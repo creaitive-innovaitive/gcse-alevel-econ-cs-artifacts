@@ -265,7 +265,7 @@ ARTIFACTS = [
     # A-Level Computer Science
     {"src": "linked-lists", "title": "Linked Lists", "kind": "Walkthrough",
      "desc": "Abstract data types: how a linked list stores, inserts and deletes nodes using pointers.",
-     "places": [("a-cs", "as/ch-10")]},
+     "places": [("a-cs", "a-level/ch-19")]},
     {"src": "insertion-sort", "title": "Insertion Sort, Step by Step", "kind": "Walkthrough",
      "desc": "Trace an insertion sort pass by pass and compare it with bubble sort.",
      "places": [("a-cs", "a-level/ch-19")]},
