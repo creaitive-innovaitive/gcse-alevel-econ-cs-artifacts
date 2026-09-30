@@ -1,0 +1,475 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Multipliers, Markets and Monopsony</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#EEF1F5;--surface:#FFFFFF;--ink:#16233A;--muted:#5B6880;--line:#C9D1DE;--grid:#E3E8F0;--green:#1E8A5A;--red:#C8413B;--blue:#2B59C3;--amber:#C98200;--tint:#F5F7FA;--amberbg:rgba(217,142,4,.18);
+--disp:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1626;--surface:#17203A;--ink:#E6ECF7;--muted:#9AA8C2;--line:#2E3A57;--grid:#222C47;--green:#45C48A;--red:#F0706A;--blue:#7BA2FF;--amber:#F2B33D;--tint:#1B2544;--amberbg:rgba(242,179,61,.22)}}
+:root[data-theme="dark"]{--bg:#0F1626;--surface:#17203A;--ink:#E6ECF7;--muted:#9AA8C2;--line:#2E3A57;--grid:#222C47;--green:#45C48A;--red:#F0706A;--blue:#7BA2FF;--amber:#F2B33D;--tint:#1B2544;--amberbg:rgba(242,179,61,.22)}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);padding-inline:16px;padding-block:24px 56px}
+.wrap{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--disp);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(1.9rem,4.5vw,2.9rem);font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--muted);max-width:62ch;margin:.6rem 0 0}
+.eyebrow{font:500 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:28px 0 20px;border-bottom:2px solid var(--line)}
+.tab{appearance:none;border:0;background:none;color:var(--muted);font:600 1rem var(--disp);padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;text-align:left}
+.tab small{display:block;font:400 .68rem var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.tab[aria-selected="true"]{color:var(--ink);border-color:var(--blue)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.panel h2{font-size:clamp(1.5rem,3vw,2rem)}
+.lede{max-width:70ch;margin:.7rem 0 0}
+.syl{display:inline-block;margin-top:.9rem;font:400 .74rem var(--mono);color:var(--muted);border:1px solid var(--line);padding:3px 8px;border-radius:4px}
+.chapters{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 14px}
+.chap{appearance:none;cursor:pointer;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px 14px;font:500 .9rem var(--body)}
+.chap[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.stage{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.stage{grid-template-columns:minmax(0,1fr)}}
+figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
+figcaption{font-size:.82rem;color:var(--muted);padding:6px 6px 2px}
+.svgbox{overflow-x:auto}
+svg{display:block;width:100%;height:auto;min-width:340px}
+.side{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{appearance:none;cursor:pointer;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:var(--tint);color:var(--muted);font:500 .85rem var(--mono)}
+.dot[aria-current="step"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.dot.done{border-color:var(--blue);color:var(--blue)}
+.step h3{font-size:1.2rem;margin-bottom:.4rem}
+.step p{margin:.4rem 0}
+.step .draw{font:400 .78rem var(--mono);color:var(--muted);background:var(--tint);padding:7px 10px;border-radius:4px;margin-top:.6rem}
+.step .draw b{color:var(--ink);font-weight:500}
+.nav{display:flex;gap:8px;margin-top:auto}
+.btn{appearance:none;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:9px 16px;font:600 .9rem var(--body)}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.ctl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:var(--tint);border-radius:6px;padding:10px 12px;font-size:.88rem}
+.ctl label{display:flex;flex-direction:column;gap:2px;font:500 .78rem var(--mono);color:var(--muted);flex:1 1 150px}
+.ctl input[type=range]{width:100%;accent-color:var(--blue)}
+.ctl input[type=number]{width:70px;font:500 .95rem var(--mono);padding:4px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink)}
+.out{font:500 .85rem var(--mono);color:var(--ink);flex:1 1 100%}
+.out b{color:var(--blue)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:30px}
+.notes h3{font-size:1.05rem;margin-bottom:.5rem}
+.notes ul{margin:0;padding-left:1.1rem}.notes li{margin:.35rem 0}
+.formula{font:500 .95rem var(--mono);background:var(--tint);padding:8px 12px;border-radius:4px;display:inline-block;margin:.3rem 0}
+table.cmp{border-collapse:collapse;width:100%;font-size:.88rem;min-width:520px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+table.cmp th{font:500 .72rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+table.cmp tr.sel td{background:var(--amberbg)}
+/* svg */
+.ax{stroke:var(--ink);stroke-width:1.8;fill:none}
+.gr{stroke:var(--grid);stroke-width:1}
+.dash{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:5 5;fill:none}
+.cv{fill:none;stroke-width:3;stroke-linecap:round}
+.cg{stroke:var(--green)}.cr{stroke:var(--red)}.cb{stroke:var(--blue)}.ck{stroke:var(--ink)}
+.t{font:500 13px var(--mono);fill:var(--ink)}.tg{fill:var(--green)}.tr{fill:var(--red)}.tb{fill:var(--blue)}.tm{fill:var(--muted);font-size:12px}.ta{fill:var(--amber)}
+.pt{fill:var(--surface);stroke:var(--ink);stroke-width:2.2}
+.ptb{fill:var(--blue)}
+.shade{fill:var(--amberbg);stroke:none}
+.shb{fill:color-mix(in srgb,var(--blue) 18%,transparent);stroke:none}
+.shr{fill:color-mix(in srgb,var(--red) 18%,transparent);stroke:none}
+.new{animation:pop .7s ease-out}
+@keyframes pop{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.new{animation:none}}
+.bar{transition:height .3s}
+.pd{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;font:500 .85rem var(--mono)}
+.pd button{appearance:none;cursor:pointer;border:1px solid var(--line);background:var(--tint);color:var(--ink);padding:14px 8px;border-radius:4px;font:inherit}
+.pd button.on{background:var(--amberbg);border-color:var(--amber)}
+</style>
+<div class="wrap">
+<div class="eyebrow">A Level Economics · 9708 · worked through step by step</div>
+<h1>Multipliers, Markets and Monopsony</h1>
+<p class="sub">Three topics, each built one move at a time. Press Next (or a step number) to draw the diagram in the order you should draw it in an exam, then use the sliders to see what changes.</p>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div id="panels"></div>
+</div>
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const f1=n=>Math.round(n*10)/10;
+/* ---------- svg helpers (labour-market grid: q 0-130, w 0-110) ---------- */
+const G={x0:70,y0:370,sx:4.1,sy:3.15,W:620,H:420};
+const px=q=>f1(G.x0+q*G.sx), py=w=>f1(G.y0-w*G.sy);
+const MK='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--ink)"/></marker></defs>';
+const svg=(body,label,W=G.W,H=G.H)=>`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}">${MK}${body}</svg>`;
+const T=(x,y,s,c='',a='start')=>`<text class="t ${c}" x="${x}" y="${y}" text-anchor="${a}">${s}</text>`;
+const L=(x1,y1,x2,y2,c)=>`<line class="${c}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+const curve=(pts,c)=>`<polyline class="cv ${c}" points="${pts.map(p=>px(p[0])+','+py(p[1])).join(' ')}"/>`;
+const fn=(fx,q1,q2,c)=>curve([[q1,fx(q1)],[q2,fx(q2)]],c);
+const axes=(xl='Quantity of labour',yl='Wage rate (£)')=>`<line class="ax" x1="70" y1="370" x2="70" y2="18" marker-end="url(#ar)"/><line class="ax" x1="70" y1="370" x2="612" y2="370" marker-end="url(#ar)"/>${T(80,20,yl,'tm')}${T(608,404,xl,'tm','end')}`;
+const drop=(q,w,ql,wl,c='dash')=>`${L(70,py(w),px(q),py(w),c)}${L(px(q),py(w),px(q),370,c)}${wl?T(62,py(w)+4,wl,'','end'):''}${ql?T(px(q),390,ql,'','middle'):''}`;
+const pt=(q,w,l,dx=8,dy=-8,c='pt')=>`<circle class="${c}" cx="${px(q)}" cy="${py(w)}" r="5.5"/>${l?T(px(q)+dx,py(w)+dy,l):''}`;
+const S_=q=>10+.5*q, MC_=q=>10+q, MRP_=q=>100-.5*q;
+/* ---------- engine ---------- */
+const APP={tabs:[],cur:0};
+function mount(tab){
+  const p=document.createElement('section');p.className='panel';p.hidden=true;p.id='p-'+tab.id;
+  p.innerHTML=`<h2>${tab.h}</h2><p class="lede">${tab.lede}</p><span class="syl">${tab.syl}</span>
+  <div class="chapters"></div>
+  <div class="stage"><figure><div class="svgbox"></div><figcaption></figcaption></figure>
+  <div class="side"><div class="dots" role="group" aria-label="Steps"></div><div class="step" aria-live="polite"></div><div class="ctl" hidden></div>
+  <div class="nav"><button class="btn prev">Back</button><button class="btn pri next">Next step</button></div></div></div>
+  <div class="notes">${tab.notes}</div>`;
+  $('#panels').append(p);
+  const st={ci:0,s:1,data:{}};
+  const cn=$('.chapters',p);
+  tab.chapters.forEach((c,i)=>{const b=document.createElement('button');b.className='chap';b.textContent=c.name;b.onclick=()=>load(i);cn.append(b)});
+  const ctl=$('.ctl',p);
+  function load(i){
+    st.ci=i;st.s=1;const c=tab.chapters[i];st.data=JSON.parse(JSON.stringify(c.init||{}));
+    [...cn.children].forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
+    ctl.innerHTML=c.ctl||'';
+    if(c.bind)c.bind(ctl,st.data,()=>draw(true));
+    draw();
+  }
+  function draw(fromCtl){
+    const c=tab.chapters[st.ci],n=c.steps.length,s=st.s,step=c.steps[s-1];
+    $('.svgbox',p).innerHTML=c.render(s,st.data);
+    $('figcaption',p).textContent=c.caption;
+    $('.step',p).innerHTML=`<div class="eyebrow">Step ${s} of ${n}</div><h3>${step.t}</h3>${step.b}${step.d?`<div class="draw"><b>Draw:</b> ${step.d}</div>`:''}`;
+    const d=$('.dots',p);d.innerHTML='';
+    c.steps.forEach((_,k)=>{const b=document.createElement('button');b.className='dot'+(k+1<s?' done':'');b.textContent=k+1;b.setAttribute('aria-label','Step '+(k+1));if(k+1===s)b.setAttribute('aria-current','step');b.onclick=()=>{st.s=k+1;draw()};d.append(b)});
+    const show=!!c.ctl&&s>=(c.ctlFrom||1);ctl.hidden=!show;
+    if(show&&c.readout){const o=$('.out',ctl);if(o)o.innerHTML=c.readout(st.data,s)}
+    $('.prev',p).disabled=s===1;$('.next',p).disabled=s===n;
+  }
+  $('.prev',p).onclick=()=>{if(st.s>1){st.s--;draw()}};
+  $('.next',p).onclick=()=>{if(st.s<tab.chapters[st.ci].steps.length){st.s++;draw()}};
+  p._key=d=>{const n=tab.chapters[st.ci].steps.length;st.s=Math.min(n,Math.max(1,st.s+d));draw()};
+  load(0);return p;
+}
+function boot(){
+  const tb=$('#tabs');
+  APP.tabs.forEach((t,i)=>{
+    const b=document.createElement('button');b.className='tab';b.role='tab';b.id='tab-'+t.id;
+    b.innerHTML=`${t.label}<small>${t.syl.split('·')[0]}</small>`;b.onclick=()=>sel(i);tb.append(b);
+    mount(t);
+  });
+  function sel(i){APP.cur=i;[...tb.children].forEach((b,j)=>b.setAttribute('aria-selected',j===i));
+    document.querySelectorAll('.panel').forEach((p,j)=>p.hidden=j!==i)}
+  let start=0;try{start=+localStorage.getItem('mmm-tab')||0}catch(e){}
+  sel(start);
+  tb.addEventListener('click',()=>{try{localStorage.setItem('mmm-tab',APP.cur)}catch(e){}});
+  document.addEventListener('keydown',e=>{
+    if(/INPUT|TEXTAREA/.test(e.target.tagName))return;
+    const p=document.querySelectorAll('.panel')[APP.cur];
+    if(e.key==='ArrowRight')p._key(1);else if(e.key==='ArrowLeft')p._key(-1)});
+}
+</script>
+<script>
+/* ---- Tab 1: multiplier and accelerator ---- */
+const fm=v=>String(Math.round(v*10)/10);
+const slider=(id,lab,min,max,step,val)=>`<label>${lab}<input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${val}"></label>`;
+function renderR(s,d){
+  const c=d.c,n=s===1?1:s===2?2:s===3?5:8,y0=330,sy=2.6;
+  let b=`<line class="ax" x1="50" y1="${y0}" x2="50" y2="50" marker-end="url(#ar)"/><line class="ax" x1="50" y1="${y0}" x2="610" y2="${y0}" marker-end="url(#ar)"/>`+T(58,46,'Income created in each round (£m)','tm')+T(608,368,'Round of spending','tm','end');
+  let sum=0;
+  for(let i=0;i<n;i++){const v=100*Math.pow(c,i);sum+=v;const x=64+i*68,h=v*sy;
+    b+=`<g class="${i===n-1&&s<4?'new':''}"><rect x="${x}" y="${y0-h}" width="48" height="${h}" rx="2" style="fill:${i===0?'var(--blue)':'var(--green)'}"/>${T(x+24,y0-h-6,fm(v),'','middle')}${T(x+24,y0+18,'R'+(i+1),'tm','middle')}</g>`}
+  if(s>=4)b+=T(64+8*68-6,y0-8,'…','tm','middle');
+  b+=T(610,80,`Running total: £${fm(sum)}m`,'','end');
+  if(s>=4)b+=`<g class="new">${T(610,104,`Limit: 100 × ${fm(1/(1-c))} = £${fm(100/(1-c))}m`,'tb','end')}</g>`;
+  return svg(b,'Bar chart of income created in each successive round of spending after a £100m injection',620,400);
+}
+const chR={name:'1 · The ripple effect',caption:'£100m enters the economy. Each round, only the share that is spent (the MPC) becomes someone else\'s income.',
+init:{c:.6},ctl:slider('r-c','Marginal propensity to consume (MPC)',.3,.9,.05,.6)+'<div class="out"></div>',
+bind:(el,d,rd)=>{$('#r-c',el).oninput=e=>{d.c=+e.target.value;rd()}},
+readout:d=>`MPC <b>${d.c}</b> · MPS <b>${fm(1-d.c)}</b> · k = 1 ÷ ${fm(1-d.c)} = <b>${fm(1/(1-d.c))}</b>`,
+render:renderR,steps:[
+{t:'An injection arrives',b:'<p>Say the government spends £100m building a bridge. That money becomes <b>income</b> for construction firms and their workers: <b>round 1</b>. Government spending, investment and exports are <b>injections</b>: money added to the circular flow from outside consumers\' spending.</p>',d:'the first bar, £100m.'},
+{t:'Part of it is spent again',b:'<p>Recipients do not spend all their new income. They spend a share (the <b>marginal propensity to consume, MPC</b>) and withdraw the rest by saving, paying tax or buying imports. The spent part becomes income for shops, garages and cafes: <b>round 2</b> = 100 × MPC. Try the slider: the higher the MPC, the bigger round 2.</p>',d:'second bar = first bar × MPC.'},
+{t:'And again, and again',b:'<p>Each round repeats the process with a smaller amount, because each time a slice leaks out. The rounds form a shrinking geometric series: 100, 100c, 100c², 100c³, …</p>',d:'bars for rounds 3, 4 and 5, each shorter by the same factor.'},
+{t:'The total is a multiple of the injection',b:'<p>The rounds fade away but never quite stop. Adding them all up: 100 × (1 + c + c² + …) = 100 ÷ (1 − c). The multiplier is<br><span class="formula">k = ΔY ÷ ΔJ = 1 ÷ (1 − MPC) = 1 ÷ MPS</span><br>So a £100m injection raises national income by £100m × k. With MPC 0.6, k = 2.5 and income rises by £250m. The <b>multiplier effect</b> is this magnified change in national income.</p>',d:'the remaining bars, and the total.'}]};
+/* multiplier formula with leakages */
+function renderF(s,d){
+  const a=d.s,t=s>=2?d.t:0,m=s>=3?d.m:0,r=1-a-t-m,W=520,x0=50;
+  const seg=[['Saved',a,'var(--amber)'],['Taxed',t,'var(--red)'],['Imported',m,'var(--blue)'],['Re-spent at home',r,'var(--green)']];
+  let x=x0,b=T(x0,60,'Each extra £1 of income is split into…','tm');
+  seg.forEach(([n,v,col])=>{const w=v*W;if(v>0){b+=`<rect x="${f1(x)}" y="80" width="${f1(w)}" height="70" style="fill:${col}"/>`+(w>58?`<text x="${f1(x+w/2)}" y="112" text-anchor="middle" style="font:500 12px var(--mono);fill:#fff">${n.split(' ')[0]}</text><text x="${f1(x+w/2)}" y="132" text-anchor="middle" style="font:500 12px var(--mono);fill:#fff">${fm(v*100)}p</text>`:'')}x+=w});
+  const w=a+t+m,k=1/w;
+  b+=T(x0,190,'Withdrawals leaving the circular flow (leakages):','tm')+T(x0,214,`MPW = ${[['MPS',a],['MRT',t],['MPM',m]].filter((_,i)=>i===0||(i===1&&s>=2)||(i===2&&s>=3)).map(z=>z[0]+' '+fm(z[1]*100)+'p').join(' + ')} = ${fm(w*100)}p`);
+  b+=`<text x="${x0}" y="270" style="font:700 22px var(--mono);fill:var(--blue)">k = 1 ÷ ${fm(w*100)/100} = ${fm(k)}</text>`;
+  b+=T(x0,310,`£100m injection → national income rises by £${fm(100*k)}m`,'');
+  if(s>=4)b+=`<g class="new">${T(x0,346,`Compare: with saving only (MPS ${fm(a*100)}p) k would be ${fm(1/a)}, so leakages cut it by ${fm(100*(1/a-k))}m per £100m`,'tm')}</g>`;
+  return svg(b,'One pound of extra income split into saving, tax, imports and re-spending, with the resulting multiplier',620,380);
+}
+const chF={name:'2 · Leakages and the formula',caption:'Every leakage shrinks the multiplier. In an open economy with a government, all three count.',
+init:{s:.2,t:.1,m:.1},ctl:slider('f-s','MPS (saving)',.05,.4,.05,.2)+slider('f-t','MRT (marginal rate of tax)',0,.3,.05,.1)+slider('f-m','MPM (imports)',0,.3,.05,.1)+'<div class="out"></div>',
+bind:(el,d,rd)=>{[['f-s','s'],['f-t','t'],['f-m','m']].forEach(([id,k])=>{$('#'+id,el).oninput=e=>{d[k]=+e.target.value;rd()}})},
+readout:(d,s)=>`Withdrawn from each extra £1: <b>${fm((d.s+(s>=2?d.t:0)+(s>=3?d.m:0))*100)}p</b>`,
+render:renderF,steps:[
+{t:'Closed economy, no government',b:'<p>The only leakage is saving. Every £1 of new income is either saved (MPS) or spent again (MPC), so MPC + MPS = 1.<br><span class="formula">k = 1 ÷ MPS = 1 ÷ (1 − MPC)</span></p>',d:'nothing to draw; write the formula.'},
+{t:'Add a government sector',b:'<p>Taxes are a second leakage. Income tax takes a slice of each extra £1 (<b>marginal rate of tax, MRT</b>) before it can be spent, so less goes round again.<br><span class="formula">k = 1 ÷ (MPS + MRT)</span></p>'},
+{t:'Open the economy',b:'<p>Spending on imports leaves for another country\'s circular flow: a third leakage (<b>marginal propensity to import, MPM</b>). The three together are the marginal propensity to withdraw.<br><span class="formula">k = 1 ÷ (MPS + MRT + MPM)</span></p>'},
+{t:'What to remember',b:'<p>The more leakages, the smaller the multiplier. High-tax, import-hungry economies see less benefit from a fiscal stimulus. The formula assumes <b>spare capacity</b>: if the economy is at full employment the extra spending mostly raises prices. Real multipliers also take time to work through and depend on who gets the money (poorer households have a higher MPC).</p>'}]};
+/* Keynesian cross */
+const kx=Y=>f1(70+Y*4.4),ky=A=>f1(370-A*2.85);
+function renderK(s,d){
+  const c=d.c,a1=16,dj=6,a2=a1+dj,Y1=a1/(1-c),Y2=a2/(1-c);
+  let b=`<line class="ax" x1="70" y1="370" x2="70" y2="18" marker-end="url(#ar)"/><line class="ax" x1="70" y1="370" x2="612" y2="370" marker-end="url(#ar)"/>`+T(80,20,'Aggregate demand (AD)','tm')+T(608,404,'Real national income (Y)','tm','end');
+  b+=at(s,1,`<line class="cv ck" style="stroke-dasharray:2 0" x1="${kx(0)}" y1="${ky(0)}" x2="${kx(120)}" y2="${ky(120)}"/>${T(kx(120)-6,ky(120)+14,'AD = Y','','end')}`);
+  b+=at(s,2,`<line class="cv cg" x1="${kx(0)}" y1="${ky(a1)}" x2="${kx(120)}" y2="${ky(a1+c*120)}"/>${T(kx(120)-4,ky(a1+c*120)+16,sb('AD','1'),'tg','end')}${L(kx(Y1),ky(Y1),kx(Y1),370,'dash')}${L(70,ky(Y1),kx(Y1),ky(Y1),'dash')}<circle class="pt" cx="${kx(Y1)}" cy="${ky(Y1)}" r="5.5"/>${T(kx(Y1),390,sb('Y','1'),'','middle')}${T(62,ky(a1)+4,'a','tg','end')}`);
+  b+=at(s,3,`<line class="cv cb" x1="${kx(0)}" y1="${ky(a2)}" x2="${kx(120)}" y2="${ky(a2+c*120)}"/>${T(kx(120)-4,ky(a2+c*120)-8,sb('AD','2'),'tb','end')}<line class="cv" style="stroke:var(--amber)" x1="80" y1="${ky(a1)}" x2="80" y2="${ky(a2)}"/>${T(88,ky(a1)-10,'ΔJ','ta')}`);
+  b+=at(s,4,`${L(kx(Y2),ky(Y2),kx(Y2),370,'dash')}<circle class="pt" cx="${kx(Y2)}" cy="${ky(Y2)}" r="5.5"/>${T(kx(Y2),390,sb('Y','2'),'','middle')}<line class="cv" style="stroke:var(--amber)" x1="${kx(Y1)}" y1="356" x2="${kx(Y2)}" y2="356"/>${T((kx(Y1)+kx(Y2))/2,346,'ΔY','ta','middle')}`);
+  if(s>=5){let pts=[[Y1,Y1]],Y=Y1;for(let i=0;i<14;i++){const A=a2+c*Y;pts.push([Y,A]);pts.push([A,A]);Y=A}
+    b+=at(s,5,`<polyline class="cv" style="stroke:var(--amber);stroke-width:1.6" points="${pts.map(p=>kx(p[0])+','+ky(p[1])).join(' ')}"/>`)}
+  return svg(b,'Keynesian cross: an injection shifts AD up by delta J and national income rises by more than delta J',620,420);
+}
+const chK={name:'3 · On the AD diagram',caption:'The same ripple drawn with the 45° line: the shift in AD is ΔJ, but the equilibrium moves by k × ΔJ.',
+init:{c:.6},ctl:slider('k-c','MPC (slope of AD)',.4,.8,.05,.6)+'<div class="out"></div>',ctlFrom:2,
+bind:(el,d,rd)=>{$('#k-c',el).oninput=e=>{d.c=+e.target.value;rd()}},
+readout:(d,s)=>{const k=1/(1-d.c);return `MPC <b>${d.c}</b> → k = <b>${fm(k)}</b> · ΔJ = 6 → ΔY = <b>${fm(6*k)}</b> (Y: ${fm(16*k)} → ${fm(22*k)})`},
+render:renderK,steps:[
+{t:'The 45° line',b:'<p>Every point on this line has AD equal to national income (Y). Along it, planned spending equals output. Equilibrium must be somewhere on it.</p>',d:'both axes to the same scale, then the 45° line.'},
+{t:'The AD line and equilibrium',b:'<p>AD = a + MPC × Y. The intercept <b>a</b> is autonomous spending (it does not depend on income), and the slope is the MPC because each extra £1 of income leads to MPC of extra spending. Where AD<sub>1</sub> crosses the 45° line, national income is in equilibrium at <b>Y<sub>1</sub></b>.</p>',d:'upward-sloping <b>AD<sub>1</sub></b> with a positive intercept, flatter than 45°; drop to <b>Y<sub>1</sub></b>.'},
+{t:'An injection shifts AD up',b:'<p>Higher investment, government spending or exports raise autonomous spending by <b>ΔJ</b>. AD shifts up <b>in parallel</b> to AD<sub>2</sub>: same slope, because the MPC has not changed.</p>',d:'<b>AD<sub>2</sub></b> parallel above AD<sub>1</sub>; label the vertical gap <b>ΔJ</b>.'},
+{t:'Income rises by more than ΔJ',b:'<p>The new equilibrium is at <b>Y<sub>2</sub></b>. The change in income ΔY is a multiple of ΔJ; ΔY ÷ ΔJ is the multiplier. Because the AD line is flatter than the 45° line, the horizontal gap is bigger than the vertical gap: this is the geometry of the multiplier.</p>',d:'drop from the new intersection to <b>Y<sub>2</sub></b>; mark ΔY.'},
+{t:'The staircase is the ripple',b:'<p>Each step is one round of spending: AD rises by ΔJ, which creates extra income, which raises spending by MPC × that income, and so on, converging on Y<sub>2</sub>. Same story as chapter 1, drawn on the diagram.</p>',d:'staircase between the AD<sub>2</sub> line and the 45° line.'},
+{t:'Try it: change the slope',b:'<p>Steepen AD by raising the MPC and watch the horizontal gap grow: a higher MPC means a larger multiplier. Flatten it and the effect of the same injection shrinks.</p>'}]};
+/* accelerator */
+const YS=[100,100,110,125,140,150,155,155,150];
+function renderA2(s,d){
+  const v=d.v,n=s===1?3:s===2?5:s===3?7:9,xs=i=>f1(70+i*62),yy=Y=>f1(190-(Y-90)*(150/70)),y0=330,sy=2.4;
+  let b=`<line class="ax" x1="70" y1="190" x2="70" y2="40" marker-end="url(#ar)"/><line class="ax" x1="70" y1="190" x2="600" y2="190"/><line class="ax" x1="70" y1="${y0}" x2="600" y2="${y0}"/>`+T(78,34,'National income Y (£bn)','tm')+T(78,222,'Net investment I = v × ΔY (£bn)','tm');
+  const pts=[];for(let i=0;i<n;i++)pts.push(xs(i)+','+yy(YS[i]));
+  b+=`<polyline class="cv cg" points="${pts.join(' ')}"/>`;
+  for(let i=0;i<n;i++){b+=`<circle class="pt" cx="${xs(i)}" cy="${yy(YS[i])}" r="4"/>${T(xs(i),y0+(i>7?58:36),'Yr '+(i+1),'tm','middle')}`;
+    if(i>0){const I=v*(YS[i]-YS[i-1]),h=Math.abs(I)*sy;
+      b+=`<g class="${i>=n-2?'new':''}"><rect x="${xs(i)-14}" y="${I>=0?y0-h:y0}" width="28" height="${h}" style="fill:${I>=0?'var(--blue)':'var(--red)'}"/>${T(xs(i),I>=0?y0-h-6:y0+h+14,fm(I),'','middle')}</g>`}}
+  if(s>=3)b+=T(xs(5),120,'Income still rising…','tg','middle')+T(xs(5),138,'…but investment is falling','tb','middle');
+  return svg(b,'Line of national income above bars of induced investment, which respond to the change in income',620,440);
+}
+const chAcc={name:'4 · The accelerator',caption:'Investment responds to the rate of change of income (ΔY), so it can fall while income is still rising.',
+init:{v:2},ctl:slider('a-v','Capital-output ratio v',1,4,.5,2)+'<div class="out"></div>',
+bind:(el,d,rd)=>{$('#a-v',el).oninput=e=>{d.v=+e.target.value;rd()}},
+readout:d=>`v = <b>${d.v}</b>: every £10bn of extra income needs <b>£${fm(d.v*10)}bn</b> of extra capital · peak investment £${fm(d.v*15)}bn in years 4–5, income peaks in years 7–8`,
+render:renderA2,steps:[
+{t:'Capital needed per unit of output',b:'<p>Firms invest (buy machines, build factories) so they can produce more. The <b>capital-output ratio (v)</b> is how much capital is needed to make £1 of output. If v = 2, producing £10bn more output needs £20bn more capital. So <b>induced investment</b> depends on the <b>change</b> in national income (i.e. consumer demand):<br><span class="formula">I = v × ΔY</span><br>Income is flat in year 2, then starts rising: investment jumps.</p>',d:'income line, and investment bars for each year (I = v × ΔY).'},
+{t:'Steady growth means steady investment',b:'<p>In years 4 and 5 income rises by the same £15bn each year. Investment is the same in both years. To keep investment <i>rising</i>, the growth in income has to keep <i>accelerating</i>: that is where the name comes from.</p>'},
+{t:'Slowing growth cuts investment',b:'<p>In years 6 and 7 income is still rising, but by less (+10, then +5). ΔY is falling, so investment falls to two thirds of its peak in year 6 and one third in year 7. Firms see spare capacity opening up and hold off ordering new machines. Investment is a volatile part of AD, which helps explain business cycles.</p>'},
+{t:'Flat or falling income',b:'<p>When income stops rising (year 8) net investment falls to zero: no new capital is needed. When income falls (year 9), net investment is negative: firms do not even replace worn-out capital. A small change in the growth of demand causes a big change in investment.</p>'},
+{t:'Accelerator plus multiplier',b:'<p>Higher investment is an injection, so the <b>multiplier</b> lifts income further, which then induces even more investment through the accelerator. Together they can magnify swings in the economy, which is why they appear in explanations of boom and bust. <b>Limits of the accelerator:</b> firms may have spare capacity and not need new capital; they may expect the rise in demand to be temporary; capital may take time to build; firms may lack finance or confidence; capital-output ratios change with technology.</p>'}]};
+APP.tabs.push({id:'t1',label:'Multiplier and accelerator',syl:'Syllabus 9.1.1 and 9.1.2 · A Level',h:'The multiplier effect and the accelerator',
+lede:'Two feedback effects that make aggregate demand more powerful, and more volatile, than the original change. The multiplier magnifies an injection of spending into a bigger rise in national income. The accelerator explains why firms\' investment swings with the growth of demand.',
+notes:`<div><h3>Key definitions</h3><ul><li><b>Multiplier:</b> the ratio of the final change in national income to the initial change in injections (or autonomous spending).</li><li><b>MPC, MPS:</b> change in consumption (or saving) ÷ change in income. MPC + MPS = 1.</li><li><b>Autonomous vs induced:</b> autonomous does not depend on income; induced does.</li><li><b>Accelerator:</b> investment depends on the rate of change of income, I = v × ΔY.</li></ul></div>
+<div><h3>Exam tips</h3><ul><li>Calculation questions: find k first, then multiply by ΔJ. With tax and imports, use 1 ÷ (MPS + MRT + MPM).</li><li>State that the multiplier needs spare capacity, or the effect is inflationary.</li><li>The multiplier is time-consuming; policy effects are not instant.</li><li>Do not confuse the accelerator (investment ← growth of income) with the multiplier (income ← injections).</li></ul></div>
+<div><h3>Evaluation points</h3><ul><li>Size depends on leakages: high saving, tax and import rates give a small multiplier.</li><li>Actual size is hard to measure and varies through the cycle and by type of spending.</li><li>Crowding out, higher interest rates and expectations can offset the effect.</li><li>Accelerator: needs firms to be at full capacity; ignores expectations.</li></ul></div>`,
+chapters:[chR,chF,chK,chAcc]});
+</script>
+<script>
+/* ---- Tab 2: imperfect competition in the labour market ---- */
+const IMP=[
+ ['Many employers compete','for workers','Monopsony: one dominant','employer','Wage and jobs both below','the competitive level'],
+ ['Many workers, each a','price taker','Trade union: workers act','as one seller of labour','Wage pushed above the','competitive level'],
+ ['Workers move freely','between jobs and areas','Occupational and','geographical immobility','Wage gaps persist; shortages','and surpluses of workers'],
+ ['Everyone knows all','wages and vacancies','Imperfect information','about pay and jobs','Workers accept less;','poor job matching'],
+ ['Market forces alone','set the wage','Government sets a','national minimum wage','Legal wage floor: jobs','may fall or rise'],
+ ['Only the wage matters;','workers are identical','Non-wage factors and','discrimination','Pay gaps unrelated','to productivity (MRP)'],
+ ['Extreme case: both sides','have market power','Bilateral monopoly:','union v monopsony','Wage bargained between','monopsony and union wage']];
+function renderImp(s){
+  const tx=(x,y,t,c='')=>`<text class="t ${c}" x="${x}" y="${y}" style="font-size:12px">${t}</text>`,X=[8,214,420],rh=46,y0=44;
+  let b=tx(X[0],22,'PERFECT MARKET ASSUMES','tm')+(s>=2?tx(X[1],22,'IN REALITY','tm')+tx(X[2],22,'EFFECT','tm'):'');
+  IMP.forEach((r,i)=>{
+    const y=y0+i*rh,vis=i<6?s>=1:s>=5,ren=i<6?(s>=2+Math.floor(i/2)):s>=5,isNew=i<6?(s===2+Math.floor(i/2)):s===5;
+    if(!vis)return;
+    b+=`<line x1="8" y1="${y}" x2="612" y2="${y}" style="stroke:var(--line)"/>`;
+    if(i<6)b+=`<g>${tx(X[0],y+18,r[0])}${tx(X[0],y+34,r[1])}</g>`;
+    if(ren)b+=`<g class="${isNew?'new':''}">${tx(X[0]+(i<6?0:0),y+18,i===6?r[0]:'','')}${i===6?tx(X[0],y+34,r[1]):''}${tx(X[1],y+18,r[2],'tb')}${tx(X[1],y+34,r[3],'tb')}${tx(X[2],y+18,r[4],'tr')}${tx(X[2],y+34,r[5],'tr')}</g>`;
+  });
+  return svg(b,'Table of perfect labour-market assumptions, how each is broken in reality and the effect on wages and employment',620,392);
+}
+const chImp={name:'1 · Why labour markets are imperfect',caption:'Each assumption of the perfect labour market can fail. Each failure moves the wage or employment away from the competitive outcome.',
+render:renderImp,steps:[
+{t:'The perfect labour market',b:'<p>The competitive model of a labour market assumes many employers and many workers, free movement between jobs, full information, and no interference. In that model the wage equals the marginal revenue product of the last worker hired, so every pay difference is explained by productivity. Each row is an assumption that real labour markets break.</p>',d:'nothing yet; know the assumptions.'},
+{t:'Power on one side or the other',b:'<p><b>Monopsony:</b> a single or dominant employer sets the wage, hires fewer workers and pays below MRP. <b>Trade union:</b> workers act together as a <b>monopoly seller of labour</b> and push the wage above the competitive level. Both are cases of imperfect competition, and both are drawn out in full in the <i>Unions and monopsony</i> tab.</p>'},
+{t:'Frictions in the market',b:'<p><b>Occupational immobility:</b> workers lack the skills to switch jobs (a coal miner cannot become a software developer overnight). <b>Geographical immobility:</b> housing costs, family ties and moving costs stop workers moving to where jobs are. <b>Imperfect information:</b> workers may not know about better-paid vacancies, employers may not know workers\' true ability. Result: wage gaps persist and there can be vacancies and unemployment at the same time (structural unemployment).</p>'},
+{t:'Government and non-wage factors',b:'<p>A <b>national minimum wage</b> is a legal wage floor; its effect depends on the market (see the next chapter). <b>Non-wage factors</b> also matter: job satisfaction, risk, hours, holidays and status mean workers accept different pay for different jobs (<b>compensating differentials</b>). <b>Discrimination</b> lowers the pay of some groups for the same MRP.</p>'},
+{t:'Both sides with power: bilateral monopoly',b:'<p>When a union faces a monopsony, both sides have market power. The monopsony wants a low wage, and the union wants a high one. There is no single equilibrium: the wage is <b>bargained</b> somewhere between the monopsony wage and the wage the union would ideally set. The result depends on each side\'s bargaining power, and a union that pulls the wage towards the competitive level can raise jobs as well as pay.</p>'}]};
+/* minimum wage in two markets */
+function renderMW(s,d){
+  if(s===1)return renderC(1,d);
+  if(s===2)return renderC(5,d);
+  if(s===3)return renderD(8,d);
+  return `<div class="eyebrow">Competitive labour market</div>${renderC(5,d)}<div class="eyebrow" style="margin-top:8px">Monopsony</div>${renderD(8,d)}`;
+}
+const chMW={name:'2 · Minimum wage: two markets',caption:'The same legal wage floor has opposite effects on jobs in a competitive market and in a monopsony.',
+init:{w:64},ctl:'<label>National minimum wage (£, illustrative)<input id="mw-w" type="range" min="60" max="72" step="1" value="64"></label><div class="out"></div>',ctlFrom:2,
+bind:(el,d,rd)=>{$('#mw-w',el).oninput=e=>{d.w=+e.target.value;rd()}},
+readout:d=>{const q2=2*(100-d.w),Em=Math.min(2*(d.w-10),q2);return `Competitive: jobs 90 → <b>${q2}</b> (${q2-90}) · Monopsony: jobs 60 → <b>${Em}</b> (${Em-60>=0?'+':''}${Em-60})`},
+render:renderMW,steps:[
+{t:'The policy',b:'<p>A national minimum wage sets a legal wage floor. The diagram starts from a competitive labour market: equilibrium wage <b>W<sub>1</sub></b>, employment <b>Q<sub>1</sub></b>. The minimum wage only has an effect if it is set <b>above</b> the market wage.</p>',d:'a competitive market with equilibrium W<sub>1</sub>, Q<sub>1</sub>.'},
+{t:'Competitive market: jobs fall',b:'<p>The floor sits above W<sub>1</sub>. Employers move up their MRP curve and demand fewer workers (Q<sub>2</sub>), while more people want to work at the higher wage (Q<sub>3</sub>). Result: <b>unemployment</b> of Q<sub>3</sub> − Q<sub>2</sub>. The size of the job loss depends on the wage elasticity of demand for labour. Try the slider: the higher the floor, the bigger the loss.</p>',d:'the wage floor, then Q<sub>2</sub> on the MRP curve and Q<sub>3</sub> on the supply curve.'},
+{t:'Monopsony: jobs rise',b:'<p>In a monopsony the wage floor flattens the firm\'s marginal cost of labour, so hiring more no longer forces up the wage for existing workers (the same steps as the union chapter). Employment <b>rises</b> from Q<sub>1</sub> to Q<sub>2</sub> as long as the minimum wage is not above the competitive wage. Set it too high and jobs fall again.</p>',d:'a flat AC<sub>L</sub> = MC<sub>L</sub> at the minimum wage up to Z, with the MC jump beyond.'},
+{t:'Side by side',b:'<p>Same policy, opposite results: <b>competitive</b> market, jobs fall for every increase; <b>monopsony</b>, jobs rise at first, peak at the competitive wage, then fall. The lesson for evaluation: whether a minimum wage costs jobs depends on <b>how much monopsony power employers have</b> and where the wage is set.</p>'},
+{t:'Evaluate',b:'<p><b>Case for:</b> raises pay for the lowest paid, reduces poverty and in-work benefits, may raise productivity and motivation, and may raise jobs where employers have monopsony power (care homes, local labour markets). <b>Case against:</b> may cost jobs, particularly for young or unskilled workers; may push firms to replace labour with capital or raise prices; a single national rate ignores regional differences in living costs and market conditions. <b>Depends on:</b> the level relative to the market wage, elasticity of demand for labour, and the industry\'s market structure.</p>'}]};
+/* wage differentials */
+function renderWD(s){
+  const pan=(ox,title)=>{const X=q=>f1(ox+q*2.2),Y=w=>f1(290-w*2.2);return {X,Y,ax:`<line class="ax" x1="${ox}" y1="290" x2="${ox}" y2="40" marker-end="url(#ar)"/><line class="ax" x1="${ox}" y1="290" x2="${ox+300}" y2="290" marker-end="url(#ar)"/>${T(ox+6,36,'Wage rate (£)','tm')}${T(ox+300,318,'Quantity of labour','tm','end')}${T(ox+150,18,title,'ta','middle')}`}};
+  const A=pan(70,'SURGEONS'),B=pan(420,'CLEANERS');
+  const ln=(P,q1,w1,q2,w2,c)=>`<line class="cv ${c}" x1="${P.X(q1)}" y1="${P.Y(w1)}" x2="${P.X(q2)}" y2="${P.Y(w2)}"/>`;
+  const dr=(P,ox,q,w,wl)=>`${L(ox,P.Y(w),P.X(q),P.Y(w),'dash')}${L(P.X(q),P.Y(w),P.X(q),290,'dash')}${T(ox-8,P.Y(w)+4,wl,'','end')}<circle class="pt" cx="${P.X(q)}" cy="${P.Y(w)}" r="5.5"/>`;
+  let b=A.ax+B.ax;
+  b+=at(s,2,ln(A,10,105,110,55,'cg')+T(A.X(110)+3,A.Y(55)+14,'D','tg')+ln(B,5,67.5,125,7.5,'cg')+T(B.X(125)+3,B.Y(7.5)+14,'D','tg'));
+  b+=at(s,3,ln(A,10,35,120,90,'cr')+T(A.X(120)+3,A.Y(90)-6,'S','tr')+ln(B,5,7.5,125,67.5,'cr')+T(B.X(125)+3,B.Y(67.5)-6,'S','tr'));
+  b+=at(s,4,dr(A,70,80,70,sb('W','surgeon'))+dr(B,420,65,37.5,sb('W','cleaner'))+T(A.X(80),308,'lower supply','tm','middle')+T(B.X(65),308,'more supply','tm','middle'));
+  return svg(b,'Two labour markets, surgeons and cleaners, with different demand and supply and so different equilibrium wages',740,340).replace('<svg ','<svg style="min-width:520px" ');
+}
+const chWD={name:'3 · Wage differentials',caption:'Different demand (MRP) and supply in each occupation produce different equilibrium wages.',
+render:renderWD,steps:[
+{t:'Two occupations, two markets',b:'<p>Draw a separate supply and demand diagram for each occupation. The vertical axes are on the same scale so that the wages can be compared.</p>',d:'two sets of axes: wage rate against quantity of labour.'},
+{t:'Demand: the value of the worker\'s output',b:'<p>Demand for labour is derived from the value of what the worker produces (MRP). A surgeon\'s work is worth much more per hour than a cleaner\'s: higher productivity, higher prices, and demand that is less affected by cost. So demand for surgeons is <b>further up</b> the wage axis.</p>',d:'a higher <b>D</b> for surgeons.'},
+{t:'Supply: how easy it is to enter',b:'<p>Surgeons need years of training, qualifications and a high level of ability, and few can qualify. Supply is <b>low</b> (fewer workers at every wage). Cleaning requires no qualifications and many people can do it, so supply is <b>high</b>. The supply curve for surgeons is further to the left and higher.</p>',d:'<b>S</b> to the left of and above the cleaners\' supply.'},
+{t:'The wage differential',b:'<p>Equilibrium wages are far apart: <b>high demand plus low supply</b> gives a high wage; <b>lower demand plus abundant supply</b> gives a low wage. This <b>wage differential</b> is what the market forces of MRP and supply explain.</p>',d:'dashed equilibrium lines and wages for each market.'},
+{t:'What else drives differentials',b:'<p><b>Widening:</b> professional bodies restricting entry (shifts supply left), unions in the well-paid occupation, discrimination, geographical and occupational immobility. <b>Narrowing:</b> a minimum wage lifts the bottom, and more people entering the high-paid occupation. <b>Compensating differentials:</b> risky, unpleasant or unsocial jobs must pay more to attract workers, even when demand is the same. So an observed difference is not always due to imperfect competition.</p>'}]};
+/* economic rent and transfer earnings */
+const RG=mkgrid(4.2,3.1);
+function mkgrid(sx,sy){const X=q=>f1(70+q*sx),Y=w=>f1(370-w*sy);return {X,Y}}
+function renderRent(s,d){
+  const g=RG,m=d.m,S0=50-60*m,S=q=>50+m*(q-60);
+  let b=`<line class="ax" x1="70" y1="370" x2="70" y2="18" marker-end="url(#ar)"/><line class="ax" x1="70" y1="370" x2="612" y2="370" marker-end="url(#ar)"/>${T(80,20,'Wage rate (£)','tm')}${T(608,404,'Quantity of labour','tm','end')}`;
+  b+=`<polyline class="cv cg" points="${g.X(10)},${g.Y(100)} ${g.X(105)},${g.Y(5)}"/>${T(g.X(105)+4,g.Y(5)+14,'D','tg')}`;
+  b+=at(s,2,`<polyline class="cv cr" points="${g.X(0)},${g.Y(S0)} ${g.X(115)},${g.Y(S(115))}"/>${T(g.X(115)+4,g.Y(S(115))-6,'S','tr')}${L(70,g.Y(50),g.X(60),g.Y(50),'dash')}${L(g.X(60),g.Y(50),g.X(60),370,'dash')}${T(62,g.Y(50)+4,sb('W','*'),'','end')}${T(g.X(60),390,sb('Q','*'),'','middle')}<circle class="pt" cx="${g.X(60)}" cy="${g.Y(50)}" r="5.5"/>`);
+  b+=at(s,3,`<rect x="70" y="${g.Y(50)}" width="${g.X(60)-70}" height="${370-g.Y(50)}" style="fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:3 3"/>${T(g.X(30),g.Y(50)+22,'total earnings = W* × Q*','tm','middle')}`);
+  b+=at(s,4,`<polygon class="shb" points="70,370 70,${g.Y(S0)} ${g.X(60)},${g.Y(50)} ${g.X(60)},370"/>${T(g.X(30),362,'transfer earnings','tb','middle')}`);
+  b+=at(s,5,`<polygon class="shade" points="70,${g.Y(S0)} 70,${g.Y(50)} ${g.X(60)},${g.Y(50)}"/>${T(g.X(6),g.Y(50)-8,'economic rent','ta')}`);
+  return svg(b,'Labour supply and demand with total earnings split into transfer earnings under the supply curve and economic rent above it',620,420);
+}
+const chRent={name:'4 · Economic rent',caption:'Transfer earnings are what a worker needs to stay in the job. Economic rent is the extra they receive above that.',
+init:{m:.5},ctl:'<label>Steepness of supply (lower = more elastic)<input id="rent-m" type="range" min="0.1" max="0.8" step="0.05" value="0.5"></label><div class="out"></div>',ctlFrom:6,
+bind:(el,d,rd)=>{$('#rent-m',el).oninput=e=>{d.m=+e.target.value;rd()}},
+readout:d=>{const r=.5*60*60*d.m;return `Economic rent = <b>${fm(r)}</b> of total earnings 3000, which is <b>${fm(r/30)}%</b>`},
+render:renderRent,steps:[
+{t:'Demand for the occupation',b:'<p>Start with the demand curve for a type of labour (for example a top footballer or a pilot).</p>',d:'downward <b>D</b>.'},
+{t:'Supply and equilibrium',b:'<p>The supply curve shows the minimum wage needed to persuade each worker to do this job rather than the next best alternative. The market wage <b>W*</b> and employment <b>Q*</b> are set where supply meets demand. Every worker gets W*, whatever their minimum wage.</p>',d:'upward <b>S</b>; dashed lines from the crossing to <b>W*</b> and <b>Q*</b>.'},
+{t:'Total earnings',b:'<p>All workers together receive W* × Q*: the rectangle out to Q*. This splits into two parts: what they needed to stay in the job, and the surplus.</p>',d:'dashed rectangle from the axes to the equilibrium point.'},
+{t:'Transfer earnings',b:'<p><b>Transfer earnings</b> are the minimum amount needed to keep a worker in their current occupation, i.e. what they could earn in their next best alternative. Below this they would <i>transfer</i> to another job. On the diagram it is the area <b>under the supply curve</b>.</p>',d:'shade the area under S up to Q*.'},
+{t:'Economic rent',b:'<p><b>Economic rent</b> is the payment above transfer earnings: the area <b>above the supply curve and below the wage</b>. A worker who would have accepted £30 but is paid £70 earns £40 of rent. It is the labour equivalent of producer surplus.</p>',d:'shade the triangle between S and W*.'},
+{t:'Try it: change the elasticity of supply',b:'<p>The steeper the supply curve (the more inelastic supply is), the bigger the share of earnings that is rent. Workers whose skills are scarce or unique, with few alternative uses, earn mostly rent. If supply were perfectly inelastic, all earnings would be economic rent.</p>'},
+{t:'What affects the split',b:'<p><b>Higher rent:</b> unique talent (a star footballer, a singer), few close alternative occupations, high demand. <b>Lower rent:</b> skills easily used elsewhere, many other equally good jobs, elastic supply. This helps explain very large pay for top sports and entertainment stars and why taxing rent hardly changes the amount of labour supplied.</p>'}]};
+APP.tabs.push({id:'t2',label:'Imperfect labour markets',syl:'Syllabus 8.3.8 to 8.3.10 · A Level',h:'Imperfect competition in the labour market',
+lede:'The perfect labour market is a benchmark. This tab covers why real labour markets fall short of it, what a minimum wage does in different market structures, why wages differ between occupations, and how much of a worker\'s pay is a surplus. Monopsony and unions are worked through in full in the next tab.',
+notes:`<div><h3>Key definitions</h3><ul><li><b>Monopsony:</b> a single (or dominant) buyer of labour.</li><li><b>Wage differential:</b> difference in pay between jobs, occupations or groups.</li><li><b>Transfer earnings:</b> the minimum earnings needed to keep a worker in their current occupation.</li><li><b>Economic rent:</b> earnings above transfer earnings.</li><li><b>Compensating differential:</b> higher pay for a job with worse non-wage conditions.</li></ul></div>
+<div><h3>Exam tips</h3><ul><li>For a minimum wage question, always say what type of market you assume. Competitive: jobs fall. Monopsony: jobs may rise.</li><li>Use "derived demand" and MRP when explaining why occupations pay differently.</li><li>Economic rent and transfer earnings are areas on a diagram: label both.</li><li>Link imperfections to the resulting gap between wage and MRP.</li></ul></div>
+<div><h3>Evaluation points</h3><ul><li>How much monopsony power employers really have, and whether workers can move between employers.</li><li>The level of the minimum wage compared to the market wage.</li><li>Differences in pay may be justified by MRP and non-wage factors, or caused by discrimination and immobility.</li><li>Long-run effects: retraining, mobility, capital replacing labour.</li></ul></div>`,
+chapters:[chImp,chMW,chWD,chRent]});
+</script>
+<script>
+const at=(s,n,h)=>s>=n?`<g class="${s===n?'new':''}">${h}</g>`:'';
+const sb=(a,b)=>`${a}<tspan dy="4" font-size="10">${b}</tspan>`;
+const WTU=sb('W','TU'),W1=sb('W','1'),W2=sb('W','2'),WC=sb('W','c');
+const Q1=sb('Q','1'),Q2=sb('Q','2'),Q3=sb('Q','3'),QC=sb('Q','c');
+const MCL=sb('MC','L'),ACL=sb('AC','L'),MRPL=sb('MRP','L'),DL=sb('D','L'),SL=sb('S','L');
+/* ---- A: competitive labour market, two panels ---- */
+function renderA(s){
+  const pan=(ox,title)=>{const X=q=>f1(ox+q*2.2),Y=w=>f1(290-w*2.2);return {X,Y,ax:`<line class="ax" x1="${ox}" y1="290" x2="${ox}" y2="40" marker-end="url(#ar)"/><line class="ax" x1="${ox}" y1="290" x2="${ox+300}" y2="290" marker-end="url(#ar)"/>${T(ox+6,36,'Wage rate (£)','tm')}${T(ox+300,318,'Quantity of labour','tm','end')}${T(ox+150,18,title,'ta','middle')}`}};
+  const M=pan(50,'MARKET'),F=pan(410,'FIRM');
+  const ln=(P,q1,w1,q2,w2,c)=>`<line class="cv ${c}" x1="${P.X(q1)}" y1="${P.Y(w1)}" x2="${P.X(q2)}" y2="${P.Y(w2)}"/>`;
+  const dr=(P,ox,q,w,ql,wl)=>`${L(ox,P.Y(w),P.X(q),P.Y(w),'dash')}${L(P.X(q),P.Y(w),P.X(q),290,'dash')}${T(ox-8,P.Y(w)+4,wl,'','end')}${T(P.X(q),308,ql,'','middle')}`;
+  let b=M.ax+F.ax;
+  b+=at(s,2,ln(M,10,95,120,40,'cg')+T(M.X(120)+4,M.Y(40)+14,DL,'tg'));
+  b+=at(s,3,ln(M,10,15,120,70,'cr')+T(M.X(120)+2,M.Y(70)-8,SL,'tr'));
+  b+=at(s,4,dr(M,50,90,55,Q1,W1)+`<circle class="pt" cx="${M.X(90)}" cy="${M.Y(55)}" r="5.5"/>`);
+  b+=at(s,5,ln(F,0,55,125,55,'cr')+dr(F,410,0,55,'',W1)+T(F.X(125),F.Y(55)-8,SL,'tr','end'));
+  b+=at(s,6,ln(F,8,88,62,7,'cg')+T(F.X(62)+4,F.Y(7)+4,'MRP = D','tg')+dr(F,410,30,55,Q1,'')+`<circle class="pt" cx="${F.X(30)}" cy="${F.Y(55)}" r="5.5"/>`);
+  return svg(b,'Competitive labour market: market equilibrium on the left sets the wage the firm takes on the right',740,340).replace('<svg ','<svg style="min-width:520px" ');
+}
+const chA={name:'1 · Competitive labour market',caption:'Left: the market sets the wage. Right: the firm takes that wage as given and hires where MRP meets it.',
+render:renderA,steps:[
+{t:'Two diagrams, one story',b:'<p>A competitive labour market needs a <b>market</b> diagram (all workers and all employers) and a <b>firm</b> diagram (one employer). The market fixes the wage; the firm reacts to it. Both have wage rate on the vertical axis and quantity of labour on the horizontal.</p>',d:'two sets of axes side by side, both labelled.'},
+{t:'Market demand for labour',b:'<p>Labour is a <b>derived demand</b>: firms want workers only for the goods those workers help produce. Each firm\'s demand is its marginal revenue product (MRP), so market demand D<sub>L</sub> is the sum of all firms\' MRP curves. It slopes down because of diminishing marginal returns: each extra worker adds less output, so employers will only take more workers if the wage is lower.</p>',d:'downward-sloping <b>D<sub>L</sub></b> on the market diagram.'},
+{t:'Market supply of labour',b:'<p>A higher wage attracts more people into this occupation (and more hours from those already in it), so S<sub>L</sub> slopes up. Non-wage factors (hours, conditions, qualifications needed) shift it; the wage moves you along it.</p>',d:'upward-sloping <b>S<sub>L</sub></b> crossing D<sub>L</sub>.'},
+{t:'Equilibrium wage and employment',b:'<p>Where D<sub>L</sub> = S<sub>L</sub>, the market clears at wage <b>W<sub>1</sub></b> and employment <b>Q<sub>1</sub></b>. No shortage, no surplus of workers.</p>',d:'dashed lines from the crossing to both axes; label <b>W<sub>1</sub></b> and <b>Q<sub>1</sub></b>.'},
+{t:'The firm is a wage taker',b:'<p>One firm is tiny relative to the market, so it can hire as many workers as it likes at W<sub>1</sub> and none at less. The supply of labour it faces is a <b>horizontal line at W<sub>1</sub></b>. That means the average cost of labour (AC<sub>L</sub>) and the marginal cost (MC<sub>L</sub>) of an extra worker are both W<sub>1</sub>.</p>',d:'carry W<sub>1</sub> across as a horizontal <b>S<sub>L</sub></b> on the firm diagram.'},
+{t:'The firm hires where MRP = wage',b:'<p>The firm\'s demand for labour is its <b>MRP curve</b>. It keeps hiring while an extra worker adds more to revenue than to cost, and stops where MRP = MC<sub>L</sub> = W<sub>1</sub>. This gives Q<sub>1</sub> workers at the firm. Each worker at the margin is paid exactly the value of what they add, so there is no exploitation. That is the benchmark you compare monopsony and unions against.</p>',d:'downward <b>MRP = D</b>; mark where it meets S<sub>L</sub>; drop to <b>Q<sub>1</sub></b>.'}]};
+/* ---- B: monopsony ---- */
+function renderB(s){
+  let b=axes();
+  b+=at(s,1,fn(S_,8,125,'cr')+T(px(125)+2,py(72.5)-8,ACL+' = '+SL,'tr','end'));
+  b+=at(s,2,fn(MC_,8,95,'cr')+T(px(95)+6,py(105)+4,MCL,'tr'));
+  b+=at(s,3,fn(MRP_,5,125,'cg')+T(px(125)+2,py(37.5)+16,MRPL+' = '+DL,'tg','end'));
+  b+=at(s,4,drop(60,70,Q1,'')+`<circle class="pt" cx="${px(60)}" cy="${py(70)}" r="5.5"/>`+T(px(60)+8,py(70)-8,'X'));
+  b+=at(s,5,drop(60,40,'',W1)+`<circle class="pt" cx="${px(60)}" cy="${py(40)}" r="5.5"/>`+T(px(60)+8,py(40)+18,'Y'));
+  b+=at(s,6,`<rect class="shade" x="70" y="${py(70)}" width="${px(60)-70}" height="${py(40)-py(70)}"/>`+T(62,py(70)+4,W2,'','end')+T(75,(py(70)+py(40))/2+4,'MRP − wage, per worker','ta'));
+  b+=at(s,7,drop(90,55,QC,WC,'dash')+`<circle class="ptb" cx="${px(90)}" cy="${py(55)}" r="5.5"/>`+T(px(90)+8,py(55)+22,'competitive outcome','tb'));
+  return svg(b,'Monopsony: the firm hires where MC equals MRP but pays the lower wage read off the AC curve');
+}
+const chB={name:'2 · Monopsony',caption:'One dominant employer faces the whole upward-sloping labour supply, so hiring more means paying everyone more.',
+render:renderB,steps:[
+{t:'The firm faces the market supply curve',b:'<p>A <b>monopsony</b> is a single (or dominant) buyer of labour: the only big employer in a town, a hospital trust hiring nurses. Its supply of labour is the whole upward-sloping market curve. The curve shows the wage it must pay to get each number of workers, i.e. its <b>average cost of labour (AC<sub>L</sub>)</b>.</p>',d:'a rising <b>AC<sub>L</sub> = S<sub>L</sub></b>. Wage on the y-axis, quantity of labour on the x-axis.'},
+{t:'Marginal cost sits above average cost',b:'<p>To attract one more worker the firm has to offer a higher wage, and (assuming it cannot pay each worker a different wage) it must raise the wage for <b>everyone already employed</b>. Example: 4 workers at £10 cost £40. To hire a 5th it must pay £12 to all five, costing £60. The marginal cost of that 5th worker is £20, not £12. So MC<sub>L</sub> lies above AC<sub>L</sub> and is steeper.</p>',d:'<b>MC<sub>L</sub></b> above AC<sub>L</sub>, starting at the same point on the y-axis and rising twice as steeply if AC is a straight line.'},
+{t:'Demand is still MRP',b:'<p>The firm\'s demand for labour is unchanged: the marginal revenue product of each worker, MRP<sub>L</sub>, downward sloping because of diminishing returns.</p>',d:'downward <b>MRP<sub>L</sub></b> crossing MC<sub>L</sub>.'},
+{t:'Profit-maximising employment: MC = MRP',b:'<p>The firm hires until the cost of the last worker equals what that worker adds to revenue. This is at point <b>X</b>, giving employment <b>Q<sub>1</sub></b>. Hire fewer and MRP &gt; MC, so profit is left on the table; hire more and MC &gt; MRP, so each extra worker loses money.</p>',d:'dashed vertical from <b>X</b> (where MC<sub>L</sub> meets MRP<sub>L</sub>) to the x-axis: <b>Q<sub>1</sub></b>.'},
+{t:'Read the wage from AC, not MC',b:'<p>Go up from Q<sub>1</sub> to the <b>AC<sub>L</sub> curve</b> (point <b>Y</b>). That is the lowest wage that will still attract Q<sub>1</sub> workers, so the monopsonist pays <b>W<sub>1</sub></b>. Beginners often read the wage off X. The MC point sets how many workers; the AC curve sets what they are paid.</p>',d:'dashed line from <b>Y</b> to the y-axis: <b>W<sub>1</sub></b>.'},
+{t:'The wage is below the worker\'s value',b:'<p>At Q<sub>1</sub> the last worker adds <b>W<sub>2</sub></b> (read from MRP) to revenue but is paid only <b>W<sub>1</sub></b>. The gap XY is the monopsony power: workers are paid less than the value of what they produce (sometimes called exploitation). The shaded gap, times workers, is extra profit for the firm.</p>',d:'label <b>W<sub>2</sub></b> at MRP; shade the gap between W<sub>2</sub> and W<sub>1</sub>.'},
+{t:'Compare with the competitive outcome',b:'<p>In a competitive market the wage and employment would be where MRP = AC<sub>L</sub> (W<sub>c</sub>, Q<sub>c</sub>). The monopsonist hires <b>fewer workers</b> (Q<sub>1</sub> &lt; Q<sub>c</sub>) at a <b>lower wage</b> (W<sub>1</sub> &lt; W<sub>c</sub>). It restricts employment because hiring more would push up the wage bill for everyone. This is a market failure, and it is what a union or minimum wage can correct (next chapters).</p>',d:'optionally the <b>MRP = AC</b> crossing, for comparison.'}]};
+</script>
+<script>
+/* ---- C: union in a competitive market ---- */
+function renderC(s,d){
+  const w=d.w,q2=2*(100-w),q3=2*(w-10);
+  let b=axes()+fn(S_,8,125,'cr')+fn(MRP_,5,125,'cg')+T(px(125)+2,py(72.5)-8,ACL+' / '+SL,'tr','end')+T(px(125)+2,py(37.5)+16,MRPL+' / '+DL,'tg','end');
+  b+=drop(90,55,Q1,W1)+pt(90,55,'');
+  b+=at(s,2,`<line class="cv cb" x1="70" y1="${py(w)}" x2="${px(125)}" y2="${py(w)}"/>`+T(62,py(w)+4,WTU,'tb','end')+T(px(125),py(w)-8,'union wage','tb','end'));
+  b+=at(s,3,`${L(px(q2),py(w),px(q2),370,'dash')}<circle class="pt" cx="${px(q2)}" cy="${py(w)}" r="5.5"/>${T(px(q2),390,Q2,'','middle')}<line class="cv cr" x1="${px(q2)}" y1="356" x2="${px(90)}" y2="356"/>${T((px(q2)+px(90))/2,346,'jobs lost','tr','middle')}`);
+  b+=at(s,4,`${L(px(q3),py(w),px(q3),370,'dash')}<circle class="pt" cx="${px(q3)}" cy="${py(w)}" r="5.5"/>${T(px(q3),390,Q3,'','middle')}${T(px(q3)+9,py(w)-9,'x')}`);
+  b+=at(s,5,`<line class="cv" style="stroke:var(--amber)" x1="${px(q2)}" y1="${py(w)}" x2="${px(q3)}" y2="${py(w)}"/>${T((px(q2)+px(q3))/2,py(w)+20,'excess supply = unemployment','ta','middle')}`);
+  return svg(b,'Union wage set above the competitive wage: employment falls to Q2 while Q3 workers want jobs');
+}
+const chC={name:'3 · Union: competitive market',caption:'A wage set above equilibrium creates winners (workers who keep jobs) and losers (jobs lost, more people looking).',
+init:{w:66},ctl:'<label>Union wage W<sub>TU</sub> (£, illustrative)<input id="c-w" type="range" min="60" max="72" step="1" value="66"></label><div class="out"></div>',ctlFrom:7,
+bind:(el,d,rd)=>{$('#c-w',el).oninput=e=>{d.w=+e.target.value;rd()}},
+readout:d=>{const q2=2*(100-d.w),q3=2*(d.w-10);return `Wage 55 → <b>${d.w}</b> · jobs 90 → <b>${q2}</b> (${q2-90}) · people wanting work <b>${q3}</b> · unemployed <b>${q3-q2}</b>`},
+render:renderC,steps:[
+{t:'Start from the competitive equilibrium',b:'<p>Same market as chapter 1 on one diagram. Supply and demand cross at wage <b>W<sub>1</sub></b> and employment <b>Q<sub>1</sub></b>. Label the curves <b>AC<sub>L</sub>/S<sub>L</sub></b> and <b>MRP<sub>L</sub>/D<sub>L</sub></b>: for a firm facing a fixed wage, they are the same thing.</p>',d:'S<sub>L</sub> and D<sub>L</sub>, equilibrium point, dashed lines to <b>W<sub>1</sub></b> and <b>Q<sub>1</sub></b>.'},
+{t:'The union bargains a higher wage',b:'<p>A trade union bargains collectively on behalf of workers and here manages to get a wage <b>W<sub>TU</sub> above W<sub>1</sub></b>. Employers may not pay less than this, so it acts as a <b>wage floor</b>. Draw it as a horizontal line from the y-axis.</p>',d:'horizontal line at <b>W<sub>TU</sub></b> above W<sub>1</sub>, running right across both curves.'},
+{t:'Demand for labour contracts',b:'<p>At the higher wage the firm moves <b>up along its MRP curve</b>: only workers whose MRP is at least W<sub>TU</sub> are worth hiring. Employers demand <b>Q<sub>2</sub></b> workers. Employment falls from Q<sub>1</sub> to Q<sub>2</sub>. It is a movement along D<sub>L</sub>, not a shift, because only the wage changed.</p>',d:'where W<sub>TU</sub> meets MRP<sub>L</sub>, drop a dashed line to <b>Q<sub>2</sub></b>.'},
+{t:'Supply of labour extends',b:'<p>The higher wage attracts more people. Move <b>up along S<sub>L</sub></b> to the point where it meets W<sub>TU</sub> (point x). <b>Q<sub>3</sub></b> workers now want jobs. Beyond x, the line for the supply of labour keeps rising (y on your sketch): the wage floor only bites for the section below W<sub>TU</sub>.</p>',d:'dashed line from where W<sub>TU</sub> meets S<sub>L</sub> to <b>Q<sub>3</sub></b>.'},
+{t:'Excess supply of labour',b:'<p>Between Q<sub>2</sub> and Q<sub>3</sub> people are willing and able to work at W<sub>TU</sub> but no employer wants them: <b>unemployment</b> of Q<sub>3</sub> − Q<sub>2</sub>. On top of that, Q<sub>1</sub> − Q<sub>2</sub> people who had jobs have lost them. Those still employed gain higher pay.</p>',d:'mark the gap <b>Q<sub>2</sub>Q<sub>3</sub></b> on the wage line as excess supply.'},
+{t:'Evaluate',b:'<p><b>How big is the job loss?</b> It depends on the wage elasticity of demand for labour: steeper MRP (few substitutes for the workers, labour a small share of costs, demand for the product inelastic) means fewer jobs lost. <b>Who wins and loses?</b> Insiders gain, outsiders and consumers (higher prices) lose. <b>Other effects:</b> firms may replace workers with capital, the union may also raise productivity or motivation (shifting MRP right), and a strong union is less likely in a market with many workers and weak legal protection.</p>'},
+{t:'Try it: move the union wage',b:'<p>Drag the slider and watch the gap between Q<sub>2</sub> and Q<sub>3</sub>. Every extra £ on the wage costs more jobs and brings in more job seekers. The worker who keeps the job gains; the total number of people employed only falls.</p>'}]};
+/* ---- D: union in a monopsony ---- */
+const D_JOBS0=60;
+function renderD(s,d){
+  const w=s<=6?50:s===7?64:d.w,q2=2*(w-10),qd=2*(100-w),E=Math.min(q2,qd);
+  const showQ2=q2<=95;
+  let b=axes();
+  b+=`<g${s>=3?' style="opacity:.3"':''}>${fn(S_,8,125,'cr')}${fn(MC_,8,95,'cr')}</g>`;
+  b+=fn(MRP_,5,125,'cg')+T(px(125)+2,py(37.5)+16,MRPL,'tg','end')+T(px(95)+6,py(105)+4,MCL,'tr')+T(px(125)+2,py(72.5)-8,ACL,'tr','end');
+  b+=drop(60,70,Q1,'')+drop(60,40,'',W1)+(Math.abs(w-70)<4&&s>=2?'':T(62,py(70)+4,W2,'','end'));
+  b+=`<circle class="pt" cx="${px(60)}" cy="${py(70)}" r="5.5"/>${T(px(60)+8,py(70)-8,'X')}<circle class="pt" cx="${px(60)}" cy="${py(40)}" r="5.5"/>${T(px(60)+8,py(40)+18,'Y')}`;
+  b+=at(s,2,s===2?`<line class="dash" style="stroke:var(--blue)" x1="70" y1="${py(w)}" x2="${px(125)}" y2="${py(w)}"/>${T(px(125),py(w)-8,'union wage floor','tb','end')}`:'')+(s>=2?T(62,py(w)+4,WTU,'tb','end'):'');
+  if(s>=3)b+=at(s,3,`<polyline class="cv cb" points="${px(8)},${py(w)} ${px(q2)},${py(w)}"/>${fn(S_,q2,125,'cb')}<circle class="ptb" cx="${px(q2)}" cy="${py(w)}" r="5.5"/>${T(px(q2)+8,py(w)+20,'Z','tb')}${L(px(q2),py(w),px(q2),370,'dash')}${T(px(q2),390,Q2,'','middle')}`);
+  if(s>=4)b+=at(s,4,`${T(px(14),py(w)-9,ACL+' = '+MCL,'tb')}${showQ2?fn(MC_,q2,95,'cb')+L(px(q2),py(w),px(q2),py(MC_(q2)),'dash'):''}`);
+  if(s>=5){
+    const gain=E>=D_JOBS0;
+    b+=at(s,5,`<line class="cv ${gain?'cg':'cr'}" x1="${px(D_JOBS0)}" y1="356" x2="${px(E)}" y2="356"/>${T((px(D_JOBS0)+px(E))/2,346,gain?'jobs gained':'jobs lost',gain?'tg':'tr','middle')}`+
+      (qd<q2?`<circle class="pt" cx="${px(qd)}" cy="${py(w)}" r="5.5"/>${L(px(qd),py(w),px(qd),370,'dash')}${T(px(qd),390,sb('Q','d'),'','middle')}<line class="cv" style="stroke:var(--amber)" x1="${px(qd)}" y1="${py(w)}" x2="${px(q2)}" y2="${py(w)}"/>${T((px(qd)+px(q2))/2,py(w)+20,'unemployment','ta','middle')}`:''));
+  }
+  return svg(b,'Union wage floor in a monopsony: the flat marginal cost of labour raises employment from Q1 to Q2');
+}
+const chD={name:'4 · Union: monopsony',caption:'A wage floor between W₁ and the competitive wage raises both pay and employment in a monopsony.',
+init:{w:50},ctl:'<label>Union wage W<sub>TU</sub> (£, illustrative)<input id="d-w" type="range" min="46" max="74" step="1" value="50"></label><div class="out"></div>',ctlFrom:8,
+bind:(el,d,rd)=>{$('#d-w',el).oninput=e=>{d.w=+e.target.value;rd()}},
+readout:d=>{const q2=2*(d.w-10),qd=2*(100-d.w),E=Math.min(q2,qd),dj=E-D_JOBS0,u=Math.max(0,q2-qd);
+  const v=d.w<=55?'Below the competitive wage (55): jobs rise as the wage rises.':d.w<70?'Above the competitive wage (55): the firm now hires fewer than it could, but still more than under monopsony.':'Too high: the firm hires fewer workers than under monopsony (60). The union has overshot.';
+  return `Wage 40 → <b>${d.w}</b> · jobs 60 → <b>${E}</b> (${dj>=0?'+':''}${dj}) · unemployed <b>${u}</b><br>${v} Jobs peak at wage 55.`},
+render:renderD,steps:[
+{t:'Start from the monopsony',b:'<p>Same diagram as chapter 2. The firm equates MC<sub>L</sub> and MRP<sub>L</sub> at <b>X</b>, hires <b>Q<sub>1</sub></b> and pays <b>W<sub>1</sub></b> from point <b>Y</b> on AC<sub>L</sub>, well below the worker\'s MRP (<b>W<sub>2</sub></b>).</p>',d:'redraw the monopsony (AC<sub>L</sub>, MC<sub>L</sub>, MRP<sub>L</sub>, X, Y, W<sub>1</sub>, W<sub>2</sub>, Q<sub>1</sub>).'},
+{t:'The union sets a wage floor',b:'<p>The union negotiates a wage <b>W<sub>TU</sub></b> that is above W<sub>1</sub> but not as high as W<sub>2</sub>. Employers can no longer pay less than this.</p>',d:'a horizontal line at <b>W<sub>TU</sub></b> between W<sub>1</sub> and W<sub>2</sub>.'},
+{t:'The supply curve goes flat',b:'<p>Up to the point where W<sub>TU</sub> meets the old supply curve (<b>Z</b>), the firm has to pay exactly W<sub>TU</sub> to every worker: it can hire any number up to <b>Q<sub>2</sub></b> without raising the wage, because more than Q<sub>2</sub> people are willing to work at W<sub>TU</sub>. So the average cost of labour is a <b>flat line at W<sub>TU</sub></b> until Q<sub>2</sub>, then follows the old AC<sub>L</sub>.</p>',d:'solid line from the y-axis along W<sub>TU</sub> to <b>Z</b>, then up along S<sub>L</sub>. Drop <b>Q<sub>2</sub></b>.'},
+{t:'Marginal cost goes flat too',b:'<p>Extra workers up to Q<sub>2</sub> no longer force the firm to raise everyone\'s wage, so MC<sub>L</sub> = AC<sub>L</sub> = W<sub>TU</sub> in that range. At Q<sub>2</sub> the firm is back on the old supply curve, so MC<sub>L</sub> <b>jumps up</b> to the original MC<sub>L</sub> curve and follows it.</p>',d:'label the flat section <b>AC<sub>L</sub> = MC<sub>L</sub></b>; dashed vertical at Q<sub>2</sub> up to the old MC<sub>L</sub>.'},
+{t:'New equilibrium: more jobs and higher pay',b:'<p>The firm still equates MC and MRP. For every worker up to Q<sub>2</sub>, MRP is greater than the flat MC (= W<sub>TU</sub>), so it keeps hiring. Past Q<sub>2</sub> the marginal cost has jumped above MRP, so it stops. New employment is <b>Q<sub>2</sub></b> at wage <b>W<sub>TU</sub></b> (point Z). Compared with the monopsony: wage up from W<sub>1</sub> to W<sub>TU</sub>, employment up from Q<sub>1</sub> to Q<sub>2</sub>.</p>',d:'mark <b>Z</b> as the new equilibrium and show Q<sub>1</sub> → Q<sub>2</sub>.'},
+{t:'Why a higher wage can raise employment',b:'<p>The monopsonist was holding employment down because each extra worker meant a pay rise for the whole workforce. The wage floor removes that: extra workers cost W<sub>TU</sub> and no more, so the firm hires more. Workers are still paid less than their MRP at Z, but the gap is smaller. The result: higher wages, more jobs, less exploitation. This is the opposite of the competitive-market result in the last chapter. Note that a legal minimum wage works in exactly the same way.</p>'},
+{t:'Set it too high and the gains reverse',b:'<p>Jobs are highest when W<sub>TU</sub> is at the competitive wage, where MRP = AC<sub>L</sub>. Set the wage above that and the firm stops hiring at the point where MRP falls to W<sub>TU</sub> (<b>Q<sub>d</sub></b>), which is less than the Q<sub>2</sub> workers willing to work. The gap is unemployment, just like the competitive case. Push far enough and employment ends up below the monopsony level.</p>'},
+{t:'Try it: find the best union wage',b:'<p>Slide the wage from just above W<sub>1</sub> up to well beyond the competitive level. Watch where jobs peak, and where they fall below the original Q<sub>1</sub> = 60.</p>'}]};
+APP.tabs.push({id:'t3',label:'Unions and monopsony',syl:'Syllabus 8.3.8 · A Level',h:'The impact of a trade union on a monopsony labour market',
+lede:'Build it in four stages, using the diagrams in the order you would draw them. You need the competitive labour market to judge monopsony, and the union in a competitive market to see why the monopsony result surprises people.',
+notes:`<div><h3>The four diagrams at a glance</h3><ul><li><b>Competitive, no union:</b> wage W<sub>1</sub>, jobs Q<sub>1</sub>, paid MRP at the margin.</li><li><b>Monopsony, no union:</b> MC = MRP sets jobs, AC sets the wage. Fewer jobs, lower pay.</li><li><b>Union, competitive:</b> wage floor above equilibrium, so jobs fall and unemployment appears.</li><li><b>Union, monopsony:</b> wage floor between W<sub>1</sub> and the competitive wage, so pay and jobs both rise.</li></ul></div>
+<div><h3>Common mistakes</h3><ul><li>Reading the monopsony wage off the MC curve rather than the AC curve.</li><li>Drawing the union wage as a shift of the supply curve. It is a new flat section of AC and MC.</li><li>Forgetting the MC jump at Q<sub>2</sub>.</li><li>Saying unions always cut employment. In a monopsony they can raise it, up to a point.</li></ul></div>
+<div><h3>Evaluation points</h3><ul><li>Size of the union wage relative to the competitive wage.</li><li>Wage elasticity of demand for labour (in a competitive market).</li><li>How real monopsony is: single-employer towns, nurses, teachers, and how many other employers can workers move to.</li><li>Alternatives: a legal minimum wage, and long-run effects such as substituting capital for labour.</li><li>Employer response: prices, profits, layoffs, and productivity.</li></ul></div>`,
+chapters:[chA,chB,chC,chD]});
+</script>
+<script>boot();</script>
+
+</body></html>

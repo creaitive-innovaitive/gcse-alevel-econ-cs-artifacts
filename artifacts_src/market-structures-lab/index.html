@@ -1,0 +1,661 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Market Structures Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: sticky nav, single reading column, one chart + slider panel per structure */
+:root{
+  --bg:#f3f4ee; --surface:#ffffff; --surface-2:#ebede4;
+  --ink:#1c2624; --ink-dim:#5b6864; --line:#d6d9cd;
+  --prod:#0f766e; --prod-soft:#d9efe9;
+  --cost:#b5502e; --cost-soft:#fae2d6;
+  --rev:#4c3f91; --rev-soft:#e6e2f7;
+  --profit:#9a6b12; --profit-soft:#f5e6c4;
+  --good:#2f7d4f; --bad:#b3392f;
+  --serif:'Literata',Georgia,serif; --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161b19; --surface:#1e2523; --surface-2:#242c29;
+    --ink:#eef1ec; --ink-dim:#a8b3ad; --line:#38423e;
+    --prod:#4fb6a8; --prod-soft:#1e3532;
+    --cost:#e08a5f; --cost-soft:#3a2a20;
+    --rev:#a89bef; --rev-soft:#2c2748;
+    --profit:#e0b558; --profit-soft:#3a2f16;
+    --good:#6fce93; --bad:#e2837a;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161b19; --surface:#1e2523; --surface-2:#242c29;
+  --ink:#eef1ec; --ink-dim:#a8b3ad; --line:#38423e;
+  --prod:#4fb6a8; --prod-soft:#1e3532;
+  --cost:#e08a5f; --cost-soft:#3a2a20;
+  --rev:#a89bef; --rev-soft:#2c2748;
+  --profit:#e0b558; --profit-soft:#3a2f16;
+  --good:#6fce93; --bad:#e2837a;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.55}
+h1,h2,h3{font-family:var(--serif); text-wrap:balance; margin:0 0 .3em}
+.mono{font-family:var(--mono)}
+.wrap{max-width:880px; margin:0 auto; padding-inline:20px}
+.topbar{position:sticky; top:env(safe-area-inset-top,0px); z-index:50; background:var(--surface); border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:880px; margin:0 auto; padding:10px 20px}
+.brand{display:flex; align-items:baseline; gap:10px; margin-bottom:8px; flex-wrap:wrap}
+.brand h1{font-size:1.15rem; margin:0}
+.brand .tag{font-size:.72rem; color:var(--ink-dim); font-family:var(--mono); letter-spacing:.04em}
+.nav-scroll{display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:thin; align-items:center}
+.nav-scroll a{flex:none; font-size:.78rem; padding:6px 11px; border-radius:99px; background:var(--surface-2); color:var(--ink-dim); text-decoration:none; border:1px solid transparent; white-space:nowrap}
+.nav-scroll a:hover{color:var(--ink); border-color:var(--line)}
+.mode-toggle{display:flex; margin-left:auto; flex:none}
+.mode-toggle button{font:inherit; font-size:.78rem; padding:6px 12px; border:1px solid var(--line); background:var(--surface); color:var(--ink-dim); cursor:pointer}
+.mode-toggle button:first-child{border-radius:99px 0 0 99px}
+.mode-toggle button:last-child{border-radius:0 99px 99px 0; border-left:none}
+.mode-toggle button.active{background:var(--prod); color:#fff; border-color:var(--prod)}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--prod); outline-offset:2px}
+
+.hero{padding:34px 20px 20px}
+.hero .eyebrow{font-family:var(--mono); font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--prod)}
+.hero h1{font-size:clamp(1.7rem,4.5vw,2.3rem); margin:.2em 0 .35em}
+.hero p{color:var(--ink-dim); max-width:62ch}
+
+section.topic{padding:26px 20px 8px; border-top:1px solid var(--line); scroll-margin-top:calc(96px + env(safe-area-inset-top,0px))}
+section.topic > .wrap{padding-inline:0}
+.topic-head{display:flex; align-items:center; gap:10px; margin-bottom:4px}
+.topic-num{font-family:var(--mono); font-size:.72rem; color:#fff; background:var(--accent,var(--prod)); width:26px; height:26px; border-radius:7px; display:flex; align-items:center; justify-content:center; flex:none}
+.topic-head h2{font-size:1.35rem; margin:0}
+.topic.t-prod{--accent:var(--prod)} .topic.t-cost{--accent:var(--cost)} .topic.t-rev{--accent:var(--rev)} .topic.t-profit{--accent:var(--profit)}
+
+.card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:14px 0}
+.card p:first-child{margin-top:0} .card p:last-child{margin-bottom:0}
+.keyword-row{display:flex; flex-wrap:wrap; gap:7px; margin:14px 0}
+.kw{background:var(--prod-soft); color:var(--ink); border:1px solid color-mix(in srgb, var(--accent,var(--prod)) 40%, var(--line)); font-size:.78rem; padding:4px 10px; border-radius:99px; font-weight:500}
+.t-cost .kw{background:var(--cost-soft)} .t-rev .kw{background:var(--rev-soft)} .t-profit .kw{background:var(--profit-soft)}
+.callout{border-left:3px solid var(--accent,var(--prod)); background:var(--surface-2); border-radius:0 10px 10px 0; padding:12px 16px; margin:14px 0; font-size:.93rem}
+.callout b{color:var(--accent,var(--prod))}
+.formula{font-family:var(--mono); background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:8px 14px; font-size:.86rem; margin:6px 0; display:inline-block; max-width:100%; overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-size:.85rem}
+th,td{padding:8px 10px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--mono); font-size:.72rem; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-dim); font-weight:600}
+.table-wrap{overflow-x:auto; margin:14px 0}
+.table-wrap table{min-width:560px}
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.two-col > *{min-width:0}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+.pill-label{display:inline-block; font-size:.7rem; font-family:var(--mono); padding:2px 8px; border-radius:6px; margin-bottom:6px; font-weight:600; background:var(--prod-soft); color:var(--prod)}
+.pill-label.b{background:var(--rev-soft); color:var(--rev)}
+.pill-label.c{background:var(--cost-soft); color:var(--cost)}
+
+/* interactive lab */
+.lab{background:var(--surface); border:1px solid var(--line); border-radius:14px; margin:16px 0; overflow:hidden}
+.lab-head{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 16px; background:var(--surface-2); border-bottom:1px solid var(--line); font-family:var(--mono); font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-dim); flex-wrap:wrap}
+.lab-body{display:grid; grid-template-columns:minmax(0,1fr) 250px; gap:0}
+@media(max-width:760px){.lab-body{grid-template-columns:minmax(0,1fr)}}
+.lab svg{display:block; width:100%; height:auto}
+.controls{padding:14px 16px; border-left:1px solid var(--line); display:flex; flex-direction:column; gap:14px}
+@media(max-width:760px){.controls{border-left:none; border-top:1px solid var(--line)}}
+.ctl label{display:flex; justify-content:space-between; gap:8px; font-size:.8rem; color:var(--ink-dim); margin-bottom:2px}
+.ctl output{font-family:var(--mono); color:var(--ink); font-weight:600}
+.ctl input[type=range]{width:100%; accent-color:var(--prod); margin:0; height:28px}
+.ctl .hint{font-size:.72rem; color:var(--ink-dim); margin-top:0}
+.chk{display:flex; gap:8px; align-items:center; font-size:.8rem; color:var(--ink-dim); cursor:pointer}
+.chk input{accent-color:var(--prod); width:16px; height:16px}
+.legend{display:flex; flex-wrap:wrap; gap:6px 14px; padding:0 16px 10px; font-size:.75rem; color:var(--ink-dim)}
+.legend i{display:inline-block; width:18px; height:0; border-top:3px solid; vertical-align:middle; margin-right:5px}
+.legend i.dash{border-top-style:dashed}
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:1px; background:var(--line); border-top:1px solid var(--line)}
+.stat{background:var(--surface); padding:9px 14px}
+.stat small{display:block; font-size:.68rem; font-family:var(--mono); letter-spacing:.04em; text-transform:uppercase; color:var(--ink-dim)}
+.stat b{font-family:var(--mono); font-size:1rem; font-variant-numeric:tabular-nums}
+.stat.good b{color:var(--good)} .stat.bad b{color:var(--bad)} .stat.warn b{color:var(--profit)}
+.verdict{padding:11px 16px; border-top:1px solid var(--line); font-size:.9rem}
+.verdict b{font-weight:600}
+svg text{font-family:'IBM Plex Sans',sans-serif}
+svg .lbl{font-size:11.5px; font-weight:600} svg .lbl-dim{font-size:10.5px; fill:var(--ink-dim)}
+svg .axis{stroke:var(--ink-dim); stroke-width:1} svg .grid{stroke:var(--line); stroke-width:1}
+
+/* payoff matrix */
+.matrix{display:grid; grid-template-columns:auto 1fr 1fr; gap:6px; padding:16px; align-items:stretch}
+.matrix > *{min-width:0}
+.mh{font-family:var(--mono); font-size:.72rem; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.04em; display:flex; align-items:center; justify-content:center; text-align:center; padding:4px}
+.cell{border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:var(--surface-2); font-variant-numeric:tabular-nums}
+.cell .row{display:flex; justify-content:space-between; gap:8px; font-size:.85rem}
+.cell .row span:first-child{color:var(--ink-dim)}
+.cell .row b{font-family:var(--mono); font-size:1.05rem}
+.cell .row b.br{color:var(--prod); text-decoration:underline; text-underline-offset:3px}
+.cell .nm{font-size:.7rem; font-family:var(--mono); margin-top:4px; color:var(--ink-dim)}
+.cell.nash{border:2px solid var(--bad); background:color-mix(in srgb, var(--bad) 9%, var(--surface))}
+.cell.best{border-color:var(--good)}
+.mh.side{writing-mode:vertical-rl; transform:rotate(180deg)}
+
+footer{padding:28px 20px 40px; text-align:center; color:var(--ink-dim); font-size:.8rem; border-top:1px solid var(--line); margin-top:20px}
+
+#practice{display:none}
+body.mode-practice #learn{display:none}
+body.mode-practice #practice{display:block}
+.prompt-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:16px 0}
+.prompt-card h3{font-size:1.02rem; margin-bottom:2px}
+.prompt-card .ctx{font-size:.82rem; color:var(--ink-dim); margin:0 0 10px}
+.prompt-card textarea{width:100%; min-height:80px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); font:inherit; font-size:.88rem; padding:9px 11px; resize:vertical}
+.applywrap label{font-size:.72rem; font-family:var(--mono); color:var(--ink-dim); text-transform:uppercase; letter-spacing:.03em}
+a{color:var(--prod)}
+</style>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><h1>Market Structures Lab</h1><span class="tag">CIE A Level · Ch. 35</span></div>
+    <div class="nav-scroll">
+      <a href="#spectrum">Spectrum</a>
+      <a href="#perfect">Perfect competition</a>
+      <a href="#monopoly">Monopoly</a>
+      <a href="#mcomp">Monopolistic comp.</a>
+      <a href="#oligopoly">Oligopoly</a>
+      <a href="#game">Game theory</a>
+      <a href="#contest">Contestability</a>
+      <a href="#compare">Compare</a>
+      <div class="mode-toggle">
+        <button id="btnLearn" class="active" onclick="setMode('learn')">Explainer</button>
+        <button id="btnPractice" onclick="setMode('practice')">Practice</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="learn">
+<div class="hero wrap">
+  <div class="eyebrow">Market structures &amp; firm performance</div>
+  <h1>Same costs, different market: how structure decides price, output and profit</h1>
+  <p>Perfect competition, monopoly, monopolistic competition and oligopoly, with the short-run and long-run outcomes for each. Every chart below has sliders, so you can push a curve and watch what the firm does in response. Built around Chapter 35 of the CIE A Level coursebook.</p>
+</div>
+
+<!-- ============ SPECTRUM ============ -->
+<section class="topic t-prod" id="spectrum">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">1</span><h2>The spectrum of market structures</h2></div>
+    <p>Market structure is defined by four features: the <b>number and size of firms</b>, whether products are <b>differentiated</b>, how easily firms can <b>enter and exit</b>, and how much <b>information</b> buyers and sellers have. Those features fix how much control a firm has over price, and so what its revenue curves look like.</p>
+    <div class="keyword-row">
+      <span class="kw">perfect competition</span><span class="kw">imperfect competition</span><span class="kw">monopoly</span><span class="kw">monopolistic competition</span><span class="kw">oligopoly</span><span class="kw">natural monopoly</span><span class="kw">barriers to entry</span><span class="kw">price taker / price maker</span>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Feature</th><th>Perfect competition</th><th>Monopolistic competition</th><th>Oligopoly</th><th>Monopoly</th></tr>
+      <tr><td><b>Firms</b></td><td>Very many, all small</td><td>Many</td><td>Few, large, interdependent</td><td>One (or one dominant)</td></tr>
+      <tr><td><b>Product</b></td><td>Homogeneous</td><td>Differentiated</td><td>Homogeneous or differentiated</td><td>Unique, no close substitute</td></tr>
+      <tr><td><b>Entry / exit</b></td><td>Free</td><td>Fairly free</td><td>Significant barriers</td><td>Very high barriers</td></tr>
+      <tr><td><b>Information</b></td><td>Perfect</td><td>Imperfect</td><td>Imperfect, rivals watched closely</td><td>Imperfect</td></tr>
+      <tr><td><b>Demand facing the firm</b></td><td class="mono">Horizontal: D = AR = MR</td><td>Downward, fairly elastic</td><td>Downward, kinked if rivals react</td><td>Market demand, downward</td></tr>
+      <tr><td><b>Price control</b></td><td>Price taker</td><td>Some</td><td>Considerable, but rivals react</td><td>Price maker</td></tr>
+    </table></div>
+    <div class="callout"><b>One rule for all four:</b> a profit-maximising firm produces where <span class="mono">MR = MC</span> (with MC cutting MR from below). What differs is where MR sits. For a price taker MR is the price; for everyone else MR lies below AR, so price ends up above marginal cost.</div>
+  </div>
+</section>
+
+<!-- ============ PERFECT COMPETITION ============ -->
+<section class="topic t-prod" id="perfect">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">2</span><h2>Perfect competition: short run, shutdown, long run</h2></div>
+    <p>A perfectly competitive firm takes the market price. It can sell as much as it likes at that price and nothing at a higher one, so it only chooses output. It expands until <span class="mono">MC = MR = P</span>. Whether that output earns supernormal, normal or subnormal profit depends on where the price line sits against ATC.</p>
+    <div class="keyword-row">
+      <span class="kw">MC = MR</span><span class="kw">supernormal profit</span><span class="kw">subnormal profit</span><span class="kw">shutdown price</span><span class="kw">firm's supply curve</span><span class="kw">entry and exit</span><span class="kw">productive efficiency</span><span class="kw">allocative efficiency</span>
+    </div>
+
+    <div class="lab">
+      <div class="lab-head"><span>Lab 1 · Perfectly competitive firm</span><span>Move the market price</span></div>
+      <div class="lab-body">
+        <svg id="pcSvg" viewBox="0 0 620 340" role="img" aria-label="Perfectly competitive firm cost curves and price line"></svg>
+        <div class="controls" id="pcCtl"></div>
+      </div>
+      <div class="legend"><span><i style="border-color:var(--rev)"></i>MC</span><span><i style="border-color:var(--cost)"></i>ATC</span><span><i style="border-color:var(--ink-dim)"></i>AVC</span><span><i style="border-color:var(--prod)"></i>P = AR = MR = D</span></div>
+      <div class="stats" id="pcStats"></div>
+      <div class="verdict" id="pcVerdict"></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <span class="pill-label">try this</span>
+        <p>Drag price down slowly. Profit shrinks to zero when P touches the bottom of ATC, then turns negative. The firm keeps producing while P is above AVC, because each unit still contributes something to fixed costs. Once P drops below the lowest point of AVC the firm is better off closing: it loses only FC instead of FC plus the shortfall on variable costs.</p>
+      </div>
+      <div class="card">
+        <span class="pill-label b">shutdown rule</span>
+        <p><b>Short run:</b> stay open if <span class="mono">P ≥ AVC</span> (TR covers variable costs). <b>Long run:</b> stay only if <span class="mono">P ≥ ATC</span>, because every cost is variable and must be recovered.</p>
+        <p>The firm's <b>supply curve</b> is the part of MC above the minimum of AVC. Tick the box in the lab to highlight it.</p>
+      </div>
+    </div>
+
+    <div class="callout"><b>Long-run adjustment:</b> supernormal profit signals entry (free entry, perfect information). Market supply shifts right, price falls, and profit is competed away until <span class="mono">P = min ATC</span>. Subnormal profit does the reverse: firms exit, supply shifts left, price rises. The long-run equilibrium sits at the lowest point of ATC, where <span class="mono">P = MC = min ATC</span>, so the firm is both <b>productively efficient</b> (lowest cost) and <b>allocatively efficient</b> (P = MC).</div>
+  </div>
+</section>
+
+<!-- ============ MONOPOLY ============ -->
+<section class="topic t-rev" id="monopoly">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">3</span><h2>Monopoly: price maker, restricted output</h2></div>
+    <p>A monopolist faces the whole market demand curve, so selling more means cutting the price on every unit. Its MR curve therefore sits below AR (= demand). It still maximises profit at <span class="mono">MR = MC</span>, but then reads the price off the demand curve, not the MR curve. That gap is what creates supernormal profit and the welfare loss.</p>
+    <div class="keyword-row">
+      <span class="kw">barriers to entry</span><span class="kw">price maker</span><span class="kw">supernormal profit</span><span class="kw">deadweight loss</span><span class="kw">natural monopoly</span><span class="kw">X-inefficiency</span><span class="kw">allocative inefficiency</span>
+    </div>
+
+    <div class="lab">
+      <div class="lab-head"><span>Lab 2 · Profit-maximising monopolist</span><span>Shift demand and costs</span></div>
+      <div class="lab-body">
+        <svg id="moSvg" viewBox="0 0 620 340" role="img" aria-label="Monopoly demand, MR, MC and ATC"></svg>
+        <div class="controls" id="moCtl"></div>
+      </div>
+      <div class="legend"><span><i style="border-color:var(--prod)"></i>D = AR</span><span><i class="dash" style="border-color:var(--ink)"></i>MR</span><span><i style="border-color:var(--rev)"></i>MC</span><span><i style="border-color:var(--cost)"></i>ATC</span></div>
+      <div class="stats" id="moStats"></div>
+      <div class="verdict" id="moVerdict"></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <span class="pill-label b">compared with competition</span>
+        <p>A competitive industry with the same costs would produce where D = MC, at a lower price and a higher output. The monopolist restricts output to raise price, and the triangle between demand and MC over the lost output is the <b>deadweight loss</b>: units consumers value above their cost that never get made.</p>
+      </div>
+      <div class="card">
+        <span class="pill-label">what monopoly can offer</span>
+        <p>Large scale can mean lower unit costs than many small firms could reach, and supernormal profit can fund R&amp;D (dynamic efficiency). A <b>natural monopoly</b> has LRAC still falling at the market's whole demand, so one firm is cheapest. Regulators then cap price rather than break the firm up.</p>
+      </div>
+    </div>
+    <div class="callout"><b>X-inefficiency:</b> shielded from competition, a monopolist has less pressure to control costs, so its actual cost curves sit above the lowest achievable ones. Try pushing the MC slider up: the same demand now supports a higher price and less output, and the welfare loss comes from costs as well as from market power.</div>
+  </div>
+</section>
+
+<!-- ============ MONOPOLISTIC COMPETITION ============ -->
+<section class="topic t-cost" id="mcomp">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">4</span><h2>Monopolistic competition: from supernormal to normal profit</h2></div>
+    <p>Many firms sell differentiated products (restaurants, hairdressers, clothing brands). Each has some control over price because its product is not identical to rivals', but entry is easy. In the short run a firm looks like a small monopolist. In the long run, entry pulls its demand curve left and makes it flatter until it just touches ATC.</p>
+    <div class="keyword-row">
+      <span class="kw">product differentiation</span><span class="kw">brand loyalty</span><span class="kw">non-price competition</span><span class="kw">tangency solution</span><span class="kw">excess capacity</span>
+    </div>
+
+    <div class="lab">
+      <div class="lab-head"><span>Lab 3 · Short run to long run</span><span>Let rivals enter</span></div>
+      <div class="lab-body">
+        <svg id="mcSvg" viewBox="0 0 620 340" role="img" aria-label="Monopolistic competition demand tangent to ATC in long run"></svg>
+        <div class="controls" id="mcCtl"></div>
+      </div>
+      <div class="legend"><span><i style="border-color:var(--prod)"></i>D = AR</span><span><i class="dash" style="border-color:var(--ink)"></i>MR</span><span><i style="border-color:var(--rev)"></i>MC</span><span><i style="border-color:var(--cost)"></i>ATC</span></div>
+      <div class="stats" id="mcStats"></div>
+      <div class="verdict" id="mcVerdict"></div>
+    </div>
+
+    <div class="callout"><b>Reading the slider:</b> at 0% entry the firm earns supernormal profit at MR = MC. Each new rival takes away some customers, shifting D left. At 100% the demand curve is tangent to ATC at the profit-maximising output, so <span class="mono">P = ATC</span> and profit is normal. Past 100% (say after a demand shock) demand sits below ATC everywhere, profit is subnormal and firms leave. The tangency point is <i>left</i> of the lowest point of ATC, which is the <b>excess capacity</b> argument: firms could produce more cheaply but the demand for their particular brand is too small. The steeper the demand (strong loyalty), the more supernormal profit each firm keeps in the short run, but the tangency still holds in the long run.</div>
+  </div>
+</section>
+
+<!-- ============ OLIGOPOLY ============ -->
+<section class="topic t-profit" id="oligopoly">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">5</span><h2>Oligopoly: interdependence and sticky prices</h2></div>
+    <p>With a few large firms, each firm's best move depends on what rivals do. That interdependence produces two typical behaviours: prices that stay put for long periods, and a choice between competing and colluding. The <b>kinked demand curve</b> explains the first.</p>
+    <div class="keyword-row">
+      <span class="kw">interdependence</span><span class="kw">concentration ratio</span><span class="kw">kinked demand curve</span><span class="kw">price rigidity</span><span class="kw">price war</span><span class="kw">non-price competition</span><span class="kw">collusion</span><span class="kw">cartel</span>
+    </div>
+    <div class="card">
+      <p>Assume the market price is P<sub>0</sub>. If the firm <b>raises</b> price, rivals do not follow, so it loses many customers: demand above P<sub>0</sub> is elastic (flat). If it <b>cuts</b> price, rivals match to protect their share, so it gains few customers: demand below P<sub>0</sub> is inelastic (steep). The result is a kink at P<sub>0</sub>, and a break in the MR curve directly below it. Costs can move anywhere within the gap in MR without changing the profit-maximising price.</p>
+    </div>
+
+    <div class="lab">
+      <div class="lab-head"><span>Lab 4 · Kinked demand</span><span>Change costs and rival reaction</span></div>
+      <div class="lab-body">
+        <svg id="koSvg" viewBox="0 0 620 340" role="img" aria-label="Kinked demand curve with discontinuous MR and MC"></svg>
+        <div class="controls" id="koCtl"></div>
+      </div>
+      <div class="legend"><span><i style="border-color:var(--prod)"></i>Kinked D = AR</span><span><i class="dash" style="border-color:var(--ink)"></i>MR</span><span><i style="border-color:var(--rev)"></i>MC</span></div>
+      <div class="stats" id="koStats"></div>
+      <div class="verdict" id="koVerdict"></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <span class="pill-label c">price competition</span>
+        <p>Price cuts, promotions, price wars. Risky in oligopoly because rivals can match, leaving everyone with lower revenue and no extra share.</p>
+      </div>
+      <div class="card">
+        <span class="pill-label b">non-price competition</span>
+        <p>Branding, advertising, product quality, loyalty schemes, after-sales service, innovation. Hard for rivals to copy instantly, so firms compete here instead, at the cost of higher spending.</p>
+      </div>
+    </div>
+    <div class="callout"><b>Limits of the model:</b> it explains why price is sticky but not how P<sub>0</sub> was set in the first place. Real oligopolies also see price leadership, where one dominant firm moves first and the rest follow.</div>
+  </div>
+</section>
+
+<!-- ============ GAME THEORY ============ -->
+<section class="topic t-rev" id="game">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">6</span><h2>Collusion and the Prisoner's Dilemma</h2></div>
+    <p>Firms in an oligopoly can agree to keep prices high (<b>overt collusion</b>, a formal cartel) or move in step without an agreement (<b>tacit collusion</b>). Both are unstable, because each firm gains by cheating while the other holds the agreement. <b>Game theory</b> shows why with a payoff matrix.</p>
+    <div class="keyword-row">
+      <span class="kw">game theory</span><span class="kw">payoff matrix</span><span class="kw">dominant strategy</span><span class="kw">Nash equilibrium</span><span class="kw">cartel</span><span class="kw">tacit collusion</span><span class="kw">repeated games</span>
+    </div>
+
+    <div class="lab">
+      <div class="lab-head"><span>Lab 5 · Two-firm pricing game (profit, $m)</span><span>Change the payoffs</span></div>
+      <div class="lab-body">
+        <div>
+          <div class="matrix" id="gmMatrix"></div>
+        </div>
+        <div class="controls" id="gmCtl"></div>
+      </div>
+      <div class="stats" id="gmStats"></div>
+      <div class="verdict" id="gmVerdict"></div>
+    </div>
+
+    <div class="callout"><b>Reading the matrix:</b> underlined numbers are best responses. Where both players' payoffs are underlined in the same cell, neither wants to change: that is the <b>Nash equilibrium</b>. With the default numbers, cutting price is a dominant strategy for both (whatever the rival does, cutting pays more), so both cut and both end up with $6m, when holding would have given each $10m. The individually rational choice leaves both worse off. Lower the temptation payoff and collusion becomes stable. In a repeated game, punishment in later rounds can make holding rational, and the lab shows the probability of continuing needed to sustain it.</div>
+  </div>
+</section>
+
+<!-- ============ CONTESTABILITY ============ -->
+<section class="topic t-cost" id="contest">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">7</span><h2>Contestable markets and X-inefficiency</h2></div>
+    <p>A market is <b>contestable</b> when entry and exit are costless in practice: the threat of a rival entering matters more than the number of firms currently there. Its key feature is <b>low sunk costs</b> (money that cannot be recovered on exit), which allows <i>hit-and-run</i> entry.</p>
+    <div class="two-col">
+      <div class="card">
+        <span class="pill-label">effect on incumbents</span>
+        <p>Even a monopolist behaves almost competitively if entry is easy: it holds price near ATC (<b>limit pricing</b>), keeps costs down and takes only normal profit, because supernormal profit would attract a rival immediately. Airline routes and online retail are common examples.</p>
+      </div>
+      <div class="card">
+        <span class="pill-label c">when it fails</span>
+        <p>High sunk costs (advertising, specialised plant, R&amp;D) mean a failed entrant loses everything. Incumbents can also threaten predatory pricing or use loyalty schemes, so the market becomes less contestable however many firms are present.</p>
+      </div>
+    </div>
+    <div class="callout"><b>X-inefficiency</b> is the gap between the cost a firm actually produces at and the lowest cost it could achieve. It appears when competitive pressure is weak: managers tolerate slack, overstaff, or overpay. The firm's cost curves sit higher than necessary. Strong competition or a credible entry threat reduces it; a protected monopoly is the textbook case where it is largest.</div>
+  </div>
+</section>
+
+<!-- ============ COMPARE ============ -->
+<section class="topic t-profit" id="compare">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">8</span><h2>Firm performance compared</h2></div>
+    <div class="table-wrap"><table>
+      <tr><th>Outcome</th><th>Perfect comp.</th><th>Monopolistic comp.</th><th>Oligopoly</th><th>Monopoly</th></tr>
+      <tr><td><b>Short-run profit</b></td><td>Any of super, normal, sub</td><td>Any</td><td>Usually supernormal</td><td>Usually supernormal</td></tr>
+      <tr><td><b>Long-run profit</b></td><td>Normal only</td><td>Normal only</td><td>Supernormal can persist</td><td>Supernormal can persist</td></tr>
+      <tr><td><b>Price vs MC</b></td><td class="mono">P = MC</td><td class="mono">P &gt; MC</td><td class="mono">P &gt; MC</td><td class="mono">P &gt; MC</td></tr>
+      <tr><td><b>Productive efficiency</b></td><td>Yes (P = min ATC)</td><td>No (excess capacity)</td><td>Usually not</td><td>Usually not, unless scale economies are big</td></tr>
+      <tr><td><b>Allocative efficiency</b></td><td>Yes</td><td>No</td><td>No</td><td>No</td></tr>
+      <tr><td><b>Dynamic efficiency</b></td><td>Weak: no supernormal profit to invest</td><td>Some product variety</td><td>Often strong: profit funds R&amp;D</td><td>Possible, but little pressure to innovate</td></tr>
+      <tr><td><b>Non-price competition</b></td><td>None</td><td>Central</td><td>Central</td><td>Limited</td></tr>
+    </table></div>
+    <div class="callout"><b>Evaluating:</b> perfect competition is the benchmark for efficiency, not a description of most real markets. In practice the useful questions are how contestable the market is, how large the scale economies are relative to demand, and whether supernormal profit is being reinvested or simply held.</div>
+  </div>
+</section>
+
+<footer class="wrap">Market Structures Lab — built from CIE A Level Economics Chapter 35. Curves are illustrative models with fixed shapes; use alongside the coursebook.</footer>
+</div>
+
+<!-- ============ PRACTICE ============ -->
+<div id="practice">
+<div class="hero wrap">
+  <div class="eyebrow">Classnotes practice</div>
+  <h1>Draw it. Explain it. Apply it.</h1>
+  <p>Sketch each diagram in your notebook, then explain it in your own words and apply it to a real market. Answers save in this browser only.</p>
+</div>
+<div class="wrap" id="promptList"></div>
+<footer class="wrap">Answers are stored locally in this browser only. Keep a copy of anything you don't want to lose.</footer>
+</div>
+
+<script>
+function setMode(m){
+  document.body.classList.toggle('mode-practice', m==='practice');
+  document.getElementById('btnLearn').classList.toggle('active', m==='learn');
+  document.getElementById('btnPractice').classList.toggle('active', m==='practice');
+  try{ localStorage.setItem('mktstruct-mode', m); }catch(e){}
+}
+try{ if(localStorage.getItem('mktstruct-mode')==='practice') setMode('practice'); }catch(e){}
+
+var $=function(id){return document.getElementById(id)};
+var f1=function(x){return x.toFixed(1)}, f2=function(x){return x.toFixed(2)};
+
+/* ---------- slider builder ---------- */
+function sliders(boxId, cfg, extras, onChange){
+  var box=$(boxId), st={};
+  cfg.forEach(function(c){
+    st[c.k]=c.v;
+    var d=document.createElement('div'); d.className='ctl';
+    d.innerHTML='<label for="'+boxId+'_'+c.k+'"><span>'+c.label+'</span><output id="'+boxId+'_'+c.k+'_o"></output></label>'+
+      '<input type="range" id="'+boxId+'_'+c.k+'" min="'+c.min+'" max="'+c.max+'" step="'+c.step+'" value="'+c.v+'">'+
+      (c.hint?'<p class="hint">'+c.hint+'</p>':'');
+    box.appendChild(d);
+    var inp=d.querySelector('input'), out=d.querySelector('output');
+    var show=function(){ out.textContent=(c.fmt?c.fmt(st[c.k]):st[c.k]); };
+    show();
+    inp.addEventListener('input',function(){ st[c.k]=parseFloat(inp.value); show(); onChange(); });
+  });
+  (extras||[]).forEach(function(x){
+    st[x.k]=x.v;
+    var l=document.createElement('label'); l.className='chk';
+    l.innerHTML='<input type="checkbox" id="'+boxId+'_'+x.k+'"'+(x.v?' checked':'')+'> '+x.label;
+    box.appendChild(l);
+    l.querySelector('input').addEventListener('change',function(e){ st[x.k]=e.target.checked; onChange(); });
+  });
+  return st;
+}
+
+/* ---------- SVG chart helper ---------- */
+function Chart(xmax,ymax,xstep,ystep,xlab,ylab){
+  var W=620,H=340,L=52,R=26,T=16,B=44, s=[];
+  var sx=function(q){return L+q/xmax*(W-L-R)}, sy=function(p){return H-B-p/ymax*(H-T-B)};
+  for(var x=0;x<=xmax+1e-9;x+=xstep){ if(x>0) s.push('<line class="grid" x1="'+sx(x)+'" y1="'+T+'" x2="'+sx(x)+'" y2="'+(H-B)+'"/>'); s.push('<text class="lbl-dim" x="'+sx(x)+'" y="'+(H-B+15)+'" text-anchor="middle">'+x+'</text>'); }
+  for(var y=0;y<=ymax+1e-9;y+=ystep){ if(y>0) s.push('<line class="grid" x1="'+L+'" y1="'+sy(y)+'" x2="'+(W-R)+'" y2="'+sy(y)+'"/>'); s.push('<text class="lbl-dim" x="'+(L-7)+'" y="'+(sy(y)+3.5)+'" text-anchor="end">'+y+'</text>'); }
+  s.push('<line class="axis" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-B)+'"/><line class="axis" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'"/>');
+  s.push('<text class="lbl-dim" x="'+((L+W-R)/2)+'" y="'+(H-8)+'" text-anchor="middle">'+xlab+'</text>');
+  s.push('<text class="lbl-dim" transform="translate(13 '+((T+H-B)/2)+') rotate(-90)" text-anchor="middle">'+ylab+'</text>');
+  var c={
+    sx:sx, sy:sy,
+    ln:function(fn,x0,x1,col,w,dash){
+      var pts=[],seg=[],n=140;
+      for(var i=0;i<=n;i++){ var q=x0+(x1-x0)*i/n, y=fn(q);
+        if(y>=0&&y<=ymax){ seg.push(sx(q).toFixed(1)+','+sy(y).toFixed(1)); } else if(seg.length){ pts.push(seg); seg=[]; } }
+      if(seg.length) pts.push(seg);
+      pts.forEach(function(p){ if(p.length>1) s.push('<polyline points="'+p.join(' ')+'" fill="none" style="stroke:var(--'+col+')" stroke-width="'+(w||2.4)+'"'+(dash?' stroke-dasharray="6 4"':'')+' stroke-linecap="round" stroke-linejoin="round"/>'); });
+      return c;
+    },
+    seg:function(x1,y1,x2,y2,col,w,dash){ s.push('<line x1="'+sx(x1)+'" y1="'+sy(y1)+'" x2="'+sx(x2)+'" y2="'+sy(y2)+'" style="stroke:var(--'+col+')" stroke-width="'+(w||1.4)+'"'+(dash?' stroke-dasharray="4 4"':'')+'/>'); return c; },
+    dot:function(x,y,col,hollow){ s.push('<circle cx="'+sx(x)+'" cy="'+sy(y)+'" r="5" style="fill:'+(hollow?'var(--surface)':'var(--'+col+')')+';stroke:var(--'+col+')" stroke-width="2"/>'); return c; },
+    rect:function(x1,y1,x2,y2,col,op){ var top=Math.min(y1,y2), bot=Math.max(y1,y2); s.push('<rect x="'+sx(x1)+'" y="'+sy(bot)+'" width="'+Math.max(0,sx(x2)-sx(x1))+'" height="'+Math.max(0,sy(top)-sy(bot))+'" style="fill:var(--'+col+')" fill-opacity="'+(op||.25)+'"/>'); return c; },
+    poly:function(p,col,op){ s.push('<polygon points="'+p.map(function(a){return sx(a[0]).toFixed(1)+','+sy(a[1]).toFixed(1)}).join(' ')+'" style="fill:var(--'+col+')" fill-opacity="'+(op||.25)+'"/>'); return c; },
+    txt:function(x,y,t,col,anchor,dim){ s.push('<text class="'+(dim?'lbl-dim':'lbl')+'" x="'+sx(x)+'" y="'+sy(y)+'" text-anchor="'+(anchor||'start')+'"'+(col?' style="fill:var(--'+col+')"':'')+'>'+t+'</text>'); return c; },
+    tick:function(x,t,col){ s.push('<text class="lbl" x="'+sx(x)+'" y="'+(H-B+29)+'" text-anchor="middle" style="fill:var(--'+col+')">'+t+'</text>'); return c; },
+    ytick:function(y,t,col){ s.push('<text class="lbl" x="'+(L-7)+'" y="'+(sy(y)-6)+'" text-anchor="end" style="fill:var(--'+col+')">'+t+'</text>'); return c; },
+    render:function(id){ $(id).innerHTML=s.join(''); }
+  };
+  return c;
+}
+function stats(id,arr){
+  $(id).innerHTML=arr.map(function(a){ return '<div class="stat '+(a[2]||'')+'"><small>'+a[0]+'</small><b>'+a[1]+'</b></div>'; }).join('');
+}
+
+/* =====================  LAB 1: PERFECT COMPETITION  ===================== */
+var PB=1.5, PC=0.15;
+var pc=sliders('pcCtl',[
+  {k:'P',label:'Market price',min:2,max:20,step:0.25,v:11,fmt:function(v){return '$'+f2(v)}},
+  {k:'FC',label:'Fixed costs',min:0,max:40,step:1,v:15,fmt:function(v){return '$'+v}},
+  {k:'a',label:'Input costs (wages, materials)',min:8,max:12,step:0.25,v:10,fmt:function(v){return '$'+f2(v)},hint:'Shifts MC, AVC and ATC up or down.'}
+],[{k:'sup',label:'Highlight the supply curve',v:false}],drawPC);
+function drawPC(){
+  var a=pc.a,FC=pc.FC,P=pc.P;
+  var MC=function(q){return a-2*PB*q+3*PC*q*q}, AVC=function(q){return a-PB*q+PC*q*q}, ATC=function(q){return AVC(q)+FC/q};
+  var qv=PB/(2*PC), minAVC=AVC(qv);
+  var D=4*PB*PB-12*PC*(a-P), q=0;
+  if(D>=0){ q=(2*PB+Math.sqrt(D))/(6*PC); if(P<AVC(q)) q=0; }
+  var open=q>0, tc=open?ATC(q)*q:FC, tr=P*q, profit=tr-tc;
+  var minATC=1e9,qa=0; for(var i=0.1;i<=10;i+=0.02){ var v=ATC(i); if(v<minATC){minATC=v;qa=i;} }
+  var ch=Chart(10,28,1,4,'Output (units per week)','Price / cost ($)');
+  if(open){ ch.rect(0,ATC(q),q,P,profit>=0?'good':'bad',.28); }
+  ch.ln(ATC,0.2,10,'cost',2.4).ln(AVC,0,10,'ink-dim',2.2).ln(MC,0,10,'rev',2.4);
+  if(pc.sup) ch.ln(MC,qv,10,'rev',5.5);
+  ch.seg(0,P,10,P,'prod',2.6);
+  if(open){ ch.seg(q,0,q,P,'ink-dim',1.2,true).dot(q,P,'ink').tick(q,'Q*','ink'); }
+  ch.txt(9.85,Math.min(MC(9.85)+1.2,27),'MC','rev','end').txt(9.85,ATC(9.85)+1.4,'ATC','cost','end').txt(9.85,AVC(9.85)-1.7,'AVC','ink-dim','end',true);
+  ch.txt(0.15,P+0.9,'P = AR = MR = D','prod','start');
+  ch.dot(qv,minAVC,'ink-dim',true);
+  if(!open) ch.txt(5,24.5,'Shut down: P is below the lowest AVC','bad','middle');
+  ch.render('pcSvg');
+  var status,cls;
+  if(!open){ status='Shutdown'; cls='bad'; }
+  else if(Math.abs(profit)<0.05*Math.max(1,tc)/10 || Math.abs(P-ATC(q))<0.06){ status='Normal profit'; cls='warn'; }
+  else if(profit>0){ status='Supernormal'; cls='good'; } else { status='Subnormal'; cls='bad'; }
+  stats('pcStats',[['Output Q*',open?f2(q):'0'],['Total revenue','$'+f2(tr)],['Total cost','$'+f2(tc)],['Profit','$'+f2(profit),profit>0.02?'good':(profit<-0.02?'bad':'warn')],['Status',status,cls]]);
+  var v;
+  if(!open) v='<b>Short-run shutdown.</b> P ($'+f2(P)+') is below the lowest AVC ($'+f2(minAVC)+'). Staying open loses more than the fixed costs of $'+FC+', so the firm produces nothing until price recovers.';
+  else if(P<ATC(q)-0.06) v='<b>Subnormal profit, but stay open.</b> P covers AVC ($'+f2(AVC(q))+') though not ATC ($'+f2(ATC(q))+'). The loss is smaller than shutting down, so the firm continues in the short run. In the long run firms exit, supply shifts left, and price rises.';
+  else if(P>ATC(q)+0.06) v='<b>Supernormal profit.</b> P is above ATC by $'+f2(P-ATC(q))+' per unit. New firms are attracted in, supply shifts right, and price falls towards the lowest ATC of $'+f2(minATC)+'.';
+  else v='<b>Normal profit: long-run equilibrium.</b> P = ATC at Q* (lowest ATC is $'+f2(minATC)+' at about '+f1(qa)+' units). No entry, no exit.';
+  $('pcVerdict').innerHTML=v;
+}
+drawPC();
+
+/* =====================  LAB 2: MONOPOLY  ===================== */
+var MB=1.8, MN=0.6;
+var mo=sliders('moCtl',[
+  {k:'A',label:'Demand strength (price intercept)',min:14,max:26,step:0.5,v:20,fmt:function(v){return '$'+f1(v)},hint:'Shifts demand and MR right or left.'},
+  {k:'m',label:'Marginal cost at zero output',min:1,max:10,step:0.25,v:4,fmt:function(v){return '$'+f2(v)}},
+  {k:'FC',label:'Fixed costs',min:0,max:40,step:1,v:10,fmt:function(v){return '$'+v}}
+],[{k:'cmp',label:'Show competitive outcome and deadweight loss',v:true}],drawMO);
+function drawMO(){
+  var A=mo.A,m=mo.m,FC=mo.FC;
+  var Dm=function(q){return A-MB*q}, MR=function(q){return A-2*MB*q}, MC=function(q){return m+MN*q}, ATC=function(q){return m+MN*q/2+FC/q};
+  var qm=(A-m)/(2*MB+MN), pm=Dm(qm), qc=(A-m)/(MB+MN), pc_=Dm(qc);
+  var prof=(pm-ATC(qm))*qm, dwl=0.5*(qc-qm)*(pm-MC(qm));
+  var cs=0.5*qm*(A-pm);
+  var ch=Chart(14,26,2,4,'Output (units per week)','Price / cost ($)');
+  ch.rect(0,ATC(qm),qm,pm,prof>=0?'profit':'bad',.35);
+  if(mo.cmp) ch.poly([[qm,pm],[qm,MC(qm)],[qc,pc_]],'bad',.4);
+  ch.ln(ATC,0.25,14,'cost',2.4).ln(MC,0,14,'rev',2.4).ln(Dm,0,14,'prod',2.6).ln(MR,0,A/(2*MB),'ink',2.2,true);
+  ch.seg(qm,0,qm,pm,'ink-dim',1.2,true).seg(0,pm,qm,pm,'ink-dim',1.2,true).dot(qm,MC(qm),'ink').dot(qm,pm,'ink');
+  ch.tick(qm,'Qm','ink').ytick(pm,'Pm','ink');
+  if(mo.cmp){ ch.dot(qc,pc_,'ink-dim',true).tick(qc,'Qc','ink-dim').txt(qc+0.2,pc_-1.4,'competitive: D = MC','ink-dim','start',true).txt((qm+qc)/2+0.2,(pm+MC(qm))/2+0.2,'DWL','bad','start'); }
+  ch.txt(0.2,Math.min(A+1,25.2),'D = AR','prod','start').txt(A/(2*MB)-0.15,1.2,'MR','ink','end').txt(13.85,Math.min(MC(13.85)+1.2,25),'MC','rev','end').txt(13.85,ATC(13.85)+1.5,'ATC','cost','end');
+  ch.render('moSvg');
+  stats('moStats',[['Output Qm',f2(qm)],['Price Pm','$'+f2(pm)],['Profit','$'+f2(prof),prof>0?'good':'bad'],['Price above MC','$'+f2(pm-MC(qm))],['Deadweight loss','$'+f2(dwl),'bad']]);
+  var v='<b>MR = MC at '+f2(qm)+' units, price read off demand at $'+f2(pm)+'.</b> A competitive market would sell '+f2(qc)+' units at $'+f2(pc_)+'. ';
+  v+=prof>=0?'Supernormal profit of $'+f2(prof)+' is protected by barriers to entry.':'At these costs even the monopolist makes a loss of $'+f2(-prof)+'; it would need to cut fixed costs or shut down in the long run.';
+  $('moVerdict').innerHTML=v;
+}
+drawMO();
+
+/* =====================  LAB 3: MONOPOLISTIC COMPETITION  ===================== */
+var CN=0.5, CM=3;
+var mc=sliders('mcCtl',[
+  {k:'e',label:'Entry of rival firms',min:0,max:130,step:1,v:0,fmt:function(v){return v+'%'},hint:'100% = long-run equilibrium.'},
+  {k:'B',label:'Brand loyalty (steepness of demand)',min:0.8,max:2.2,step:0.05,v:1.2,fmt:function(v){return f2(v)},hint:'Higher = fewer close substitutes.'},
+  {k:'FC',label:'Fixed costs',min:4,max:24,step:1,v:12,fmt:function(v){return '$'+v}}
+],[],drawMC);
+function drawMC(){
+  var B=mc.B,FC=mc.FC,e=mc.e/100;
+  var ATC=function(q){return CM+CN*q/2+FC/q}, MCf=function(q){return CM+CN*q};
+  var qt=Math.sqrt(FC/(B+CN/2)), At=ATC(qt)+B*qt, A0=At+5;
+  var A=A0-(A0-At)*e;
+  var Dm=function(q){return A-B*q}, MR=function(q){return A-2*B*q};
+  var q=Math.max(0,(A-CM)/(2*B+CN)), p=Dm(q), prof=(p-ATC(q))*q, qmin=Math.sqrt(2*FC/CN);
+  var ch=Chart(8,20,1,4,'Output (units per week)','Price / cost ($)');
+  if(q>0) ch.rect(0,ATC(q),q,p,prof>=0?'profit':'bad',.35);
+  ch.ln(ATC,0.5,8,'cost',2.4).ln(MCf,0,8,'rev',2.4).ln(Dm,0,8,'prod',2.6).ln(MR,0,A/(2*B),'ink',2.2,true);
+  if(q>0){ ch.seg(q,0,q,p,'ink-dim',1.2,true).seg(0,p,q,p,'ink-dim',1.2,true).dot(q,MCf(q),'ink').dot(q,p,'ink').tick(q,'Q','ink'); }
+  ch.dot(qmin,ATC(qmin),'cost',true).txt(qmin,ATC(qmin)-1.5,'lowest ATC','cost','middle',true);
+  ch.txt(0.15,Math.min(A+.9,19.3),'D = AR','prod','start').txt(A/(2*B)-.1,.9,'MR','ink','end').txt(7.9,MCf(7.9)+1,'MC','rev','end').txt(7.9,ATC(7.9)+1.5,'ATC','cost','end');
+  ch.render('mcSvg');
+  var st=Math.abs(prof)<0.15?'Normal':(prof>0?'Supernormal':'Subnormal');
+  stats('mcStats',[['Output',f2(q)],['Price','$'+f2(p)],['ATC','$'+f2(ATC(q))],['Profit','$'+f2(prof),Math.abs(prof)<0.15?'warn':(prof>0?'good':'bad')],['Excess capacity',f2(Math.max(0,qmin-q))+' units']]);
+  var v;
+  if(Math.abs(prof)<0.15) v='<b>Long-run equilibrium.</b> Demand is tangent to ATC at the MR = MC output, so P = ATC and profit is normal. Output is '+f2(qmin-q)+' units below the lowest-ATC output: excess capacity, and P is above MC by $'+f2(p-MCf(q))+'.';
+  else if(prof>0) v='<b>Supernormal profit of $'+f2(prof)+'.</b> Easy entry means rivals with similar (not identical) products arrive. Each takes some of this firm\'s customers, shifting D left. Move the entry slider to 100%.';
+  else v='<b>Subnormal profit.</b> D lies below ATC at every output, so some firms exit. The remaining firms\' demand shifts back right until profit returns to normal.';
+  $('mcVerdict').innerHTML=v;
+}
+drawMC();
+
+/* =====================  LAB 4: KINKED DEMAND  ===================== */
+var KP=10, KQ=5, KS1=0.6, KN=0.3;
+var ko=sliders('koCtl',[
+  {k:'m',label:'Marginal cost at zero output',min:0,max:12,step:0.25,v:2.5,fmt:function(v){return '$'+f2(v)},hint:'Raise or lower the firm\'s costs.'},
+  {k:'r',label:'Rival reaction to a price cut',min:1.2,max:3.2,step:0.1,v:2.5,fmt:function(v){return f1(v)+'x'},hint:'How much steeper demand is below the kink.'}
+],[],drawKO);
+function drawKO(){
+  var m=ko.m,s1=KS1,s2=KS1*ko.r;
+  var A1=KP+s1*KQ, A2=KP+s2*KQ;
+  var D1=function(q){return A1-s1*q}, D2=function(q){return A2-s2*q}, MR1=function(q){return A1-2*s1*q}, MR2=function(q){return A2-2*s2*q}, MC=function(q){return m+KN*q};
+  var hi=MR1(KQ), lo=MR2(KQ), mq=MC(KQ);
+  var q,p,where;
+  if(mq>hi){ q=(A1-m)/(2*s1+KN); p=D1(q); where='above'; }
+  else if(mq<lo){ q=(A2-m)/(2*s2+KN); p=D2(q); where='below'; }
+  else { q=KQ; p=KP; where='in'; }
+  var ch=Chart(10,20,1,4,'Output (units per week)','Price / cost ($)');
+  ch.rect(KQ-0.12,Math.max(0,lo),KQ+0.12,hi,'profit',.45);
+  ch.ln(D1,0,KQ,'prod',2.8).ln(D2,KQ,10,'prod',2.8).ln(MR1,0,KQ,'ink',2.2,true).ln(MR2,KQ,10,'ink',2.2,true).ln(MC,0,10,'rev',2.6);
+  ch.seg(KQ,0,KQ,KP,'ink-dim',1,true).seg(0,KP,KQ,KP,'ink-dim',1,true).dot(KQ,KP,'ink-dim',true).ytick(KP,'P0','ink-dim').tick(KQ,'Q0','ink-dim');
+  ch.dot(q,p,'ink').txt(q+0.25,p+0.9,'profit-max ($'+f2(p)+')','ink','start',false);
+  ch.txt(KQ+0.3,Math.max(hi,0)+0.6,'gap in MR','profit','start').txt(0.2,A1+1,'D (elastic)','prod','start').txt(9.85,Math.min(19,MC(9.85)+1),'MC','rev','end').txt(9.5,Math.max(D2(9.5)-1.4,1),'D (inelastic)','prod','end');
+  ch.render('koSvg');
+  var mlo=lo-KN*KQ, mhi=hi-KN*KQ;
+  stats('koStats',[['Price','$'+f2(p)],['Output',f2(q)],['MC at kink','$'+f2(mq),where==='in'?'good':'warn'],['MR gap','$'+f2(lo)+' to $'+f2(hi)],['Price sticky if MC(0) between','$'+f2(mlo)+' and $'+f2(mhi)]]);
+  var v;
+  if(where==='in') v='<b>Price stays at $'+f2(KP)+'.</b> MC at the kink ($'+f2(mq)+') lies inside the gap in MR, so MC cuts MR at Q0 and the profit-maximising price does not move, even though costs have changed.';
+  else if(where==='above') v='<b>Costs have risen out of the gap.</b> MC now cuts the upper MR segment, so the firm cuts output and raises price to $'+f2(p)+'. A large enough rise breaks the rigidity, and rivals would face the same costs so are likely to follow.';
+  else v='<b>Costs have fallen out of the gap.</b> MC now cuts the lower MR segment, so the firm expands and price falls to $'+f2(p)+'. Small cost changes would not have done this.';
+  $('koVerdict').innerHTML=v;
+}
+drawKO();
+
+/* =====================  LAB 5: PRISONER'S DILEMMA  ===================== */
+var gm=sliders('gmCtl',[
+  {k:'R',label:'Both hold price (each)',min:6,max:14,step:1,v:10,fmt:function(v){return '$'+v+'m'}},
+  {k:'T',label:'Temptation: you cut, rival holds',min:9,max:20,step:1,v:15,fmt:function(v){return '$'+v+'m'}},
+  {k:'Pn',label:'Both cut (each)',min:2,max:9,step:1,v:6,fmt:function(v){return '$'+v+'m'}},
+  {k:'S',label:'Sucker: you hold, rival cuts',min:0,max:6,step:1,v:2,fmt:function(v){return '$'+v+'m'}},
+  {k:'d',label:'Chance game continues next year',min:0,max:0.95,step:0.05,v:0.6,fmt:function(v){return Math.round(v*100)+'%'},hint:'For repeated play.'}
+],[],drawGM);
+function drawGM(){
+  var R=gm.R,T=gm.T,Pn=gm.Pn,S=gm.S,d=gm.d;
+  var pay=function(a,b){ // a,b: 0=hold, 1=cut; returns [A payoff, B payoff]
+    if(a===0&&b===0) return [R,R]; if(a===1&&b===0) return [T,S]; if(a===0&&b===1) return [S,T]; return [Pn,Pn]; };
+  var cells=[[0,0],[0,1],[1,0],[1,1]], nashN=0, nashCell=null;
+  var html='<div class="mh"></div><div class="mh">Firm B holds price</div><div class="mh">Firm B cuts price</div>';
+  var names=['holds','cuts'];
+  for(var a=0;a<2;a++){
+    html+='<div class="mh side">Firm A '+names[a]+'</div>';
+    for(var b=0;b<2;b++){
+      var p=pay(a,b), pa=p[0], pb=p[1];
+      var bra=pa>=pay(1-a,b)[0], brb=pb>=pay(a,1-b)[1];
+      var nash=bra&&brb; if(nash){nashN++; nashCell=[a,b];}
+      html+='<div class="cell'+(nash?' nash':'')+'"><div class="row"><span>Firm A</span><b'+(bra?' class="br"':'')+'>$'+pa+'m</b></div><div class="row"><span>Firm B</span><b'+(brb?' class="br"':'')+'>$'+pb+'m</b></div>'+(nash?'<div class="nm">Nash equilibrium</div>':'')+'</div>';
+    }
+  }
+  $('gmMatrix').innerHTML=html;
+  var dilemma=T>R&&R>Pn&&Pn>S;
+  var dcrit=T>Pn?(T-R)/(T-Pn):1;
+  var cheatDom=T>R&&Pn>S;
+  var eq=nashCell?('A '+names[nashCell[0]]+', B '+names[nashCell[1]]):'none';
+  stats('gmStats',[['One-shot outcome',nashN===1?(nashCell[0]===1&&nashCell[1]===1?'Both cut':(nashCell[0]===0&&nashCell[1]===0?'Both hold':'Mixed')):'Multiple',nashN===1&&nashCell[0]===0&&nashCell[1]===0?'good':'bad'],['Joint profit','$'+(nashCell?pay(nashCell[0],nashCell[1])[0]*2:0)+'m'],['Best possible joint','$'+2*R+'m'],['Min. continue chance for collusion',Math.round(dcrit*100)+'%',d>=dcrit?'good':'bad']]);
+  var v;
+  if(nashN===1&&nashCell[0]===1&&nashCell[1]===1) v='<b>Prisoner\'s Dilemma.</b> Cutting is a dominant strategy for both, so both cut and earn $'+Pn+'m each instead of $'+R+'m. '+(d>=dcrit?'But with a '+Math.round(d*100)+'% chance of the game continuing (at least '+Math.round(dcrit*100)+' needed), the threat of retaliation in later years can make holding price rational: tacit collusion becomes sustainable.':'With only a '+Math.round(d*100)+'% chance of continuing (needs at least '+Math.round(dcrit*100)+'%), the future cost of a price war is too small to deter cheating.');
+  else if(nashN===1&&nashCell[0]===0&&nashCell[1]===0) v='<b>Collusion is stable.</b> The temptation payoff ($'+T+'m) is no better than holding ($'+R+'m), so neither firm gains by cheating. This is no longer a dilemma.';
+  else v='<b>No single dominant outcome.</b> Payoffs give '+nashN+' Nash equilibria; adjust the numbers so that T &gt; R &gt; Both cut &gt; Sucker to see the classic dilemma.';
+  $('gmVerdict').innerHTML=v;
+}
+drawGM();
+
+/* ---------- practice ---------- */
+var PROMPTS=[
+ {id:'p1',title:'1 — Perfect competition and shutdown',ctx:'Sketch MC, ATC, AVC and a horizontal price line in three versions: supernormal profit, normal profit, and P between AVC and ATC.',ask:'Explain why the firm keeps producing at a loss in the short run, and where its supply curve is. Apply it: which real market comes closest to perfect competition, and where does the match break down?'},
+ {id:'p2',title:'2 — Monopoly and deadweight loss',ctx:'Sketch D, MR, MC and ATC with supernormal profit shaded and the deadweight loss triangle marked.',ask:'Explain why the monopolist prices off the demand curve, not the MR curve. Apply it: name a firm with market power and say what protects its profits.'},
+ {id:'p3',title:'3 — Monopolistic competition, short and long run',ctx:'Draw two diagrams: supernormal profit in the short run, then the long-run tangency solution.',ask:'Explain what causes the shift between the two. Apply it: choose a local market (cafés, salons) and describe non-price competition in it.'},
+ {id:'p4',title:'4 — The kinked demand curve',ctx:'Sketch the kinked D, the broken MR and an MC curve passing through the gap, then shift MC up within the gap.',ask:'Explain why price does not change. Apply it: give two limits of the model when used on a real industry.'},
+ {id:'p5',title:'5 — Prisoner\'s Dilemma',ctx:'Draw a 2x2 payoff matrix for two airlines choosing between holding and cutting fares. Mark best responses.',ask:'Explain why the Nash equilibrium is worse for both than cooperating, and what could keep them cooperating. Apply it: how does the law on collusion change the payoffs?'},
+ {id:'p6',title:'6 — Contestability and efficiency',ctx:'No diagram needed. List the features of a market with low sunk costs and one with high sunk costs.',ask:'Explain how a monopolist behaves in a contestable market, and evaluate whether it is better for consumers than a market with many firms and high barriers.'}
+];
+var list=$('promptList');
+PROMPTS.forEach(function(p){
+  var card=document.createElement('div'); card.className='prompt-card';
+  card.innerHTML='<h3>'+p.title+'</h3><p class="ctx">'+p.ctx+'</p><div class="applywrap"><label for="'+p.id+'">Explain &amp; apply</label><br><textarea id="'+p.id+'" placeholder="'+p.ask.replace(/"/g,'&quot;')+'"></textarea></div>';
+  list.appendChild(card);
+  var ta=card.querySelector('textarea');
+  try{ var sv=localStorage.getItem('mktstruct-'+p.id); if(sv) ta.value=sv; }catch(e){}
+  ta.addEventListener('input',function(){ try{ localStorage.setItem('mktstruct-'+p.id,ta.value); }catch(e){} });
+});
+</script>
+
+</body></html>

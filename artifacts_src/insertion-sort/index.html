@@ -1,0 +1,441 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Insertion Sort Walkthrough</title>
+<style>
+:root{
+  --bg:#f7f5f1;
+  --panel:#ffffff;
+  --ink:#20241f;
+  --sub:#5d6259;
+  --line:#dcd8cf;
+  --key:#c25b2c;
+  --keybg:#fbe8dd;
+  --scan:#2d6a4f;
+  --scanbg:#e3f1e9;
+  --sorted:#e8f0e3;
+  --sortedline:#8faa7c;
+  --code-bg:#1e2320;
+  --code-ink:#e7e9e4;
+  --code-dim:#7d8a7a;
+  --code-hl:#3a4038;
+  --accent:#c25b2c;
+}
+:root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark) {
+    --bg:#181a17;
+    --panel:#22251f;
+    --ink:#eceae3;
+    --sub:#9a9c92;
+    --line:#3a3d36;
+    --key:#e18a5c;
+    --keybg:#3a2a1e;
+    --scan:#7fbf9e;
+    --scanbg:#1f2e26;
+    --sorted:#22291f;
+    --sortedline:#4d5c43;
+    --code-bg:#101210;
+    --code-ink:#e7e9e4;
+    --code-dim:#6d786a;
+    --code-hl:#252a24;
+    --accent:#e18a5c;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#181a17;
+  --panel:#22251f;
+  --ink:#eceae3;
+  --sub:#9a9c92;
+  --line:#3a3d36;
+  --key:#e18a5c;
+  --keybg:#3a2a1e;
+  --scan:#7fbf9e;
+  --scanbg:#1f2e26;
+  --sorted:#22291f;
+  --sortedline:#4d5c43;
+  --code-bg:#101210;
+  --code-ink:#e7e9e4;
+  --code-dim:#6d786a;
+  --code-hl:#252a24;
+  --accent:#e18a5c;
+}
+
+* { box-sizing: border-box; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  padding: clamp(16px, 4vw, 40px) 16px calc(40px + env(safe-area-inset-bottom,0px));
+}
+.wrap{ max-width: 920px; margin: 0 auto; display:flex; flex-direction:column; gap:22px; }
+
+h1{
+  font-family:"Fraunces","Georgia",serif;
+  font-weight:600;
+  font-size: clamp(28px, 5vw, 40px);
+  margin: 4px 0 0;
+  text-wrap: balance;
+}
+.eyebrow{
+  font-size:12px; letter-spacing:0.12em; text-transform:uppercase;
+  color: var(--accent); font-weight:700;
+}
+.intro{ color:var(--sub); font-size:16px; line-height:1.55; max-width:65ch; margin:0; }
+.intro code{ background:var(--keybg); color:var(--key); padding:1px 5px; border-radius:4px; font-family:"JetBrains Mono",monospace; font-size:0.9em;}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:22px clamp(14px,3vw,26px);
+}
+
+/* controls */
+.controls{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.controls button{
+  font-family:inherit; font-size:14px; font-weight:600;
+  border:1px solid var(--line); background:var(--panel); color:var(--ink);
+  padding:9px 16px; border-radius:9px; cursor:pointer;
+}
+.controls button.primary{ background:var(--accent); color:#fff; border-color:var(--accent); }
+.controls button:disabled{ opacity:0.4; cursor:not-allowed; }
+.controls button:hover:not(:disabled){ filter:brightness(0.96); }
+:root:not([data-theme="light"]) .controls button:hover:not(:disabled) { @media (prefers-color-scheme: dark){ filter:brightness(1.15);} }
+:root[data-theme="dark"] .controls button:hover:not(:disabled){ filter:brightness(1.15); }
+.step-counter{ font-family:"JetBrains Mono",monospace; font-size:13px; color:var(--sub); margin-left:auto; }
+
+.narration{
+  min-height: 3.4em;
+  font-size:15.5px; line-height:1.5;
+  color:var(--ink);
+}
+.narration b{ color:var(--accent); }
+
+/* array viz */
+.stage{ overflow-x:auto; padding-bottom:6px; }
+.arrow-row{
+  display:flex; gap:8px; min-width:max-content; height:34px; position:relative;
+}
+.arrow-cell{
+  width:54px; flex:0 0 54px; display:flex; align-items:flex-end; justify-content:center;
+  font-family:"JetBrains Mono",monospace; font-size:12px; font-weight:700;
+}
+.arrow-cell .lbl{ display:flex; flex-direction:column; align-items:center; gap:1px; }
+.arrow-cell .glyph{ font-size:16px; line-height:1; }
+.arrow-key .lbl{ color:var(--key); }
+.arrow-j .lbl{ color:var(--scan); }
+
+.array-row{ display:flex; gap:8px; min-width:max-content; }
+.slot{
+  width:54px; height:54px; flex:0 0 54px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:10px; border:2px solid var(--line);
+  font-family:"JetBrains Mono",monospace; font-weight:700; font-size:19px;
+  background: var(--panel);
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  font-variant-numeric: tabular-nums;
+}
+.slot.sorted{ background:var(--sorted); border-color:var(--sortedline); }
+.slot.key{ background:var(--keybg); border-color:var(--key); color:var(--key); transform: translateY(-6px); }
+.slot.compare{ background:var(--scanbg); border-color:var(--scan); color:var(--scan); }
+.slot.empty{ border-style:dashed; opacity:0.35; }
+.idx-row{ display:flex; gap:8px; min-width:max-content; margin-top:6px; }
+.idx{ width:54px; flex:0 0 54px; text-align:center; font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--sub); }
+
+/* code */
+.code-panel{ background:var(--code-bg); border-radius:14px; padding:18px 0; overflow-x:auto; }
+.code-panel pre{ margin:0; padding:0 20px; }
+.code-line{
+  font-family:"JetBrains Mono",monospace; font-size:13.5px; line-height:1.85;
+  color:var(--code-dim); white-space:pre; display:block; border-radius:6px; padding:0 8px; margin:0 -8px;
+}
+.code-line .n{ display:inline-block; width:1.6em; color:var(--code-dim); opacity:0.55; user-select:none; }
+.code-line.active{ background:var(--code-hl); color:var(--code-ink); }
+.code-line.active .n{ color:var(--accent); opacity:1; }
+
+.legend{ display:flex; gap:18px; flex-wrap:wrap; font-size:13px; color:var(--sub); }
+.legend span{ display:inline-flex; align-items:center; gap:6px; }
+.swatch{ width:13px; height:13px; border-radius:4px; border:2px solid; display:inline-block; }
+.sw-sorted{ background:var(--sorted); border-color:var(--sortedline); }
+.sw-key{ background:var(--keybg); border-color:var(--key); }
+.sw-compare{ background:var(--scanbg); border-color:var(--scan); }
+
+footer{ color:var(--sub); font-size:13px; text-align:center; }
+
+/* bubble sort comparison */
+.compare{ display:flex; flex-direction:column; gap:16px; margin-top:14px; }
+.compare h2{ font-family:"Fraunces","Georgia",serif; font-weight:600; font-size:clamp(22px,4vw,28px); margin:0; text-wrap:balance; }
+.compare h3{ font-size:16px; margin:0 0 8px; color:var(--accent); }
+.compare .eyebrow{ margin-bottom:-8px; }
+.cols{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:16px; }
+.col{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 20px; }
+.col p{ margin:0 0 10px; font-size:15px; line-height:1.55; }
+.col p:last-child{ margin-bottom:0; color:var(--sub); }
+.mono{ font-family:"JetBrains Mono",monospace; font-size:0.9em; background:var(--keybg); color:var(--key); padding:1px 6px; border-radius:4px; white-space:nowrap; }
+.table-scroll{ overflow-x:auto; background:var(--panel); border:1px solid var(--line); border-radius:14px; }
+table{ border-collapse:collapse; width:100%; min-width:520px; font-size:14.5px; }
+th,td{ text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.45; }
+thead th{ font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--sub); }
+tbody th{ font-weight:600; width:32%; }
+tbody tr:last-child th, tbody tr:last-child td{ border-bottom:none; }
+
+@media (max-width:480px){
+  .slot,.idx,.arrow-cell{ width:40px; flex-basis:40px; }
+  .slot{ height:44px; font-size:16px; }
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<div class="wrap">
+  <div>
+    <div class="eyebrow">Chapter 19 &middot; Sorting Algorithms</div>
+    <h1>Insertion Sort, Step by Step</h1>
+    <p class="intro">This version has no separate key variable. Instead, <b style="color:var(--scan)">place</b> and <b style="color:var(--scan)">place + 1</b> are compared directly, and if they're out of order the three-line <b style="color:var(--key)">temp</b> swap trades them: park one value in <code>temp</code>, overwrite it, then write <code>temp</code> back — one adjacent swap at a time, walking backwards.</p>
+  </div>
+
+  <div class="panel" style="display:flex; flex-direction:column; gap:16px;">
+    <div class="controls">
+      <button id="btnReset" title="Restart">&#8634; Restart</button>
+      <button id="btnPrev">&larr; Back</button>
+      <button id="btnPlay" class="primary">&#9654; Play</button>
+      <button id="btnNext">Next &rarr;</button>
+      <span class="step-counter" id="stepCounter">step 0 / 0</span>
+    </div>
+
+    <div class="stage">
+      <div class="arrow-row" id="arrowRow"></div>
+      <div class="array-row" id="arrayRow"></div>
+      <div class="idx-row" id="idxRow"></div>
+    </div>
+
+    <div id="tempBadge"></div>
+    <div class="narration" id="narration"></div>
+
+    <div class="legend">
+      <span><i class="swatch sw-sorted"></i> sorted region</span>
+      <span><i class="swatch sw-key"></i> holding temp</span>
+      <span><i class="swatch sw-compare"></i> place / place + 1</span>
+    </div>
+  </div>
+
+  <div class="code-panel">
+    <pre id="codeBlock"></pre>
+  </div>
+
+  <section class="compare">
+    <div class="eyebrow">Versus bubble sort</div>
+    <h2>Same swaps, different route</h2>
+    <p class="intro">Both sorts fix a list using swaps of neighbouring items, so they look alike on paper. The difference is where they look and when they stop.</p>
+
+    <div class="cols">
+      <div class="col">
+        <h3>Bubble sort</h3>
+        <p>Sweeps the <em>whole</em> unsorted part of the list from the left, comparing each neighbouring pair and swapping if they're the wrong way round. One sweep carries the largest remaining value to the far right, like a bubble rising. Then it starts again from the left, one place shorter each time.</p>
+        <p>The sorted part grows from the <b>right-hand end</b>, and every value inside it is already in its final position.</p>
+      </div>
+      <div class="col">
+        <h3>Insertion sort</h3>
+        <p>Takes one new item at a time and walks it <em>backwards</em> through the part already sorted, swapping until the item on its left is no longer bigger. Then it stops and moves on to the next item.</p>
+        <p>The sorted part grows from the <b>left-hand end</b>, but its values are only sorted relative to each other. A later, smaller item can still push them along to the right.</p>
+      </div>
+    </div>
+
+    <p class="intro">Trace both on <span class="mono">[7, 3, 9, 4, 1]</span> and they make exactly the same number of swaps, 7. That's not a coincidence: each swap fixes exactly one pair that was out of order, and this list has 7 such pairs, so any adjacent-swap sort needs 7 swaps. What changes is how many comparisons it takes to find them.</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th></th><th>Bubble sort</th><th>Insertion sort</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>Comparisons on <span class="mono">[7, 3, 9, 4, 1]</span></th><td>10</td><td>9</td></tr>
+          <tr><th>Swaps on <span class="mono">[7, 3, 9, 4, 1]</span></th><td>7</td><td>7</td></tr>
+          <tr><th>Comparisons if already sorted</th><td>10 (always all pairs, without a stop-early flag)</td><td>4 (one per item, then it stops)</td></tr>
+          <tr><th>Sorted part grows from</th><td>the right</td><td>the left</td></tr>
+          <tr><th>Stops looking early?</th><td>Only with a "no swaps this pass" flag</td><td>Yes, built in: the inner loop ends as soon as the neighbour is smaller</td></tr>
+          <tr><th>Worst case</th><td>reversed list, n(n&minus;1)/2 comparisons</td><td>reversed list, n(n&minus;1)/2 comparisons</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="intro">Insertion sort's advantage shows up on lists that are already <em>nearly</em> in order: each new item only has to travel a short way before the inner loop ends, so the work drops close to one comparison per item. Bubble sort has no such shortcut unless you add one. On a list in reverse order neither has any advantage, and both are slow on big lists, which is why the exam usually cares about the method, not the speed.</p>
+  </section>
+
+  <footer>Use Next, or the left and right arrow keys, to step through. Every comparison and swap in this run is real, traced from the code above.</footer>
+</div>
+
+<script>
+(function(){
+  const data = [7, 3, 9, 4, 1];
+
+  const codeLines = [
+    "def insertion_sort(myList):",
+    "    for i in range(1, len(myList)):",
+    "        place = i - 1",
+    "        while place >= 0 and myList[place] > myList[place + 1]:",
+    "            temp = myList[place + 1]",
+    "            myList[place + 1] = myList[place]",
+    "            myList[place] = temp",
+    "            place = place - 1",
+    "    return myList",
+  ];
+  const LINE = { def:0, for:1, place0:2, whiletest:3, temp:4, copy:5, writeback:6, dec:7, ret:8 };
+
+  function trace(input){
+    const arr = input.slice();
+    const steps = [];
+    const n = arr.length;
+
+    function snap(line, opts){
+      steps.push(Object.assign({
+        arr: arr.slice(),
+        line,
+        sortedUpto: opts.sortedUpto,
+        place: opts.place,
+        tempVal: opts.tempVal,
+        tempAt: opts.tempAt,
+        compareA: opts.compareA,
+        compareB: opts.compareB,
+        note: opts.note,
+      }));
+    }
+
+    snap(LINE.def, {sortedUpto:0, note:"Start: a 5-element list. A single element (index 0) counts as already sorted."});
+
+    for (let i = 1; i < n; i++) {
+      snap(LINE.for, {sortedUpto:i, note:`Outer loop: i = ${i}. Everything left of i is the sorted region so far.`});
+      let place = i - 1;
+      snap(LINE.place0, {sortedUpto:i, place, note:`Set place = ${place}. We'll compare this element with its right-hand neighbour.`});
+
+      while (place >= 0 && arr[place] > arr[place + 1]) {
+        snap(LINE.whiletest, {sortedUpto:i, place, compareA:place, compareB:place+1,
+          note:`Compare: is myList[${place}] = ${arr[place]} greater than myList[${place+1}] = ${arr[place+1]}? Yes — swap them.`});
+
+        const temp = arr[place + 1];
+        snap(LINE.temp, {sortedUpto:i, place, tempVal:temp, tempAt:place+1, compareA:place, compareB:place+1,
+          note:`Stage 1 — temp = myList[${place+1}]. Park ${temp} in temp so it isn't lost when we overwrite it.`});
+
+        arr[place + 1] = arr[place];
+        snap(LINE.copy, {sortedUpto:i, place, tempVal:temp, tempAt:place+1, compareA:place, compareB:place+1,
+          note:`Stage 2 — myList[${place+1}] = myList[${place}]. Copy ${arr[place+1]} rightward; temp still holds ${temp}.`});
+
+        arr[place] = temp;
+        snap(LINE.writeback, {sortedUpto:i, place, compareA:place, compareB:place+1,
+          note:`Stage 3 — myList[${place}] = temp. Write ${temp} back in from the left. The swap is complete.`});
+
+        place = place - 1;
+        snap(LINE.dec, {sortedUpto:i, place, note:`place = place - 1 = ${place}. Move the comparison one step further left.`});
+      }
+
+      if (place >= 0) {
+        snap(LINE.whiletest, {sortedUpto:i+1, place, compareA:place, compareB:place+1,
+          note:`Compare: is myList[${place}] = ${arr[place]} greater than myList[${place+1}] = ${arr[place+1]}? No — stop. Region [0..${i}] is now sorted.`});
+      } else {
+        snap(LINE.whiletest, {sortedUpto:i+1, place,
+          note:`place has fallen off the front of the list (place = -1) — the element has bubbled all the way to index 0. Region [0..${i}] is now sorted.`});
+      }
+    }
+    snap(LINE.ret, {sortedUpto:n, note:"Every element has been walked into position. The list is fully sorted."});
+    return steps;
+  }
+
+  const steps = trace(data);
+  let idx = 0;
+  let timer = null;
+
+  const arrowRow = document.getElementById('arrowRow');
+  const arrayRow = document.getElementById('arrayRow');
+  const idxRow = document.getElementById('idxRow');
+  const narration = document.getElementById('narration');
+  const stepCounter = document.getElementById('stepCounter');
+  const codeBlock = document.getElementById('codeBlock');
+  const btnPlay = document.getElementById('btnPlay');
+
+  codeBlock.innerHTML = codeLines.map((l,i)=>`<span class="code-line" data-line="${i}"><span class="n">${i}</span>${escapeHtml(l)}</span>`).join('\n');
+  function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+  function render(){
+    const s = steps[idx];
+    const n = s.arr.length;
+
+    let arrowsHtml = '';
+    let slotsHtml = '';
+    let idxHtml = '';
+
+    for (let i = 0; i < n; i++) {
+      if (s.place === i) {
+        arrowsHtml += `<div class="arrow-cell arrow-j"><div class="lbl"><span class="glyph">&#8593;</span><span>place</span></div></div>`;
+      } else if (s.place !== undefined && s.place + 1 === i && s.compareB === i) {
+        arrowsHtml += `<div class="arrow-cell arrow-key"><div class="lbl"><span class="glyph">&#8593;</span><span>place+1</span></div></div>`;
+      } else {
+        arrowsHtml += `<div class="arrow-cell"></div>`;
+      }
+
+      let cls = 'slot';
+      const label = s.arr[i];
+      if (s.tempAt === i) {
+        cls += ' key';
+      } else if (s.compareA === i || s.compareB === i) {
+        cls += ' compare';
+      } else if (i < s.sortedUpto) {
+        cls += ' sorted';
+      }
+      slotsHtml += `<div class="${cls}">${label}</div>`;
+      idxHtml += `<div class="idx">${i}</div>`;
+    }
+
+    let tempBadge = '';
+    if (s.tempVal !== undefined) {
+      tempBadge = `<div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--key); margin-top:-4px;">temp = ${s.tempVal}</div>`;
+    }
+    document.getElementById('tempBadge').innerHTML = tempBadge;
+
+    arrowRow.innerHTML = arrowsHtml;
+    arrayRow.innerHTML = slotsHtml;
+    idxRow.innerHTML = idxHtml;
+    narration.innerHTML = s.note;
+
+    document.querySelectorAll('.code-line').forEach(el=>{
+      el.classList.toggle('active', Number(el.dataset.line) === s.line);
+    });
+
+    stepCounter.textContent = `step ${idx+1} / ${steps.length}`;
+    document.getElementById('btnPrev').disabled = idx === 0;
+    document.getElementById('btnNext').disabled = idx === steps.length - 1;
+  }
+
+  function next(){
+    if (idx < steps.length - 1) { idx++; render(); }
+    else stopPlay();
+  }
+  function prev(){ if (idx > 0) { idx--; render(); } }
+  function reset(){ idx = 0; render(); stopPlay(); }
+
+  function stopPlay(){
+    if (timer) { clearInterval(timer); timer = null; }
+    btnPlay.textContent = '▶ Play';
+  }
+  function togglePlay(){
+    if (timer) { stopPlay(); return; }
+    if (idx === steps.length - 1) idx = 0;
+    btnPlay.textContent = '⏸ Pause';
+    timer = setInterval(()=>{
+      if (idx >= steps.length - 1) { stopPlay(); return; }
+      next();
+    }, 1100);
+  }
+
+  document.getElementById('btnNext').addEventListener('click', ()=>{ stopPlay(); next(); });
+  document.getElementById('btnPrev').addEventListener('click', ()=>{ stopPlay(); prev(); });
+  document.getElementById('btnReset').addEventListener('click', reset);
+  btnPlay.addEventListener('click', togglePlay);
+
+  window.addEventListener('keydown', (e)=>{
+    if (e.key === 'ArrowRight') { stopPlay(); next(); }
+    if (e.key === 'ArrowLeft') { stopPlay(); prev(); }
+  });
+
+  render();
+})();
+</script>
+
+</body></html>

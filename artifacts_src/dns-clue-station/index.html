@@ -1,0 +1,200 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>DNS Clue Station</title>
+<style>
+  :root{
+    --bg:#0f1b2d; --panel:#16283f; --accent:#5ec8f8; --accent2:#7cf29c;
+    --text:#eef4fb; --muted:#9db2c9; --danger:#ff8a80; --claimed:#2a3a4d;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--text); font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;
+    min-height:100vh; margin:0; display:flex; align-items:center; justify-content:center;
+    padding:24px; padding-block:32px;
+  }
+  .wrap{width:100%; max-width:900px;}
+  h1{font-size:clamp(22px,4vw,34px); text-align:center; margin:0 0 6px;}
+  .sub{text-align:center; color:var(--muted); margin:0 0 28px; font-size:15px;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px;}
+  .team-btn{
+    background:var(--panel); border:2px solid #223650; border-radius:16px; color:var(--text);
+    font-size:20px; font-weight:700; padding:26px 10px; cursor:pointer; transition:.15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .team-btn:active{transform:scale(.97);}
+  .team-btn.claimed{background:var(--claimed); color:var(--muted); border-color:#1c2a3a;}
+  .team-btn .tick{display:block; font-size:26px; margin-top:6px;}
+  .screen{display:none;}
+  .screen.active{display:block;}
+  .card{
+    background:var(--panel); border-radius:20px; padding:36px 28px; text-align:center;
+    max-width:520px; margin:0 auto;
+  }
+  .back{
+    display:inline-block; margin-bottom:18px; background:none; border:none; color:var(--muted);
+    font-size:15px; cursor:pointer; padding:8px 4px;
+  }
+  input#codeInput{
+    width:100%; font-size:32px; text-align:center; letter-spacing:8px; text-transform:uppercase;
+    padding:16px; border-radius:12px; border:2px solid #2a3f5a; background:#0c1723; color:var(--text);
+    margin:18px 0;
+  }
+  .submit-btn{
+    width:100%; padding:16px; border-radius:12px; border:none; background:var(--accent);
+    color:#052033; font-size:18px; font-weight:700; cursor:pointer;
+  }
+  .msg{min-height:24px; margin-top:12px; font-size:15px;}
+  .msg.err{color:var(--danger);}
+  .clue-screen{
+    background:var(--accent2); color:#04331a; border-radius:24px; padding:48px 28px;
+    text-align:center; max-width:600px; margin:0 auto;
+  }
+  .clue-screen h2{margin-top:0; font-size:15px; letter-spacing:2px; text-transform:uppercase; opacity:.7;}
+  .clue-screen p{font-size:clamp(20px,4vw,28px); font-weight:700; line-height:1.4;}
+  .timerbar{height:8px; background:rgba(0,0,0,.15); border-radius:5px; overflow:hidden; margin-top:24px;}
+  .timerbar-fill{height:100%; background:#04331a; width:100%; transform-origin:left;}
+  @keyframes shrink{ from{transform:scaleX(1);} to{transform:scaleX(0);} }
+  .timerbar-fill.run{animation:shrink 20s linear forwards;}
+  footer{text-align:center; color:var(--muted); font-size:12px; margin-top:26px;}
+  .reset-btn{
+    display:block; margin:18px auto 0; background:none; border:1px solid #2a3f5a; color:var(--muted);
+    font-size:13px; padding:8px 16px; border-radius:10px; cursor:pointer;
+  }
+</style>
+
+<div class="wrap">
+
+  <div id="mainScreen" class="screen active">
+    <h1>🔑 DNS Clue Station</h1>
+    <p class="sub">Sequenced your cards? Tap your team, then enter the code.</p>
+    <div class="grid" id="teamGrid"></div>
+    <footer>Enter the word your cards spell, in order, for a 20-second check-in question.</footer>
+    <button class="reset-btn" id="resetBtn" onclick="handleResetClick()">Reset for new class</button>
+  </div>
+
+  <div id="entryScreen" class="screen">
+    <div class="card">
+      <button class="back" onclick="goHome()">&larr; back to teams</button>
+      <h1 id="entryTeamName" style="margin-top:0;">Team</h1>
+      <p class="sub" style="margin:0;">What word do your cards spell in order?</p>
+      <input id="codeInput" maxlength="10" autocomplete="off" autocapitalize="characters" placeholder="?????">
+      <button class="submit-btn" onclick="checkCode()">Reveal clue</button>
+      <div id="entryMsg" class="msg"></div>
+    </div>
+  </div>
+
+  <div id="clueScreen" class="screen">
+    <div class="clue-screen">
+      <h2>Your check-in question</h2>
+      <p id="clueText"></p>
+      <div class="timerbar"><div class="timerbar-fill" id="timerFill"></div></div>
+      <p style="font-size:13px; font-weight:400; opacity:.75; margin-top:14px;">Write it on your exit slip now — you'll answer it in the plenary.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const DEFAULT_TEAMS = [
+  {name:'Group 1', code:'CACHED',    claimed:false, clue:"Why does DNS server (1) store the IP address it receives from DNS server (2)?"},
+  {name:'Group 2', code:'SERVERS',   claimed:false, clue:"What is the difference between a DNS server and the website server in this process?"},
+  {name:'Group 3', code:'DOMAINS',   claimed:false, clue:"Why does a computer need DNS to translate a URL into an IP address, instead of just using the URL directly?"},
+  {name:'Group 4', code:'BROWSERS',  claimed:false, clue:"What does the browser do once it receives the HTML files back from the website server?"},
+  {name:'Group 5', code:'ADDRESSES', claimed:false, clue:"Why does the computer need an IP address before it can contact the website server?"},
+  {name:'Group 6', code:'WEBSITES',  claimed:false, clue:"What does the website server send back once it receives the request from the computer?"},
+];
+
+let teams = JSON.parse(localStorage.getItem('dnsClueTeams') || 'null');
+if(!teams || !teams[0] || teams[0].code !== DEFAULT_TEAMS[0].code){
+  teams = DEFAULT_TEAMS.map(t => ({...t}));
+  localStorage.setItem('dnsClueTeams', JSON.stringify(teams));
+}
+let activeTeam = null;
+
+function saveTeams(){ localStorage.setItem('dnsClueTeams', JSON.stringify(teams)); }
+
+function renderGrid(){
+  const grid = document.getElementById('teamGrid');
+  grid.innerHTML = '';
+  teams.forEach((t, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'team-btn' + (t.claimed ? ' claimed' : '');
+    btn.innerHTML = t.name + (t.claimed ? '<span class="tick">✓ claimed</span>' : '');
+    btn.onclick = () => { if(!t.claimed) openEntry(idx); };
+    grid.appendChild(btn);
+  });
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function openEntry(idx){
+  activeTeam = idx;
+  document.getElementById('entryTeamName').textContent = teams[idx].name;
+  document.getElementById('codeInput').value = '';
+  document.getElementById('entryMsg').textContent = '';
+  document.getElementById('entryMsg').className = 'msg';
+  showScreen('entryScreen');
+  setTimeout(() => document.getElementById('codeInput').focus(), 200);
+}
+
+let resetArmed = false;
+let resetArmTimeout = null;
+
+function handleResetClick(){
+  const btn = document.getElementById('resetBtn');
+  if(!resetArmed){
+    resetArmed = true;
+    btn.textContent = 'Tap again to confirm reset';
+    btn.style.borderColor = 'var(--danger)';
+    btn.style.color = 'var(--danger)';
+    clearTimeout(resetArmTimeout);
+    resetArmTimeout = setTimeout(() => {
+      resetArmed = false;
+      btn.textContent = 'Reset for new class';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }, 4000);
+  } else {
+    clearTimeout(resetArmTimeout);
+    resetArmed = false;
+    teams = DEFAULT_TEAMS.map(t => ({...t}));
+    saveTeams();
+    renderGrid();
+    btn.textContent = 'Reset for new class';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }
+}
+
+function goHome(){
+  renderGrid();
+  showScreen('mainScreen');
+}
+
+function checkCode(){
+  const val = document.getElementById('codeInput').value.trim().toUpperCase();
+  if(val === teams[activeTeam].code){
+    teams[activeTeam].claimed = true;
+    saveTeams();
+    document.getElementById('clueText').textContent = teams[activeTeam].clue;
+    showScreen('clueScreen');
+    const fill = document.getElementById('timerFill');
+    fill.classList.remove('run'); void fill.offsetWidth; fill.classList.add('run');
+    setTimeout(goHome, 20000);
+  } else {
+    const msg = document.getElementById('entryMsg');
+    msg.textContent = "Not quite — double-check your order and try again.";
+    msg.className = 'msg err';
+  }
+}
+
+document.getElementById('codeInput')?.addEventListener('keydown', e => {
+  if(e.key === 'Enter') checkCode();
+});
+
+renderGrid();
+</script>
+
+</body></html>

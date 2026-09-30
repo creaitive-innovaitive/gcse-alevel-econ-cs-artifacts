@@ -1,0 +1,767 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Big O Notation</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: one readable column, sticky section nav. Each complexity class keeps one colour everywhere (charts, chips, tabs). */
+:root{
+  --bg:#EFF2FA; --surface:#FFFFFF; --ink:#111A33; --muted:#4F5B7A; --line:#CFD6EA;
+  --accent:#2946D0; --accent-soft:#DDE3FB; --amber:#A65A00; --amber-soft:#F8E8CF; --bad:#B3372F; --bad-soft:#F8DEDB; --good:#1F7A4D; --good-soft:#D6EFE1;
+  --c1:#5B6B8C; --c2:#0E8A7D; --c3:#2946D0; --c4:#B8650A; --c5:#C4302B;
+  --cell:#E4E9F7; --cell-line:#B9C3E2;
+  --display:'Bricolage Grotesque','Segoe UI',sans-serif; --body:'Source Sans 3','Segoe UI',sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D1226; --surface:#151C36; --ink:#E6EAFA; --muted:#98A3C7; --line:#283154;
+  --accent:#8DA0FF; --accent-soft:#1F2A5C; --amber:#F0A04B; --amber-soft:#3A2A14; --bad:#F0857D; --bad-soft:#3E1D1B; --good:#6CCB9B; --good-soft:#123A28;
+  --c1:#9AA9CC; --c2:#4FD1BF; --c3:#8DA0FF; --c4:#F0A04B; --c5:#FF7A70; --cell:#1E2748; --cell-line:#37426E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D1226; --surface:#151C36; --ink:#E6EAFA; --muted:#98A3C7; --line:#283154;
+  --accent:#8DA0FF; --accent-soft:#1F2A5C; --amber:#F0A04B; --amber-soft:#3A2A14; --bad:#F0857D; --bad-soft:#3E1D1B; --good:#6CCB9B; --good-soft:#123A28;
+  --c1:#9AA9CC; --c2:#4FD1BF; --c3:#8DA0FF; --c4:#F0A04B; --c5:#FF7A70; --cell:#1E2748; --cell-line:#37426E; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:900px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,6vw,3rem);font-weight:700}
+h2{font-size:1.7rem;font-weight:700;margin-bottom:6px}
+h3{font-size:1.15rem;font-weight:700;margin:22px 0 8px}
+p{margin:0 0 12px}
+code,.mono{font-family:var(--mono);font-size:.9em}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+header.hero{padding-block:36px 20px}
+header.hero p{max-width:62ch;color:var(--muted);font-size:1.1rem;margin-top:10px}
+
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding:8px 16px;overflow-x:auto;white-space:nowrap;display:flex;gap:6px}
+nav.top a{font-family:var(--mono);font-size:.8rem;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none}
+nav.top a:hover,nav.top a:focus-visible{border-color:var(--accent);color:var(--accent)}
+
+section.panel{padding-block:34px 6px;scroll-margin-top:60px}
+.sec-label{font-family:var(--mono);font-size:.78rem;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;margin-block:14px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.grid2>*{min-width:0}
+.def{background:var(--accent-soft);border-radius:10px;padding:18px 20px;margin-block:14px}
+.def b.big{font-family:var(--display);font-size:1.3rem}
+.tip,.warn,.good{border-radius:8px;padding:12px 14px;margin-block:12px;font-size:.98rem}
+.tip{background:var(--accent-soft)} .warn{background:var(--amber-soft)} .good{background:var(--good-soft)}
+.tip>b:first-child,.warn>b:first-child,.good>b:first-child{font-family:var(--mono);font-size:.76rem;letter-spacing:.07em;text-transform:uppercase;display:block;margin-bottom:2px}
+.tip>b:first-child{color:var(--accent)} .warn>b:first-child{color:var(--amber)} .good>b:first-child{color:var(--good)}
+pre.code{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-family:var(--mono);font-size:.85rem;line-height:1.5;overflow-x:auto;margin:10px 0}
+button,.btn{font-family:var(--body);font-size:.95rem;font-weight:600;padding:8px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
+:root[data-theme="dark"] button,:root[data-theme="dark"] .btn{color:#0D1226}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button{color:#0D1226}}
+button.ghost{background:transparent;color:var(--accent)}
+button:disabled{opacity:.45;cursor:default}
+button:focus-visible,input:focus-visible,summary:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-block:10px}
+.ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-block:8px}
+.ctrl input[type=range]{flex:1 1 200px;min-width:0;accent-color:var(--accent)}
+.ctrl label{font-weight:600}
+input[type=number],textarea,select{font-family:var(--mono);font-size:.95rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+textarea{width:100%;min-height:80px;font-family:var(--body);font-size:1rem}
+.readout{font-family:var(--mono);font-size:.9rem;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-block:10px}
+.readout b{color:var(--accent)}
+
+/* order tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-block:14px}
+.tab{background:var(--surface);color:var(--ink);border:2px solid var(--line);font-family:var(--mono);font-weight:600}
+.tab[aria-selected="true"]{color:#fff;border-color:transparent}
+.tab[data-i="0"][aria-selected="true"]{background:var(--c1)}.tab[data-i="1"][aria-selected="true"]{background:var(--c2)}.tab[data-i="2"][aria-selected="true"]{background:var(--c3)}.tab[data-i="3"][aria-selected="true"]{background:var(--c4)}.tab[data-i="4"][aria-selected="true"]{background:var(--c5)}
+:root[data-theme="dark"] .tab[aria-selected="true"]{color:#0D1226}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tab[aria-selected="true"]{color:#0D1226}}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px;margin-block:12px}
+.facts>div{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0}
+.facts small{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* cells */
+.cells{display:flex;flex-wrap:wrap;gap:4px;margin-block:10px}
+.cell{width:32px;height:32px;display:grid;place-items:center;font-family:var(--mono);font-size:.72rem;background:var(--cell);border:1px solid var(--cell-line);border-radius:5px;color:var(--ink);padding:0;font-weight:500;cursor:pointer;transition:background .2s,opacity .2s}
+.cell.dim{opacity:.28}
+.cell.seen{opacity:.45}
+.cell.mid{background:var(--amber);color:#fff;border-color:var(--amber)}
+.cell.found{background:var(--good);color:#fff;border-color:var(--good)}
+.cell.target{outline:2px dashed var(--accent);outline-offset:1px}
+.cell.on{background:var(--c4);color:#fff;border-color:var(--c4)}
+.cell.mem{cursor:default;width:auto;min-width:36px;padding-inline:6px}
+.cell.mem.fill{background:var(--accent);color:#fff;border-color:var(--accent)}
+:root[data-theme="dark"] .cell.mid,:root[data-theme="dark"] .cell.found,:root[data-theme="dark"] .cell.on,:root[data-theme="dark"] .cell.mem.fill{color:#0D1226}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cell.mid,:root:not([data-theme="light"]) .cell.found,:root:not([data-theme="light"]) .cell.on,:root:not([data-theme="light"]) .cell.mem.fill{color:#0D1226}}
+.grid-n{display:grid;gap:2px;margin-block:10px;max-width:420px}
+.grid-n i{aspect-ratio:1;background:var(--cell);border-radius:2px}
+.grid-n i.on{background:var(--c4)}
+.grid-n i.cur{background:var(--c5)}
+
+/* chart */
+.chartbox{overflow-x:auto}
+svg.chart{width:100%;min-width:480px;height:auto;display:block}
+svg.chart text{fill:var(--muted);font-family:var(--mono);font-size:11px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-block:8px}
+.legend label{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.85rem;border:1px solid var(--line);border-radius:99px;padding:4px 10px;cursor:pointer;background:var(--surface)}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+td.num{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto}
+
+/* match game */
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:48px;padding:10px;border:2px dashed var(--line);border-radius:10px;margin-block:10px}
+.drag{background:var(--surface);color:var(--ink);border:1px solid var(--cell-line);border-radius:8px;padding:7px 11px;font-weight:600;font-size:.92rem;cursor:grab;user-select:none;text-align:left}
+.drag.sel{outline:3px solid var(--accent);outline-offset:1px}
+.drag.no{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:10px}
+.bucket{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:92px;background:var(--surface);cursor:pointer;min-width:0}
+.bucket h4{margin:0 0 6px;font-family:var(--mono);font-size:.95rem}
+.bucket.over{border-color:var(--accent);background:var(--accent-soft)}
+.bucket .drag{cursor:default;background:var(--good-soft);border-color:var(--good);margin-bottom:5px;display:block;font-size:.85rem}
+
+/* rank */
+ol.rank{list-style:none;margin:10px 0;padding:0;display:grid;gap:6px}
+ol.rank li{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+ol.rank li span{flex:1;font-weight:600;min-width:0}
+ol.rank li.ok{border-color:var(--good);background:var(--good-soft)}
+ol.rank li.bad{border-color:var(--bad);background:var(--bad-soft)}
+ol.rank button{padding:3px 10px}
+
+/* answers */
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-block:12px}
+details>summary{cursor:pointer;padding:14px 16px;font-family:var(--display);font-weight:700;font-size:1.05rem;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"+";font-family:var(--mono);color:var(--accent);width:1ch}
+details[open]>summary::before{content:"\2212"}
+details>.inner{padding:0 16px 16px}
+.marks{font-family:var(--mono);font-size:.78rem;background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:2px 9px;font-weight:600}
+.m1,.m2,.m3,.m4{border-radius:4px;padding:1px 4px}
+.m1{background:var(--accent-soft)} .m2{background:var(--good-soft)} .m3{background:var(--amber-soft)} .m4{background:var(--bad-soft)}
+ul.mp{list-style:none;padding:0;margin:8px 0;display:grid;gap:6px}
+ul.mp li{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:8px}
+ul.mp li:nth-child(4n+1){background:var(--accent-soft)} ul.mp li:nth-child(4n+2){background:var(--good-soft)} ul.mp li:nth-child(4n+3){background:var(--amber-soft)} ul.mp li:nth-child(4n){background:var(--bad-soft)}
+ul.mp input{margin-top:5px;accent-color:var(--accent);width:18px;height:18px;flex:none}
+.score{font-family:var(--mono);font-weight:600}
+svg.diagram{width:100%;max-width:640px;height:auto;display:block;margin-block:8px}
+svg.diagram text{fill:var(--ink);font-family:var(--mono);font-size:13px}
+svg.diagram .sm{fill:var(--muted);font-size:11px}
+svg.diagram .box{fill:var(--cell);stroke:var(--cell-line);stroke-width:1.5}
+svg.diagram .hl{fill:var(--amber-soft);stroke:var(--amber);stroke-width:2}
+svg.diagram .ln{stroke:var(--muted);stroke-width:1.6;fill:none}
+svg.diagram .ptr{fill:var(--accent)}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-block:10px}
+.opts button{background:var(--surface);color:var(--ink);border-color:var(--cell-line);font-family:var(--mono)}
+.opts button.right{background:var(--good);color:#fff;border-color:var(--good)}
+.opts button.wrong{background:var(--bad);color:#fff;border-color:var(--bad)}
+.fb{min-height:1.5em;font-size:.97rem}
+.fb.ok{color:var(--good)} .fb.no{color:var(--bad)}
+.rw{display:grid;gap:12px}
+.rw .card{margin:0}
+.rw h3{margin-top:0}
+.tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;font-weight:600}
+.tag.t1{background:var(--c1);color:#fff}.tag.t2{background:var(--c2);color:#fff}.tag.t3{background:var(--c3);color:#fff}.tag.t4{background:var(--c4);color:#fff}.tag.t5{background:var(--c5);color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tag{color:#0D1226!important}}
+:root[data-theme="dark"] .tag{color:#0D1226!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">A-Level Computer Science · 9618 · Topic 19</div>
+  <h1>19.1.5 Comparing algorithms: Big O notation</h1>
+  <p>How to describe, in one short expression, what happens to an algorithm's running time or memory use as the amount of data grows. Definition, interactive explainers, Activity 19Q answers, past paper questions and a toolkit for spotting the order of any algorithm.</p>
+</header>
+
+<nav class="top" aria-label="Sections">
+  <a href="#def">1 Definition</a><a href="#time">2 Time</a><a href="#space">3 Space</a><a href="#act">4 Activity 19Q</a><a href="#ppq">5 Exam questions</a><a href="#more">6 Toolkit</a>
+</nav>
+
+<!-- 1 DEFINITION -->
+<section class="panel" id="def">
+  <div class="sec-label">1 · Definition</div>
+  <h2>What Big O notation is</h2>
+  <div class="def">
+    <p><b class="big">Big O notation</b> is a mathematical notation used to describe the performance or complexity of an algorithm in relation to the <b>time taken</b> or the <b>memory used</b> for the task. It describes the <b>worst-case</b> scenario.</p>
+    <p style="margin:0">It answers one question: <i>as N (the number of items of data) gets bigger, how fast does the time or memory needed grow?</i></p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">Time complexity</h3><p>How the <b>number of steps</b> (and so the time) grows as N grows. Written like O(N) or O(N²).</p></div>
+    <div class="card"><h3 style="margin-top:0">Space complexity</h3><p>How the <b>amount of memory</b> the algorithm needs grows as N grows. Same notation, different question.</p></div>
+  </div>
+  <div class="tip"><b>Why not just time it in seconds?</b>Seconds depend on the computer, the language and what else is running. Big O counts steps against N, so it compares the <i>algorithms</i>, not the machines. A fast laptop running an O(N²) algorithm still loses to a slow phone running O(log N) once N is big enough.</div>
+
+  <h3>Worked example: searching a list</h3>
+  <p>You want to find a name in a list of N names using a <b>linear search</b>: check item 1, then item 2, and so on. Pick where the name sits and watch the steps.</p>
+  <div class="card" id="demo1">
+    <div class="ctrl"><label for="d1N">Items in the list, N = <b id="d1Nv">20</b></label><input type="range" id="d1N" min="4" max="40" value="20"></div>
+    <div class="ctrl"><label for="d1pos">Where is the name?</label>
+      <select id="d1pos"><option value="best">First item (best case)</option><option value="avg">Middle (average case)</option><option value="worst" selected>Last item or not there (worst case)</option></select></div>
+    <div class="cells" id="d1cells" aria-label="List of items"></div>
+    <div class="btnrow"><button id="d1run">▶ Run the search</button><button class="ghost" id="d1stop">Reset</button></div>
+    <div class="readout" id="d1out"></div>
+  </div>
+  <div class="warn"><b>Big O uses the worst case</b>The first item might be found in 1 step, but Big O quotes the worst case: all N items checked. So a linear search is <code>O(N)</code> even though it sometimes gets lucky.</div>
+
+  <h3>The five orders you need</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Notation</th><th>Name</th><th>Time complexity example</th></tr></thead>
+    <tbody>
+      <tr><td><code>O(1)</code></td><td>Constant</td><td>Deciding if a number is even or odd</td></tr>
+      <tr><td><code>O(log N)</code></td><td>Logarithmic</td><td>Binary search</td></tr>
+      <tr><td><code>O(N)</code></td><td>Linear</td><td>Linear search</td></tr>
+      <tr><td><code>O(N²)</code></td><td>Polynomial</td><td>Bubble sort, insertion sort</td></tr>
+      <tr><td><code>O(2<sup>N</sup>)</code></td><td>Exponential</td><td>Recursive calculation of Fibonacci numbers</td></tr>
+    </tbody></table></div>
+  <p style="margin-top:10px;color:var(--muted);font-size:.95rem">For space complexity the syllabus only asks for <code>O(1)</code> and <code>O(N)</code>. The textbook writes the exponential one as O(2N) in places. It means 2 to the power N, not 2 × N.</p>
+</section>
+
+<!-- 2 TIME -->
+<section class="panel" id="time">
+  <div class="sec-label">2 · Time complexity</div>
+  <h2>Each order of time complexity, explained</h2>
+  <p>Pick an order. Each one has a live demo you can drive.</p>
+  <div class="tabs" role="tablist" id="ttabs"></div>
+  <div class="card" id="tpanel"></div>
+
+  <h3>All five side by side</h3>
+  <p>Drag N along and watch the curves separate. Everything looks similar for tiny N. The difference only becomes obvious as N grows, and that is exactly when it matters.</p>
+  <div class="card">
+    <div class="legend" id="legend"></div>
+    <div class="chartbox"><svg class="chart" id="chart" viewBox="0 0 640 330" role="img" aria-label="Growth curves for each Big O order"></svg></div>
+    <div class="ctrl"><label for="chN">N = <b id="chNv">10</b></label><input type="range" id="chN" min="1" max="20" value="10">
+      <label for="chY">Chart height</label><select id="chY"><option value="50">50 steps</option><option value="100" selected>100 steps</option><option value="500">500 steps</option><option value="1000">1,000 steps</option></select></div>
+    <div class="tablewrap"><table><thead><tr><th>Order</th><th style="text-align:right">Steps at this N</th><th style="text-align:right">Steps at 2N</th></tr></thead><tbody id="chTable"></tbody></table></div>
+  </div>
+
+  <h3>Activity: match the algorithm to its order</h3>
+  <p>Drag each card into a box, or tap a card then tap a box.</p>
+  <div class="card" id="match">
+    <div class="pool" id="pool" aria-label="Cards to sort"></div>
+    <div class="buckets" id="buckets"></div>
+    <div class="readout" id="mscore"></div>
+    <button class="ghost" id="mreset">Shuffle and restart</button>
+  </div>
+
+  <h3>Activity: put them in order</h3>
+  <p>Rank the orders from <b>slowest-growing (best)</b> at the top to <b>fastest-growing (worst)</b> at the bottom.</p>
+  <div class="card">
+    <ol class="rank" id="rank"></ol>
+    <div class="btnrow"><button id="rcheck">Check order</button><button class="ghost" id="rshuf">Shuffle</button></div>
+    <div class="fb" id="rfb"></div>
+  </div>
+
+  <div class="tip"><b>Top tip: doubling test</b>To recognise an order, ask what happens to the time when N doubles. Same time: O(1). One extra step: O(log N). Twice the time: O(N). Four times the time: O(N²). Squared, or worse: O(2<sup>N</sup>) (adding just one item doubles it).</div>
+</section>
+
+<!-- 3 SPACE -->
+<section class="panel" id="space">
+  <div class="sec-label">3 · Space complexity</div>
+  <h2>Each order of space complexity, explained</h2>
+  <p>Space complexity asks how much <b>memory</b> the algorithm needs as N grows. The syllabus gives two orders.</p>
+  <div class="ctrl"><label for="spN">Amount of data, N = <b id="spNv">10</b></label><input type="range" id="spN" min="1" max="30" value="10"></div>
+  <div class="grid2">
+    <div class="card">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="tag t1">O(1)</span><b>Constant space</b></div>
+      <p style="margin-top:8px">Always uses the same amount of memory to do the task. <b>Example:</b> any algorithm that just uses variables, such as <code>d = a + b + c</code>.</p>
+      <pre class="code">d ← a + b + c</pre>
+      <div class="cells" id="sp1cells"></div>
+      <div class="readout" id="sp1out"></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="tag t3">O(N)</span><b>Linear space</b></div>
+      <p style="margin-top:8px">Memory grows in direct proportion to N. <b>Example:</b> any algorithm that uses arrays, such as a loop that calculates a running total of values input to an array of N elements.</p>
+      <pre class="code">DECLARE values : ARRAY[1:N] OF INTEGER
+total ← 0
+FOR i ← 1 TO N
+   INPUT values[i]
+   total ← total + values[i]
+NEXT i</pre>
+      <div class="cells" id="sp2cells"></div>
+      <div class="readout" id="sp2out"></div>
+      <button id="sp2run">▶ Fill the array</button>
+    </div>
+  </div>
+  <div class="card">
+    <b>Memory used as N grows</b>
+    <div class="tablewrap"><table><thead><tr><th>N</th><th style="text-align:right">O(1) cells</th><th style="text-align:right">O(N) cells (array + total + counter)</th></tr></thead><tbody id="spTable"></tbody></table></div>
+  </div>
+  <div class="warn"><b>Common mistake</b>A loop that runs N times but only ever stores one running total uses <b>O(1) space</b>, and takes <b>O(N) time</b>. Space counts memory, time counts steps. Read the question to see which one is asked.</div>
+
+  <h3>Activity: time or space, which order?</h3>
+  <div class="card" id="spq"></div>
+
+  <div class="tip"><b>Going further (not required for 9618)</b>Recursion also uses memory: each call adds a stack frame. A recursive factorial of N stacks N frames, so it needs O(N) space even though it declares no array. Useful in an evaluation point about recursion vs iteration.</div>
+</section>
+
+<!-- 4 ACTIVITY 19Q -->
+<section class="panel" id="act">
+  <div class="sec-label">4 · Textbook activity</div>
+  <h2>Activity 19Q: answers with explainers</h2>
+  <p>Open each question for a model answer, a diagram and the reasoning behind it. Mark points are colour-coded like a mark scheme.</p>
+
+  <details open><summary>Q1 a) Using a diagram, describe the structure of a binary tree <span class="marks">3–4 marks</span></summary><div class="inner">
+    <svg class="diagram" viewBox="0 0 640 250" role="img" aria-label="Binary tree with root 27 and children 15 and 40">
+      <g class="ln"><line x1="320" y1="46" x2="180" y2="112"/><line x1="320" y1="46" x2="460" y2="112"/><line x1="180" y1="136" x2="100" y2="196"/><line x1="180" y1="136" x2="260" y2="196"/><line x1="460" y1="136" x2="540" y2="196"/></g>
+      <g><rect class="hl" x="290" y="20" width="60" height="30" rx="6"/><text x="320" y="40" text-anchor="middle">27</text><text class="sm" x="320" y="14" text-anchor="middle">root</text>
+      <rect class="box" x="150" y="108" width="60" height="30" rx="6"/><text x="180" y="128" text-anchor="middle">15</text>
+      <rect class="box" x="430" y="108" width="60" height="30" rx="6"/><text x="460" y="128" text-anchor="middle">40</text>
+      <rect class="box" x="70" y="192" width="60" height="30" rx="6"/><text x="100" y="212" text-anchor="middle">9</text>
+      <rect class="box" x="230" y="192" width="60" height="30" rx="6"/><text x="260" y="212" text-anchor="middle">21</text>
+      <rect class="box" x="510" y="192" width="60" height="30" rx="6"/><text x="540" y="212" text-anchor="middle">52</text>
+      <text class="sm" x="180" y="240" text-anchor="middle">left subtree of 27</text><text class="sm" x="380" y="240" text-anchor="start">null pointers below leaf nodes</text></g>
+    </svg>
+    <ul class="mp">
+      <li><span>A tree is made of <b>nodes</b>, joined by branches. The top node is the <b>root</b>.</span></li>
+      <li><span>Each node has <b>at most two children</b>: a <b>left child</b> and a <b>right child</b>.</span></li>
+      <li><span>Each node holds <b>data</b> plus a <b>left pointer</b> and a <b>right pointer</b> (null if there is no child). A node with no children is a <b>leaf</b>.</span></li>
+      <li><span>In an ordered tree: smaller values go to the left of a node, larger to the right, which is why binary trees are quick to search.</span></li>
+    </ul>
+    <div class="tip"><b>Exam tip</b>Label root, node, leaf, left pointer and right pointer on your diagram. A bare circle-and-lines sketch with no labels usually loses marks.</div>
+  </div></details>
+
+  <details><summary>Q1 b) Using a diagram, describe the structure of a linked list <span class="marks">3–4 marks</span></summary><div class="inner">
+    <svg class="diagram" viewBox="0 0 640 150" role="img" aria-label="Linked list of three nodes with a start pointer">
+      <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" class="ptr"/></marker></defs>
+      <text class="sm" x="10" y="40">Start pointer</text><line class="ln" x1="60" y1="50" x2="60" y2="70" marker-end="url(#ah)" style="stroke:var(--accent)"/>
+      <g>
+        <rect class="box" x="20" y="72" width="100" height="36"/><line class="ln" x1="80" y1="72" x2="80" y2="108"/><text x="50" y="95" text-anchor="middle">Ali</text><circle class="ptr" cx="100" cy="90" r="4"/>
+        <rect class="box" x="200" y="72" width="100" height="36"/><line class="ln" x1="260" y1="72" x2="260" y2="108"/><text x="230" y="95" text-anchor="middle">Bea</text><circle class="ptr" cx="280" cy="90" r="4"/>
+        <rect class="box" x="380" y="72" width="100" height="36"/><line class="ln" x1="440" y1="72" x2="440" y2="108"/><text x="410" y="95" text-anchor="middle">Cy</text><text x="460" y="95" text-anchor="middle" style="fill:var(--bad)">null</text>
+        <line x1="100" y1="90" x2="198" y2="90" style="stroke:var(--accent);stroke-width:1.8" marker-end="url(#ah)"/>
+        <line x1="280" y1="90" x2="378" y2="90" style="stroke:var(--accent);stroke-width:1.8" marker-end="url(#ah)"/>
+        <text class="sm" x="50" y="128" text-anchor="middle">data</text><text class="sm" x="100" y="128" text-anchor="middle">pointer</text>
+      </g>
+      <text class="sm" x="510" y="95">last node's pointer = null</text>
+    </svg>
+    <ul class="mp">
+      <li><span>A linked list is a set of <b>nodes</b>. Each node has a <b>data</b> field and a <b>pointer</b> field.</span></li>
+      <li><span>The pointer holds the <b>address/index of the next node</b>, so nodes need not be next to each other in memory.</span></li>
+      <li><span>A <b>start pointer</b> identifies the first node. The <b>last node's pointer is null</b> to mark the end.</span></li>
+      <li><span>Nodes are inserted or deleted by <b>changing pointers</b>, so no data has to be shifted, and the list can grow or shrink.</span></li>
+    </ul>
+    <div class="tip"><b>Exam tip</b>In a linked list you can only reach a node by following pointers from the start. That is why searching it is O(N), never O(log N).</div>
+  </div></details>
+
+  <details><summary>Q2 a) Explain what is meant by a dictionary data type <span class="marks">2 marks</span></summary><div class="inner">
+    <p><span class="m1">A dictionary is an abstract data type (ADT) made of <b>pairs</b>: each pair has a <b>key</b> and a <b>value</b>.</span> <span class="m2">The <b>key is used to find the value</b>, so you look items up by key, not by position.</span></p>
+    <p>Real-life picture: a phone contacts list. The name is the key, the number is the value. In the textbook's example the student ID is the key and the name is the value (<code>27 → Leon</code>, <code>78 → Ahmad</code>, <code>64 → Susie</code>). Keys must be unique.</p>
+    <div class="tip"><b>Exam tip</b>"Explain" needs two ideas: what it stores (key/value pairs) and how it is used (key finds the value). One half alone gets one mark.</div>
+  </div></details>
+
+  <details><summary>Q2 b) Show how a dictionary can be constructed from a linked list <span class="marks">4+ marks</span></summary><div class="inner">
+    <p>Make each <b>node</b> of the linked list hold a <b>key</b>, a <b>value</b> and a <b>pointer</b>. The nodes are linked in the same way as an ordinary linked list.</p>
+    <svg class="diagram" viewBox="0 0 640 130" role="img" aria-label="Dictionary as a linked list of key value pointer nodes">
+      <defs><marker id="ah2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" class="ptr"/></marker></defs>
+      <text class="sm" x="8" y="22">startPointer</text><line x1="40" y1="30" x2="40" y2="50" style="stroke:var(--accent);stroke-width:1.8" marker-end="url(#ah2)"/>
+      <g>
+        <rect class="box" x="10" y="52" width="150" height="36"/><line class="ln" x1="45" y1="52" x2="45" y2="88"/><line class="ln" x1="115" y1="52" x2="115" y2="88"/><text x="27" y="75" text-anchor="middle">27</text><text x="80" y="75" text-anchor="middle">Leon</text><circle class="ptr" cx="138" cy="70" r="4"/>
+        <rect class="box" x="210" y="52" width="150" height="36"/><line class="ln" x1="245" y1="52" x2="245" y2="88"/><line class="ln" x1="315" y1="52" x2="315" y2="88"/><text x="227" y="75" text-anchor="middle">78</text><text x="280" y="75" text-anchor="middle">Ahmad</text><circle class="ptr" cx="338" cy="70" r="4"/>
+        <rect class="box" x="410" y="52" width="150" height="36"/><line class="ln" x1="445" y1="52" x2="445" y2="88"/><line class="ln" x1="515" y1="52" x2="515" y2="88"/><text x="427" y="75" text-anchor="middle">64</text><text x="480" y="75" text-anchor="middle">Susie</text><text x="538" y="75" text-anchor="middle" style="fill:var(--bad)" class="sm">null</text>
+        <line x1="138" y1="70" x2="208" y2="70" style="stroke:var(--accent);stroke-width:1.8" marker-end="url(#ah2)"/>
+        <line x1="338" y1="70" x2="408" y2="70" style="stroke:var(--accent);stroke-width:1.8" marker-end="url(#ah2)"/>
+        <text class="sm" x="27" y="108" text-anchor="middle">key</text><text class="sm" x="80" y="108" text-anchor="middle">value</text><text class="sm" x="138" y="108" text-anchor="middle">pointer</text>
+      </g>
+    </svg>
+    <p><b>To look a value up:</b> start at <code>startPointer</code>, compare each node's key with the key wanted, and follow the pointer if they differ. When the keys match, return that node's value. If you reach the null pointer the key is not in the dictionary.</p>
+    <p><b>Add</b> a pair: take a free node, fill in key and value, and link it in. <b>Delete</b> a pair: point the previous node at the node after it.</p>
+    <pre class="code">TYPE dictNode
+   DECLARE key     : INTEGER
+   DECLARE value   : STRING
+   DECLARE pointer : INTEGER
+ENDTYPE
+
+DECLARE myDictionary : ARRAY[0:19] OF dictNode
+DECLARE startPointer     : INTEGER   // first node in use
+DECLARE heapStartPointer : INTEGER   // first free node</pre>
+    <div class="card">
+      <b>Try it: look up a key</b>
+      <div class="btnrow" id="dlook"></div>
+      <div class="readout" id="dlout">Choose a key to look up.</div>
+    </div>
+    <div class="good"><b>Link to Big O</b>Every lookup walks the list from the start, so this dictionary is O(N) to search, just like a linear search. Real dictionaries in programming languages use a hash table to get close to O(1), which is why they are so fast.</div>
+  </div></details>
+
+  <details><summary>Q3 Compare the performance of a linear search and a binary search using Big O notation <span class="marks">4 marks</span></summary><div class="inner">
+    <p>Model answer, colour-coded by mark point:</p>
+    <p><span class="m1">A linear search has time complexity <b>O(N)</b>, where N is the number of items in the list.</span> <span class="m2">The time taken is directly proportional to N: if the list doubles, the worst-case time doubles.</span> <span class="m3">A binary search has time complexity <b>O(log N)</b>. The time taken goes up only by a small, fixed amount each time the list doubles, so it increases linearly as the number of items increases exponentially.</span> <span class="m4">So a binary search becomes far more time-efficient than a linear search as the list gets bigger (though it needs the data to be sorted).</span></p>
+    <div class="card">
+      <b>Race them: worst-case comparisons</b>
+      <div class="ctrl"><label for="raceN">List size N = <b id="raceNv">1,000</b></label><input type="range" id="raceN" min="1" max="20" value="10"></div>
+      <div class="facts"><div><small>Linear search · O(N)</small><b class="mono" id="raceL"></b></div><div><small>Binary search · O(log N)</small><b class="mono" id="raceB"></b></div></div>
+      <div style="display:grid;gap:6px;margin-top:8px"><div style="display:flex;gap:8px;align-items:center"><span class="mono" style="width:56px">Linear</span><div style="flex:1;height:14px;background:var(--cell);border-radius:4px;overflow:hidden"><div id="raceLb" style="height:100%;background:var(--c3);width:100%"></div></div></div>
+      <div style="display:flex;gap:8px;align-items:center"><span class="mono" style="width:56px">Binary</span><div style="flex:1;height:14px;background:var(--cell);border-radius:4px;overflow:hidden"><div id="raceBb" style="height:100%;background:var(--c2);width:1%"></div></div></div></div>
+    </div>
+    <div class="tip"><b>Exam tip</b>"Compare" means both sides, joined by a comparative word: "whereas", "much slower", "more efficient". Two separate descriptions with no comparison lose the last mark. Always quote the notation <i>and</i> say what it means.</div>
+  </div></details>
+</section>
+
+<!-- 5 PAST PAPER -->
+<section class="panel" id="ppq">
+  <div class="sec-label">5 · Exam questions</div>
+  <h2>Past paper questions on Big O</h2>
+  <p>The two real Cambridge questions from your Chapter 19 practice set that test this topic. Write your answer, reveal the mark points, and tick the ones you earned.</p>
+  <div class="card" style="background:var(--bg)"><b>Command word reminders</b>
+    <ul style="margin:6px 0 0;padding-left:20px"><li><b>State</b>: one short fact, no explanation.</li><li><b>Describe</b>: say what happens, using the right terms.</li><li><b>Explain</b>: say what happens and why.</li><li><b>Compare</b>: similarities or differences of both, side by side.</li></ul></div>
+  <div id="ppqs"></div>
+
+  <h3>Extra practice (written for revision, not past papers)</h3>
+  <p>Same style and mark allocation. These cover space complexity and the doubling test, which are less common in past papers but are on the syllabus.</p>
+  <div id="xqs"></div>
+</section>
+
+<!-- 6 TOOLKIT -->
+<section class="panel" id="more">
+  <div class="sec-label">6 · Toolkit</div>
+  <h2>Spotting the order of any algorithm</h2>
+  <div class="card">
+    <h3 style="margin-top:0">Four rules that cover almost everything</h3>
+    <div class="tablewrap"><table><thead><tr><th>If the code…</th><th>Then it is…</th></tr></thead><tbody>
+      <tr><td>does a fixed number of steps, whatever N is (even a loop of 10)</td><td><code>O(1)</code></td></tr>
+      <tr><td>halves the problem each time (halving N, or discarding half the list)</td><td><code>O(log N)</code></td></tr>
+      <tr><td>has one loop that goes through the N items once</td><td><code>O(N)</code></td></tr>
+      <tr><td>has a loop <b>inside</b> a loop, both over N</td><td><code>O(N²)</code></td></tr>
+      <tr><td>calls itself twice, each with a slightly smaller problem (or tries every combination)</td><td><code>O(2<sup>N</sup>)</code></td></tr>
+    </tbody></table></div>
+    <p style="margin-top:10px">Loops <b>one after another</b> add (N + N is still O(N)). Loops <b>inside each other</b> multiply (N × N = O(N²)).</p>
+  </div>
+
+  <h3>Activity: code spotter</h3>
+  <div class="card" id="spot"></div>
+
+  <h3>Real-world examples</h3>
+  <p>Picture N as the number of things you have to deal with.</p>
+  <div class="rw">
+    <div class="card"><span class="tag t1">O(1)</span><h3>Constant: a locker</h3><p>You know the locker number, so you walk straight to it. 10 lockers or 10,000, one step. A light switch, reading <code>array[5]</code> and the even/odd check work the same way.</p><p class="mono" style="color:var(--muted)">In an exam: "the time taken does not depend on the number of items."</p></div>
+    <div class="card"><span class="tag t2">O(log N)</span><h3>Logarithmic: guess my number</h3><p>Guess a number from 1 to 1,000 and I answer "higher" or "lower". Always guess the middle and you need at most 10 guesses. Double the range to 2,000 and it costs just one more guess. Finding a word in a paper dictionary by opening near the middle is the same idea.</p><p class="mono" style="color:var(--muted)">In an exam: binary search, on sorted data only.</p></div>
+    <div class="card"><span class="tag t3">O(N)</span><h3>Linear: finding a name on an unsorted register</h3><p>Nobody has sorted the register, so you read down it until you find the name. A register twice as long takes twice as long. Reading a book page by page and totalling a shopping receipt are the same.</p><p class="mono" style="color:var(--muted)">In an exam: linear search, running total.</p></div>
+    <div class="card"><span class="tag t4">O(N²)</span><h3>Quadratic: everyone shakes hands with everyone</h3><p>10 people in a room: about 100 handshake attempts (45 distinct pairs, still growing with N²). Invite 20 people and it is about 400, four times as many. Bubble sort compares every item against many others in the same way.</p><p class="mono" style="color:var(--muted)">In an exam: bubble sort and insertion sort.</p></div>
+    <div class="card"><span class="tag t5">O(2<sup>N</sup>)</span><h3>Exponential: the combination lock</h3><p>A lock with N on/off switches has 2<sup>N</sup> combinations. Each extra switch doubles the tries. 10 switches: 1,024. 30 switches: over a billion. It is why brute-forcing long passwords is impractical. Recursive Fibonacci behaves like this because each call spawns two more.</p><p class="mono" style="color:var(--muted)">In an exam: recursive Fibonacci; "adding one item doubles the time".</p></div>
+    <div class="card"><span class="tag t1">Space</span><h3>Space: sticky note vs photocopied register</h3><p>Adding three numbers needs a sticky note with three numbers and an answer: O(1), however big the numbers are. Copying a whole class register onto a new sheet needs space that grows with the class size: O(N).</p></div>
+  </div>
+
+  <h3>Common mistakes</h3>
+  <div class="grid2">
+    <div class="warn"><b>Mistake</b>Writing "O(N) means it takes N seconds." It means the number of steps grows in proportion to N. Never quote seconds.</div>
+    <div class="warn"><b>Mistake</b>Saying binary search works on any list. It needs the data <b>sorted</b> first. Sorting costs time too.</div>
+    <div class="warn"><b>Mistake</b>Reading O(2<sup>N</sup>) as "2 × N". Doubling per item is very different from doubling once.</div>
+    <div class="warn"><b>Mistake</b>Giving best case. A linear search that finds the item first time is not O(1). Big O is worst case.</div>
+  </div>
+
+  <h3>Top tips</h3>
+  <div class="grid2">
+    <div class="tip"><b>Tip 1</b>Learn the table cold: five time orders with one example each, two space orders with one example each. Most marks are direct recall.</div>
+    <div class="tip"><b>Tip 2</b>For "describe the performance", give the notation <i>and</i> a plain-English sentence about how time changes as N grows.</div>
+    <div class="tip"><b>Tip 3</b>Use the words "as the number of items increases". Answers that skip the link to N do not earn the mark.</div>
+    <div class="tip"><b>Tip 4</b>Marks match the question: 1 mark for the notation, 1 for the meaning, extra marks for the comparison.</div>
+    <div class="tip"><b>Tip 5</b>Link back to what you know: nested loops in sorts, halving in binary search, one pass in linear search.</div>
+    <div class="tip"><b>Tip 6</b>Say "worst case" once in any answer. It shows you know what Big O measures.</div>
+  </div>
+  <p style="color:var(--muted);font-size:.9rem;margin-top:24px">Source: Cambridge International AS &amp; A Level Computer Science (Williams &amp; Watson), 19.1.5 and Activity 19Q. Past paper questions from 9618 Paper 3. Mark points for the past paper questions follow your Chapter 19 practice set.</p>
+</section>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var fmt=function(n){return n>=1e15?n.toExponential(2):n.toLocaleString('en-GB')};
+var log2=Math.log2;
+var timers={};
+function stopT(k){if(timers[k]){clearInterval(timers[k]);timers[k]=null}}
+function every(k,ms,fn){stopT(k);timers[k]=setInterval(function(){if(fn()===false)stopT(k)},ms)}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function humanTime(sec){
+  if(sec<0.001)return '< 1 ms';
+  if(sec<1)return (sec*1000).toFixed(0)+' ms';
+  if(sec<60)return sec.toFixed(1)+' seconds';
+  if(sec<3600)return (sec/60).toFixed(1)+' minutes';
+  if(sec<86400)return (sec/3600).toFixed(1)+' hours';
+  if(sec<31536000)return (sec/86400).toFixed(1)+' days';
+  var y=sec/31536000;return y<1e9?fmt(Math.round(y))+' years':y.toExponential(2)+' years';
+}
+function fibCalls(n){var a=1,b=1;for(var i=2;i<=n;i++){var c=a+b+1;a=b;b=c}return n<2?1:b}
+
+/* ---------- 1 definition demo ---------- */
+(function(){
+  var N=$('#d1N'),pos=$('#d1pos'),cells=$('#d1cells'),out=$('#d1out');
+  function target(){var n=+N.value;return pos.value==='best'?0:pos.value==='avg'?Math.floor(n/2):n-1}
+  function draw(cur,done){
+    var n=+N.value,t=target(),h='';
+    for(var i=0;i<n;i++){var c='cell';if(i===t)c+=' target';if(cur>=0&&i<cur)c+=' seen';if(i===cur)c+=done?' found':' mid';h+='<span class="'+c+'">'+(i+1)+'</span>'}
+    cells.innerHTML=h;$('#d1Nv').textContent=n;
+  }
+  function reset(){stopT('d1');draw(-1,false);out.innerHTML='Steps taken: <b>0</b> · the name is at position <b>'+(target()+1)+'</b> · worst case for N = '+N.value+' is <b>'+N.value+'</b> steps.'}
+  $('#d1run').onclick=function(){
+    var i=-1,t=target();draw(-1,false);
+    every('d1',Math.max(60,400-N.value*8),function(){
+      i++;var d=i===t;draw(i,d);
+      out.innerHTML='Steps taken: <b>'+(i+1)+'</b> of a possible '+N.value+(d?' · <b>found</b> at position '+(i+1):' · checking item '+(i+1)+'…');
+      return !d;
+    });
+  };
+  $('#d1stop').onclick=reset;N.oninput=reset;pos.onchange=reset;reset();
+})();
+
+/* ---------- 2 time complexity ---------- */
+var ORD=[
+ {k:'O(1)',name:'Constant',c:1,desc:'Always takes the <b>same time</b> to perform the task, however much data there is.',ex:'Deciding if a number is even or odd.',real:'Opening a locker when you know its number: 10 lockers or 10,000, one step.',dbl:'Same time',f:function(){return 1}},
+ {k:'O(log N)',name:'Logarithmic',c:2,desc:'The time goes up <b>linearly as the number of items goes up exponentially</b>. Double the data and you add just one extra step.',ex:'Binary search (on sorted data).',real:'Guess a number 1 to 1,000 with "higher/lower" clues: 10 guesses at most.',dbl:'One extra step',f:function(n){return Math.log2(n)}},
+ {k:'O(N)',name:'Linear',c:3,desc:'The time grows <b>linearly, in direct proportion to N</b>, the number of items of data the algorithm is using.',ex:'A linear search.',real:'Reading down an unsorted register for one name.',dbl:'Twice the time',f:function(n){return n}},
+ {k:'O(N²)',name:'Polynomial (quadratic)',c:4,desc:'The time grows in direct proportion to the <b>square of N</b>. Typically a loop inside a loop.',ex:'Bubble sort, insertion sort.',real:'Everyone in a room shakes hands with everyone else.',dbl:'Four times the time',f:function(n){return n*n}},
+ {k:'O(2<sup>N</sup>)',name:'Exponential',c:5,desc:'The time <b>doubles every time the algorithm uses one extra item</b> of data.',ex:'Calculating Fibonacci numbers using recursion.',real:'Trying every combination of an N-switch lock.',dbl:'Squares (N + 1 items doubles it)',f:function(n){return Math.pow(2,n)}}
+];
+var tsel=0,idc=0;
+function searchVis(root,mode){
+  var id='sv'+(idc++),lin=mode==='lin';
+  root.innerHTML='<div class="ctrl"><label for="'+id+'N">Items, N = <b id="'+id+'Nv"></b></label><input type="range" id="'+id+'N" min="4" max="64" value="32"></div>'+
+   '<p style="margin:0 0 4px;color:var(--muted);font-size:.93rem">'+(lin?'Items are in any order. ':'Items are <b>sorted</b>, which binary search needs. ')+'Tap a cell to choose what to search for (dashed outline).</p>'+
+   '<div class="cells" id="'+id+'c"></div>'+
+   '<div class="btnrow"><button id="'+id+'play">▶ Play</button><button class="ghost" id="'+id+'step">Step</button><button class="ghost" id="'+id+'worst">Pick worst case</button><button class="ghost" id="'+id+'reset">Reset</button></div>'+
+   '<div class="readout" id="'+id+'r"></div>';
+  var N=$('#'+id+'N'),box=$('#'+id+'c'),r=$('#'+id+'r'),st,tgt;
+  function binSteps(t,n){var lo=0,hi=n-1,s=0;while(lo<=hi){var m=(lo+hi)>>1;s++;if(m===t)return s;if(t<m)hi=m-1;else lo=m+1}return s}
+  function worstIdx(n){if(lin)return n-1;var b=0,bi=0;for(var i=0;i<n;i++){var s=binSteps(i,n);if(s>b){b=s;bi=i}}return bi}
+  function worstVal(n){return lin?n:Math.floor(log2(n))+1}
+  function init(){var n=+N.value;stopT(id);st={lo:0,hi:n-1,i:-1,steps:0,mid:-1,found:false};if(tgt===undefined||tgt>=n)tgt=worstIdx(n);draw()}
+  function draw(){
+    var n=+N.value,h='';$('#'+id+'Nv').textContent=n;
+    for(var i=0;i<n;i++){
+      var c='cell';if(i===tgt)c+=' target';
+      if(lin){if(i<st.i)c+=' seen';if(i===st.i)c+=st.found?' found':' mid'}
+      else{if(i<st.lo||i>st.hi)c+=' dim';if(i===st.mid)c=c.replace(' dim','')+(st.found?' found':' mid')}
+      h+='<button class="'+c+'" data-i="'+i+'" aria-label="Item '+(i+1)+'">'+(lin?(((i*7+3)%90)+10):(i+1)*2)+'</button>';
+    }
+    box.innerHTML=h;
+    r.innerHTML='Comparisons so far: <b>'+st.steps+'</b> · worst case for N = '+n+': <b>'+worstVal(n)+'</b> '+(lin?'(N)':'(floor(log₂N) + 1)')+(st.found?' · <b>found</b>':'');
+  }
+  function step(){
+    var n=+N.value;if(st.found)return false;
+    if(lin){st.i++;st.steps++;if(st.i===tgt)st.found=true;if(st.i>=n-1&&!st.found)return false}
+    else{if(st.lo>st.hi)return false;var m=(st.lo+st.hi)>>1;st.mid=m;st.steps++;if(m===tgt)st.found=true;else if(tgt<m)st.hi=m-1;else st.lo=m+1}
+    draw();return !st.found;
+  }
+  box.onclick=function(e){var b=e.target.closest('button');if(!b)return;tgt=+b.dataset.i;init()};
+  N.oninput=init;
+  $('#'+id+'play').onclick=function(){init();every(id,lin?110:750,step)};
+  $('#'+id+'step').onclick=function(){stopT(id);step()};
+  $('#'+id+'worst').onclick=function(){tgt=worstIdx(+N.value);init()};
+  $('#'+id+'reset').onclick=init;
+  init();
+}
+function gridVis(root){
+  root.innerHTML='<div class="ctrl"><label for="gN">N = <b id="gNv"></b></label><input type="range" id="gN" min="2" max="16" value="8"></div>'+
+   '<pre class="code">FOR i ← 1 TO N\n   FOR j ← 1 TO N\n      compare items i and j\n   NEXT j\nNEXT i</pre>'+
+   '<div class="grid-n" id="gg"></div><div class="btnrow"><button id="gplay">▶ Run the loops</button><button class="ghost" id="greset">Reset</button></div><div class="readout" id="gr"></div>';
+  var N=$('#gN'),g=$('#gg'),r=$('#gr');
+  function build(){var n=+N.value;stopT('g');$('#gNv').textContent=n;g.style.gridTemplateColumns='repeat('+n+',1fr)';g.style.maxWidth=Math.min(420,n*30)+'px';g.innerHTML=new Array(n*n+1).join('<i></i>');
+    r.innerHTML='Inner-loop steps: <b>0</b> of N × N = <b>'+n*n+'</b> · double N to '+n*2+' and it becomes <b>'+(4*n*n)+'</b> (four times).'}
+  N.oninput=build;$('#greset').onclick=build;
+  $('#gplay').onclick=function(){build();var n=+N.value,k=0,cs=g.children;every('g',Math.max(8,600/n),function(){if(k>0)cs[k-1].className='on';if(k>=n*n){r.innerHTML='Finished: <b>'+(n*n)+'</b> steps = N × N. That is O(N²).';return false}cs[k].className='cur';k++;r.innerHTML='Inner-loop steps: <b>'+k+'</b> of N × N = <b>'+n*n+'</b>'})};
+  build();
+}
+function expVis(root){
+  root.innerHTML='<div class="ctrl"><label for="eN">N items, N = <b id="eNv"></b></label><input type="range" id="eN" min="1" max="50" value="10"></div>'+
+   '<div class="facts"><div><small>Steps = 2<sup>N</sup></small><b class="mono" id="eS"></b></div><div><small>At 1 million steps per second</small><b id="eT"></b></div><div><small>Recursive fib(N) function calls</small><b class="mono" id="eF"></b></div></div>'+
+   '<div class="tablewrap"><table><thead><tr><th>N</th><th style="text-align:right">2<sup>N</sup> steps</th><th>Time at 1M steps/s</th></tr></thead><tbody id="eTab"></tbody></table></div>';
+  var N=$('#eN');
+  function up(){var n=+N.value,s=Math.pow(2,n);$('#eNv').textContent=n;$('#eS').textContent=fmt(s);$('#eT').textContent=humanTime(s/1e6);$('#eF').textContent=n<=40?fmt(fibCalls(n)):'too many';
+    var h='';for(var i=Math.max(1,n-4);i<=n;i++){var v=Math.pow(2,i);h+='<tr'+(i===n?' style="font-weight:600"':'')+'><td>'+i+'</td><td class="num">'+fmt(v)+'</td><td>'+humanTime(v/1e6)+'</td></tr>'}
+    $('#eTab').innerHTML=h}
+  N.oninput=up;up();
+}
+function constVis(root){
+  root.innerHTML='<div class="ctrl"><label for="oN">Type any whole number</label><input type="number" id="oN" value="7" min="0" step="1"><button id="oGo">Odd or even?</button></div>'+
+   '<pre class="code">IF number MOD 2 = 0 THEN OUTPUT "even" ELSE OUTPUT "odd"</pre><div class="readout" id="oR"></div>'+
+   '<div class="tablewrap"><table><thead><tr><th>Size of number</th><th style="text-align:right">Steps</th></tr></thead><tbody><tr><td>7</td><td class="num">1</td></tr><tr><td>7,000</td><td class="num">1</td></tr><tr><td>7,000,000,000</td><td class="num">1</td></tr></tbody></table></div>';
+  function go(){var v=Math.floor(+$('#oN').value||0);$('#oR').innerHTML=fmt(v)+' MOD 2 = <b>'+(v%2)+'</b> → <b>'+(v%2?'odd':'even')+'</b> · steps taken: <b>1</b>. The size of the number does not change the work.'}
+  $('#oGo').onclick=go;$('#oN').oninput=go;go();
+}
+function drawTime(){
+  var o=ORD[tsel];
+  $('#tpanel').innerHTML='<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="tag t'+o.c+'" style="font-size:.95rem">'+o.k+'</span><h3 style="margin:0">'+o.name+'</h3></div>'+
+   '<p style="margin-top:10px">'+o.desc+'</p><div class="facts"><div><small>Textbook example</small>'+o.ex+'</div><div><small>Real world</small>'+o.real+'</div><div><small>If N doubles</small><b>'+o.dbl+'</b></div></div><div id="tvis"></div>';
+  var v=$('#tvis');
+  if(tsel===0)constVis(v);else if(tsel===1)searchVis(v,'bin');else if(tsel===2)searchVis(v,'lin');else if(tsel===3)gridVis(v);else expVis(v);
+}
+(function(){
+  var tabs=$('#ttabs');
+  tabs.innerHTML=ORD.map(function(o,i){return '<button class="tab" role="tab" data-i="'+i+'" aria-selected="'+(i===0)+'">'+o.k+'</button>'}).join('');
+  tabs.onclick=function(e){var b=e.target.closest('.tab');if(!b)return;Object.keys(timers).forEach(stopT);tsel=+b.dataset.i;$$('.tab').forEach(function(t){t.setAttribute('aria-selected',t===b)});drawTime()};
+  drawTime();
+})();
+
+/* comparison chart */
+(function(){
+  var cols=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)'],on=[1,1,1,1,1];
+  var leg=$('#legend'),svg=$('#chart'),NS=$('#chN'),YS=$('#chY');
+  leg.innerHTML=ORD.map(function(o,i){return '<label><input type="checkbox" id="lg'+i+'" checked style="accent-color:'+'var(--accent)'+'"><i style="background:'+cols[i]+'"></i>'+o.k+'</label>'}).join('');
+  leg.onchange=function(e){var i=+e.target.id.slice(2);on[i]=e.target.checked?1:0;draw()};
+  function draw(){
+    var x0=48,x1=620,y0=14,y1=290,ym=+YS.value,n=+NS.value;
+    function X(v){return x0+(v-1)/19*(x1-x0)}function Y(v){return y1-Math.min(v,ym*2)/ym*(y1-y0)}
+    var h='<defs><clipPath id="cp"><rect x="'+x0+'" y="'+y0+'" width="'+(x1-x0)+'" height="'+(y1-y0)+'"/></clipPath></defs>';
+    for(var t=0;t<=4;t++){var yy=y1-t/4*(y1-y0);h+='<line x1="'+x0+'" x2="'+x1+'" y1="'+yy+'" y2="'+yy+'" stroke="var(--line)"/><text x="'+(x0-6)+'" y="'+(yy+4)+'" text-anchor="end">'+Math.round(ym*t/4)+'</text>'}
+    [1,5,10,15,20].forEach(function(v){h+='<text x="'+X(v)+'" y="'+(y1+16)+'" text-anchor="middle">'+v+'</text>'});
+    h+='<text x="'+((x0+x1)/2)+'" y="'+(y1+34)+'" text-anchor="middle">N (number of items)</text><text x="12" y="'+((y0+y1)/2)+'" transform="rotate(-90 12 '+((y0+y1)/2)+')" text-anchor="middle">steps</text>';
+    h+='<g clip-path="url(#cp)">';
+    ORD.forEach(function(o,i){if(!on[i])return;var p='';for(var v=1;v<=20.001;v+=0.1)p+=X(v).toFixed(1)+','+Y(o.f(v)).toFixed(1)+' ';h+='<polyline fill="none" stroke="'+cols[i]+'" stroke-width="2.6" stroke-linejoin="round" points="'+p+'"/>'});
+    h+='</g><line x1="'+X(n)+'" x2="'+X(n)+'" y1="'+y0+'" y2="'+y1+'" stroke="var(--ink)" stroke-dasharray="4 4" opacity=".6"/>';
+    ORD.forEach(function(o,i){if(on[i]&&o.f(n)<=ym)h+='<circle cx="'+X(n)+'" cy="'+Y(o.f(n))+'" r="5" fill="'+cols[i]+'" stroke="var(--surface)" stroke-width="2"/>'});
+    svg.innerHTML=h;$('#chNv').textContent=n;
+    $('#chTable').innerHTML=ORD.map(function(o,i){var a=o.f(n),b=o.f(2*n);return '<tr><td><span class="tag t'+o.c+'">'+o.k+'</span></td><td class="num">'+(i===1?a.toFixed(1):fmt(a))+'</td><td class="num">'+(i===1?b.toFixed(1):fmt(b))+'</td></tr>'}).join('');
+  }
+  NS.oninput=draw;YS.onchange=draw;draw();
+})();
+
+/* match game */
+(function(){
+  var items=[['Deciding if a number is even or odd',0],['Reading the first item of an array',0],['Linear search',2],['Binary search',1],['Bubble sort',3],['Insertion sort',3],['Recursive Fibonacci',4],['Finding the largest value in an unsorted list',2],['Comparing every item with every other item',3],['Halving a range until one item remains',1]];
+  var pool=$('#pool'),bk=$('#buckets'),sc=$('#mscore'),sel=null,right,tries;
+  function build(){
+    right=0;tries=0;sel=null;
+    bk.innerHTML=ORD.map(function(o,i){return '<div class="bucket" data-b="'+i+'" tabindex="0" role="button" aria-label="Drop in '+o.k+'"><h4><span class="tag t'+o.c+'">'+o.k+'</span></h4></div>'}).join('');
+    pool.innerHTML=shuffle(items.map(function(x,i){return i})).map(function(i){return '<button class="drag" draggable="true" data-i="'+i+'" id="mc'+i+'">'+items[i][0]+'</button>'}).join('');
+    score();
+  }
+  function score(){sc.innerHTML='Placed correctly: <b>'+right+' / '+items.length+'</b> · attempts: <b>'+tries+'</b>'+(right===items.length?' · <b>all matched</b>':'')}
+  function place(card,b){
+    var i=+card.dataset.i;tries++;
+    if(items[i][1]===b){right++;card.classList.remove('sel');card.draggable=false;card.removeAttribute('id');$('.bucket[data-b="'+b+'"]').appendChild(card);card.disabled=true}
+    else{card.classList.add('no');setTimeout(function(){card.classList.remove('no')},400)}
+    sel=null;$$('.drag.sel').forEach(function(c){c.classList.remove('sel')});score();
+  }
+  var dragged=null;
+  document.addEventListener('dragstart',function(e){var c=e.target.closest&&e.target.closest('.drag');if(c&&c.closest('#match')){dragged=c;try{e.dataTransfer.setData('text/plain',c.dataset.i)}catch(x){}}});
+  bk.addEventListener('dragover',function(e){var b=e.target.closest('.bucket');if(b){e.preventDefault();b.classList.add('over')}});
+  bk.addEventListener('dragleave',function(e){var b=e.target.closest('.bucket');if(b)b.classList.remove('over')});
+  bk.addEventListener('drop',function(e){e.preventDefault();var b=e.target.closest('.bucket');if(!b)return;b.classList.remove('over');if(dragged)place(dragged,+b.dataset.b);dragged=null});
+  pool.addEventListener('click',function(e){var c=e.target.closest('.drag');if(!c||c.disabled)return;$$('.drag.sel').forEach(function(x){x.classList.remove('sel')});sel=c;c.classList.add('sel')});
+  bk.addEventListener('click',function(e){var b=e.target.closest('.bucket');if(b&&sel)place(sel,+b.dataset.b)});
+  bk.addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&sel){e.preventDefault();place(sel,+e.target.closest('.bucket').dataset.b)}});
+  $('#mreset').onclick=build;build();
+})();
+
+/* rank */
+(function(){
+  var list=$('#rank'),fb=$('#rfb'),order;
+  function draw(res){
+    list.innerHTML=order.map(function(k,p){var cls=res?(k===p?'ok':'bad'):'';return '<li class="'+cls+'"><span class="tag t'+ORD[k].c+'">'+ORD[k].k+'</span><span>'+ORD[k].name+'</span><button class="ghost" data-m="-1" data-p="'+p+'" aria-label="Move up">↑</button><button class="ghost" data-m="1" data-p="'+p+'" aria-label="Move down">↓</button></li>'}).join('');
+  }
+  function sh(){do{order=shuffle([0,1,2,3,4])}while(order.join()==='0,1,2,3,4');fb.textContent='';draw()}
+  list.onclick=function(e){var b=e.target.closest('button');if(!b)return;var p=+b.dataset.p,q=p+ +b.dataset.m;if(q<0||q>4)return;var t=order[p];order[p]=order[q];order[q]=t;fb.textContent='';draw()};
+  $('#rcheck').onclick=function(){var n=order.filter(function(k,p){return k===p}).length;draw(true);fb.className='fb '+(n===5?'ok':'no');fb.textContent=n===5?'Correct: constant, logarithmic, linear, quadratic, exponential.':n+' of 5 in the right place. Hint: what happens when N doubles?'};
+  $('#rshuf').onclick=sh;sh();
+})();
+
+/* ---------- 3 space ---------- */
+(function(){
+  var N=$('#spN'),c1=$('#sp1cells'),c2=$('#sp2cells');
+  function draw(fill){
+    var n=+N.value,h='';$('#spNv').textContent=n;
+    c1.innerHTML=['a','b','c','d'].map(function(v){return '<span class="cell mem fill">'+v+'</span>'}).join('');
+    $('#sp1out').innerHTML='Memory cells: <b>4</b> whatever N is';
+    for(var i=1;i<=n;i++)h+='<span class="cell mem'+(fill!==undefined&&i<=fill?' fill':'')+'">'+i+'</span>';
+    h+='<span class="cell mem fill">total</span><span class="cell mem fill">i</span>';
+    c2.innerHTML=h;$('#sp2out').innerHTML='Memory cells: <b>'+(n+2)+'</b> (N array cells + total + i)';
+    var t='',pts=[1,5,10,100,1000,1000000];pts.forEach(function(v){t+='<tr><td class="num" style="text-align:left">'+fmt(v)+'</td><td class="num">4</td><td class="num">'+fmt(v+2)+'</td></tr>'});
+    $('#spTable').innerHTML=t;
+  }
+  N.oninput=function(){stopT('sp');draw()};
+  $('#sp2run').onclick=function(){var n=+N.value,k=0;draw(0);every('sp',Math.max(40,300-n*8),function(){k++;draw(k);return k<n})};
+  draw();
+})();
+function quiz(root,qs,opts,bad){
+  var i=0,score=0;
+  function show(){
+    if(i>=qs.length){root.innerHTML='<div class="good"><b>Finished</b>You scored '+score+' / '+qs.length+'.</div><button class="ghost" id="qz'+root.id+'">Try again</button>';$('#qz'+root.id).onclick=function(){i=0;score=0;show()};return}
+    var q=qs[i];
+    root.innerHTML='<div class="eyebrow">Question '+(i+1)+' of '+qs.length+'</div><p style="margin-top:6px"><b>'+q.q+'</b></p>'+(q.code?'<pre class="code">'+q.code+'</pre>':'')+
+      '<div class="opts">'+opts.map(function(o,k){return '<button data-k="'+k+'">'+o+'</button>'}).join('')+'</div><div class="fb" role="status"></div>';
+    var done=false;
+    $$('.opts button',root).forEach(function(b){b.onclick=function(){
+      if(done)return;done=true;var k=+b.dataset.k,ok=k===q.a;if(ok)score++;
+      b.classList.add(ok?'right':'wrong');if(!ok)$$('.opts button',root)[q.a].classList.add('right');
+      var f=$('.fb',root);f.className='fb '+(ok?'ok':'no');f.innerHTML=(ok?'Correct. ':'Not quite. ')+q.e+' <button class="ghost" id="nx'+root.id+'" style="margin-left:6px">Next</button>';
+      $('#nx'+root.id).onclick=function(){i++;show()};
+    }});
+  }
+  show();
+}
+quiz($('#spq'),[
+ {q:'What is the space complexity of this code?',code:'a ← 5\nb ← 8\nc ← a * b',a:0,e:'Only three variables are used, whatever the data. O(1).'},
+ {q:'What is the space complexity of this code?',code:'DECLARE marks : ARRAY[1:N] OF INTEGER\nFOR i ← 1 TO N\n   INPUT marks[i]\nNEXT i',a:1,e:'The array has N elements, so memory grows with N. O(N).'},
+ {q:'A loop runs N times, adding each input to one variable called total. What is the SPACE complexity?',a:0,e:'Only total and the counter exist. The time is O(N), but the space stays O(1).'},
+ {q:'Copying an array of N items into a second array of N items. Extra space?',a:1,e:'A second array of N cells is needed. O(N).'}
+],['O(1)','O(N)']);
+quiz($('#spot'),[
+ {q:'What is the time complexity?',code:'total ← 0\nFOR i ← 1 TO N\n   total ← total + data[i]\nNEXT i',a:2,e:'One loop through N items: O(N).'},
+ {q:'What is the time complexity?',code:'first ← data[1]\nOUTPUT first',a:0,e:'Two steps whatever N is, so O(1).'},
+ {q:'What is the time complexity?',code:'FOR i ← 1 TO N\n   FOR j ← 1 TO N\n      IF data[i] = data[j] THEN count ← count + 1\n   NEXT j\nNEXT i',a:3,e:'A loop inside a loop, both over N: N × N. O(N²).'},
+ {q:'What is the time complexity?',code:'steps ← 0\nWHILE n > 1\n   n ← n DIV 2\n   steps ← steps + 1\nENDWHILE',a:1,e:'n is halved each time, so the number of loops is about log₂N. O(log N).'},
+ {q:'What is the time complexity? (Careful.)',code:'FOR i ← 1 TO N\n   OUTPUT data[i]\nNEXT i\nFOR j ← 1 TO N\n   OUTPUT data[j]\nNEXT j',a:2,e:'Loops one after the other add: N + N = 2N, which is still O(N). Only nested loops multiply.'},
+ {q:'What is the time complexity? (Careful.)',code:'FOR i ← 1 TO 10\n   OUTPUT "Hello"\nNEXT i',a:0,e:'The loop always runs 10 times, however large N is. Fixed work is O(1).'},
+ {q:'What is the time complexity?',code:'FUNCTION fib(n)\n   IF n <= 1 THEN RETURN n\n   RETURN fib(n-1) + fib(n-2)\nENDFUNCTION',a:4,e:'Each call makes two more calls, so the work roughly doubles per extra n: exponential.'}
+],ORD.map(function(o){return o.k}));
+
+/* ---------- 4 dictionary lookup + race ---------- */
+(function(){
+  var d=[[27,'Leon'],[78,'Ahmad'],[64,'Susie']],b=$('#dlook'),o=$('#dlout');
+  b.innerHTML=d.map(function(x){return '<button class="ghost" data-k="'+x[0]+'">Find key '+x[0]+'</button>'}).join('')+'<button class="ghost" data-k="99">Find key 99</button>';
+  b.onclick=function(e){var t=e.target.closest('button');if(!t)return;var k=+t.dataset.k,s=[],f=null;
+    for(var i=0;i<d.length;i++){s.push('node '+(i+1)+' (key '+d[i][0]+')'+(d[i][0]===k?' matches':' no match'));if(d[i][0]===k){f=d[i][1];break}}
+    o.innerHTML='Followed pointers: '+s.join(' → ')+(f?'<br>Value returned: <b>'+f+'</b>':' → null pointer reached.<br><b>Key not found.</b>')+'<br>Comparisons: <b>'+s.length+'</b>'};
+  var R=$('#raceN');
+  function race(){var n=Math.pow(10,+R.value/20*6),nn=Math.max(1,Math.round(n));if(+R.value<=1)nn=1;
+    var l=nn,bs=Math.floor(log2(nn))+1;$('#raceNv').textContent=fmt(nn);$('#raceL').textContent=fmt(l)+' comparisons';$('#raceB').textContent=fmt(bs)+' comparisons';
+    $('#raceBb').style.width=Math.max(1,bs/l*100)+'%'}
+  R.oninput=race;race();
+})();
+
+/* ---------- 5 exam questions ---------- */
+function examQ(root,q){
+  var el=document.createElement('details');
+  el.innerHTML='<summary>'+q.title+' <span class="marks">'+q.marks+' marks</span></summary><div class="inner"><p class="mono" style="color:var(--muted);margin-bottom:8px">'+q.src+'</p>'+q.body+
+   '<label for="ans'+q.id+'" class="eyebrow">Your answer</label><textarea id="ans'+q.id+'" placeholder="Write your answer here first…"></textarea>'+
+   '<div class="btnrow"><button id="rv'+q.id+'">Show mark points</button></div><div id="ms'+q.id+'" hidden></div></div>';
+  root.appendChild(el);
+  $('#rv'+q.id,el).onclick=function(){
+    var m=$('#ms'+q.id,el);if(!m.hidden){m.hidden=true;this.textContent='Show mark points';return}
+    this.textContent='Hide mark points';m.hidden=false;
+    m.innerHTML='<p style="margin-bottom:0">Tick each point your answer made.</p><ul class="mp">'+q.pts.map(function(p,i){return '<li><input type="checkbox" id="cb'+q.id+'_'+i+'"><label for="cb'+q.id+'_'+i+'">'+p+'</label></li>'}).join('')+'</ul><div class="score" id="sc'+q.id+'">Your mark: 0 / '+q.marks+'</div>'+
+      '<div class="tip"><b>Examiner tips</b>'+q.tips+'</div>';
+    $$('input[type=checkbox]',m).forEach(function(c){c.onchange=function(){var n=$$('input:checked',m).length;$('#sc'+q.id,m).textContent='Your mark: '+Math.min(n,q.marks)+' / '+q.marks}});
+  };
+}
+var PP=[
+ {id:'p1',title:'Question 1: binary search (a) and (c)',marks:3,src:'9618/31 May/June 2024, Q10(a) and (c)',
+  body:'<p>(a) State a condition that must be true for an array to be searchable using a binary search. <b>[1]</b></p><p>(c) Describe the performance of a binary search in relation to the number of data items in the array being searched. Refer to Big O notation in your answer. <b>[2]</b></p>',
+  pts:['<b>(a)</b> The array must be <b>sorted</b> / in order (ascending or descending).','<b>(c)</b> Binary search is <b>O(log₂ N)</b> (O(log N)).','<b>(c)</b> Each comparison halves the search field, so the time taken increases only <b>slowly / logarithmically</b> as the number of items increases (it scales much better than a linear O(N) search).'],
+  tips:'"Describe" plus "Refer to Big O" means give the notation <i>and</i> a sentence about how time changes as N grows. The notation alone gets 1 of the 2 marks. Do not say "it is faster"; say how the time grows.'},
+ {id:'p2',title:'Question 2: binary vs linear search (b)(i), (b)(ii), (b)(iii) and (c)',marks:9,src:'9618/32 May/June 2022, Q8(b) and (c)',
+  body:'<p>A binary search or a linear search can be used to look for a specific value in an array.</p><p>(b)(i) State the necessary condition for a binary search. <b>[1]</b></p><p>(b)(ii) Describe how to perform a binary search. <b>[4]</b></p><p>(b)(iii) Explain how the performance of a binary search varies according to the number of values in the array. <b>[1]</b></p><p>(c) Compare the performance of the algorithms for a binary search and a linear search using Big O notation for order of time complexity. <b>[3]</b></p>',
+  pts:['<b>(b)(i)</b> The array/list must already be <b>sorted</b>.','<b>(b)(ii)</b> Find the <b>middle</b> item/index of the (sub)list.','<b>(b)(ii)</b> <b>Compare</b> the middle value with the item searched for; if equal, it is found.','<b>(b)(ii)</b> If not, <b>discard the half</b> that cannot contain the item (depends on whether the middle is greater or less than the target).','<b>(b)(ii)</b> <b>Repeat</b> on the remaining half until the item is found or only one item is left and it does not match.','<b>(b)(iii)</b> As the number of items increases, the time taken increases, but only <b>slowly</b>.','<b>(c)</b> A linear search is <b>O(N)</b> and a binary search is <b>O(log₂ N)</b>.','<b>(c)</b> For a linear search, the time increases <b>linearly</b> (in proportion) with the number of items.','<b>(c)</b> For a binary search, the time increases <b>logarithmically</b>, much more slowly than a linear search as the list grows.'],
+  tips:'The four marks for (b)(ii) are a sequence: find middle, compare, discard half, repeat. A one-line "it halves the list" gets one mark at most. In (c) the third mark needs a <i>comparison</i>: "much slower rise than", not two separate descriptions.'}
+];
+var XQ=[
+ {id:'x1',title:'Practice 1: sort and recursion orders',marks:2,src:'Written for revision · Big O time complexity',
+  body:'<p>(a) State the Big O order of time complexity of a bubble sort. <b>[1]</b></p><p>(b) State the Big O order of time complexity of calculating Fibonacci numbers using recursion. <b>[1]</b></p>',
+  pts:'<b>(a)</b> O(N²)|<b>(b)</b> O(2<sup>N</sup>)'.split('|'),
+  tips:'Pure recall marks. Write the notation exactly, with the superscript. "Exponential" on its own is a risk; give the notation and the name if you have space.'},
+ {id:'x2',title:'Practice 2: the doubling test',marks:3,src:'Written for revision · Big O time complexity',
+  body:'<p>An algorithm has time complexity O(N²). It takes 2 seconds to process 1,000 items.</p><p>(a) Describe what O(N²) means. <b>[1]</b></p><p>(b) Estimate the time it will take to process 3,000 items. Show your working. <b>[2]</b></p>',
+  pts:['<b>(a)</b> The time taken grows in proportion to the <b>square of N</b>, the number of items.','<b>(b)</b> 3 times the items means <b>3² = 9</b> times the time.','<b>(b)</b> 9 × 2 = <b>18 seconds</b>.'],
+  tips:'Do the doubling (or tripling) test: multiply N by k and the time is multiplied by k². Show the "3² = 9" step, because the method mark is separate from the answer mark.'},
+ {id:'x3',title:'Practice 3: space complexity',marks:3,src:'Written for revision · Big O space complexity',
+  body:'<p>A program reads N test marks into an array and then calculates their total.</p><p>(a) State the Big O order of space complexity of the program. <b>[1]</b></p><p>(b) Justify your answer. <b>[2]</b></p>',
+  pts:['<b>(a)</b> O(N).','<b>(b)</b> The array needs <b>N elements/memory locations</b>.','<b>(b)</b> So the memory used <b>grows in direct proportion to N</b>.'],
+  tips:'Challenge: if the program added each mark to a running total as it was entered, without storing the marks, the space would be O(1). Only the total and a counter are needed.'},
+ {id:'x4',title:'Practice 4: choosing an algorithm',marks:4,src:'Written for revision · Compare command word',
+  body:'<p>A school has a sorted list of 1,000,000 student IDs. Compare a linear search and a binary search for finding one ID, using Big O notation. <b>[4]</b></p>',
+  pts:['A linear search is <b>O(N)</b>: in the worst case every ID is checked (up to 1,000,000 comparisons).','A binary search is <b>O(log N)</b>: it halves the list each time, so about <b>20 comparisons</b> at most.','The time for a linear search grows <b>in proportion to N</b>, whereas for a binary search it grows <b>only logarithmically</b> (very slowly) as N grows.','The binary search is <b>much more efficient</b> here because the list is already sorted. If the list were unsorted, it would need sorting first.'],
+  tips:'Use the numbers: 1,000,000 against about 20 makes the comparison concrete. floor(log₂ 1,000,000) + 1 = 20. Include the condition that the data is sorted.'}
+];
+PP.forEach(function(q){examQ($('#ppqs'),q)});
+XQ.forEach(function(q){examQ($('#xqs'),q)});
+})();
+</script>
+
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover{background:rgba(255,255,255,.18)}@media print{.site-pill{display:none}}</style><div class="site-pill"><a href="../../a-cs/a-level/ch-19/">← Chapter 19</a><a href="../../">Home</a></div></body></html>

@@ -1,0 +1,625 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>IGCSE Compression Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=JetBrains+Mono:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: one long scroll of self-contained lab panels under a sticky section nav. Runs of repeated data get their own tint (--r0..--r5), used consistently in every panel. */
+:root{
+  --bg:#EDF1F3; --surface:#FFFFFF; --surface2:#E2E9ED; --ink:#10212A; --muted:#51646D; --line:#C6D3D9;
+  --accent:#0B7A75; --accent-fg:#FFFFFF; --count:#B45309; --good:#1B7F3B; --bad:#B42318;
+  --r0:#BDE9E5; --r1:#FBD9A8; --r2:#F8C6D0; --r3:#C5D8F8; --r4:#CFEBB5; --r5:#DDD0F3;
+  --pix-on:#10212A; --pix-off:#FFFFFF;
+  --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0C171D; --surface:#132229; --surface2:#1B2F38; --ink:#E6EEF1; --muted:#93A8B1; --line:#2A414B;
+  --accent:#3FC7BE; --accent-fg:#06211F; --count:#F2A550; --good:#5BD17F; --bad:#FF8A7A;
+  --r0:#14524F; --r1:#6B4413; --r2:#6B2A38; --r3:#26437A; --r4:#3D5E20; --r5:#4A3878;
+  --pix-on:#E6EEF1; --pix-off:#0C171D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C171D; --surface:#132229; --surface2:#1B2F38; --ink:#E6EEF1; --muted:#93A8B1; --line:#2A414B;
+  --accent:#3FC7BE; --accent-fg:#06211F; --count:#F2A550; --good:#5BD17F; --bad:#FF8A7A;
+  --r0:#14524F; --r1:#6B4413; --r2:#6B2A38; --r3:#26437A; --r4:#3D5E20; --r5:#4A3878;
+  --pix-on:#E6EEF1; --pix-off:#0C171D; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:980px;margin-inline:auto}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,6vw,3.4rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem);font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0;max-width:68ch}
+code,.mono{font-family:var(--f-mono);font-weight:500}
+.lab{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+
+header.top{padding-block:40px 24px;display:grid;gap:14px}
+header.top p{font-size:1.15rem;color:var(--muted)}
+nav.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding:10px 16px;display:flex;gap:8px;overflow-x:auto;white-space:nowrap}
+nav.nav a{font-size:.9rem;font-weight:600;color:var(--ink);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:99px;background:var(--surface)}
+nav.nav a:hover,nav.nav a:focus-visible{border-color:var(--accent);color:var(--accent)}
+section{padding-block:44px 8px;display:grid;gap:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:16px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.grid2>*,.grid3>*{min-width:0}
+.callout{border-left:4px solid var(--count);background:var(--surface2);padding:12px 16px;border-radius:0 8px 8px 0}
+.callout b{color:var(--count)}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{background:var(--accent);color:var(--accent-fg);border:0;border-radius:6px;padding:8px 16px;font-weight:700}
+.btn.alt{background:var(--surface2);color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-family:var(--f-mono);min-width:0}
+input[type=range]{width:100%;accent-color:var(--accent)}
+
+/* compare table */
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.95rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+
+/* stepper */
+.cells{display:flex;flex-wrap:wrap;gap:4px}
+.cell{width:40px;height:48px;display:grid;place-items:center;font-family:var(--f-mono);font-weight:700;font-size:1.2rem;background:var(--surface2);border:2px solid transparent;border-radius:6px;position:relative}
+.cell.ptr{border-color:var(--ink)}
+.cell.ptr::after{content:"▲";position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:.7rem;color:var(--ink)}
+.cell.live{border-style:dashed;border-color:var(--count)}
+.cells.tall{padding-bottom:22px}
+.out{display:flex;flex-wrap:wrap;gap:6px;min-height:48px;align-items:center}
+.tok{font-family:var(--f-mono);font-weight:700;font-size:1.2rem;padding:8px 10px;border-radius:6px;border:2px solid transparent}
+.tok b{color:var(--count);margin-right:1px}
+.tok.live{border:2px dashed var(--count);background:transparent}
+.msg{min-height:3.2em;background:var(--surface2);border-radius:8px;padding:10px 14px}
+.stat{display:flex;gap:20px;flex-wrap:wrap}
+.stat div{display:grid}
+.stat span:first-child{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.stat span:last-child{font-family:var(--f-mono);font-size:1.3rem;font-weight:700}
+.bar{height:14px;border-radius:7px;background:var(--surface2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.bar.orig i{background:var(--muted)}
+.bar.bad i{background:var(--bad)}
+
+/* pixel grid */
+.pixgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;width:min(100%,320px);touch-action:none;background:var(--line);padding:2px;border-radius:4px}
+.pix{aspect-ratio:1;border:0;padding:0;background:var(--pix-off);border-radius:0}
+.pix.on{background:var(--pix-on)}
+.pix.hl{outline:3px solid var(--count);outline-offset:-3px;z-index:1}
+.rows{display:grid;gap:6px;font-family:var(--f-mono)}
+.rows div{display:flex;gap:6px;flex-wrap:wrap;align-items:center;min-height:32px}
+.rows .rn{color:var(--muted);width:3.4em;font-size:.85rem}
+.rows .tok{font-size:1rem;padding:3px 8px}
+.pre{display:flex;gap:6px;flex-wrap:wrap}
+
+/* decode */
+.qrow{display:grid;grid-template-columns:1fr;gap:6px;padding-block:10px;border-bottom:1px solid var(--line)}
+.qrow:last-child{border:0}
+.fb{font-weight:700;min-height:1.4em}
+.fb.ok{color:var(--good)} .fb.no{color:var(--bad)}
+
+/* activities */
+ol.order{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+ol.order li{display:flex;gap:10px;align-items:center;background:var(--surface2);border:2px solid var(--line);border-radius:8px;padding:10px 12px;cursor:grab}
+ol.order li.dragging{opacity:.4}
+ol.order li.ok{border-color:var(--good)} ol.order li.no{border-color:var(--bad)}
+ol.order li span.t{flex:1;min-width:0}
+.mv{border:1px solid var(--line);background:var(--surface);border-radius:6px;width:34px;height:34px;font-weight:700}
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:44px;padding:10px;border:2px dashed var(--line);border-radius:8px}
+.chip{background:var(--accent);color:var(--accent-fg);border:2px solid transparent;border-radius:99px;padding:6px 14px;font-weight:700;cursor:grab}
+.chip.sel{border-color:var(--ink);box-shadow:0 0 0 3px var(--r1)}
+.slots{display:grid;gap:8px}
+.slot{display:grid;grid-template-columns:minmax(0,150px) 1fr;gap:12px;align-items:center;border:2px solid var(--line);background:var(--surface2);border-radius:8px;padding:8px 12px;min-height:56px}
+.slot.over{border-color:var(--accent)} .slot.ok{border-color:var(--good)} .slot.no{border-color:var(--bad)}
+.slot .drop{min-height:36px;display:flex;align-items:center;border:2px dashed var(--line);border-radius:99px;padding:2px;justify-content:center}
+@media (max-width:520px){.slot{grid-template-columns:1fr}}
+
+/* sliders */
+.ctl{display:grid;gap:4px}
+.ctl label{display:flex;justify-content:space-between;font-weight:600;gap:12px}
+.ctl label span{font-family:var(--f-mono);color:var(--count)}
+svg.wave{width:100%;height:auto;background:var(--surface2);border-radius:8px;display:block}
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.tip{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:4px;align-content:start}
+.tip b{font-family:var(--f-display);font-size:1.05rem}
+.tip p{font-size:.97rem;color:var(--muted)}
+
+/* exam */
+details.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+details.q summary{cursor:pointer;padding:16px 18px;display:flex;gap:12px;align-items:baseline;list-style:none;font-weight:600}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{content:"Show answer";margin-left:auto;font-size:.85rem;color:var(--accent);white-space:nowrap}
+details.q[open] summary::after{content:"Hide"}
+.marks{font-family:var(--f-mono);font-size:.85rem;background:var(--surface2);border-radius:99px;padding:2px 10px;white-space:nowrap}
+.ans{padding:0 18px 18px;display:grid;gap:12px}
+.ans .model{background:var(--surface2);border-radius:8px;padding:12px 14px}
+.ans .tipbox{border-left:4px solid var(--accent);padding:4px 12px;font-size:.96rem}
+mark{color:inherit;border-radius:4px;padding:1px 4px}
+mark.m1{background:var(--r0)} mark.m2{background:var(--r1)} mark.m3{background:var(--r2)} mark.m4{background:var(--r3)}
+.cw{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;font-size:.95rem}
+.cw div{background:var(--surface2);border-radius:8px;padding:8px 12px}
+.cw b{font-family:var(--f-mono)}
+footer{padding-block:40px 0;color:var(--muted);font-size:.9rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <span class="lab">IGCSE Computer Science · Data representation</span>
+  <h1>Compression Lab</h1>
+  <p>Why files get squeezed, the two ways of doing it, and a step-by-step walk through run-length encoding (RLE). Work through it in order, or jump to a section.</p>
+</header>
+
+<nav class="nav" aria-label="Sections">
+  <a href="#basics">Lossy vs lossless</a><a href="#rle">RLE on text</a><a href="#image">RLE on images</a><a href="#decode">Decode &amp; encode</a><a href="#lossy">Lossy sliders</a><a href="#activities">Activities</a><a href="#world">Real world</a><a href="#tips">Top tips</a><a href="#exam">Exam questions</a>
+</nav>
+
+<section id="basics">
+  <h2>Why compress, and the two methods</h2>
+  <p>Compression makes a file smaller. Smaller files take up less storage, download faster and use less bandwidth when streamed. There are two families of method.</p>
+  <div class="grid2">
+    <div class="panel"><span class="lab">Lossless</span><h3>Nothing is thrown away</h3>
+      <p>The data is stored more cleverly. When decompressed, the file is rebuilt exactly as it was. RLE is lossless.</p>
+      <p><b>Use when</b> every bit matters: text documents, program files, spreadsheets, medical images.</p></div>
+    <div class="panel"><span class="lab">Lossy</span><h3>Some data is removed for good</h3>
+      <p>Detail the user is unlikely to notice is deleted. The original can never be recovered, but the file gets much smaller.</p>
+      <p><b>Use when</b> a small drop in quality is fine: streamed music, photos on a website, video calls.</p></div>
+  </div>
+  <div class="panel tbl"><table>
+    <tr><th></th><th>Lossless</th><th>Lossy</th></tr>
+    <tr><td>Original recoverable?</td><td>Yes, exactly</td><td>No</td></tr>
+    <tr><td>File size reduction</td><td>Moderate</td><td>Large</td></tr>
+    <tr><td>Quality</td><td>Unchanged</td><td>Reduced</td></tr>
+    <tr><td>Examples</td><td>RLE, ZIP, PNG, FLAC</td><td>MP3, JPEG, MP4</td></tr>
+  </table></div>
+</section>
+
+<section id="rle">
+  <h2>Run-length encoding, step by step</h2>
+  <p>A <b>run</b> is a stretch of the same value repeated. RLE replaces each run with two things: <b>how many</b> (the count) and <b>what</b> (the value). <code>AAAAA</code> becomes <code>5A</code>.</p>
+  <div class="panel">
+    <div class="row"><label for="rleIn" class="lab">Your data (letters only)</label>
+      <input type="text" id="rleIn" value="AAAAABBBCCDAAA" maxlength="24" size="26" autocomplete="off" spellcheck="false">
+      <button class="btn alt" id="rleLoad">Load</button></div>
+    <div class="cells tall" id="rleCells" aria-label="Input data"></div>
+    <div class="msg" id="rleMsg" aria-live="polite"></div>
+    <div><span class="lab">Output so far</span><div class="out" id="rleOut"></div></div>
+    <div class="row">
+      <button class="btn alt" id="rlePrev">◀ Back</button>
+      <button class="btn" id="rlePlay">▶ Play</button>
+      <button class="btn alt" id="rleNext">Next ▶</button>
+      <button class="btn alt" id="rleReset">Reset</button>
+      <span class="mono" id="rleCount" style="margin-left:auto"></span>
+    </div>
+    <div class="ctl" style="max-width:320px"><label for="rleSpeed">Speed <span id="rleSpeedV"></span></label><input type="range" id="rleSpeed" min="1" max="5" value="3"></div>
+    <div class="stat" id="rleStat" hidden>
+      <div><span>Original</span><span id="sO"></span></div><div><span>Encoded</span><span id="sE"></span></div><div><span>Saved</span><span id="sS"></span></div>
+    </div>
+  </div>
+  <div class="callout"><b>The four things RLE does:</b> keep a count, compare each new item with the current run, write <code>count + value</code> when the run breaks, and write the last run when the data ends. Notice the second <code>A</code> run is a separate token. RLE only joins items that are next to each other.</div>
+  <div class="callout"><b>When RLE backfires.</b> Try <code>ABCDEF</code>. Every run has length 1, so <code>1A1B1C1D1E1F</code> is twice as long. RLE only helps when there are long runs.</div>
+</section>
+
+<section id="image">
+  <h2>RLE on a bitmap image</h2>
+  <p>An image is a grid of pixels. Here each pixel is 1 bit: black (B) or white (W). Encode one row at a time, left to right. Click or drag on the grid to draw, or pick a preset.</p>
+  <div class="panel">
+    <div class="row" id="presets"></div>
+    <div class="grid2" style="align-items:start">
+      <div style="display:grid;gap:10px;justify-items:start">
+        <div class="pixgrid" id="pixgrid"></div>
+        <div class="row"><button class="btn" id="scan">▶ Animate the scan</button><button class="btn alt" id="scanStop">Show all</button></div>
+      </div>
+      <div style="display:grid;gap:10px">
+        <span class="lab">Encoded, row by row</span>
+        <div class="rows" id="imgRows"></div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div style="display:grid;gap:6px"><span class="lab">Original: 64 pixels × 1 bit</span><div class="bar orig"><i id="bOrig" style="width:100%"></i></div><span class="mono" id="tOrig"></span></div>
+      <div style="display:grid;gap:6px"><span class="lab">Encoded</span><div class="bar" id="bEncWrap"><i id="bEnc"></i></div><span class="mono" id="tEnc"></span></div>
+    </div>
+    <p id="imgVerdict" style="font-weight:600"></p>
+    <p style="color:var(--muted);font-size:.95rem">Bits per run = bits needed to store the longest count, plus 1 bit for the colour. Longest run of 8 needs 4 bits for the count (0–15), so each run costs 5 bits.</p>
+  </div>
+</section>
+
+<section id="decode">
+  <h2>Decode and encode</h2>
+  <p>Decoding is the reverse: write each value out as many times as its count says. Try these. Answers are checked ignoring spaces and case.</p>
+  <div class="panel" id="quiz"></div>
+</section>
+
+<section id="lossy">
+  <h2>Lossy compression and the sliders</h2>
+  <p>Lossy methods for sound and images work by keeping less detail. Drag the sliders to see how the RLE saving depends on run length, and how sound and image file sizes change.</p>
+
+  <div class="panel">
+    <h3>RLE saving against run length</h3>
+    <div class="ctl"><label for="runLen">Average run length <span id="runLenV"></span></label><input type="range" id="runLen" min="1" max="12" value="4"></div>
+    <div class="cells" id="rlA"></div>
+    <div class="out" id="rlB"></div>
+    <div class="grid2">
+      <div style="display:grid;gap:6px"><span class="lab">Original</span><div class="bar orig"><i style="width:100%"></i></div><span class="mono" id="rlO"></span></div>
+      <div style="display:grid;gap:6px"><span class="lab">Encoded</span><div class="bar" id="rlBarW"><i id="rlBar"></i></div><span class="mono" id="rlE"></span></div>
+    </div>
+    <p id="rlV" style="font-weight:600"></p>
+  </div>
+
+  <div class="panel">
+    <h3>Sound: sample rate and bit depth</h3>
+    <p>A sound is stored by measuring the wave many times a second (<b>sample rate</b>, in Hz) and rounding each measurement to one of 2<sup>bits</sup> levels (<b>bit depth</b>). The dashed line is the real sound. The solid line is what gets stored.</p>
+    <svg class="wave" id="wave" viewBox="0 0 640 200" role="img" aria-label="Sampled sound wave"></svg>
+    <div class="grid3">
+      <div class="ctl"><label for="sr">Sample rate <span id="srV"></span></label><input type="range" id="sr" min="4000" max="44100" step="100" value="44100"></div>
+      <div class="ctl"><label for="bd">Bit depth <span id="bdV"></span></label><input type="range" id="bd" min="1" max="16" value="16"></div>
+      <div class="ctl"><label for="dur">Length <span id="durV"></span></label><input type="range" id="dur" min="5" max="240" value="30"></div>
+    </div>
+    <div class="stat"><div><span>Bits</span><span id="aBits"></span></div><div><span>Bytes</span><span id="aBytes"></span></div><div><span>File size</span><span id="aSize"></span></div></div>
+    <p style="color:var(--muted);font-size:.95rem">File size = sample rate × bit depth × length in seconds (mono). Divide by 8 for bytes and by 1024 for KiB. Lowering the rate or depth is lossy: the sound is less accurate and cannot be restored.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Image: resolution and colour depth</h3>
+    <div class="grid3">
+      <div class="ctl"><label for="iw">Width in pixels <span id="iwV"></span></label><input type="range" id="iw" min="16" max="4000" step="16" value="1600"></div>
+      <div class="ctl"><label for="ih">Height in pixels <span id="ihV"></span></label><input type="range" id="ih" min="16" max="3000" step="16" value="1200"></div>
+      <div class="ctl"><label for="id">Colour depth <span id="idV"></span></label><input type="range" id="id" min="1" max="24" value="24"></div>
+    </div>
+    <div class="stat"><div><span>Colours possible</span><span id="iCol"></span></div><div><span>File size</span><span id="iSize"></span></div></div>
+    <p style="color:var(--muted);font-size:.95rem">Image size = width × height × colour depth (in bits). Lower resolution and lower colour depth are both lossy.</p>
+  </div>
+</section>
+
+<section id="activities">
+  <h2>Activities</h2>
+  <div class="panel">
+    <h3>Put the RLE algorithm in order</h3>
+    <p>Drag the steps, or use the arrows.</p>
+    <ol class="order" id="order"></ol>
+    <div class="row"><button class="btn" id="ordCheck">Check order</button><button class="btn alt" id="ordShuffle">Shuffle</button><span class="fb" id="ordFb"></span></div>
+  </div>
+  <div class="panel">
+    <h3>Match the term to its meaning</h3>
+    <p>Drag a term onto its definition. On a phone, tap a term, then tap a definition. Tap a placed term to send it back.</p>
+    <div class="pool" id="pool"></div>
+    <div class="slots" id="slots"></div>
+    <div class="row"><button class="btn" id="mCheck">Check matches</button><button class="btn alt" id="mReset">Reset</button><span class="fb" id="mFb"></span></div>
+  </div>
+</section>
+
+<section id="world">
+  <h2>Real-world examples and how to use them in an answer</h2>
+  <div class="panel tbl"><table>
+    <tr><th>Example</th><th>Type</th><th>Why</th><th>Exam sentence</th></tr>
+    <tr><td>Spotify or Apple Music (MP3, AAC)</td><td>Lossy</td><td>Millions of songs streamed over mobile data</td><td>"Lossy compression is used so the file is smaller, so it streams with less buffering and uses less bandwidth."</td></tr>
+    <tr><td>Photos on a website (JPEG)</td><td>Lossy</td><td>Pages load faster with smaller images</td><td>"Reducing colour depth removes some detail permanently but the image is still acceptable."</td></tr>
+    <tr><td>Netflix, YouTube (MP4)</td><td>Lossy</td><td>Video is huge; viewers tolerate slight quality loss</td><td>"Data the viewer is unlikely to notice is removed to cut the file size."</td></tr>
+    <tr><td>Zipping a Word document or program</td><td>Lossless</td><td>One wrong character would corrupt it</td><td>"Lossless is needed because the original file must be rebuilt exactly."</td></tr>
+    <tr><td>Logos, icons, diagrams, fax pages (GIF, PNG)</td><td>Lossless, RLE-style</td><td>Large areas of one colour make long runs</td><td>"RLE suits images with large blocks of the same colour because the runs are long."</td></tr>
+    <tr><td>Medical scans, archived music (FLAC)</td><td>Lossless</td><td>Detail can matter for a diagnosis or a master copy</td><td>"No data is lost, so nothing important is missing."</td></tr>
+  </table></div>
+</section>
+
+<section id="tips">
+  <h2>Top tips</h2>
+  <div class="tips">
+    <div class="tip"><b>Say "data", not just "quality"</b><p>Lossless means no data is lost and the original can be rebuilt. "No loss of quality" alone often earns nothing.</p></div>
+    <div class="tip"><b>Count then value</b><p>Write RLE as count first, then the value: 4W3B. Match the format in the question if it shows one.</p></div>
+    <div class="tip"><b>Runs only join neighbours</b><p>WWBWW is 2W1B2W, not 4W1B. Separate runs stay separate.</p></div>
+    <div class="tip"><b>Check the answer is shorter</b><p>If the encoded version is not smaller, say so. Short runs make RLE useless, and examiners like this point.</p></div>
+    <div class="tip"><b>Lossy is permanent</b><p>The removed data cannot be recovered. Always link it to a reason: smaller size, faster streaming, less storage.</p></div>
+    <div class="tip"><b>Show the calculation</b><p>Sample rate × bit depth × seconds. Then ÷ 8 for bytes, ÷ 1024 for KiB. Method marks are easy to pick up.</p></div>
+    <div class="tip"><b>Two-digit counts</b><p>12A means twelve As, not one then two. Read the whole number before the letter.</p></div>
+    <div class="tip"><b>Match your reason to the data</b><p>Text and programs need lossless. Music, photos and video usually allow lossy.</p></div>
+  </div>
+</section>
+
+<section id="exam">
+  <h2>Exam questions and model answers</h2>
+  <div class="panel">
+    <span class="lab">Command words</span>
+    <div class="cw">
+      <div><b>State / Give</b><br>Short fact, no explanation.</div>
+      <div><b>Describe</b><br>Say what happens, one point per mark.</div>
+      <div><b>Explain</b><br>Point plus a reason: "because", "so".</div>
+      <div><b>Calculate</b><br>Show working. Units matter.</div>
+    </div>
+    <p style="font-size:.95rem;color:var(--muted)">In each model answer, every coloured highlight is one mark.</p>
+  </div>
+
+  <details class="q"><summary><span class="marks">2 marks</span><span>State what is meant by <b>lossless</b> compression.</span></summary>
+    <div class="ans"><div class="model">A compression method that <mark class="m1">reduces the file size without permanently removing any data</mark>, so <mark class="m2">the original file can be rebuilt exactly</mark> when decompressed.</div>
+    <div class="tipbox"><b>Tip:</b> "State" with 2 marks means two short points. Avoid "no loss of quality" on its own.</div></div></details>
+
+  <details class="q"><summary><span class="marks">3 marks</span><span>Describe how <b>lossy</b> compression can reduce the size of a sound file.</span></summary>
+    <div class="ans"><div class="model">Some data is <mark class="m1">permanently removed from the file</mark>. For example the <mark class="m2">sample rate or bit depth is reduced</mark>, so fewer or less detailed samples are stored. Sounds that <mark class="m3">humans are unlikely to hear can be deleted</mark>.</div>
+    <div class="tipbox"><b>Tip:</b> Three marks, three separate points. Naming sample rate or bit depth turns a vague answer into a full-mark one.</div></div></details>
+
+  <details class="q"><summary><span class="marks">3 marks</span><span>A row of pixels is <code>WWWWBBBBBBWW</code>. Show how it is stored using run-length encoding (RLE).</span></summary>
+    <div class="ans"><div class="model">Runs: WWWW, BBBBBB, WW.<br><mark class="m1">4W</mark> <mark class="m2">6B</mark> <mark class="m3">2W</mark> → <b class="mono">4W6B2W</b><br>12 items become 6 characters.</div>
+    <div class="tipbox"><b>Tip:</b> One mark per correct run. Keep the format count then value. Do not merge the two W runs.</div></div></details>
+
+  <details class="q"><summary><span class="marks">4 marks</span><span>Explain why RLE would not work well on a photograph.</span></summary>
+    <div class="ans"><div class="model">A photograph contains <mark class="m1">many different colours</mark>, so <mark class="m2">neighbouring pixels are rarely identical</mark>. The <mark class="m3">runs are very short, often length 1</mark>. Each run needs a count and a value, so the <mark class="m4">encoded file can be the same size or larger than the original</mark>.</div>
+    <div class="tipbox"><b>Tip:</b> "Explain" is a chain: cause, then effect, then result. Finish on the file size.</div></div></details>
+
+  <details class="q"><summary><span class="marks">3 marks</span><span>Explain why a text document should be compressed using lossless compression.</span></summary>
+    <div class="ans"><div class="model">Lossy compression would <mark class="m1">remove some of the characters or data</mark>, so the <mark class="m2">text could be changed or unreadable</mark>. Lossless means the <mark class="m3">original document can be recreated exactly</mark>.</div>
+    <div class="tipbox"><b>Tip:</b> Tie the answer to the data type. Text and programs cannot lose a single character.</div></div></details>
+
+  <details class="q"><summary><span class="marks">4 marks</span><span>A streaming service uses lossy compression for its films. Give <b>two</b> benefits and <b>two</b> drawbacks.</span></summary>
+    <div class="ans"><div class="model">Benefits: the <mark class="m1">file size is much smaller</mark>, so it <mark class="m2">streams faster with less buffering and uses less bandwidth</mark>. Drawbacks: <mark class="m3">some data is lost permanently</mark>, so the <mark class="m4">picture or sound quality is reduced</mark>.</div>
+    <div class="tipbox"><b>Tip:</b> Also acceptable: less storage needed on the servers. Make sure you give the number of points asked for, no more.</div></div></details>
+
+  <details class="q"><summary><span class="marks">3 marks</span><span>Calculate the file size, in KiB, of a 30 second mono sound recording with a sample rate of 8000 Hz and a bit depth of 16 bits.</span></summary>
+    <div class="ans"><div class="model"><mark class="m1">8000 × 16 × 30</mark> = <mark class="m2">3 840 000 bits</mark><br>÷ 8 = 480 000 bytes; ÷ 1024 = <mark class="m3">468.75 KiB</mark></div>
+    <div class="tipbox"><b>Tip:</b> Check your answer with the sound sliders above. Set 8000 Hz, 16 bits, 30 s.</div></div></details>
+</section>
+
+<footer>Built for IGCSE Computer Science revision. RLE examples use letters and black/white pixels, as in past-paper style questions.</footer>
+</div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const tint=i=>"var(--r"+(i%6)+")";
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+function rle(str){
+  const runs=[];
+  for(const ch of str){
+    const last=runs[runs.length-1];
+    if(last&&last.ch===ch)last.n++; else runs.push({ch,n:1});
+  }
+  return runs;
+}
+const encStr=runs=>runs.map(r=>r.n+r.ch).join("");
+
+/* ---------- RLE text stepper ---------- */
+const st={steps:[],k:0,timer:null,str:""};
+function buildSteps(str){
+  const steps=[];const done=[];let cur=null;
+  const snap=(i,msg,fin)=>steps.push({i,done:done.map(r=>({...r})),cur:cur&&{...cur},msg,fin:!!fin});
+  snap(-1,str?"Nothing read yet. The pointer starts at the first character and the output is empty. Press Next.":"Type some letters above, then press Load.");
+  for(let i=0;i<str.length;i++){
+    const ch=str[i];
+    if(!cur){cur={ch,n:1,start:i};snap(i,"Read <b>"+ch+"</b>. It is the first item, so start a run with count = 1.");}
+    else if(cur.ch===ch){cur.n++;snap(i,"<b>"+ch+"</b> is the same as the current run. Add 1 to the count: count = <b>"+cur.n+"</b>.");}
+    else{
+      const prev=cur;done.push(prev);
+      cur={ch,n:1,start:i};
+      snap(i,"<b>"+ch+"</b> is different from <b>"+prev.ch+"</b>, so the run has ended. Write <b>"+prev.n+prev.ch+"</b> to the output, then start a new run of <b>"+ch+"</b> with count = 1.");
+    }
+  }
+  if(cur){done.push(cur);const last=cur;cur=null;
+    snap(str.length,"End of the data. Write the final run, <b>"+last.n+last.ch+"</b>. Encoding is finished.",true);}
+  return steps;
+}
+function rleRender(){
+  const s=st.steps[st.k],n=st.str.length;
+  const idx=new Array(n).fill(-1);
+  s.done.forEach((r,ri)=>{for(let j=r.start;j<r.start+r.n;j++)idx[j]=ri;});
+  if(s.cur)for(let j=s.cur.start;j<=s.i;j++)idx[j]=s.done.length;
+  $("#rleCells").innerHTML=[...st.str].map((c,j)=>{
+    const bg=idx[j]>=0?"background:"+tint(idx[j]):"";
+    const cls="cell"+(j===s.i?" ptr":"")+(s.cur&&idx[j]===s.done.length?" live":"");
+    return '<div class="'+cls+'" style="'+bg+'">'+esc(c)+'</div>';}).join("");
+  let o=s.done.map((r,ri)=>'<span class="tok" style="background:'+tint(ri)+'"><b>'+r.n+'</b>'+r.ch+'</span>').join("");
+  if(s.cur)o+='<span class="tok live" title="Run still being counted"><b>'+s.cur.n+'</b>'+s.cur.ch+'</span>';
+  $("#rleOut").innerHTML=o||'<span style="color:var(--muted)">empty</span>';
+  $("#rleMsg").innerHTML=s.msg;
+  $("#rleCount").textContent="Step "+st.k+" of "+(st.steps.length-1);
+  $("#rlePrev").disabled=st.k===0;$("#rleNext").disabled=st.k>=st.steps.length-1;
+  const stat=$("#rleStat");stat.hidden=!s.fin;
+  if(s.fin){
+    const e=s.done.length*2,o2=n;
+    $("#sO").textContent=o2+" chars";$("#sE").textContent=e+" chars";
+    $("#sS").textContent=e<o2?Math.round((1-e/o2)*100)+"%":(e===o2?"0%":"None: it grew");
+  }
+  if(s.fin)rlePause();
+}
+function rlePause(){clearInterval(st.timer);st.timer=null;$("#rlePlay").textContent="▶ Play";}
+function rlePlay(){
+  if(st.timer){rlePause();return;}
+  if(st.k>=st.steps.length-1)st.k=0;
+  $("#rlePlay").textContent="❚❚ Pause";
+  const ms=[1600,1200,850,550,300][$("#rleSpeed").value-1];
+  st.timer=setInterval(()=>{if(st.k<st.steps.length-1){st.k++;rleRender();}else rlePause();},ms);
+  rleRender();
+}
+function rleLoad(){
+  rlePause();
+  const v=$("#rleIn").value.toUpperCase().replace(/[^A-Z]/g,"").slice(0,24);
+  $("#rleIn").value=v;st.str=v;st.steps=buildSteps(v);st.k=0;rleRender();
+}
+$("#rleLoad").onclick=rleLoad;
+$("#rleIn").addEventListener("keydown",e=>{if(e.key==="Enter")rleLoad();});
+$("#rleReset").onclick=()=>{rlePause();st.k=0;rleRender();};
+$("#rleNext").onclick=()=>{rlePause();if(st.k<st.steps.length-1)st.k++;rleRender();};
+$("#rlePrev").onclick=()=>{rlePause();if(st.k>0)st.k--;rleRender();};
+$("#rlePlay").onclick=rlePlay;
+$("#rleSpeed").oninput=()=>{$("#rleSpeedV").textContent=["slowest","slow","medium","fast","fastest"][$("#rleSpeed").value-1];if(st.timer){rlePause();rlePlay();}};
+$("#rleSpeed").oninput();
+rleLoad();
+
+/* ---------- bitmap RLE ---------- */
+const PRE={
+  Smiley:["..####..",".#....#.","#.#..#.#","#......#","#.#..#.#","#..##..#",".#....#.","..####.."],
+  Stripes:["########","########","........","........","########","########","........","........"],
+  "Letter T":["########","########","...##...","...##...","...##...","...##...","...##...","...##..."],
+  Checker:["#.#.#.#.",".#.#.#.#","#.#.#.#.",".#.#.#.#","#.#.#.#.",".#.#.#.#","#.#.#.#.",".#.#.#.#"],
+  Blank:["........","........","........","........","........","........","........","........"]
+};
+let grid=PRE.Smiley.join("").split("").map(c=>c==="#");
+let anim=null,animTimer=null,painting=null;
+function rowRuns(r){
+  const runs=[];
+  for(let c=0;c<8;c++){
+    const b=grid[r*8+c],last=runs[runs.length-1];
+    if(last&&last.b===b)last.n++; else runs.push({b,n:1,start:c});
+  }
+  return runs;
+}
+function imgRender(){
+  const all=[];for(let r=0;r<8;r++)rowRuns(r).forEach(x=>all.push({...x,row:r,f:all.length}));
+  const cur=anim!==null?all[Math.min(anim,all.length-1)]:null;
+  $("#pixgrid").innerHTML=grid.map((b,i)=>{
+    const r=Math.floor(i/8),c=i%8;
+    const hl=cur&&cur.row===r&&c>=cur.start&&c<cur.start+cur.n;
+    return '<button class="pix'+(b?" on":"")+(hl?" hl":"")+'" data-i="'+i+'" aria-label="Row '+(r+1)+', column '+(c+1)+': '+(b?"black":"white")+'"></button>';}).join("");
+  let html="";
+  for(let r=0;r<8;r++){
+    const toks=all.filter(x=>x.row===r&&(anim===null||x.f<=anim)).map(x=>
+      '<span class="tok" style="background:'+tint(x.f)+(cur&&cur.f===x.f?";outline:2px solid var(--count)":"")+'"><b>'+x.n+'</b>'+(x.b?"B":"W")+'</span>').join("");
+    html+='<div><span class="rn">Row '+(r+1)+'</span>'+(toks||'<span style="color:var(--muted)">…</span>')+'</div>';
+  }
+  $("#imgRows").innerHTML=html;
+  const R=all.length,m=Math.max(...all.map(x=>x.n)),cb=Math.max(1,Math.ceil(Math.log2(m+1))),per=cb+1,tot=R*per;
+  $("#tOrig").textContent="64 bits";
+  $("#tEnc").textContent=R+" runs × "+per+" bits = "+tot+" bits";
+  $("#bEnc").style.width=Math.min(100,tot/64*100)+"%";
+  $("#bEncWrap").className="bar"+(tot>=64?" bad":"");
+  $("#imgVerdict").textContent=tot<64?"Encoded is "+Math.round((1-tot/64)*100)+"% smaller. Long runs of one colour make RLE work well."
+    :tot===64?"Encoded is exactly the same size. RLE has saved nothing here.":"Encoded is bigger than the original by "+(tot-64)+" bits. Short runs make RLE backfire.";
+}
+function setPix(i,v){if(grid[i]!==v){grid[i]=v;stopScan();imgRender();}}
+$("#pixgrid").addEventListener("pointerdown",e=>{const b=e.target.closest(".pix");if(!b)return;e.preventDefault();const i=+b.dataset.i;painting=!grid[i];setPix(i,painting);});
+$("#pixgrid").addEventListener("pointerover",e=>{if(painting===null)return;const b=e.target.closest(".pix");if(b)setPix(+b.dataset.i,painting);});
+$("#pixgrid").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){const b=e.target.closest(".pix");if(b){e.preventDefault();const i=+b.dataset.i;setPix(i,!grid[i]);const nb=document.querySelector('.pix[data-i="'+i+'"]');nb&&nb.focus();}}});
+document.addEventListener("pointerup",()=>painting=null);
+$("#presets").innerHTML=Object.keys(PRE).map(k=>'<button class="btn alt" data-p="'+k+'">'+k+'</button>').join("");
+$("#presets").onclick=e=>{const k=e.target.dataset.p;if(!k)return;stopScan();grid=PRE[k].join("").split("").map(c=>c==="#");imgRender();};
+function stopScan(){clearInterval(animTimer);animTimer=null;anim=null;}
+$("#scanStop").onclick=()=>{stopScan();imgRender();};
+$("#scan").onclick=()=>{
+  stopScan();anim=0;imgRender();
+  const total=[...Array(8).keys()].reduce((a,r)=>a+rowRuns(r).length,0);
+  animTimer=setInterval(()=>{if(anim<total-1){anim++;imgRender();}else{clearInterval(animTimer);animTimer=null;}},700);
+};
+imgRender();
+
+/* ---------- decode / encode quiz ---------- */
+const QZ=[
+  {q:"Decode <code>3A2B4C</code>",a:"AAABBCCCC"},
+  {q:"Decode <code>1X5Y2X</code>",a:"XYYYYYXX"},
+  {q:"Decode this pixel row: <code>2W4B2W</code>",a:"WWBBBBWW"},
+  {q:"Encode <code>WWWBBBBBW</code>",a:"3W5B1W"},
+  {q:"Encode <code>AAABCCCC</code>",a:"3A1B4C"},
+  {q:"Decode <code>12A3B</code> (watch the two-digit count)",a:"AAAAAAAAAAAABBB"}
+];
+$("#quiz").innerHTML=QZ.map((x,i)=>'<div class="qrow"><div>'+x.q+'</div><div class="row"><input type="text" id="qz'+i+'" size="24" autocomplete="off" spellcheck="false" aria-label="Answer '+(i+1)+'"><button class="btn" data-c="'+i+'">Check</button><button class="btn alt" data-s="'+i+'">Show answer</button></div><div class="fb" id="qf'+i+'" aria-live="polite"></div></div>').join("");
+$("#quiz").onclick=e=>{
+  const c=e.target.dataset.c,s=e.target.dataset.s;
+  if(c!==undefined){
+    const v=$("#qz"+c).value.toUpperCase().replace(/\s/g,""),f=$("#qf"+c);
+    if(v===QZ[c].a){f.className="fb ok";f.textContent="Correct.";}
+    else{f.className="fb no";f.textContent=v?"Not quite. Check each count against its letter.":"Type an answer first.";}
+  }
+  if(s!==undefined){const f=$("#qf"+s);f.className="fb";f.textContent="Answer: "+QZ[s].a;}
+};
+
+/* ---------- slider: run length ---------- */
+function rlaRender(){
+  const r=+$("#runLen").value;$("#runLenV").textContent=r;
+  let s="";for(let i=0;s.length<24;i++)s+="ABCDEFGH"[i%8].repeat(r);
+  s=s.slice(0,24);
+  const runs=rle(s),e=runs.length*2;
+  $("#rlA").innerHTML=[...s].map((c,j)=>{
+    let k=0,acc=0;while(acc+runs[k].n<=j){acc+=runs[k].n;k++;}
+    return '<div class="cell" style="width:28px;height:36px;font-size:.95rem;background:'+tint(k)+'">'+c+'</div>';}).join("");
+  $("#rlB").innerHTML=runs.map((x,k)=>'<span class="tok" style="font-size:.95rem;padding:4px 8px;background:'+tint(k)+'"><b>'+x.n+'</b>'+x.ch+'</span>').join("");
+  $("#rlO").textContent="24 characters";$("#rlE").textContent=e+" characters";
+  $("#rlBar").style.width=Math.min(100,e/24*100)+"%";
+  $("#rlBarW").className="bar"+(e>24?" bad":"");
+  $("#rlV").textContent=e<24?"Saved "+Math.round((1-e/24)*100)+"%."
+    :e===24?"Same size. Runs of 2 give no saving.":"Bigger than the original. Every run of 1 costs two characters.";
+}
+$("#runLen").oninput=rlaRender;rlaRender();
+
+/* ---------- slider: sound ---------- */
+const fmtBytes=b=>b<1024?b.toLocaleString()+" B":b<1048576?(b/1024).toFixed(1)+" KiB":(b/1048576).toFixed(2)+" MiB";
+function waveRender(){
+  const sr=+$("#sr").value,bd=+$("#bd").value,dur=+$("#dur").value;
+  $("#srV").textContent=sr.toLocaleString()+" Hz";$("#bdV").textContent=bd+" bit"+(bd>1?"s":"");
+  $("#durV").textContent=dur+" s";
+  const f=t=>0.75*Math.sin(2*Math.PI*3*t)+0.2*Math.sin(2*Math.PI*7*t);
+  const L=Math.pow(2,bd),q=v=>{const u=(v+1)/2;return Math.round(u*(L-1))/(L-1)*2-1;};
+  const X=t=>20+t*600,Y=v=>100-v*80;
+  let real="";for(let i=0;i<=300;i++){const t=i/300;real+=(i?"L":"M")+X(t).toFixed(1)+" "+Y(f(t)).toFixed(1);}
+  const n=Math.max(4,Math.round(sr/1000));
+  let pts="",dots="";
+  for(let k=0;k<n;k++){const t=k/(n-1),v=q(Math.max(-1,Math.min(1,f(t))));
+    pts+=(k?"L":"M")+X(t).toFixed(1)+" "+Y(v).toFixed(1);
+    if(n<=48)dots+='<circle cx="'+X(t).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="3.5" fill="var(--count)"/>';}
+  $("#wave").innerHTML='<line x1="20" x2="620" y1="100" y2="100" stroke="var(--line)" stroke-width="1" fill="none"/>'+
+    '<path d="'+real+'" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4" fill="none"/>'+
+    '<path d="'+pts+'" stroke="var(--accent)" stroke-width="2.5" fill="none"/>'+dots+
+    '<text x="20" y="192" font-size="12" fill="var(--muted)" font-family="JetBrains Mono,monospace">'+n+' samples shown · '+L.toLocaleString()+' levels</text>';
+  const bits=sr*bd*dur,bytes=bits/8;
+  $("#aBits").textContent=bits.toLocaleString();$("#aBytes").textContent=Math.round(bytes).toLocaleString();$("#aSize").textContent=fmtBytes(bytes);
+}
+["sr","bd","dur"].forEach(i=>$("#"+i).oninput=waveRender);waveRender();
+
+/* ---------- slider: image ---------- */
+function imgSizeRender(){
+  const w=+$("#iw").value,h=+$("#ih").value,d=+$("#id").value;
+  $("#iwV").textContent=w+" px";$("#ihV").textContent=h+" px";$("#idV").textContent=d+" bit"+(d>1?"s":"");
+  $("#iCol").textContent=Math.pow(2,d).toLocaleString();
+  $("#iSize").textContent=fmtBytes(w*h*d/8);
+}
+["iw","ih","id"].forEach(i=>$("#"+i).oninput=imgSizeRender);imgSizeRender();
+
+/* ---------- order activity ---------- */
+const STEPS=["Read the first item and set the count to 1.","Compare the next item with the current one.","If it is the same, add 1 to the count and compare the next item.","If it is different, write the count and item to the output, then reset the count to 1 for the new item.","When the data runs out, write the count and item of the final run."];
+let ord=[3,0,4,2,1];
+function ordRender(marks){
+  $("#order").innerHTML=ord.map((id,p)=>'<li draggable="true" data-p="'+p+'" class="'+(marks?(id===p?"ok":"no"):"")+'"><span aria-hidden="true">⠿</span><span class="t">'+STEPS[id]+'</span><button class="mv" data-u="'+p+'" aria-label="Move up">↑</button><button class="mv" data-d="'+p+'" aria-label="Move down">↓</button></li>').join("");
+  $("#ordFb").textContent="";
+}
+const swap=(a,b)=>{if(b<0||b>=ord.length)return;const x=ord.splice(a,1)[0];ord.splice(b,0,x);ordRender();};
+$("#order").addEventListener("click",e=>{const u=e.target.dataset.u,d=e.target.dataset.d;if(u!==undefined)swap(+u,+u-1);if(d!==undefined)swap(+d,+d+1);});
+let dragP=null;
+$("#order").addEventListener("dragstart",e=>{const li=e.target.closest("li");if(!li)return;dragP=+li.dataset.p;li.classList.add("dragging");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",String(dragP));});
+$("#order").addEventListener("dragover",e=>e.preventDefault());
+$("#order").addEventListener("drop",e=>{e.preventDefault();const li=e.target.closest("li");if(li&&dragP!==null)swap(dragP,+li.dataset.p);dragP=null;});
+$("#order").addEventListener("dragend",()=>{dragP=null;ordRender();});
+$("#ordCheck").onclick=()=>{ordRender(true);const n=ord.filter((id,p)=>id===p).length;const f=$("#ordFb");f.className="fb "+(n===5?"ok":"no");f.textContent=n===5?"Correct order.":n+" of 5 in the right place.";};
+$("#ordShuffle").onclick=()=>{do{ord=ord.map(v=>[v,Math.random()]).sort((a,b)=>a[1]-b[1]).map(x=>x[0]);}while(ord.every((v,i)=>v===i));ordRender();};
+ordRender();
+
+/* ---------- match activity ---------- */
+const TERMS=["Lossless","Lossy","Run-length encoding","Sample rate","Bit depth","Resolution"];
+const DEFS=[[3,"Number of sound samples taken each second, measured in Hz"],[0,"Compression where the original file can be rebuilt exactly"],[5,"Number of pixels in an image, width × height"],[2,"Stores repeated values as a count and the value"],[1,"Compression that permanently removes some data"],[4,"Number of bits used for each sample or colour"]];
+let placed={},selT=null;
+function mRender(marks){
+  const inUse=new Set(Object.values(placed));
+  $("#pool").innerHTML=TERMS.map((t,i)=>inUse.has(i)?"":'<button class="chip'+(selT===i?" sel":"")+'" draggable="true" data-t="'+i+'">'+t+'</button>').join("")||'<span style="color:var(--muted)">All placed</span>';
+  $("#slots").innerHTML=DEFS.map(([ans,def],k)=>{
+    const p=placed[k];
+    const cls="slot"+(marks&&p!==undefined?(p===ans?" ok":" no"):"");
+    return '<div class="'+cls+'" data-k="'+k+'"><div class="drop">'+(p!==undefined?'<button class="chip" data-r="'+k+'" draggable="true" data-t="'+p+'">'+TERMS[p]+'</button>':'<span style="color:var(--muted);font-size:.85rem">drop here</span>')+'</div><div>'+def+'</div></div>';}).join("");
+  $("#mFb").textContent="";
+}
+function place(k,t){for(const key in placed)if(placed[key]===t)delete placed[key];placed[k]=t;selT=null;mRender();}
+document.addEventListener("dragstart",e=>{const c=e.target.closest&&e.target.closest(".chip");if(c&&c.dataset.t!==undefined)e.dataTransfer.setData("text/plain","t"+c.dataset.t);});
+$("#slots").addEventListener("dragover",e=>{const s=e.target.closest(".slot");if(s){e.preventDefault();s.classList.add("over");}});
+$("#slots").addEventListener("dragleave",e=>{const s=e.target.closest(".slot");if(s)s.classList.remove("over");});
+$("#slots").addEventListener("drop",e=>{e.preventDefault();const s=e.target.closest(".slot");const d=e.dataTransfer.getData("text/plain");if(s&&d[0]==="t")place(+s.dataset.k,+d.slice(1));});
+$("#pool").addEventListener("dragover",e=>e.preventDefault());
+$("#pool").addEventListener("drop",e=>{e.preventDefault();const d=e.dataTransfer.getData("text/plain");if(d[0]==="t"){const t=+d.slice(1);for(const key in placed)if(placed[key]===t)delete placed[key];mRender();}});
+$("#pool").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;selT=selT===+c.dataset.t?null:+c.dataset.t;mRender();});
+$("#slots").addEventListener("click",e=>{
+  const r=e.target.closest("[data-r]");
+  if(r&&selT===null){delete placed[r.dataset.r];mRender();return;}
+  const s=e.target.closest(".slot");if(s&&selT!==null)place(+s.dataset.k,selT);
+});
+$("#mCheck").onclick=()=>{mRender(true);const n=DEFS.filter(([a],k)=>placed[k]===a).length;const f=$("#mFb");f.className="fb "+(n===6?"ok":"no");f.textContent=n===6?"All correct.":n+" of 6 correct.";};
+$("#mReset").onclick=()=>{placed={};selT=null;mRender();};
+mRender();
+</script>
+
+</body></html>

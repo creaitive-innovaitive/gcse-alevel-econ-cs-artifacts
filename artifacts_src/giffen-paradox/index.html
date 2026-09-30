@@ -1,0 +1,522 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>The Giffen Paradox</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#eceee6;
+  --surface:#ffffff;
+  --surface-2:#f4f5ef;
+  --border:#d6d9cd;
+  --ink:#1e2621;
+  --ink-soft:#5b6259;
+  --ink-faint:#8b9186;
+  --teal:#1e6f64;
+  --teal-soft:#c9e2dd;
+  --amber:#b0721f;
+  --amber-soft:#efdcb8;
+  --brick:#a5423a;
+  --brick-soft:#eecfcb;
+  --slate:#4a5750;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12160f;
+    --surface:#191f18;
+    --surface-2:#1f261d;
+    --border:#313a2c;
+    --ink:#e9ede4;
+    --ink-soft:#a8b0a1;
+    --ink-faint:#727a6c;
+    --teal:#5fc4b3;
+    --teal-soft:#22322d;
+    --amber:#e0a552;
+    --amber-soft:#3a2f1c;
+    --brick:#e08079;
+    --brick-soft:#3a2320;
+    --slate:#a9b3a8;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12160f;
+  --surface:#191f18;
+  --surface-2:#1f261d;
+  --border:#313a2c;
+  --ink:#e9ede4;
+  --ink-soft:#a8b0a1;
+  --ink-faint:#727a6c;
+  --teal:#5fc4b3;
+  --teal-soft:#22322d;
+  --amber:#e0a552;
+  --amber-soft:#3a2f1c;
+  --brick:#e08079;
+  --brick-soft:#3a2320;
+  --slate:#a9b3a8;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  padding:32px clamp(16px,4vw,48px) 56px;
+}
+.wrap{max-width:1180px;margin:0 auto;}
+header{margin-bottom:28px;}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--teal);
+  margin:0 0 10px;
+}
+h1{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:500;
+  font-size:clamp(28px,4vw,42px);
+  line-height:1.08;
+  margin:0 0 12px;
+  text-wrap:balance;
+  max-width:16ch;
+}
+.dek{
+  color:var(--ink-soft);
+  font-size:15.5px;
+  line-height:1.55;
+  max-width:62ch;
+  margin:0;
+}
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(300px,0.95fr);
+  gap:22px;
+  align-items:start;
+}
+@media (max-width:880px){ .layout{grid-template-columns:1fr;} }
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 20px 16px;
+}
+
+/* --- diagram card --- */
+.diagram-card svg{width:100%;height:auto;display:block;}
+.diagram-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px;}
+.diagram-title{font-weight:600;font-size:14px;}
+.diagram-sub{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-faint);}
+
+.axis-label{font-family:"IBM Plex Sans";font-size:12.5px;fill:var(--ink-soft);}
+.tick-label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--ink-faint);}
+.pt-label{font-family:"Fraunces",serif;font-weight:600;font-size:15px;}
+.pt-sub{font-family:"IBM Plex Mono",monospace;font-size:10px;fill:var(--ink-soft);}
+
+.ic-path{fill:none;stroke-width:2;transition:opacity .5s ease;}
+.ic-initial{stroke:var(--slate);}
+.ic-final{stroke:var(--teal);}
+
+.budget-line{stroke-width:2;transition:x1 .8s cubic-bezier(.4,0,.2,1),y1 .8s cubic-bezier(.4,0,.2,1),x2 .8s cubic-bezier(.4,0,.2,1),y2 .8s cubic-bezier(.4,0,.2,1),opacity .5s ease,stroke .5s ease;}
+.budget-initial{stroke:var(--ink-faint);}
+.budget-final{stroke:var(--teal);}
+.budget-compensated{stroke:var(--amber);stroke-dasharray:6 5;}
+
+.bundle-pt{transition:cx .8s cubic-bezier(.4,0,.2,1),cy .8s cubic-bezier(.4,0,.2,1),opacity .5s ease;stroke:var(--surface);stroke-width:2;}
+.pt-A{fill:var(--ink);}
+.pt-S{fill:var(--amber);}
+.pt-F{fill:var(--teal);}
+
+.eff-arrow{fill:none;stroke-width:2.25;transition:opacity .5s ease, d .6s ease;marker-end:url(#arrowhead);}
+.arrow-sub{stroke:var(--amber);}
+.arrow-inc{stroke:var(--brick);}
+.arrow-net{stroke:var(--ink);stroke-dasharray:2 4;}
+
+.fadeable{transition:opacity .5s ease;}
+.hide{opacity:0;}
+
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:10px;padding-top:12px;border-top:1px solid var(--border);}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-soft);}
+.swatch{width:16px;height:2.5px;border-radius:2px;flex:none;}
+.swatch.dot{width:9px;height:9px;border-radius:50%;}
+.swatch.dashed{background:none;border-top:2.5px dashed var(--amber);height:0;}
+
+/* --- control card --- */
+.scenario-toggle{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:10px;padding:4px;margin-bottom:18px;
+}
+.scenario-toggle button{
+  font-family:"IBM Plex Sans";font-size:13px;font-weight:600;
+  border:none;background:transparent;color:var(--ink-soft);
+  padding:9px 8px;border-radius:7px;cursor:pointer;transition:background .2s,color .2s;
+}
+.scenario-toggle button.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.scenario-toggle button:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+
+.steps{display:flex;flex-direction:column;gap:0;margin-bottom:16px;}
+.step-row{
+  display:grid;grid-template-columns:22px 1fr;gap:10px;
+  padding:9px 4px;border-radius:8px;cursor:pointer;
+  border:1px solid transparent;
+}
+.step-row:hover{background:var(--surface-2);}
+.step-row.active{background:var(--surface-2);border-color:var(--border);}
+.step-dot{
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"IBM Plex Mono";font-size:11px;font-weight:500;
+  background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);
+}
+.step-row.active .step-dot{background:var(--teal);color:#fff;border-color:var(--teal);}
+.step-row.done .step-dot{background:var(--teal-soft);color:var(--teal);border-color:var(--teal-soft);}
+.step-name{font-size:13px;font-weight:600;color:var(--ink);line-height:22px;}
+.step-row:not(.active) .step-name{color:var(--ink-soft);}
+
+.narration{
+  background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+  padding:14px 15px;font-size:13.5px;line-height:1.6;color:var(--ink);min-height:118px;
+}
+.narration b{color:inherit;}
+
+.controls{display:flex;gap:8px;margin-top:14px;}
+.controls button{
+  font-family:"IBM Plex Sans";font-weight:600;font-size:13px;
+  border:1px solid var(--border);background:var(--surface);color:var(--ink);
+  padding:9px 14px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;
+}
+.controls button:hover{border-color:var(--teal);color:var(--teal);}
+.controls button:focus-visible{outline:2px solid var(--teal);outline-offset:1px;}
+.controls button.primary{background:var(--teal);color:#fff;border-color:var(--teal);}
+.controls button.primary:hover{opacity:.9;color:#fff;}
+.controls button:disabled{opacity:.4;cursor:default;}
+.controls button:disabled:hover{border-color:var(--border);color:var(--ink);}
+
+.effect-table{margin-top:16px;border-top:1px solid var(--border);padding-top:14px;}
+.effect-table h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);margin:0 0 10px;font-weight:600;}
+.eff-row{display:grid;grid-template-columns:1fr auto;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);gap:8px;}
+.eff-row:last-child{border-bottom:none;}
+.eff-label{font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:7px;}
+.eff-dot{width:8px;height:8px;border-radius:50%;flex:none;}
+.eff-val{font-family:"IBM Plex Mono",monospace;font-size:13.5px;font-variant-numeric:tabular-nums;font-weight:500;}
+.eff-val.pending{color:var(--ink-faint);}
+
+footer.explainer{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+@media (max-width:880px){footer.explainer{grid-template-columns:1fr;}}
+footer.explainer h2{font-family:"Fraunces",serif;font-weight:500;font-size:18px;margin:0 0 8px;}
+footer.explainer p{font-size:13.5px;line-height:1.65;color:var(--ink-soft);margin:0;max-width:60ch;}
+
+@media (prefers-reduced-motion:reduce){
+  .ic-path,.budget-line,.bundle-pt,.eff-arrow,.fadeable{transition:none!important;}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Consumer Theory · Indifference Curves</p>
+    <h1>The Giffen Paradox</h1>
+    <p class="dek">A Giffen good is bought <em>more</em> when its price rises, and <em>less</em> when its price falls — the one case where demand curves slope the wrong way. The diagram below decomposes the price change into a substitution effect and an income effect to show why.</p>
+  </header>
+
+  <div class="layout">
+    <section class="card diagram-card">
+      <div class="diagram-head">
+        <span class="diagram-title">Good X (Giffen) vs. Good Y (normal)</span>
+        <span class="diagram-sub" id="priceReadout">Pₓ: $3.00 → $1.50 · Pᵧ: $2.00 · M: $120</span>
+      </div>
+      <svg viewBox="0 0 920 610" id="chart" role="img" aria-label="Indifference curve and budget line diagram showing substitution and income effects for a Giffen good">
+        <defs>
+          <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="context-stroke"></path>
+          </marker>
+        </defs>
+
+        <!-- axes -->
+        <line x1="70" y1="30" x2="70" y2="560" stroke="var(--ink-faint)" stroke-width="1.5"></line>
+        <line x1="70" y1="560" x2="890" y2="560" stroke="var(--ink-faint)" stroke-width="1.5"></line>
+        <text class="axis-label" x="480" y="596" text-anchor="middle">Quantity of Good X (the Giffen good)</text>
+        <text class="axis-label" x="0" y="0" text-anchor="middle" transform="translate(24,300) rotate(-90)">Quantity of Good Y (normal good)</text>
+
+        <!-- curves & lines (updated by JS) -->
+        <path id="icInitial" class="ic-path ic-initial"></path>
+        <path id="icFinal" class="ic-path ic-final"></path>
+
+        <line id="budgetInitial" class="budget-line budget-initial"></line>
+        <line id="budgetFinal" class="budget-line budget-final"></line>
+        <line id="budgetComp" class="budget-line budget-compensated"></line>
+
+        <path id="arrowSub" class="eff-arrow arrow-sub"></path>
+        <path id="arrowInc" class="eff-arrow arrow-inc"></path>
+        <path id="arrowNet" class="eff-arrow arrow-net"></path>
+
+        <circle id="ptA" class="bundle-pt pt-A" r="6"></circle>
+        <circle id="ptS" class="bundle-pt pt-S" r="6"></circle>
+        <circle id="ptF" class="bundle-pt pt-F" r="6"></circle>
+
+        <g id="labA" class="fadeable"><text class="pt-label" fill="var(--ink)"></text><text class="pt-sub"></text></g>
+        <g id="labS" class="fadeable"><text class="pt-label" fill="var(--amber)"></text><text class="pt-sub"></text></g>
+        <g id="labF" class="fadeable"><text class="pt-label" fill="var(--teal)"></text><text class="pt-sub"></text></g>
+      </svg>
+
+      <div class="legend">
+        <span class="legend-item"><span class="swatch" style="background:var(--ink-faint)"></span>Original budget line</span>
+        <span class="legend-item"><span class="swatch" style="background:var(--teal)"></span>New budget line</span>
+        <span class="legend-item"><span class="swatch dashed"></span>Compensated (hypothetical) line</span>
+        <span class="legend-item"><span class="swatch" style="background:var(--slate)"></span>IC₁ — original utility</span>
+        <span class="legend-item"><span class="swatch" style="background:var(--teal)"></span>IC₂ — new utility</span>
+        <span class="legend-item"><span class="swatch dot" style="background:var(--ink)"></span>A — initial bundle</span>
+        <span class="legend-item"><span class="swatch dot" style="background:var(--amber)"></span>S — substitution point</span>
+        <span class="legend-item"><span class="swatch dot" style="background:var(--teal)"></span>F — final bundle</span>
+      </div>
+    </section>
+
+    <aside>
+      <div class="card">
+        <div class="scenario-toggle" role="tablist" aria-label="Choose price scenario">
+          <button id="btnFall" class="active" role="tab" aria-selected="true">Price of X falls</button>
+          <button id="btnRise" role="tab" aria-selected="false">Price of X rises</button>
+        </div>
+
+        <div class="steps" id="steps"></div>
+
+        <div class="narration" id="narration" aria-live="polite"></div>
+
+        <div class="controls">
+          <button id="btnPrev">← Back</button>
+          <button id="btnPlay" class="primary">▶ Play</button>
+          <button id="btnNext">Next →</button>
+        </div>
+
+        <div class="effect-table">
+          <h3>Effect decomposition (Δ Good X)</h3>
+          <div class="eff-row">
+            <span class="eff-label"><span class="eff-dot" style="background:var(--amber)"></span>Substitution effect</span>
+            <span class="eff-val pending" id="valSub">—</span>
+          </div>
+          <div class="eff-row">
+            <span class="eff-label"><span class="eff-dot" style="background:var(--brick)"></span>Income effect</span>
+            <span class="eff-val pending" id="valInc">—</span>
+          </div>
+          <div class="eff-row">
+            <span class="eff-label"><span class="eff-dot" style="background:var(--ink)"></span>Net effect</span>
+            <span class="eff-val pending" id="valNet">—</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="explainer">
+    <div>
+      <h2>Why the curves stay bowed toward the origin</h2>
+      <p>Both indifference curves are drawn as true convex-to-origin curves (rectangular hyperbolas, y = k⁄x): the consumer needs ever more of one good to give up a unit of the other as that good becomes scarce. This diminishing marginal rate of substitution is what keeps the tangency solution well-defined — it's never relaxed to make the Giffen result "work."</p>
+    </div>
+    <div>
+      <h2>Where the paradox actually comes from</h2>
+      <p>The convex curves guarantee the substitution effect always points the "normal" way — more X when X gets relatively cheaper, less when it gets dearer. A Giffen result needs nothing exotic in the curve's shape; it needs X to be so strongly inferior that the income effect of the price change outweighs that substitution effect and reverses its sign in the total.</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+const px = x => 70 + 9*x;
+const py = y => 560 - (530/65)*y;
+
+function hyperbolaPath(k, xMax){
+  const xMin = k/65;
+  const pts = [];
+  const N = 48;
+  for(let i=0;i<=N;i++){
+    const t = i/N;
+    const x = xMin * Math.pow(xMax/xMin, t);
+    const y = k/x;
+    pts.push([px(x), py(y)]);
+  }
+  return 'M ' + pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' L ');
+}
+
+function budgetPx(pX, pY, M){
+  return {x1:px(0), y1:py(M/pY), x2:px(M/pX), y2:py(0)};
+}
+
+// clip a line y = c - m*x to the plot box x:[0,90] y:[0,65]
+function compensatedPx(S, m){
+  const c = S.y + m*S.x;
+  const candidates = [];
+  const yAt0 = c;                if(yAt0>=0 && yAt0<=65) candidates.push([0,yAt0]);
+  const yAt90 = c - m*90;        if(yAt90>=0 && yAt90<=65) candidates.push([90,yAt90]);
+  const xAt0 = c/m;              if(xAt0>=0 && xAt0<=90) candidates.push([xAt0,0]);
+  const xAt65 = (c-65)/m;        if(xAt65>=0 && xAt65<=90) candidates.push([xAt65,65]);
+  candidates.sort((a,b)=>a[0]-b[0]);
+  const p1 = candidates[0], p2 = candidates[candidates.length-1];
+  return {x1:px(p1[0]),y1:py(p1[1]),x2:px(p2[0]),y2:py(p2[1])};
+}
+
+function arrowPath(p1,p2,bow){
+  const mx=(p1.x+p2.x)/2, my=(p1.y+p2.y)/2;
+  const dx=p2.x-p1.x, dy=p2.y-p1.y, len=Math.hypot(dx,dy)||1;
+  const nx=-dy/len, ny=dx/len;
+  const cx=mx+nx*bow, cy=my+ny*bow;
+  return `M ${p1.x.toFixed(1)},${p1.y.toFixed(1)} Q ${cx.toFixed(1)},${cy.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+}
+
+const M=120, pY=2;
+
+const scenarios = {
+  fall: {
+    label:'Price of X falls',
+    p0:3, p1:1.5,
+    kInitial:562.5, kFinal:612,
+    A:{x:15,y:37.5}, S:{x:27.386,y:20.545}, F:{x:12,y:51},
+    priceReadout:'Pₓ: $3.00 → $1.50 · Pᵧ: $2.00 · M: $120',
+    steps:[
+      {name:'Initial equilibrium',
+       text:'At <b>Pₓ = $3</b>, the consumer settles at <b>A</b> — the bundle where the budget line is tangent to IC₁. They buy <b>15 units of X</b> and 37.5 of Y.'},
+      {name:'Price falls',
+       text:'Pₓ drops to <b>$1.50</b>. Y\'s price and income M are unchanged, so the budget line pivots outward around its Y-intercept — the whole shaded triangle of affordable bundles grows.'},
+      {name:'Substitution effect',
+       text:'Freeze utility on IC₁ and ask: with X relatively cheaper, how does the consumer reshuffle spending? They slide along IC₁ to <b>S</b>. Substitution effect: <b>+12.4 units of X</b> — always positive when a good\'s own price falls.'},
+      {name:'Income effect & result',
+       text:'Now restore real purchasing power (drop the hypothetical line, reinstate the true one). Because X is so strongly inferior here, the consumer moves from S down to <b>F</b> — <b>−15.4 units</b>, more than wiping out the substitution effect. Net: X demand <b>falls from 15 to 12</b> even though its price fell. That\'s the Giffen paradox.'}
+    ]
+  },
+  rise: {
+    label:'Price of X rises',
+    p0:3, p1:6,
+    kInitial:562.5, kFinal:57,
+    A:{x:15,y:37.5}, S:{x:13.69,y:41.08}, F:{x:19,y:3},
+    priceReadout:'Pₓ: $3.00 → $6.00 · Pᵧ: $2.00 · M: $120',
+    steps:[
+      {name:'Initial equilibrium',
+       text:'Same starting point: at <b>Pₓ = $3</b> the consumer is at <b>A</b>, tangent to IC₁, buying <b>15 units of X</b>.'},
+      {name:'Price rises',
+       text:'Pₓ doubles to <b>$6</b>. The budget line pivots <em>inward</em> around the Y-intercept — real purchasing power over X collapses.'},
+      {name:'Substitution effect',
+       text:'Holding utility fixed on IC₁, the now-dearer X is swapped for Y, sliding the consumer to <b>S</b>. Substitution effect: <b>−1.3 units of X</b> — the ordinary, negative response to a price rise.'},
+      {name:'Income effect & result',
+       text:'Reinstating the real (much poorer) budget line moves the consumer from S out to <b>F</b> — <b>+5.3 units</b>, on a far lower indifference curve (IC₂ collapses in toward the origin — real income has fallen a lot). X is so strongly inferior that, unable to afford Y, the consumer buys <em>more</em> X to survive. Net: demand <b>rises from 15 to 19</b> even though the price rose — the classic "potatoes in a famine" story.'}
+    ]
+  }
+};
+
+let scenarioKey='fall', step=0, playing=false, timer=null;
+
+const el = id => document.getElementById(id);
+const stepsEl = el('steps');
+
+function renderStepsList(){
+  stepsEl.innerHTML='';
+  scenarios[scenarioKey].steps.forEach((s,i)=>{
+    const row=document.createElement('div');
+    row.className='step-row'+(i===step?' active':'')+(i<step?' done':'');
+    row.innerHTML=`<span class="step-dot">${i<step?'✓':i+1}</span><span class="step-name">${s.name}</span>`;
+    row.addEventListener('click',()=>{ stopPlay(); step=i; render(); });
+    stepsEl.appendChild(row);
+  });
+}
+
+function setLabel(gId,x,y,text,sub){
+  const g=el(gId);
+  const [t1,t2]=g.children;
+  t1.setAttribute('x',px(x)+10); t1.setAttribute('y',py(y)-10); t1.textContent=text;
+  t2.setAttribute('x',px(x)+10); t2.setAttribute('y',py(y)+6); t2.textContent=sub;
+}
+
+function render(){
+  const sc = scenarios[scenarioKey];
+  const {A,S,F,kInitial,kFinal,p0,p1} = sc;
+
+  el('btnFall').classList.toggle('active',scenarioKey==='fall');
+  el('btnFall').setAttribute('aria-selected',scenarioKey==='fall');
+  el('btnRise').classList.toggle('active',scenarioKey==='rise');
+  el('btnRise').setAttribute('aria-selected',scenarioKey==='rise');
+  el('priceReadout').textContent = sc.priceReadout;
+
+  // curves
+  el('icInitial').setAttribute('d', hyperbolaPath(kInitial, 70));
+  el('icFinal').setAttribute('d', hyperbolaPath(kFinal, 70));
+  el('icFinal').style.opacity = step>=2 ? 1 : 0;
+
+  // budget lines
+  const bi = budgetPx(p0,pY,M);
+  Object.assign(el('budgetInitial'),{});
+  el('budgetInitial').setAttribute('x1',bi.x1); el('budgetInitial').setAttribute('y1',bi.y1);
+  el('budgetInitial').setAttribute('x2',bi.x2); el('budgetInitial').setAttribute('y2',bi.y2);
+  el('budgetInitial').style.opacity = step<=1 ? 1 : 0.35;
+
+  const bf = budgetPx(p1,pY,M);
+  el('budgetFinal').setAttribute('x1',bf.x1); el('budgetFinal').setAttribute('y1',bf.y1);
+  el('budgetFinal').setAttribute('x2',bf.x2); el('budgetFinal').setAttribute('y2',bf.y2);
+  el('budgetFinal').style.opacity = step>=1 ? 1 : 0;
+
+  const m = p1/pY;
+  const bc = compensatedPx(S, m);
+  el('budgetComp').setAttribute('x1',bc.x1); el('budgetComp').setAttribute('y1',bc.y1);
+  el('budgetComp').setAttribute('x2',bc.x2); el('budgetComp').setAttribute('y2',bc.y2);
+  el('budgetComp').style.opacity = (step===2) ? 1 : 0;
+
+  // points
+  el('ptA').setAttribute('cx',px(A.x)); el('ptA').setAttribute('cy',py(A.y));
+  el('ptS').setAttribute('cx',px(S.x)); el('ptS').setAttribute('cy',py(S.y));
+  el('ptS').style.opacity = step>=2 ? 1 : 0;
+  el('ptF').setAttribute('cx',px(F.x)); el('ptF').setAttribute('cy',py(F.y));
+  el('ptF').style.opacity = step>=3 ? 1 : 0;
+
+  setLabel('labA',A.x,A.y,'A',`(${A.x}, ${A.y})`);
+  setLabel('labS',S.x,S.y,'S',`(${S.x.toFixed(1)}, ${S.y.toFixed(1)})`);
+  setLabel('labF',F.x,F.y,'F',`(${F.x}, ${F.y})`);
+  el('labS').style.opacity = step>=2 ? 1:0;
+  el('labF').style.opacity = step>=3 ? 1:0;
+
+  // arrows
+  const Apx={x:px(A.x),y:py(A.y)}, Spx={x:px(S.x),y:py(S.y)}, Fpx={x:px(F.x),y:py(F.y)};
+  el('arrowSub').setAttribute('d', arrowPath(Apx,Spx,-22));
+  el('arrowSub').style.opacity = step>=2 ? 1:0;
+  el('arrowInc').setAttribute('d', arrowPath(Spx,Fpx,-22));
+  el('arrowInc').style.opacity = step>=3 ? 1:0;
+  el('arrowNet').setAttribute('d', arrowPath(Apx,Fpx,40));
+  el('arrowNet').style.opacity = step>=3 ? 1:0;
+
+  // narration + steps list
+  renderStepsList();
+  el('narration').innerHTML = sc.steps[step].text;
+
+  // effect table
+  const sub = S.x-A.x, inc = F.x-S.x, net = F.x-A.x;
+  const fmt = v => (v>=0?'+':'')+v.toFixed(1);
+  el('valSub').textContent = step>=2 ? fmt(sub) : '—';
+  el('valSub').classList.toggle('pending', step<2);
+  el('valInc').textContent = step>=3 ? fmt(inc) : '—';
+  el('valInc').classList.toggle('pending', step<3);
+  el('valNet').textContent = step>=3 ? fmt(net) : '—';
+  el('valNet').classList.toggle('pending', step<3);
+
+  el('btnPrev').disabled = step===0;
+  el('btnNext').disabled = step===3;
+}
+
+function stopPlay(){
+  playing=false; clearInterval(timer);
+  el('btnPlay').textContent='▶ Play';
+}
+
+el('btnFall').addEventListener('click',()=>{ stopPlay(); scenarioKey='fall'; step=0; render(); });
+el('btnRise').addEventListener('click',()=>{ stopPlay(); scenarioKey='rise'; step=0; render(); });
+el('btnPrev').addEventListener('click',()=>{ stopPlay(); step=Math.max(0,step-1); render(); });
+el('btnNext').addEventListener('click',()=>{ stopPlay(); step=Math.min(3,step+1); render(); });
+el('btnPlay').addEventListener('click',()=>{
+  if(playing){ stopPlay(); return; }
+  if(step>=3) step=0;
+  playing=true; el('btnPlay').textContent='⏸ Pause';
+  render();
+  timer=setInterval(()=>{
+    step++;
+    if(step>3){ stopPlay(); step=3; render(); return; }
+    render();
+  },2400);
+});
+
+render();
+</script>
+
+</body></html>

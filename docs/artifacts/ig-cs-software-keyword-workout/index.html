@@ -1,0 +1,456 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>Chapter 4: Software — Keyword Workout</title>
+<style>
+:root{
+  --paper:#eef1f3;
+  --card:#ffffff;
+  --ink:#1c2731;
+  --ink-soft:#4b5a66;
+  --rule:#c7d0d6;
+  --teal:#1f6f78;
+  --teal-deep:#124a51;
+  --amber:#c97b2e;
+  --amber-soft:#f3e2cd;
+  --os-bg:#e3edee; --os-ink:#124a51;
+  --util-bg:#fbe9d8; --util-ink:#8a4a12;
+  --app-bg:#e7e9f5; --app-ink:#38408a;
+  --trans-bg:#e6f0e2; --trans-ink:#3c6b2a;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#161d22;
+    --card:#1e2830;
+    --ink:#e7edf0;
+    --ink-soft:#a7b6c0;
+    --rule:#334049;
+    --teal:#4fb8bf;
+    --teal-deep:#8fd4d8;
+    --amber:#e0a05a;
+    --amber-soft:#3a2c18;
+    --os-bg:#1c3436; --os-ink:#9fdfe4;
+    --util-bg:#3a2c18; --util-ink:#f0b978;
+    --app-bg:#242a45; --app-ink:#b3b9ec;
+    --trans-bg:#233421; --trans-ink:#a9d69a;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#161d22;
+  --card:#1e2830;
+  --ink:#e7edf0;
+  --ink-soft:#a7b6c0;
+  --rule:#334049;
+  --teal:#4fb8bf;
+  --teal-deep:#8fd4d8;
+  --amber:#e0a05a;
+  --amber-soft:#3a2c18;
+  --os-bg:#1c3436; --os-ink:#9fdfe4;
+  --util-bg:#3a2c18; --util-ink:#f0b978;
+  --app-bg:#242a45; --app-ink:#b3b9ec;
+  --trans-bg:#233421; --trans-ink:#a9d69a;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+  font-size:16px;
+  line-height:1.5;
+}
+.sheet{
+  max-width:920px;
+  margin:0 auto;
+  padding:2.5rem 1.75rem 4rem;
+}
+h1,h2,h3{
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  text-wrap:balance;
+  margin:0;
+}
+header.title-block{
+  border-bottom:3px solid var(--ink);
+  padding-bottom:1.1rem;
+  margin-bottom:2rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:1rem;
+  flex-wrap:wrap;
+}
+header.title-block h1{
+  font-size:2rem;
+  font-weight:700;
+  color:var(--ink);
+}
+header.title-block .sub{
+  font-size:0.95rem;
+  color:var(--ink-soft);
+  margin-top:0.3rem;
+}
+.meta{
+  font-size:0.8rem;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--teal-deep);
+  font-weight:600;
+  text-align:right;
+}
+.meta div{margin-bottom:0.15rem;}
+.meta .fillline{
+  display:inline-block;
+  border-bottom:1px solid var(--ink-soft);
+  min-width:110px;
+}
+
+section{margin-bottom:2.75rem;}
+.activity-head{
+  display:flex;
+  align-items:baseline;
+  gap:0.65rem;
+  margin-bottom:0.35rem;
+}
+.activity-num{
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  font-size:1.7rem;
+  color:var(--teal);
+  font-weight:700;
+}
+.activity-head h2{
+  font-size:1.35rem;
+  color:var(--ink);
+}
+.instructions{
+  color:var(--ink-soft);
+  font-size:0.95rem;
+  margin:0.2rem 0 1rem;
+  max-width:65ch;
+}
+
+/* Activity 1: matching columns */
+.match-wrap{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 1.5rem;
+}
+.match-col h3{
+  font-size:0.8rem;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  color:var(--ink-soft);
+  margin-bottom:0.6rem;
+  font-family:"Avenir Next","Segoe UI",sans-serif;
+  font-weight:700;
+}
+.match-item{
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+  background:var(--card);
+  border:1px solid var(--rule);
+  border-radius:7px;
+  padding:0.55rem 0.75rem;
+  margin-bottom:0.55rem;
+  font-size:0.92rem;
+}
+.bubble{
+  flex:0 0 auto;
+  width:1.6rem;
+  height:1.6rem;
+  border-radius:50%;
+  border:1.5px solid var(--teal);
+  color:var(--teal-deep);
+  font-weight:700;
+  font-size:0.8rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:"Avenir Next",sans-serif;
+}
+.match-col.terms .match-item{font-weight:600;}
+.match-col.defs .bubble{border-color:var(--amber); color:var(--amber);}
+
+/* Activity 2: gap fill */
+.gapfill{
+  background:var(--card);
+  border:1px solid var(--rule);
+  border-radius:10px;
+  padding:1.3rem 1.5rem;
+  font-size:0.98rem;
+}
+.gapfill p{margin:0 0 0.9rem;}
+.gapfill p:last-child{margin-bottom:0;}
+.blank{
+  display:inline-block;
+  min-width:9ch;
+  border-bottom:1.5px solid var(--ink);
+  margin:0 2px;
+}
+.wordbank{
+  margin-top:1rem;
+  padding-top:0.9rem;
+  border-top:1px dashed var(--rule);
+  font-family:"SF Mono","Consolas","Menlo",monospace;
+  font-size:0.82rem;
+  color:var(--teal-deep);
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.4rem 0.7rem;
+}
+.wordbank span{
+  background:var(--amber-soft);
+  border-radius:5px;
+  padding:0.15rem 0.5rem;
+}
+
+/* Activity 3: category sort */
+.category-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1rem;
+}
+.cat-card{
+  border-radius:10px;
+  padding:1rem 1.1rem 1.2rem;
+  border:1px solid var(--rule);
+}
+.cat-card h3{
+  font-family:"Avenir Next",sans-serif;
+  font-size:0.85rem;
+  text-transform:uppercase;
+  letter-spacing:0.07em;
+  font-weight:800;
+  margin-bottom:0.7rem;
+}
+.cat-card.os{background:var(--os-bg); color:var(--os-ink);}
+.cat-card.util{background:var(--util-bg); color:var(--util-ink);}
+.cat-card.app{background:var(--app-bg); color:var(--app-ink);}
+.cat-card.trans{background:var(--trans-bg); color:var(--trans-ink);}
+.cat-card ul{
+  list-style:none;
+  margin:0; padding:0;
+  min-height:7.5rem;
+}
+.cat-card li{
+  font-size:0.85rem;
+  padding:0.35rem 0;
+  border-bottom:1px dotted currentColor;
+  opacity:0.85;
+}
+.cat-card li:last-child{border-bottom:none;}
+.cardpool{
+  margin-top:1.1rem;
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.5rem;
+}
+.term-card{
+  font-family:"SF Mono","Consolas","Menlo",monospace;
+  font-size:0.8rem;
+  background:var(--card);
+  border:1.5px solid var(--ink);
+  border-radius:6px;
+  padding:0.35rem 0.65rem;
+  color:var(--ink);
+}
+
+/* Activity 4: speed round / quickfire */
+.quickfire{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:0.9rem;
+}
+.qf-card{
+  background:var(--card);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--teal);
+  border-radius:0 8px 8px 0;
+  padding:0.8rem 1rem;
+}
+.qf-card .clue{font-size:0.92rem; margin-bottom:0.4rem;}
+.qf-card .ans-line{
+  height:1.1rem;
+  border-bottom:1px solid var(--ink-soft);
+}
+
+/* answer key */
+.key{
+  background:var(--card);
+  border:1px dashed var(--rule);
+  border-radius:10px;
+  padding:1.2rem 1.4rem;
+  font-size:0.85rem;
+  color:var(--ink-soft);
+}
+.key h2{font-size:1.1rem; color:var(--ink); margin-bottom:0.8rem;}
+.key-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:0.3rem 1.5rem;
+}
+.key-grid div b{color:var(--ink);}
+
+footer{
+  margin-top:2.5rem;
+  padding-top:1rem;
+  border-top:1px solid var(--rule);
+  font-size:0.75rem;
+  color:var(--ink-soft);
+  display:flex;
+  justify-content:space-between;
+}
+
+@media print{
+  body{background:#fff;}
+  .sheet{max-width:none; padding:0.4in;}
+  .key{page-break-before:always;}
+  section{break-inside:avoid;}
+}
+
+@media (max-width:640px){
+  .match-wrap, .category-grid, .quickfire, .key-grid{grid-template-columns:1fr;}
+}
+</style>
+
+<div class="sheet">
+
+  <header class="title-block">
+    <div>
+      <h1>Software — Keyword Workout</h1>
+      <div class="sub">Cambridge IGCSE / GCSE Computer Science · Chapter 4: Software</div>
+    </div>
+    <div class="meta">
+      <div>Name: <span class="fillline">&nbsp;</span></div>
+      <div>Class: <span class="fillline">&nbsp;</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="activity-head">
+      <span class="activity-num">1</span>
+      <h2>Match the term to its definition</h2>
+    </div>
+    <p class="instructions">Write the letter of each definition next to its matching number. Cut along the dotted lines if you'd rather sort them as cards.</p>
+    <div class="match-wrap">
+      <div class="match-col terms">
+        <h3>Terms</h3>
+        <div class="match-item"><span class="bubble">1</span> Operating system</div>
+        <div class="match-item"><span class="bubble">2</span> Utility software</div>
+        <div class="match-item"><span class="bubble">3</span> Compiler</div>
+        <div class="match-item"><span class="bubble">4</span> Interpreter</div>
+        <div class="match-item"><span class="bubble">5</span> Source code</div>
+        <div class="match-item"><span class="bubble">6</span> Bespoke software</div>
+        <div class="match-item"><span class="bubble">7</span> Firmware</div>
+        <div class="match-item"><span class="bubble">8</span> IDE</div>
+      </div>
+      <div class="match-col defs">
+        <h3>Definitions</h3>
+        <div class="match-item"><span class="bubble">A</span> Translates high-level code line by line, stopping at the first error it finds</div>
+        <div class="match-item"><span class="bubble">B</span> Software written to a specific customer's requirements</div>
+        <div class="match-item"><span class="bubble">C</span> Manages hardware, memory and files so applications can run</div>
+        <div class="match-item"><span class="bubble">D</span> Permanent software stored on a ROM chip inside a device</div>
+        <div class="match-item"><span class="bubble">E</span> Program code as originally typed by the programmer, before translation</div>
+        <div class="match-item"><span class="bubble">F</span> A single package combining an editor, translator and debugger</div>
+        <div class="match-item"><span class="bubble">G</span> Translates an entire high-level program into machine code before it runs</div>
+        <div class="match-item"><span class="bubble">H</span> Housekeeping software such as anti-virus, defragmentation and backup tools</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="activity-head">
+      <span class="activity-num">2</span>
+      <h2>Fill the gaps</h2>
+    </div>
+    <p class="instructions">Complete each passage using a word or phrase from the bank below. Each word is used once.</p>
+    <div class="gapfill">
+      <p>An operating system provides <span class="blank"></span>, which lets the user interact with the computer through icons, windows and menus. It also carries out <span class="blank"></span>, keeping track of which parts of RAM are free and which are in use by running programs. When several programs appear to run at once on a single processor, this is called <span class="blank"></span>.</p>
+      <p>Software written for one specific customer's needs is called <span class="blank"></span>, whereas software written to be sold to a wide range of users is <span class="blank"></span> software.</p>
+      <p>Before a program can run, its <span class="blank"></span> must be translated into <span class="blank"></span> that the processor can execute directly. A <span class="blank"></span> error stops a program from running at all, while a <span class="blank"></span> error lets the program run but produces the wrong result.</p>
+    </div>
+    <div class="wordbank">
+      <span>user interface</span><span>memory management</span><span>multi-tasking</span>
+      <span>bespoke</span><span>general-purpose</span><span>source code</span>
+      <span>object code</span><span>syntax</span><span>logic</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="activity-head">
+      <span class="activity-num">3</span>
+      <h2>Sort the terms</h2>
+    </div>
+    <p class="instructions">Cut out the terms from the pool and stick each one under the category it belongs to. Some categories may end up with more than others — that's fine.</p>
+    <div class="category-grid">
+      <div class="cat-card os">
+        <h3>Operating system jobs</h3>
+        <ul><li>&nbsp;</li><li>&nbsp;</li><li>&nbsp;</li></ul>
+      </div>
+      <div class="cat-card util">
+        <h3>Utility software</h3>
+        <ul><li>&nbsp;</li><li>&nbsp;</li><li>&nbsp;</li></ul>
+      </div>
+      <div class="cat-card app">
+        <h3>Application software</h3>
+        <ul><li>&nbsp;</li><li>&nbsp;</li><li>&nbsp;</li></ul>
+      </div>
+      <div class="cat-card trans">
+        <h3>Translators &amp; program development</h3>
+        <ul><li>&nbsp;</li><li>&nbsp;</li><li>&nbsp;</li></ul>
+      </div>
+    </div>
+    <div class="cardpool">
+      <span class="term-card">peripheral management</span>
+      <span class="term-card">disk defragmentation</span>
+      <span class="term-card">anti-virus software</span>
+      <span class="term-card">file compression</span>
+      <span class="term-card">off-the-shelf word processor</span>
+      <span class="term-card">assembler</span>
+      <span class="term-card">syntax error</span>
+      <span class="term-card">user account management</span>
+      <span class="term-card">backup utility</span>
+      <span class="term-card">spreadsheet software</span>
+      <span class="term-card">assembly language</span>
+      <span class="term-card">machine code</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="activity-head">
+      <span class="activity-num">4</span>
+      <h2>Quick-fire round</h2>
+    </div>
+    <p class="instructions">One-word or short-phrase answers. Good as a whole-class rapid recall — read the clue, students write the term.</p>
+    <div class="quickfire">
+      <div class="qf-card"><div class="clue">Low-level language written using mnemonics like LDA and ADD</div><div class="ans-line"></div></div>
+      <div class="qf-card"><div class="clue">Binary instructions the processor executes directly</div><div class="ans-line"></div></div>
+      <div class="qf-card"><div class="clue">Translator that converts assembly language into machine code</div><div class="ans-line"></div></div>
+      <div class="qf-card"><div class="clue">Software category that includes browsers, games and spreadsheets</div><div class="ans-line"></div></div>
+      <div class="qf-card"><div class="clue">Term for software bought "as is" and used by many different customers</div><div class="ans-line"></div></div>
+      <div class="qf-card"><div class="clue">Reduces file size for storage or transmission</div><div class="ans-line"></div></div>
+      <div class="qf-card"><div class="clue">OS job that controls printers, keyboards and other devices</div><div class="ans-line"></div></div>
+      <div class="qf-card"><div class="clue">Copy of data kept in case the original is lost or damaged</div><div class="ans-line"></div></div>
+    </div>
+  </section>
+
+  <section class="key">
+    <h2>Answer key (teacher copy — cut off before handing out)</h2>
+    <div class="key-grid">
+      <div><b>Activity 1:</b> 1-C, 2-H, 3-G, 4-A, 5-E, 6-B, 7-D, 8-F</div>
+      <div><b>Activity 4:</b> assembly language; machine code; assembler; application software; off-the-shelf; compression; peripheral management; backup</div>
+      <div><b>Activity 2 (in order):</b> user interface, memory management, multi-tasking, bespoke, general-purpose, source code, object code, syntax, logic</div>
+      <div><b>Activity 3 — OS jobs:</b> peripheral management, user account management, file management (implied)<br>
+      <b>Utility:</b> disk defragmentation, anti-virus software, file compression, backup utility<br>
+      <b>Application:</b> off-the-shelf word processor, spreadsheet software<br>
+      <b>Translators/dev:</b> assembler, syntax error, assembly language, machine code</div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Chapter 4: Software — Keyword Workout</span>
+    <span>Cambridge IGCSE / GCSE Computer Science</span>
+  </footer>
+
+</div>
+
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover{background:rgba(255,255,255,.18)}@media print{.site-pill{display:none}}</style><div class="site-pill"><a href="../../ig-cs/ch-04/">← Chapter 4</a><a href="../../">Home</a></div></body></html>

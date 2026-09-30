@@ -1,0 +1,638 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>IGCSE CS Blockchain Explained</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: single readable column with sticky nav; red = must-know keyword, blue = supporting term, green = benefit. Animated stepper sits in its own section. */
+:root{
+  --bg:#EFF2FA; --surface:#FFFFFF; --ink:#111A33; --muted:#4F5B7A; --line:#CFD6EA;
+  --accent:#2946D0; --accent-soft:#DDE3FB; --amber:#A65A00; --amber-soft:#F8E8CF; --bad:#B3372F; --bad-soft:#F8DEDB; --good:#1F7A4D; --good-soft:#D6EFE1;
+  --red:#C4160E;
+  --display:'Bricolage Grotesque','Segoe UI',sans-serif; --body:'Source Sans 3','Segoe UI',sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D1226; --surface:#151C36; --ink:#E6EAFA; --muted:#98A3C7; --line:#283154;
+  --accent:#8DA0FF; --accent-soft:#1F2A5C; --amber:#F0A04B; --amber-soft:#3A2A14; --bad:#F0857D; --bad-soft:#3E1D1B; --good:#6CCB9B; --good-soft:#123A28; --red:#FF7A70; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D1226; --surface:#151C36; --ink:#E6EAFA; --muted:#98A3C7; --line:#283154;
+  --accent:#8DA0FF; --accent-soft:#1F2A5C; --amber:#F0A04B; --amber-soft:#3A2A14; --bad:#F0857D; --bad-soft:#3E1D1B; --good:#6CCB9B; --good-soft:#123A28; --red:#FF7A70; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 var(--body);padding-inline:16px;padding-block:32px 64px;margin:0}
+.wrap{max-width:860px;margin-inline:auto;display:grid;gap:34px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,6vw,3rem);letter-spacing:-.02em}
+h2{font-size:1.55rem;letter-spacing:-.01em}
+h3{font-size:1.1rem}
+p{margin:0 0 .7em}
+code,.mono{font-family:var(--mono);font-size:.88em}
+.eyebrow{font:500 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+section{display:grid;gap:14px}
+section>*{min-width:0}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+nav a{white-space:nowrap;font:500 .74rem var(--mono);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:6px 10px;border-radius:99px;border:1px solid var(--line);background:var(--surface)}
+nav a:hover,nav a:focus-visible{color:var(--accent);border-color:var(--accent);outline:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card>:last-child{margin-bottom:0}
+.big{background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:18px 22px}
+.big p{margin:0;font:500 1.15rem/1.45 var(--display)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.two>*{min-width:0}
+.lbl{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 6px}
+.note{font-size:.85rem;color:var(--muted)}
+/* keyword highlighting */
+.kw{color:var(--red);font-weight:700}
+.kb{color:var(--accent);font-weight:600}
+.kg{color:var(--good);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.9rem;padding:10px 14px;border:1px dashed var(--line);border-radius:8px}
+.steps{display:grid;padding:0;margin:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:12px;padding-block:9px;position:relative}
+.steps li::before{content:counter(s);width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--bg);font:600 .85rem var(--mono);display:grid;place-items:center}
+.steps li:not(:last-child)::after{content:'';position:absolute;left:13px;top:38px;bottom:-4px;width:2px;background:var(--line)}
+.steps b{display:block}.steps span{color:var(--muted);font-size:.96rem}
+.flag{border:1px solid var(--amber);background:var(--amber-soft);border-radius:10px;padding:14px 18px;font-size:.95rem}
+.flag b{color:var(--amber)}
+.flag ul{margin:6px 0 0;padding-left:1.2em}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.95rem;min-width:520px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+td:first-child{font-weight:600}
+tr:last-child td{border-bottom:0}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn{font:500 .8rem var(--mono);letter-spacing:.04em;padding:9px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--bg)}
+.btn.alt{background:transparent;color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn:not(:disabled):hover{filter:brightness(1.08)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tag{font:500 .68rem var(--mono);padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+input[type=text],textarea{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:10px}
+.res div{border-top:2px solid var(--accent);padding-top:6px;min-width:0}
+.res small{display:block;font:500 .66rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.res strong{font:600 1.05rem var(--mono);font-variant-numeric:tabular-nums;word-break:break-all}
+.out{font:500 .9rem var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;word-break:break-all;min-height:2.4em}
+
+/* process ladder */
+.blocks{display:flex;gap:0;overflow-x:auto;padding-bottom:6px}
+.bk{flex:0 0 190px;border:2px solid var(--accent);border-radius:8px;background:var(--surface);padding:10px;font:500 .74rem var(--mono);display:grid;gap:4px}
+.bk small{font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.bk .r{color:var(--red);font-weight:600;word-break:break-all}
+.bk b{font-family:var(--display);font-size:.9rem}
+.lk{flex:0 0 26px;display:grid;place-items:center;color:var(--muted);font-weight:700}
+
+/* crypto */
+.pad{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line)}
+.pad:last-child{border:0}
+
+/* chain cards */
+.coin{border-top:5px solid var(--c);border-radius:10px;background:var(--surface);border-left:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 18px;display:grid;gap:8px;min-width:0}
+.coin h3{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.coin h3 small{font:500 .7rem var(--mono);color:var(--c);letter-spacing:.06em}
+.coin .pc{display:grid;gap:8px}
+.coin ul{margin:0;padding-left:1.1em;font-size:.94rem}
+.coin li{margin-bottom:3px}
+.coin .pro b{color:var(--good)}
+.coin .con b{color:var(--bad)}
+.coins{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.btc{--c:#D97706}.eth{--c:#4F5FD6}.ada{--c:#0F8A9D}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btc{--c:#F59E0B}:root:not([data-theme="light"]) .eth{--c:#8DA0FF}:root:not([data-theme="light"]) .ada{--c:#4FC1D3}}
+:root[data-theme="dark"] .btc{--c:#F59E0B}:root[data-theme="dark"] .eth{--c:#8DA0FF}:root[data-theme="dark"] .ada{--c:#4FC1D3}
+
+/* animation */
+.stage{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.stage svg{display:block;width:100%;height:auto}
+.stage text{font-family:var(--mono);fill:var(--ink)}
+.s-box{fill:var(--bg);stroke:var(--line);stroke-width:1.5}
+.s-node{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2;transition:fill .4s,stroke .4s}
+.s-node.win{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+.s-link{stroke:var(--line);stroke-width:1.5;fill:none;transition:stroke .4s}
+.s-link.hot{stroke:var(--accent);stroke-width:2.5}
+.el{opacity:0;transition:opacity .45s,transform .7s cubic-bezier(.3,.7,.3,1);pointer-events:none}
+.el.on{opacity:1}
+.s-tx{fill:var(--amber-soft);stroke:var(--amber);stroke-width:2}
+.s-blk{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+.s-blk.pend{stroke-dasharray:5 4;stroke:var(--muted)}
+.s-hash{fill:var(--red)!important;font-weight:600}
+.cap{padding:14px 18px;border-top:1px solid var(--line);display:grid;gap:4px;min-height:9.2em;align-content:start}
+.cap h3{font-size:1.05rem}
+.cap p{margin:0}
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);background:var(--bg)}
+.dots{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
+.dots button{width:12px;height:12px;border-radius:50%;border:2px solid var(--accent);background:transparent;padding:0}
+.dots button.on{background:var(--accent)}
+.dots button.done{background:var(--accent-soft)}
+.cnt{font:600 .8rem var(--mono);color:var(--muted)}
+
+/* tooltips */
+.hastip{cursor:help;border-bottom:1.5px dotted currentColor;outline-offset:2px}
+#tt{position:fixed;z-index:50;max-width:min(300px,calc(100vw - 24px));background:var(--ink);color:var(--bg);border-radius:8px;padding:10px 12px;font:400 .88rem/1.4 var(--body);box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s}
+#tt.show{opacity:1}
+#tt b{display:block;font:600 .68rem var(--mono);letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.el{transition:opacity .01s}}
+</style>
+
+<div class="wrap">
+<header>
+<div class="eyebrow">Cambridge IGCSE Computer Science 0478 · Chapter 5.2</div>
+<h1>Blockchain, Consensus and Cryptography</h1>
+<p style="color:var(--muted);font-size:1.1rem">How a blockchain records transactions without a bank, how the network agrees on what is true, and the cryptography that keeps it secure. Then a step-by-step animation and a comparison of Bitcoin, Ethereum and Cardano.</p>
+</header>
+
+<nav aria-label="Sections">
+<a href="#process">Process</a><a href="#consensus">Proof of work</a><a href="#crypto">Cryptography</a><a href="#chains">BTC · ETH · ADA</a><a href="#anim">Animation</a>
+</nav>
+
+<div class="legend" aria-label="Colour key"><span><span class="kw">Red</span> = keyword to learn word for word</span><span><span class="kb">Blue</span> = supporting term</span><span><span class="kg">Green</span> = benefit</span><span>Dotted underline = hover or tap for a definition</span></div>
+
+<section id="process">
+<h2>1 · The process of blockchaining</h2>
+<div class="big"><p>A <span class="kw">blockchain</span> is a <span class="kw">decentralised</span> digital <span class="kw">ledger</span>. Transactions are grouped into <span class="kw">blocks</span>, and each block is linked to the one before it using a <span class="kw">hash</span>. Once a block is added, it is very hard to change.</p></div>
+
+<div class="card">
+<div class="lbl">What is inside a block</div>
+<div class="blocks" role="img" aria-label="Three linked blocks, each holding data, a previous hash and its own hash">
+<div class="bk"><b>Block 1</b><small>Data</small><span>Lan → Minh £5</span><small>Previous hash</small><span class="r">00000000</span><small>Hash</small><span class="r">3fa9c21d</span></div>
+<div class="lk">→</div>
+<div class="bk"><b>Block 2</b><small>Data</small><span>Minh → Hoa £2</span><small>Previous hash</small><span class="r">3fa9c21d</span><small>Hash</small><span class="r">b70e58a4</span></div>
+<div class="lk">→</div>
+<div class="bk"><b>Block 3</b><small>Data</small><span>Hoa → Nam £1</span><small>Previous hash</small><span class="r">b70e58a4</span><small>Hash</small><span class="r">91d4c6e2</span></div>
+</div>
+<p class="note" style="margin:8px 0 0">Block 2 stores Block 1's hash. Change Block 1 and its hash changes, so Block 2's stored copy no longer matches. The break is visible straight away.</p>
+</div>
+
+<div class="card">
+<div class="lbl">The process, step by step</div>
+<ol class="steps">
+<li><div><b>A user makes a <span class="kw">transaction</span></b><span>For example, Lan sends 5 coins to Minh. Nobody hands over cash and no bank is involved.</span></div></li>
+<li><div><b>The transaction is signed with a <span class="kw">private key</span></b><span>This produces a <span class="kw">digital signature</span> that proves Lan authorised it. Only Lan has the private key.</span></div></li>
+<li><div><b>It is broadcast to the network of <span class="kw">nodes</span></b><span>Nodes are the computers that hold a copy of the ledger. Each one receives the transaction.</span></div></li>
+<li><div><b>Nodes <span class="kw">verify</span> it</b><span>They check the signature is valid using Lan's <span class="kw">public key</span>, and that she has enough coins. Any <span class="kw">invalid transaction</span> (a forged signature, or coins the sender does not have) is rejected.</span></div></li>
+<li><div><b>Valid transactions are collected into a new <span class="kw">block</span></b><span>A <span class="kb">miner</span> gathers pending transactions, adds a <span class="kw">timestamp</span> and the <span class="kw">previous hash</span>.</span></div></li>
+<li><div><b>The network reaches <span class="kw">consensus</span></b><span>Nodes must agree who adds the next block. In <span class="kw">proof of work</span> miners race to solve a puzzle. The winner adds the block. See section 2.</span></div></li>
+<li><div><b>The block is <span class="kw">hashed</span> and linked to the chain</b><span>Its hash is calculated from its contents, and the next block will store it as its <span class="kw">previous hash</span>.</span></div></li>
+<li><div><b>Every node updates its copy of the ledger</b><span>Minh now owns the 5 coins. The transaction is <span class="kw">immutable</span>: it cannot be altered without breaking the chain.</span></div></li>
+</ol>
+</div>
+
+<div class="card">
+<div class="lbl">Try the hash: change one character</div>
+<input type="text" id="hin" value="Lan pays Minh 5 coins" aria-label="Text to hash">
+<div class="res" style="grid-template-columns:1fr"><div><small>SHA-256 hash <span id="hnote"></span></small><strong id="hout" style="font-size:.85rem"></strong></div></div>
+<p class="note" style="margin:8px 0 0">Always the same length. The same input always gives the same hash. A tiny change gives a completely different hash. You cannot work backwards from the hash to the input.</p>
+</div>
+
+<div class="lbl" style="margin-top:6px">Keyword bank</div>
+<div class="tblwrap"><table>
+<thead><tr><th>Keyword</th><th>Definition to write in the exam</th></tr></thead>
+<tbody>
+<tr><td class="kw">Blockchain</td><td>A digital ledger made of blocks of data linked together using hashes, shared across many computers.</td></tr>
+<tr><td class="kw">Decentralised</td><td>Not controlled by one bank, company or government. Control is spread across many nodes.</td></tr>
+<tr><td class="kw">Ledger</td><td>A record of all transactions.</td></tr>
+<tr><td class="kw">Block</td><td>A group of transactions with a timestamp, its own hash and the previous block's hash.</td></tr>
+<tr><td class="kw">Hash</td><td>A fixed-length code produced from data by a hashing algorithm. Any change to the data changes the hash.</td></tr>
+<tr><td class="kw">Node</td><td>A computer on the network that stores a copy of the blockchain and checks transactions.</td></tr>
+<tr><td class="kw">Consensus</td><td>The way nodes agree which block is added next and that the ledger is correct.</td></tr>
+<tr><td class="kw">Immutable</td><td>Cannot be changed once recorded.</td></tr>
+<tr><td class="kw">Private key / public key</td><td>A pair of keys. The private key is kept secret and used to sign. The public key is shared and used to verify.</td></tr>
+<tr><td class="kw">Digital signature</td><td>Data created with a private key that proves who sent a transaction and that it was not altered.</td></tr>
+<tr><td class="kw">Nonce</td><td>A number changed over and over by miners until the block's hash meets the puzzle target.</td></tr>
+<tr><td class="kb">Miner</td><td>A node that competes to create and add the next block, and is paid for doing so.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="consensus">
+<h2>2 · Proof of work: what the "work" really is</h2>
+<div class="big"><p><span class="kw">Proof of work</span> means a <span class="kw">miner</span> has to spend real computer effort, and real electricity, before they are allowed to add a <span class="kw">block</span>. The effort is the proof. It makes cheating expensive and honest mining profitable.</p></div>
+
+<div class="card">
+<div class="lbl">So what is the work?</div>
+<p>The work is <b>guessing</b>. The miner takes everything in the new block, adds one extra number called the <span class="kw">nonce</span>, and puts it all through the <span class="kw">hash</span> function. Out comes a hash. The network sets a rule, for example "the hash must start with 19 zeros". Almost every hash fails, so the miner changes the nonce by 1 and tries again.</p>
+<div class="tblwrap" style="margin-bottom:10px"><table style="min-width:420px">
+<thead><tr><th>Nonce tried</th><th>Hash produced</th><th>Starts with enough zeros?</th></tr></thead>
+<tbody>
+<tr><td class="mono">0</td><td class="mono">8f3a5c21…</td><td>No</td></tr>
+<tr><td class="mono">1</td><td class="mono">c41d09be…</td><td>No</td></tr>
+<tr><td class="mono">2</td><td class="mono">27be6f30…</td><td>No</td></tr>
+<tr><td class="mono">… billions more …</td><td class="mono">…</td><td>No</td></tr>
+<tr><td class="mono">48,213,907,552</td><td class="mono"><span class="kw">0000</span>a9e4…</td><td><span class="kg">Yes! Block found</span></td></tr>
+</tbody></table></div>
+<p class="note" style="margin:0 0 .7em">Illustration only. Real hashes are 64 characters long and the winning nonce is far bigger.</p>
+<p><b>Why guessing?</b> A hash function cannot be run backwards, and it is impossible to predict which nonce will work. The only method is trial and error, exactly like rolling a die over and over until you get a six, except the odds are billions to one.</p>
+<p style="margin:0"><b>Hard to do, easy to check.</b> Finding the winning nonce takes an enormous number of tries. Checking it takes one: every other <span class="kw">node</span> puts the block through the hash function once and sees whether it passes.</p>
+</div>
+
+<div class="card">
+<div class="lbl">Try it: be the miner</div>
+<label for="diff" style="font-weight:600">Difficulty: hash must start with <output id="dn" class="mono">3</output> zeros</label>
+<input type="range" id="diff" min="1" max="5" value="3">
+<div class="bar" style="margin-top:8px"><button class="btn" id="mine">Mine block</button></div>
+<div class="res"><div><small>Nonce found</small><strong id="mn">–</strong></div><div><small>Guesses made</small><strong id="ma">–</strong></div><div><small>Odds of one guess winning</small><strong id="mo">1 in 4,096</strong></div></div>
+<div class="out" id="mh" style="margin-top:10px">Press Mine block. Each extra zero makes the puzzle about 16 times harder.</div>
+<p class="note" style="margin:8px 0 0">Demo uses a simple 32-bit hash so it runs in your browser. Real mining uses SHA-256 and needs trillions of guesses.</p>
+</div>
+
+<div class="two">
+<div class="card"><h3>Why it keeps the network secure</h3>
+<p style="margin-top:6px">To change an old block, a cheat would have to redo the work for that block <i>and every block after it</i>, faster than all the honest miners combined. That costs a fortune in electricity and hardware. To win they would need over half the network's power, a <span class="kw">51% attack</span>. For Bitcoin that is too expensive to be realistic.</p></div>
+<div class="card"><h3>Why honest mining pays</h3>
+<p style="margin-top:6px">A miner only earns the <span class="kw">block reward</span> if the network accepts their block. A cheating miner's invalid block is thrown away, and the electricity they spent is wasted. Following the rules is the profitable choice.</p></div>
+</div>
+
+<div class="card">
+<div class="lbl">What miners actually use</div>
+<p>Mining is done by <b>software</b> running on special <b>hardware</b>.</p>
+<ul style="margin:0;padding-left:1.2em">
+<li>The software is connected to a full node. It gathers pending transactions, builds the candidate block and hands it to the hardware.</li>
+<li>The hardware is an <span class="kw">ASIC</span>, a chip built to do one job only: hash. It is thousands of times faster than a normal computer at this, and useless for anything else.</li>
+<li>When the hardware finds a valid nonce, the software broadcasts the block to the network.</li>
+<li>Most people join a <span class="kw">mining pool</span>. Thousands of miners combine their power and share the reward according to how much work each did, so they earn small regular payments instead of a rare jackpot.</li>
+</ul>
+</div>
+
+<div class="card">
+<div class="lbl">Difficulty: keeping the pace steady</div>
+<p>Bitcoin is designed to produce one block about every <b>10 minutes</b>. The <span class="kw">difficulty</span> is how hard the puzzle is: the more zeros required, the harder. Every 2,016 blocks (about two weeks) the network checks how fast blocks really arrived and adjusts.</p>
+<div class="tblwrap"><table style="min-width:460px">
+<thead><tr><th>What happened</th><th>Blocks arrive</th><th>Difficulty changes</th></tr></thead>
+<tbody>
+<tr><td>Lots of miners join</td><td>Faster than 10 minutes</td><td><span class="kw">Goes up</span>, so the puzzle is harder</td></tr>
+<tr><td>Many miners leave</td><td>Slower than 10 minutes</td><td><span class="kw">Goes down</span>, so the puzzle is easier</td></tr>
+</tbody></table></div>
+<p class="note" style="margin:8px 0 0">Nobody decides this. The rule is built into the software every node runs.</p>
+</div>
+
+<div class="card">
+<div class="lbl">How miners get paid</div>
+<ul style="margin:0 0 8px;padding-left:1.2em">
+<li>The winning miner adds a special first transaction that creates new coins for themselves. This is the <span class="kw">block reward</span>.</li>
+<li>They also keep the <span class="kw">transaction fees</span> that users attached to get into the block.</li>
+<li>The reward halves roughly every four years, an event called the <span class="kw">halving</span>. That is how Bitcoin reaches its 21 million limit.</li>
+</ul>
+<div class="tblwrap"><table style="min-width:360px">
+<thead><tr><th>Year</th><th>Reward per block</th></tr></thead>
+<tbody><tr><td>2009</td><td>50 BTC</td></tr><tr><td>2012</td><td>25 BTC</td></tr><tr><td>2016</td><td>12.5 BTC</td></tr><tr><td>2020</td><td>6.25 BTC</td></tr><tr><td>2024</td><td>3.125 BTC</td></tr></tbody></table></div>
+<p style="margin:10px 0 0"><b>Profit = reward + fees − costs.</b> The costs are electricity, hardware, cooling and rent. Electricity is by far the biggest running cost, which is why <i>where</i> a miner sets up matters so much.</p>
+</div>
+
+<h3>Real-world mining: why location decides profit</h3>
+<div class="two">
+<div class="card"><div class="lbl">Good places for miners</div>
+<ul style="margin:0;padding-left:1.2em">
+<li><b>Cheap electricity.</b> The cheaper the power per unit, the more profit per coin mined.</li>
+<li><b>Cold climate.</b> Chips give off huge heat. Cool outside air means less spent on cooling.</li>
+<li><b>Remote land.</b> Cheap space, no noise complaints, and room to build near a power source.</li>
+<li><b>Power that would be wasted.</b> A wind farm in the middle of nowhere or a hydro dam sometimes produces more electricity than the local area can use. A miner can buy that surplus for very little, a form of <span class="kw">stranded energy</span>.</li></ul></div>
+<div class="card"><div class="lbl">Bad places for miners</div>
+<ul style="margin:0;padding-left:1.2em">
+<li><b>Cities.</b> Electricity for homes and offices costs more, and grids are already busy.</li>
+<li><b>High rent.</b> Space in a city is expensive and a mining farm needs a lot of it.</li>
+<li><b>Heat and noise.</b> ASICs run day and night as loud as a vacuum cleaner or louder, and a hot room needs constant cooling.</li>
+<li><b>Rules.</b> Some places restrict or ban mining, or charge extra for heavy power use.</li></ul></div>
+</div>
+
+<div class="tblwrap"><table>
+<thead><tr><th>Where</th><th>Why miners go there</th><th>Watch out for</th></tr></thead>
+<tbody>
+<tr><td>Texas, USA</td><td>Lots of cheap wind, solar and gas power. Some miners sell power back to the grid on hot days when demand jumps.</td><td>Extreme summer heat raises cooling costs. Grid strain.</td></tr>
+<tr><td>Iceland</td><td>Cheap geothermal and hydro power, plus a cold climate.</td><td>Small country, so limited power and expensive to reach.</td></tr>
+<tr><td>Canada (Quebec)</td><td>Cheap hydropower and cold winters.</td><td>Power limits set by the utility.</td></tr>
+<tr><td>Paraguay</td><td>A large surplus of hydroelectric power from its dams.</td><td>Patchy infrastructure and rules that can change.</td></tr>
+<tr><td>Remote oil fields</td><td>Some firms run generators on waste gas that would otherwise be burned off, turning it into mining power.</td><td>Far from technicians and fast internet.</td></tr>
+<tr><td>Sichuan, China (until 2021)</td><td>Huge seasonal hydro power made it a mining centre.</td><td>China banned mining in 2021 and miners had to move abroad.</td></tr>
+<tr><td>Kazakhstan</td><td>Took in many miners after the China ban, with cheap fossil-fuel power.</td><td>Power shortages and political unrest led to disruption in 2022.</td></tr>
+</tbody></table></div>
+<div class="flag"><b>Why this also helps security.</b>
+<ul><li>Miners are spread over many countries, so no single government or power cut can shut the network down. When China banned mining, Bitcoin kept running, and its computing power recovered within months.</li><li>Cheap power means more miners can afford to take part, which raises the total work needed to attack the chain.</li><li>The trade-off is energy use. Critics point to mining powered by fossil fuels, while supporters say using surplus renewable power that would otherwise be wasted is a benefit.</li></ul></div>
+<p class="note" style="margin:0">Locations are examples of where mining has been reported. Conditions and laws change. Educational description only, not advice.</p>
+</section>
+
+<section id="crypto">
+<h2>3 · How cryptography works</h2>
+<div class="big"><p><span class="kw">Cryptography</span> is the science of keeping data secret and checking it is genuine. <span class="kw">Encryption</span> scrambles <span class="kw">plaintext</span> into <span class="kw">ciphertext</span> using an <span class="kw">algorithm</span> and a <span class="kw">key</span>. <span class="kw">Decryption</span> reverses it.</p></div>
+
+<div class="two">
+<div class="card"><h3>Symmetric encryption</h3><p style="margin-top:6px">One <span class="kw">shared key</span> both encrypts and decrypts. Fast, but the key must reach the other person safely, and if it is stolen everything is exposed.</p>
+<p style="margin:0"><b>Example:</b> AES, used to encrypt the actual data in a Wi-Fi connection or an encrypted phone.</p></div>
+<div class="card"><h3>Asymmetric encryption</h3><p style="margin-top:6px">A <span class="kw">key pair</span>. Anything locked with the <span class="kw">public key</span> can only be unlocked with the matching <span class="kw">private key</span>. The public key can be shared freely; the private key is never shared.</p>
+<p style="margin:0"><b>Example:</b> RSA, used to set up HTTPS connections.</p></div>
+</div>
+
+<div class="card">
+<div class="lbl">The padlock picture</div>
+<div class="pad"><b class="kw">1</b><span>Minh publishes an open padlock (his public key) for anyone to use.</span></div>
+<div class="pad"><b class="kw">2</b><span>Lan snaps the padlock shut on her message (encrypts with the public key).</span></div>
+<div class="pad"><b class="kw">3</b><span>Only Minh's private key opens it. Even Lan cannot reopen the padlock.</span></div>
+<div class="pad"><b class="kw">4</b><span><b>Digital signature</b> is the reverse: Lan <i>signs</i> with her private key and everyone checks it with her public key. If it verifies, only Lan could have made it.</span></div>
+</div>
+
+<div class="card">
+<div class="lbl">Try it: a Caesar cipher (the simplest symmetric cipher)</div>
+<div class="two" style="align-items:end">
+<div><label for="cin" style="font-weight:600">Plaintext</label><input type="text" id="cin" value="MEET AT NOON"></div>
+<div><label for="cshift" style="font-weight:600">Key (shift): <output id="csn" class="mono">3</output></label><input type="range" id="cshift" min="1" max="25" value="3"></div>
+</div>
+<div class="lbl" style="margin-top:12px">Ciphertext</div><div class="out" id="cout"></div>
+<p class="note" style="margin:8px 0 0">Each letter moves along the alphabet by the key. Anyone who knows the key shifts back to decrypt. It is easy to crack because there are only 25 possible keys, which is why modern algorithms use enormously bigger keys.</p>
+</div>
+
+<div class="lbl">Where cryptography is used in the real world</div>
+<div class="tblwrap"><table>
+<thead><tr><th>Use</th><th>Type</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td>HTTPS websites</td><td>Asymmetric to share a key, then symmetric</td><td>Encrypts data between browser and server using SSL/TLS, for example when paying online.</td></tr>
+<tr><td>WhatsApp and Signal</td><td>End-to-end encryption</td><td>Only the sender and receiver's devices hold the keys, so even the company cannot read the messages.</td></tr>
+<tr><td>Password storage</td><td>Hashing</td><td>Websites store a hash of your password, not the password. If the database leaks, the passwords are not directly exposed.</td></tr>
+<tr><td>Online banking and card payments</td><td>Encryption and digital signatures</td><td>Protects card details in transit and confirms a payment came from the right party.</td></tr>
+<tr><td>Wi-Fi (WPA2 and WPA3)</td><td>Symmetric</td><td>Encrypts traffic between your device and the router.</td></tr>
+<tr><td>Software updates</td><td>Digital signature</td><td>Your device checks the update was signed by the real company and was not tampered with.</td></tr>
+<tr><td>Cryptocurrency wallets</td><td>Asymmetric and hashing</td><td>The private key signs transactions; the public key (turned into an address) receives coins.</td></tr>
+</tbody></table></div>
+<div class="flag"><b>Exam wording.</b> Encryption does not stop data being intercepted. It makes intercepted data unreadable without the key. Say that in every "why encrypt" answer.</div>
+</section>
+
+<section id="chains">
+<h2>4 · Bitcoin, Ethereum and Cardano</h2>
+<p style="margin:0">All three are public blockchains with their own coin, but they were designed for different jobs. Figures are approximate and change over time.</p>
+<div class="tblwrap"><table>
+<thead><tr><th></th><th>Bitcoin (BTC)</th><th>Ethereum (ETH)</th><th>Cardano (ADA)</th></tr></thead>
+<tbody>
+<tr><td>Launched</td><td>2009, by the pseudonymous Satoshi Nakamoto</td><td>2015, Vitalik Buterin and co-founders</td><td>2017, Charles Hoskinson and co-founders</td></tr>
+<tr><td>Main purpose</td><td>Digital money / store of value</td><td>Platform for smart contracts and apps</td><td>Smart-contract platform built on academic research</td></tr>
+<tr><td>Consensus</td><td>Proof of work</td><td>Proof of stake (from Sept 2022)</td><td>Proof of stake (Ouroboros)</td></tr>
+<tr><td>Block time</td><td>About 10 minutes</td><td>About 12 seconds</td><td>About 20 seconds</td></tr>
+<tr><td>Supply</td><td>Capped at 21 million</td><td>No fixed cap</td><td>Capped at 45 billion</td></tr>
+<tr><td>Smart contracts</td><td>Very limited</td><td>Yes, main feature</td><td>Yes, since 2021</td></tr>
+</tbody></table></div>
+
+<div class="card"><div class="lbl">Key term</div><p style="margin:0">A <span class="kw">smart contract</span> is a program stored on a blockchain that runs automatically when its conditions are met, for example releasing a payment when goods are confirmed delivered. Nobody can quietly change its rules once it is deployed.</p></div>
+
+<div class="coins">
+<div class="coin btc"><h3>Bitcoin <small>BTC · PoW</small></h3>
+<p style="margin:0">The first cryptocurrency. Built to be peer-to-peer electronic cash without a bank. It is deliberately simple and conservative.</p>
+<div class="pc"><div class="pro"><b>Pros</b><ul><li>Longest track record and largest network, so it is very hard to attack</li><li>Fixed supply of 21 million, so no one can create more</li><li>Widely recognised as digital "gold" and accepted by many exchanges</li></ul></div>
+<div class="con"><b>Cons</b><ul><li>Proof of work uses huge amounts of electricity</li><li>Slow (about 7 transactions a second) and fees rise when busy</li><li>Little support for smart contracts</li><li>Price swings widely, so it is a poor everyday payment tool</li></ul></div></div>
+<p class="note" style="margin:0">Real world: El Salvador made it legal tender in 2021, a policy that was later scaled back.</p></div>
+
+<div class="coin eth"><h3>Ethereum <small>ETH · PoS</small></h3>
+<p style="margin:0">A programmable blockchain. Developers write smart contracts that run on it, so it supports far more than payments.</p>
+<div class="pc"><div class="pro"><b>Pros</b><ul><li>Smart contracts enable <span class="kb">DeFi</span> (lending without banks), tokens and <span class="kb">NFTs</span></li><li>Biggest developer community and most apps</li><li>Faster blocks than Bitcoin</li><li>Proof of stake cut its energy use by over 99%</li></ul></div>
+<div class="con"><b>Cons</b><ul><li>Fees ("gas") can become very high when the network is busy</li><li>Smart-contract bugs can be exploited and cannot be easily undone</li><li>Scaling often relies on separate "layer 2" networks, which adds complexity</li><li>Staking favours those with lots of coins</li></ul></div></div>
+<p class="note" style="margin:0">Real world: stablecoins, digital collectibles and decentralised exchanges run on it.</p></div>
+
+<div class="coin ada"><h3>Cardano <small>ADA · PoS</small></h3>
+<p style="margin:0">A proof-of-stake platform designed around peer-reviewed research and formal methods, aiming for security and long-term sustainability.</p>
+<div class="pc"><div class="pro"><b>Pros</b><ul><li>Energy-efficient from the start, with no mining</li><li>Careful, research-led design aims to reduce errors</li><li>Low, predictable transaction fees</li><li>Staking is open to holders without locking coins away</li></ul></div>
+<div class="con"><b>Cons</b><ul><li>Slower development, and smart contracts arrived years after Ethereum's</li><li>Smaller developer community and fewer apps</li><li>Less real-world usage, so its network effect is weaker</li></ul></div></div>
+<p class="note" style="margin:0">Real world: pilots for verifying qualifications and supply-chain records have been announced.</p></div>
+</div>
+
+<div class="flag"><b>How to compare in the exam.</b>
+<ul><li>Bitcoin is <b>money</b>, Ethereum is a <b>platform</b>, Cardano is a <b>research-led platform</b>.</li><li>Bitcoin uses <span class="kw">proof of work</span>; Ethereum and Cardano use <span class="kw">proof of stake</span>.</li><li>Energy use, speed and smart contracts are the three easiest points of comparison.</li></ul></div>
+<p class="note" style="margin:0">Educational description of how these systems work and have been used. Not investment advice.</p>
+</section>
+
+<section id="anim">
+<h2>5 · Animation: Lan pays Minh in Bitcoin (Lan trả tiền cho Minh)</h2>
+<p style="margin:0">Lan is in Hà Nội and buys a gift from Minh in TP. Hồ Chí Minh. Step through the payment with Next and Back, click a dot to jump, or use the arrow keys. Vietnamese terms are shown in brackets.</p>
+<div class="stage" id="stage" tabindex="0" aria-label="Blockchain animation, use left and right arrow keys">
+<svg viewBox="0 0 720 380" role="img" aria-label="Animation of a transaction moving through a blockchain network">
+ <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+ <!-- network links -->
+ <g id="links"></g>
+ <!-- people -->
+ <rect class="s-box" x="20" y="80" width="110" height="90" rx="10"/>
+ <text x="75" y="110" text-anchor="middle" font-size="15" font-weight="600">Lan</text>
+ <text x="75" y="132" text-anchor="middle" font-size="11" fill="var(--muted)" style="fill:var(--muted)">người gửi</text>
+ <text x="75" y="156" text-anchor="middle" font-size="11" id="lanBal" style="fill:var(--muted)">ví: 0.010</text>
+ <rect class="s-box" x="590" y="80" width="110" height="90" rx="10"/>
+ <text x="645" y="110" text-anchor="middle" font-size="15" font-weight="600">Minh</text>
+ <text x="645" y="132" text-anchor="middle" font-size="11" style="fill:var(--muted)">người nhận</text>
+ <text x="645" y="156" text-anchor="middle" font-size="11" id="minhBal" style="fill:var(--muted)">ví: 0.001</text>
+ <g class="el" id="qr" style="transform:translate(620px,186px)"><rect x="0" y="0" width="50" height="50" rx="4" style="fill:#fff;stroke:var(--line)"/><rect x="4" y="4" width="7" height="7" fill="#111"/><rect x="4" y="25" width="7" height="7" fill="#111"/><rect x="11" y="4" width="7" height="7" fill="#111"/><rect x="11" y="11" width="7" height="7" fill="#111"/><rect x="11" y="18" width="7" height="7" fill="#111"/><rect x="11" y="25" width="7" height="7" fill="#111"/><rect x="11" y="32" width="7" height="7" fill="#111"/><rect x="11" y="39" width="7" height="7" fill="#111"/><rect x="18" y="4" width="7" height="7" fill="#111"/><rect x="18" y="25" width="7" height="7" fill="#111"/><rect x="25" y="4" width="7" height="7" fill="#111"/><rect x="25" y="25" width="7" height="7" fill="#111"/><rect x="32" y="4" width="7" height="7" fill="#111"/><rect x="32" y="11" width="7" height="7" fill="#111"/><rect x="32" y="18" width="7" height="7" fill="#111"/><rect x="32" y="25" width="7" height="7" fill="#111"/><rect x="32" y="32" width="7" height="7" fill="#111"/><rect x="32" y="39" width="7" height="7" fill="#111"/><rect x="39" y="4" width="7" height="7" fill="#111"/><rect x="39" y="25" width="7" height="7" fill="#111"/><text x="25" y="66" text-anchor="middle" font-size="9" style="fill:var(--muted)">QR của Minh</text></g>
+ <!-- nodes -->
+ <g id="nodes"></g>
+ <text x="360" y="28" text-anchor="middle" font-size="11" style="fill:var(--muted)" letter-spacing="2">PEER-TO-PEER NETWORK OF NODES</text>
+ <!-- packet -->
+ <g class="el" id="pkt" style="transform:translate(50px,200px)">
+   <rect class="s-tx" x="-42" y="-18" width="84" height="36" rx="8"/>
+   <text x="0" y="-2" text-anchor="middle" font-size="11" font-weight="600">Lan→Minh</text>
+   <text x="0" y="12" text-anchor="middle" font-size="11">0.002 BTC</text>
+ </g>
+ <g class="el" id="sig" style="transform:translate(50px,200px)"><rect x="-38" y="22" width="76" height="20" rx="10" fill="var(--red)"/><text x="0" y="36" text-anchor="middle" font-size="10" style="fill:#fff" font-weight="600">SIGNED ✓</text></g>
+ <!-- copies at nodes -->
+ <g id="copies"></g>
+ <!-- chain -->
+ <g id="chain" transform="translate(0,255)">
+   <g id="b1"><rect class="s-blk" x="60" y="0" width="140" height="100" rx="8"/><text x="70" y="18" font-size="11" font-weight="600">Block 2</text><text x="70" y="40" font-size="9" style="fill:var(--muted)">prev: 3fa9c21d</text><text x="70" y="60" font-size="9" style="fill:var(--muted)">data: Hoa→Nam 0.05</text><text x="70" y="82" font-size="10" class="s-hash">hash: b70e58a4</text></g>
+   <path d="M200 50H240" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)"/>
+   <g id="b2"><rect class="s-blk" x="245" y="0" width="140" height="100" rx="8"/><text x="255" y="18" font-size="11" font-weight="600">Block 3</text><text x="255" y="40" font-size="9" style="fill:var(--muted)">prev: b70e58a4</text><text x="255" y="60" font-size="9" style="fill:var(--muted)">data: Tú→Mai 0.01</text><text x="255" y="82" font-size="10" class="s-hash">hash: 91d4c6e2</text></g>
+   <g class="el" id="lnk"><path d="M385 50H425" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)"/></g>
+   <g class="el" id="b3" style="transform:translate(0,0)">
+     <rect id="b3r" class="s-blk pend" x="430" y="0" width="150" height="100" rx="8"/>
+     <text x="440" y="18" font-size="11" font-weight="600">Block 4</text>
+     <text class="el" id="b3prev" x="440" y="40" font-size="9" style="fill:var(--muted)">prev: 91d4c6e2</text>
+     <text x="440" y="60" font-size="9" style="fill:var(--muted)">data: Lan→Minh 0.002</text>
+     <text class="el" id="b3ts" x="440" y="74" font-size="9" style="fill:var(--muted)">time: 14:02:07</text>
+     <text class="el s-hash" id="b3hash" x="440" y="90" font-size="10">hash: 5c1e9b07</text>
+   </g>
+ </g>
+ <g class="el" id="stamp"><rect x="596" y="278" width="110" height="52" rx="8" fill="var(--good-soft)" stroke="var(--good)" stroke-width="2"/><text x="651" y="300" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--good)">ADDED TO</text><text x="651" y="316" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--good)">EVERY COPY</text></g>
+</svg>
+<div class="cap" id="cap" aria-live="polite"></div>
+<div class="ctl"><button class="btn alt" id="bk">← Back</button><span class="cnt" id="cnt"></span><div class="dots" id="dots"></div><button class="btn alt" id="play">▶ Auto-play</button><button class="btn" id="nx">Next →</button></div>
+</div>
+
+<div class="lbl" style="margin-top:8px">Từ vựng · Vocabulary</div>
+<div class="tblwrap"><table style="min-width:420px">
+<thead><tr><th>English</th><th>Tiếng Việt</th></tr></thead>
+<tbody>
+<tr><td>blockchain</td><td>chuỗi khối</td></tr><tr><td>block</td><td>khối</td></tr><tr><td>ledger</td><td>sổ cái</td></tr><tr><td>transaction</td><td>giao dịch</td></tr>
+<tr><td>wallet</td><td>ví</td></tr><tr><td>private key / public key</td><td>khóa riêng / khóa công khai</td></tr><tr><td>digital signature</td><td>chữ ký số</td></tr>
+<tr><td>node</td><td>nút mạng</td></tr><tr><td>miner</td><td>thợ đào</td></tr><tr><td>proof of work</td><td>bằng chứng công việc</td></tr><tr><td>confirmation</td><td>xác nhận</td></tr><tr><td>decentralised</td><td>phi tập trung</td></tr>
+</tbody></table></div>
+<p class="note" style="margin:0">Example only. Cryptocurrency is not legal tender in Vietnam, and the rules on digital assets are still developing, so check current law. The ₫ amount is illustrative because prices change.</p>
+</section>
+
+<p class="note">Revision notes for Cambridge IGCSE Computer Science (0478), Chapter 5.2. Check details against your syllabus and textbook.</p>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+
+/* ---- SHA-256 demo ---- */
+async function sha(s){
+ try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+ catch(e){return null}
+}
+function fnv(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(16).padStart(8,'0')}
+async function doHash(){
+ const v=$('#hin').value,r=await sha(v);
+ $('#hout').textContent=r||fnv(v);$('#hnote').textContent=r?'(64 hex characters)':'(simple demo hash)';
+}
+$('#hin').addEventListener('input',doHash);doHash();
+
+/* ---- Proof of work demo ---- */
+$('#diff').addEventListener('input',e=>{$('#dn').textContent=e.target.value;$('#mo').textContent='1 in '+Math.pow(16,+e.target.value).toLocaleString('en-GB')});
+$('#mine').addEventListener('click',()=>{
+ const d=+$('#diff').value,target='0'.repeat(d),base='Block4|prev:91d4c6e2|Lan->Minh 5|';
+ let n=0,h;const t0=performance.now();
+ do{h=fnv(base+n);if(h.startsWith(target))break;n++}while(n<20000000);
+ $('#mo').textContent='1 in '+Math.pow(16,d).toLocaleString('en-GB');$('#mn').textContent=n.toLocaleString('en-GB');$('#ma').textContent=(n+1).toLocaleString('en-GB');
+ $('#mh').innerHTML='Hash: <span class="kw">'+h.slice(0,d)+'</span>'+h.slice(d)+' (starts with '+d+' zero'+(d>1?'s':'')+')';
+});
+
+/* ---- Caesar ---- */
+function caesar(){
+ const k=+$('#cshift').value;$('#csn').textContent=k;
+ $('#cout').textContent=$('#cin').value.toUpperCase().replace(/[A-Z]/g,c=>String.fromCharCode((c.charCodeAt(0)-65+k)%26+65));
+}
+$('#cshift').addEventListener('input',caesar);$('#cin').addEventListener('input',caesar);caesar();
+
+/* ---- Animation ---- */
+const NODES=[[300,90],[420,80],[250,170],[470,170],[360,140]];
+const NS='http://www.w3.org/2000/svg';
+const linkG=$('#links'),nodeG=$('#nodes'),copyG=$('#copies');
+const linkEls=[];
+[[0,1],[0,2],[1,3],[2,4],[3,4],[0,4],[1,4],[2,3]].forEach(([a,b])=>{
+ const l=document.createElementNS(NS,'line');l.setAttribute('class','s-link');
+ l.setAttribute('x1',NODES[a][0]);l.setAttribute('y1',NODES[a][1]);l.setAttribute('x2',NODES[b][0]);l.setAttribute('y2',NODES[b][1]);
+ linkG.appendChild(l);linkEls.push(l);
+});
+const nodeEls=NODES.map(([x,y],i)=>{
+ const g=document.createElementNS(NS,'g');
+ g.innerHTML='<circle class="s-node" cx="'+x+'" cy="'+y+'" r="20"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-size="11" font-weight="600">N'+(i+1)+'</text><text class="el chk" x="'+x+'" y="'+(y-26)+'" text-anchor="middle" font-size="14" style="fill:var(--good)">✓</text>';
+ nodeG.appendChild(g);return g;
+});
+const copyEls=NODES.map(([x,y])=>{
+ const r=document.createElementNS(NS,'rect');r.setAttribute('class','el s-blk');r.setAttribute('x',x+14);r.setAttribute('y',y+8);r.setAttribute('width',16);r.setAttribute('height',12);r.setAttribute('rx',3);
+ copyG.appendChild(r);return r;
+});
+const STEPS=[
+ {t:'1. Lan scans Minh\'s QR code (quét mã QR)',c:'Lan (Nguyễn Thị Lan, Hà Nội) opens her <span class="kw">wallet</span> app (ví) and scans the QR code of Minh (Trần Văn Minh, TP. Hồ Chí Minh). The code holds Minh\'s wallet address, which comes from his <span class="kw">public key</span> (khóa công khai). She enters <b>0.002 BTC</b>, about 4.000.000 ₫ in this example.'},
+ {t:'2. Lan makes a transaction (giao dịch)',c:'The wallet builds a <span class="kw">transaction</span>: "Lan → Minh, 0.002 BTC". No bank is involved. It is only data so far, and it also includes a small fee for the miners.'},
+ {t:'3. It is signed with her private key (khóa riêng)',c:'The wallet signs the transaction with Lan\'s <span class="kw">private key</span>, making a <span class="kw">digital signature</span> (chữ ký số). This proves it came from her and cannot be changed. The private key never leaves her phone.'},
+ {t:'4. It is broadcast to the nodes (nút mạng)',c:'The signed transaction is sent to the <span class="kw">nodes</span>, computers around the world that each keep a copy of the <span class="kw">ledger</span> (sổ cái). No single computer is in charge, so the system is <span class="kw">decentralised</span> (phi tập trung).'},
+ {t:'5. Nodes verify it (xác minh)',c:'Each node uses Lan\'s public key to check the signature and checks she really has 0.002 BTC. Valid: ✓. A forged signature or a coin already spent is an <span class="kw">invalid transaction</span> and is rejected.'},
+ {t:'6. It goes into a new block (khối)',c:'A <span class="kw">miner</span> (thợ đào) collects verified transactions into a new <span class="kw">block</span>. It is <span class="kb">pending</span> (dashed) because the network has not agreed on it yet.'},
+ {t:'7. Miners race: proof of work (bằng chứng công việc)',c:'Miners guess the <span class="kw">nonce</span> billions of times a second. N5 finds a hash with enough leading zeros first (green) and wins the <span class="kw">block reward</span> and the fees.'},
+ {t:'8. The block is hashed and linked to the chain',c:'The block gets a <span class="kw">timestamp</span>, the <span class="kw">previous hash</span> (91d4c6e2) and its own <span class="kw">hash</span>. Storing the previous hash is what links it into the <span class="kw">blockchain</span> (chuỗi khối).'},
+ {t:'9. Every node updates its ledger',c:'The new block is copied to every node. Minh\'s wallet now shows +0.002 BTC. Changing it later would change its hash and break every link after it, so it is <span class="kw">immutable</span> (bất biến).'},
+ {t:'10. More blocks = more confirmations (xác nhận)',c:'Each new block built on top is another <span class="kg">confirmation</span>. After about 6 (roughly an hour), Minh treats the payment as final and ships the gift.'}
+];
+let step=0,timer=null;
+const dots=$('#dots');
+STEPS.forEach((s,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Go to step '+(i+1));b.addEventListener('click',()=>{stop();go(i)});dots.appendChild(b)});
+const on=(el,f)=>{(typeof el==='string'?$(el):el).classList.toggle('on',f)};
+function go(n){
+ step=Math.max(0,Math.min(STEPS.length-1,n));const s=step,v=Math.max(0,Math.min(7,s-1));
+ on('#qr',s===0);
+ on('#pkt',s>=1&&s<=5);
+ const pos='translate('+(s<=3?75:190)+'px,'+(s<=3?205:115)+'px)';
+ $('#pkt').style.transform=pos;$('#sig').style.transform=pos;
+ on('#sig',s>=3&&s<=5);
+ linkEls.forEach(l=>l.classList.toggle('hot',s===4||s===5||s===7));
+ nodeEls.forEach((g,i)=>{
+  g.querySelector('circle').classList.toggle('win',(s===7||s===8)&&i===4);
+  g.querySelector('.chk').classList.toggle('on',s===5);
+ });
+ on('#b3',s>=6);on('#lnk',s>=8);
+ $('#b3r').classList.toggle('pend',s<8);
+ on('#b3prev',s>=8);on('#b3ts',s>=8);on('#b3hash',s>=8);
+ copyEls.forEach(c=>c.classList.toggle('on',s>=9));
+ on('#stamp',s>=9);
+ $('#lanBal').textContent='ví: '+(s>=9?'0.008':'0.010');$('#minhBal').textContent='ví: '+(s>=9?'0.003':'0.001');
+ $('#cap').innerHTML='<h3>'+STEPS[s].t+'</h3><p>'+STEPS[s].c+'</p>';
+ $('#cnt').textContent='Step '+(s+1)+' of '+STEPS.length;
+ [...dots.children].forEach((d,i)=>{d.classList.toggle('on',i===s);d.classList.toggle('done',i<s)});
+ $('#bk').disabled=s===0;$('#nx').disabled=s===STEPS.length-1;
+}
+function stop(){if(timer){clearInterval(timer);timer=null;$('#play').textContent='▶ Auto-play'}}
+$('#nx').addEventListener('click',()=>{stop();go(step+1)});
+$('#bk').addEventListener('click',()=>{stop();go(step-1)});
+$('#play').addEventListener('click',()=>{
+ if(timer){stop();return}
+ if(step===STEPS.length-1)go(0);
+ $('#play').textContent='❚❚ Pause';
+ timer=setInterval(()=>{if(step>=STEPS.length-1){stop();return}go(step+1)},3200);
+});
+$('#stage').addEventListener('keydown',e=>{if(e.key==='ArrowRight'){stop();go(step+1)}else if(e.key==='ArrowLeft'){stop();go(step-1)}});
+go(0);
+
+/* ---- Tooltips ---- */
+const G={
+'blockchain':'A digital ledger made of blocks of data linked together with hashes, copied across many computers.',
+'decentralised':'Not controlled by one bank, company or government. Control is spread across many computers.',
+'ledger':'A record of every transaction, like a bank statement everyone can check.',
+'block':'A batch of transactions, plus a timestamp, the previous block\'s hash and its own hash.',
+'chain':'Blocks joined in order, each storing the hash of the one before.',
+'hash':'A fixed-length code made from data by a hash function. Change the data at all and the hash changes completely. It cannot be run backwards.',
+'previous hash':'The hash of the block before this one. Storing it is what links the blocks into a chain.',
+'node':'A computer on the network that keeps a copy of the blockchain and checks new transactions.',
+'consensus':'How all the nodes agree on which block is added next, without anyone being in charge.',
+'immutable':'Cannot be changed once it has been recorded.',
+'private key':'A secret number only the owner knows. It is used to sign transactions and must never be shared.',
+'public key':'A number shared with everyone. It is used to check a signature was made by the matching private key.',
+'private key / public key':'A matched pair. Private key: secret, signs. Public key: shared, verifies.',
+'key pair':'A matching private key and public key.',
+'digital signature':'Data made from your private key and the transaction. It proves you approved it and that it was not altered afterwards.',
+'nonce':'"Number used once". The number a miner keeps changing so the block gives a different hash each guess.',
+'miner':'A computer owner who competes to add the next block by doing the proof-of-work guessing, and is paid for winning.',
+'transaction':'A record of a payment, for example Lan sends Minh 5 coins.',
+'verify':'To check something is genuine: that the signature is valid and the sender has enough coins.',
+'invalid transaction':'A transaction that breaks the rules, such as a forged signature, or spending coins the sender does not have. Nodes reject it.',
+'timestamp':'The date and time recorded in a block when it was created.',
+'proof of work':'The system where miners must spend computing effort guessing to earn the right to add a block.',
+'proof of stake':'A different system where computer owners lock up coins as a deposit and are chosen to add blocks, instead of mining. Uses much less energy.',
+'smart contract':'A program stored on a blockchain that runs by itself when its conditions are met.',
+'cryptography':'The science of keeping data secret and proving it is genuine.',
+'encryption':'Scrambling data so only someone with the right key can read it.',
+'decryption':'Turning scrambled data back into readable data using the key.',
+'plaintext':'Data before encryption, in a readable form.',
+'ciphertext':'Data after encryption, scrambled and unreadable.',
+'algorithm':'A set of step-by-step rules for doing a task, such as encrypting data.',
+'key':'A value used with an algorithm to encrypt or decrypt.',
+'shared key':'The same secret key used by both people to encrypt and decrypt.',
+'difficulty':'How hard the mining puzzle is. More zeros needed at the start of the hash means harder.',
+'block reward':'New coins created for the miner who adds a block, as payment for their work.',
+'transaction fees':'A small extra payment users add to a transaction so miners include it in a block.',
+'halving':'The event roughly every four years when Bitcoin\'s block reward is cut in half.',
+'asic':'A chip built to do one job only. Bitcoin ASICs just calculate hashes, extremely fast.',
+'mining pool':'A group of miners who combine their computing power and share the reward.',
+'51% attack':'When one person controls over half the network\'s power and can rewrite recent blocks. Extremely costly for Bitcoin.',
+'stranded energy':'Power that is produced but has nobody nearby to use it, so it is very cheap or would be wasted.',
+'pending':'Waiting to be confirmed. Not yet added to the chain.',
+'defi':'Decentralised finance: lending, borrowing and trading run by smart contracts instead of banks.',
+'nfts':'Non-fungible tokens: unique digital items whose ownership is recorded on a blockchain.'
+};
+const ALIAS={'hashed':'hash','verified':'verify','blocks':'block','nodes':'node','miners':'miner','transactions':'transaction','chains':'chain','hashes':'hash','invalid transactions':'invalid transaction','key pair':'key pair','decentralized':'decentralised','5 coins':null};
+const tt=document.createElement('div');tt.id='tt';tt.setAttribute('role','tooltip');document.body.appendChild(tt);
+let cur=null;
+function find(t){t=t.toLowerCase().trim().replace(/[.,:;!?]+$/,'');if(G[t])return t;if(ALIAS[t])return ALIAS[t];if(t.endsWith('s')&&G[t.slice(0,-1)])return t.slice(0,-1);return null}
+function open(el){
+ const k=el.dataset.tip;tt.innerHTML='<b>'+k+'</b>'+G[k];tt.classList.add('show');cur=el;
+ const r=el.getBoundingClientRect(),w=tt.offsetWidth,h=tt.offsetHeight;
+ let x=Math.min(Math.max(8,r.left+r.width/2-w/2),innerWidth-w-8),y=r.top-h-8;
+ if(y<8)y=r.bottom+8;
+ tt.style.left=x+'px';tt.style.top=y+'px';
+}
+function close(){tt.classList.remove('show');cur=null}
+function decorate(root){root.querySelectorAll('.kw,.kb,.kg').forEach(el=>{
+ if(el.dataset.tip)return;const k=find(el.textContent);if(!k)return;
+ el.dataset.tip=k;el.classList.add('hastip');el.tabIndex=0;
+})}
+decorate(document);
+new MutationObserver(()=>decorate($('#cap'))).observe($('#cap'),{childList:true});
+const T=e=>e.target.closest&&e.target.closest('.hastip');
+document.addEventListener('mouseover',e=>{const el=T(e);if(el&&el!==cur)open(el)});
+document.addEventListener('mouseout',e=>{if(T(e))close()});
+document.addEventListener('focusin',e=>{const el=T(e);if(el)open(el)});
+document.addEventListener('focusout',e=>{if(T(e))close()});
+document.addEventListener('click',e=>{const el=T(e);if(el){e.stopPropagation();cur===el&&tt.classList.contains('show')?close():open(el)}});
+document.addEventListener('click',close);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+addEventListener('scroll',close,{passive:true});
+</script>
+
+</body></html>

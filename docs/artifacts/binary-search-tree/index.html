@@ -1,0 +1,475 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Binary Search Tree Walkthrough</title>
+<style>
+:root{
+  --bg:#f7f5f1;
+  --panel:#ffffff;
+  --ink:#20241f;
+  --sub:#5d6259;
+  --line:#dcd8cf;
+  --key:#c25b2c;
+  --keybg:#fbe8dd;
+  --scan:#2d6a4f;
+  --scanbg:#e3f1e9;
+  --miss:#a13d3d;
+  --missbg:#f6e3e1;
+  --node-fill:#ffffff;
+  --code-bg:#1e2320;
+  --code-ink:#e7e9e4;
+  --code-dim:#7d8a7a;
+  --code-hl:#3a4038;
+  --accent:#c25b2c;
+}
+:root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark) {
+    --bg:#181a17; --panel:#22251f; --ink:#eceae3; --sub:#9a9c92; --line:#3a3d36;
+    --key:#e18a5c; --keybg:#3a2a1e; --scan:#7fbf9e; --scanbg:#1f2e26;
+    --miss:#e08585; --missbg:#3a2323; --node-fill:#22251f;
+    --code-bg:#101210; --code-ink:#e7e9e4; --code-dim:#6d786a; --code-hl:#252a24; --accent:#e18a5c;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#181a17; --panel:#22251f; --ink:#eceae3; --sub:#9a9c92; --line:#3a3d36;
+  --key:#e18a5c; --keybg:#3a2a1e; --scan:#7fbf9e; --scanbg:#1f2e26;
+  --miss:#e08585; --missbg:#3a2323; --node-fill:#22251f;
+  --code-bg:#101210; --code-ink:#e7e9e4; --code-dim:#6d786a; --code-hl:#252a24; --accent:#e18a5c;
+}
+
+* { box-sizing: border-box; }
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  padding: clamp(16px,4vw,40px) 16px calc(40px + env(safe-area-inset-bottom,0px));
+}
+.wrap{ max-width:920px; margin:0 auto; display:flex; flex-direction:column; gap:22px; }
+
+h1{ font-family:"Fraunces","Georgia",serif; font-weight:600; font-size:clamp(28px,5vw,40px); margin:4px 0 0; text-wrap:balance; }
+.eyebrow{ font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); font-weight:700; }
+.intro{ color:var(--sub); font-size:16px; line-height:1.55; max-width:68ch; }
+.intro code{ background:var(--keybg); color:var(--key); padding:1px 5px; border-radius:4px; font-family:"JetBrains Mono",monospace; font-size:0.9em; }
+
+.panel{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:22px clamp(14px,3vw,26px); }
+
+.tabs{ display:flex; gap:8px; flex-wrap:wrap; }
+.tab{
+  font-family:inherit; font-size:13.5px; font-weight:600;
+  border:1px solid var(--line); background:var(--panel); color:var(--sub);
+  padding:8px 14px; border-radius:999px; cursor:pointer;
+}
+.tab.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
+
+.controls{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:14px; }
+.controls button{
+  font-family:inherit; font-size:14px; font-weight:600;
+  border:1px solid var(--line); background:var(--panel); color:var(--ink);
+  padding:9px 16px; border-radius:9px; cursor:pointer;
+}
+.controls button.primary{ background:var(--accent); color:#fff; border-color:var(--accent); }
+.controls button:disabled{ opacity:0.4; cursor:not-allowed; }
+.controls button:hover:not(:disabled){ filter:brightness(0.96); }
+:root:not([data-theme="light"]) .controls button:hover:not(:disabled){ @media (prefers-color-scheme:dark){ filter:brightness(1.15);} }
+:root[data-theme="dark"] .controls button:hover:not(:disabled){ filter:brightness(1.15); }
+.step-counter{ font-family:"JetBrains Mono",monospace; font-size:13px; color:var(--sub); margin-left:auto; }
+
+.stage{ overflow-x:auto; padding:14px 4px 6px; }
+svg{ display:block; margin:0 auto; }
+.edge{ stroke:var(--line); stroke-width:2; transition:stroke 0.2s ease, stroke-width 0.2s ease; }
+.edge.active{ stroke:var(--scan); stroke-width:3.5; }
+.edge.missedge{ stroke:var(--miss); stroke-width:3.5; stroke-dasharray:5 4; }
+.node-circle{ fill:var(--node-fill); stroke:var(--line); stroke-width:2.5; transition:stroke 0.2s ease, fill 0.2s ease; }
+.node-circle.current{ stroke:var(--scan); fill:var(--scanbg); stroke-width:4; }
+.node-circle.found{ stroke:var(--key); fill:var(--keybg); stroke-width:4; }
+.node-circle.newnode{ stroke:var(--key); fill:var(--keybg); stroke-width:4; }
+.node-text{ font-family:"JetBrains Mono",monospace; font-weight:700; font-size:16px; fill:var(--ink); text-anchor:middle; dominant-baseline:central; }
+.node-text.current, .node-text.found, .node-text.newnode{ fill:var(--ink); }
+.ghost-circle{ fill:none; stroke:var(--miss); stroke-width:2.5; stroke-dasharray:4 4; opacity:0.75; }
+.ghost-text{ font-family:"JetBrains Mono",monospace; font-size:11px; fill:var(--miss); text-anchor:middle; }
+
+.narration{ min-height:3.4em; font-size:15.5px; line-height:1.5; color:var(--ink); }
+.narration b{ color:var(--accent); }
+
+.legend{ display:flex; gap:18px; flex-wrap:wrap; font-size:13px; color:var(--sub); }
+.legend span{ display:inline-flex; align-items:center; gap:6px; }
+.swatch{ width:13px; height:13px; border-radius:50%; border:2.5px solid; display:inline-block; }
+.sw-current{ background:var(--scanbg); border-color:var(--scan); }
+.sw-new{ background:var(--keybg); border-color:var(--key); }
+.sw-miss{ background:transparent; border-color:var(--miss); border-style:dashed; }
+
+.code-panel{ background:var(--code-bg); border-radius:14px; padding:18px 0; overflow-x:auto; }
+.code-panel pre{ margin:0; padding:0 20px; }
+.code-line{
+  font-family:"JetBrains Mono",monospace; font-size:13px; line-height:1.75;
+  color:var(--code-dim); white-space:pre; display:block; border-radius:6px; padding:0 8px; margin:0 -8px;
+}
+.code-line .n{ display:inline-block; width:1.8em; color:var(--code-dim); opacity:0.55; user-select:none; }
+.code-line.active{ background:var(--code-hl); color:var(--code-ink); }
+.code-line.active .n{ color:var(--accent); opacity:1; }
+.code-line.dim-inactive{ opacity:0.45; }
+
+footer{ color:var(--sub); font-size:13px; text-align:center; }
+
+@media (max-width:480px){
+  .node-text{ font-size:13px; }
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<div class="wrap">
+  <div>
+    <div class="eyebrow">Chapter 19 &middot; Trees</div>
+    <h1>Binary Search Tree Walkthrough</h1>
+    <p class="intro">A binary search tree keeps every node's left subtree smaller and its right subtree bigger. Both <code>insert</code> and <code>search</code> run the same logic: start at the root, compare, and step left or right — <code>insert</code> stops at an empty spot and plants a node there, <code>search</code> stops when it finds a match or runs off the tree into <code>None</code>.</p>
+  </div>
+
+  <div class="panel" style="display:flex; flex-direction:column; gap:16px;">
+    <div class="tabs" id="tabs"></div>
+
+    <div class="controls">
+      <button id="btnReset" title="Restart">&#8634; Restart</button>
+      <button id="btnPrev">&larr; Back</button>
+      <button id="btnPlay" class="primary">&#9654; Play</button>
+      <button id="btnNext">Next &rarr;</button>
+      <span class="step-counter" id="stepCounter">step 0 / 0</span>
+    </div>
+
+    <div class="stage">
+      <svg id="svg" width="700" height="340" viewBox="0 0 700 340"></svg>
+    </div>
+
+    <div class="narration" id="narration"></div>
+
+    <div class="legend">
+      <span><i class="swatch sw-current"></i> node being visited</span>
+      <span><i class="swatch sw-new"></i> new node / match found</span>
+      <span><i class="swatch sw-miss"></i> ran off the tree — not found</span>
+    </div>
+  </div>
+
+  <div class="code-panel">
+    <pre id="codeBlock"></pre>
+  </div>
+
+  <footer>Built from <code style="background:var(--code-hl); color:var(--code-ink); padding:1px 6px; border-radius:5px;">[50, 30, 70, 20, 40, 60, 80]</code> inserted in that order — the exact tree the sequence above produces.</footer>
+</div>
+
+<script>
+(function(){
+  const buildValues = [50, 30, 70, 20, 40, 60, 80];
+  const sortedVals = buildValues.slice().sort((a,b)=>a-b);
+  const rankOf = v => sortedVals.indexOf(v);
+
+  const MARGIN_X = 70, SPAN_X = 90, TOP_Y = 45, SPAN_Y = 95, R = 24;
+  const X = v => MARGIN_X + rankOf(v) * SPAN_X;
+  const Y = d => TOP_Y + d * SPAN_Y;
+
+  const codeLines = [
+    "class Node:",
+    "    def __init__(self, value):",
+    "        self.value = value",
+    "        self.left = None",
+    "        self.right = None",
+    "",
+    "class BinaryTree:",
+    "    def __init__(self):",
+    "        self.root = None",
+    "",
+    "    def insert(self, value):",
+    "        if self.root is None:",
+    "            self.root = Node(value)",
+    "        else:",
+    "            self._insert(self.root, value)",
+    "",
+    "    def _insert(self, node, value):",
+    "        if value < node.value:",
+    "            if node.left is None:",
+    "                node.left = Node(value)",
+    "            else:",
+    "                self._insert(node.left, value)",
+    "        elif value > node.value:",
+    "            if node.right is None:",
+    "                node.right = Node(value)",
+    "            else:",
+    "                self._insert(node.right, value)",
+    "        # if value == node.value: do nothing",
+    "",
+    "    def search(self, value):",
+    "        return self._search(self.root, value)",
+    "",
+    "    def _search(self, node, value):",
+    "        if node is None:",
+    "            return False",
+    "        if value == node.value:",
+    "            return True",
+    "        elif value < node.value:",
+    "            return self._search(node.left, value)",
+    "        else:",
+    "            return self._search(node.right, value)",
+  ];
+  const L = {
+    insertCall:10, rootIsNone:11, rootAssign:12, elseCall:14,
+    lessTest:17, leftNoneTest:18, leftAssign:19, recurseLeft:21,
+    greaterTest:22, rightNoneTest:23, rightAssign:24, recurseRight:26, dup:27,
+    searchCall:29, searchDelegate:30,
+    nodeNoneTest:33, returnFalse:34, eqTest:35, returnTrue:36,
+    ltTest:37, recurseSearchLeft:38, recurseSearchRight:40,
+  };
+
+  // ---------- tree simulation ----------
+  function cloneNodes(nodes){
+    const out = {};
+    for (const k in nodes) out[k] = Object.assign({}, nodes[k]);
+    return out;
+  }
+
+  function traceBuild(values){
+    const steps = [];
+    let nodes = {};
+    let root = null;
+
+    function snap(line, current, note, path, extra){
+      steps.push(Object.assign({
+        line, current, note, path: path || [],
+        nodes: cloneNodes(nodes), root, ghost: null,
+      }, extra || {}));
+    }
+
+    for (const v of values) {
+      snap(L.insertCall, null, `Call insert(${v}).`, []);
+      if (root === null) {
+        snap(L.rootIsNone, null, `self.root is None — the tree is empty, so ${v} becomes the root.`, []);
+        nodes[v] = { value: v, left: null, right: null, depth: 0 };
+        root = v;
+        snap(L.rootAssign, v, `self.root = Node(${v}).`, [v], { newValue: v });
+        continue;
+      }
+      snap(L.elseCall, root, `Tree isn't empty — call _insert(root, ${v}) and start comparing from the root.`, [root]);
+      let cur = root;
+      const path = [];
+      while (true) {
+        path.push(cur);
+        const node = nodes[cur];
+        if (v < node.value) {
+          snap(L.lessTest, cur, `Is ${v} < ${node.value}? Yes — it belongs in the left subtree.`, path.slice());
+          if (node.left === null) {
+            snap(L.leftNoneTest, cur, `node.left is None — this is an empty spot.`, path.slice());
+            nodes[v] = { value: v, left: null, right: null, depth: node.depth + 1 };
+            nodes[cur] = Object.assign({}, node, { left: v });
+            snap(L.leftAssign, cur, `node.left = Node(${v}). The new node is planted.`, path.concat([v]), { newValue: v });
+            break;
+          } else {
+            snap(L.recurseLeft, cur, `node.left already holds ${node.left} — recurse into the left subtree.`, path.slice());
+            cur = node.left;
+          }
+        } else if (v > node.value) {
+          snap(L.greaterTest, cur, `Is ${v} > ${node.value}? Yes — it belongs in the right subtree.`, path.slice());
+          if (node.right === null) {
+            snap(L.rightNoneTest, cur, `node.right is None — this is an empty spot.`, path.slice());
+            nodes[v] = { value: v, left: null, right: null, depth: node.depth + 1 };
+            nodes[cur] = Object.assign({}, node, { right: v });
+            snap(L.rightAssign, cur, `node.right = Node(${v}). The new node is planted.`, path.concat([v]), { newValue: v });
+            break;
+          } else {
+            snap(L.recurseRight, cur, `node.right already holds ${node.right} — recurse into the right subtree.`, path.slice());
+            cur = node.right;
+          }
+        } else {
+          snap(L.dup, cur, `${v} already exists in the tree — do nothing.`, path.slice());
+          break;
+        }
+      }
+    }
+    return { steps, nodes, root };
+  }
+
+  function traceSearch(nodes, root, target){
+    const steps = [];
+    function snap(line, current, note, path, extra){
+      steps.push(Object.assign({
+        line, current, note, path: path || [], nodes: cloneNodes(nodes), root, ghost: null,
+      }, extra || {}));
+    }
+    snap(L.searchCall, null, `Call search(${target}).`, []);
+    snap(L.searchDelegate, root, `Delegate to _search(root, ${target}).`, root !== null ? [root] : []);
+    let cur = root;
+    const path = [];
+    while (true) {
+      if (cur === null) {
+        const lastVisited = path[path.length - 1];
+        const lastNode = nodes[lastVisited];
+        const wentLeft = lastNode.left === null;
+        const gx = X(lastNode.value) + (wentLeft ? -SPAN_X/2 : SPAN_X/2);
+        const gy = Y(lastNode.depth + 1);
+        snap(L.nodeNoneTest, null, `node is None — we've run off the tree.`, path.slice(), { ghost: { x: gx, y: gy, parent: lastNode.value } });
+        snap(L.returnFalse, null, `return False — ${target} is not in the tree.`, path.slice(), { ghost: { x: gx, y: gy, parent: lastNode.value }, result: false });
+        break;
+      }
+      path.push(cur);
+      const node = nodes[cur];
+      snap(L.eqTest, cur, `Is ${target} == ${node.value}?`, path.slice());
+      if (target === node.value) {
+        snap(L.returnTrue, cur, `Match — return True. ${target} is in the tree.`, path.slice(), { result: true });
+        break;
+      } else if (target < node.value) {
+        snap(L.ltTest, cur, `${target} < ${node.value} — go left.`, path.slice());
+        snap(L.recurseSearchLeft, cur, `_search(node.left, ${target}).`, path.slice());
+        cur = node.left;
+      } else {
+        snap(L.ltTest, cur, `${target} > ${node.value} — go right.`, path.slice());
+        snap(L.recurseSearchRight, cur, `_search(node.right, ${target}).`, path.slice());
+        cur = node.right;
+      }
+    }
+    return steps;
+  }
+
+  const buildResult = traceBuild(buildValues);
+  const scenarios = {
+    build: { label: "Build the tree", steps: buildResult.steps },
+    search40: { label: "Search 40 (found)", steps: traceSearch(buildResult.nodes, buildResult.root, 40) },
+    search100: { label: "Search 100 (not found)", steps: traceSearch(buildResult.nodes, buildResult.root, 100) },
+  };
+
+  let currentKey = 'build';
+  let idx = 0;
+  let timer = null;
+
+  const tabsEl = document.getElementById('tabs');
+  const svg = document.getElementById('svg');
+  const narration = document.getElementById('narration');
+  const stepCounter = document.getElementById('stepCounter');
+  const codeBlock = document.getElementById('codeBlock');
+  const btnPlay = document.getElementById('btnPlay');
+
+  function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  codeBlock.innerHTML = codeLines.map((l,i)=>`<span class="code-line" data-line="${i}">${l.trim()===''?'':`<span class="n">${i}</span>`}${escapeHtml(l)}</span>`).join('\n');
+
+  Object.keys(scenarios).forEach(key=>{
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (key === currentKey ? ' active' : '');
+    btn.textContent = scenarios[key].label;
+    btn.dataset.key = key;
+    btn.addEventListener('click', ()=>{ switchScenario(key); });
+    tabsEl.appendChild(btn);
+  });
+
+  function switchScenario(key){
+    stopPlay();
+    currentKey = key;
+    idx = 0;
+    document.querySelectorAll('.tab').forEach(t=> t.classList.toggle('active', t.dataset.key === key));
+    render();
+  }
+
+  function svgNS(tag){ return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+
+  function render(){
+    const steps = scenarios[currentKey].steps;
+    const s = steps[idx];
+    svg.innerHTML = '';
+
+    const values = Object.keys(s.nodes).map(Number);
+    // edges
+    values.forEach(v=>{
+      const node = s.nodes[v];
+      [node.left, node.right].forEach(childVal=>{
+        if (childVal === null) return;
+        const child = s.nodes[childVal];
+        const line = svgNS('line');
+        line.setAttribute('x1', X(node.value)); line.setAttribute('y1', Y(node.depth));
+        line.setAttribute('x2', X(child.value)); line.setAttribute('y2', Y(child.depth));
+        let cls = 'edge';
+        const pi = s.path.indexOf(node.value);
+        if (pi !== -1 && s.path[pi+1] === child.value) cls += ' active';
+        line.setAttribute('class', cls);
+        svg.appendChild(line);
+      });
+    });
+
+    // ghost edge + node (search miss)
+    if (s.ghost) {
+      const parentNode = s.nodes[s.ghost.parent];
+      const gline = svgNS('line');
+      gline.setAttribute('x1', X(parentNode.value)); gline.setAttribute('y1', Y(parentNode.depth));
+      gline.setAttribute('x2', s.ghost.x); gline.setAttribute('y2', s.ghost.y);
+      gline.setAttribute('class', 'edge missedge');
+      svg.appendChild(gline);
+
+      const gc = svgNS('circle');
+      gc.setAttribute('cx', s.ghost.x); gc.setAttribute('cy', s.ghost.y); gc.setAttribute('r', R - 5);
+      gc.setAttribute('class', 'ghost-circle');
+      svg.appendChild(gc);
+      const gt = svgNS('text');
+      gt.setAttribute('x', s.ghost.x); gt.setAttribute('y', s.ghost.y);
+      gt.setAttribute('class', 'ghost-text'); gt.setAttribute('dominant-baseline','central');
+      gt.textContent = 'None';
+      svg.appendChild(gt);
+    }
+
+    // nodes
+    values.forEach(v=>{
+      const node = s.nodes[v];
+      const circle = svgNS('circle');
+      circle.setAttribute('cx', X(v)); circle.setAttribute('cy', Y(node.depth)); circle.setAttribute('r', R);
+      let cls = 'node-circle';
+      if (s.result === true && v === s.current) cls += ' found';
+      else if (s.newValue === v) cls += ' newnode';
+      else if (v === s.current) cls += ' current';
+      circle.setAttribute('class', cls);
+      svg.appendChild(circle);
+
+      const text = svgNS('text');
+      text.setAttribute('x', X(v)); text.setAttribute('y', Y(node.depth));
+      text.setAttribute('class', 'node-text');
+      text.textContent = v;
+      svg.appendChild(text);
+    });
+
+    narration.textContent = s.note;
+
+    document.querySelectorAll('.code-line').forEach(el=>{
+      el.classList.toggle('active', Number(el.dataset.line) === s.line);
+    });
+
+    stepCounter.textContent = `step ${idx+1} / ${steps.length}`;
+    document.getElementById('btnPrev').disabled = idx === 0;
+    document.getElementById('btnNext').disabled = idx === steps.length - 1;
+  }
+
+  function next(){
+    const steps = scenarios[currentKey].steps;
+    if (idx < steps.length - 1) { idx++; render(); } else stopPlay();
+  }
+  function prev(){ if (idx > 0) { idx--; render(); } }
+  function reset(){ idx = 0; render(); stopPlay(); }
+
+  function stopPlay(){
+    if (timer) { clearInterval(timer); timer = null; }
+    btnPlay.textContent = '▶ Play';
+  }
+  function togglePlay(){
+    if (timer) { stopPlay(); return; }
+    const steps = scenarios[currentKey].steps;
+    if (idx === steps.length - 1) idx = 0;
+    btnPlay.textContent = '⏸ Pause';
+    timer = setInterval(()=>{
+      const st = scenarios[currentKey].steps;
+      if (idx >= st.length - 1) { stopPlay(); return; }
+      next();
+    }, 1300);
+  }
+
+  document.getElementById('btnNext').addEventListener('click', ()=>{ stopPlay(); next(); });
+  document.getElementById('btnPrev').addEventListener('click', ()=>{ stopPlay(); prev(); });
+  document.getElementById('btnReset').addEventListener('click', reset);
+  btnPlay.addEventListener('click', togglePlay);
+
+  window.addEventListener('keydown', (e)=>{
+    if (e.key === 'ArrowRight') { stopPlay(); next(); }
+    if (e.key === 'ArrowLeft') { stopPlay(); prev(); }
+  });
+
+  render();
+})();
+</script>
+
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover{background:rgba(255,255,255,.18)}@media print{.site-pill{display:none}}</style><div class="site-pill"><a href="../../a-cs/a-level/ch-19/">← Chapter 19</a><a href="../../">Home</a></div></body></html>

@@ -1,0 +1,674 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Firm in Focus</title>
+<style>
+:root{
+  --bg:#f3f4ee; --surface:#ffffff; --surface-2:#ebede4;
+  --ink:#1c2624; --ink-dim:#5b6864; --line:#d6d9cd;
+  --prod:#0f766e; --prod-soft:#d9efe9;
+  --cost:#b5502e; --cost-soft:#fae2d6;
+  --rev:#4c3f91; --rev-soft:#e6e2f7;
+  --profit:#9a6b12; --profit-soft:#f5e6c4;
+  --good:#2f7d4f; --bad:#b3392f;
+  --focus:#0f766e;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161b19; --surface:#1e2523; --surface-2:#242c29;
+    --ink:#eef1ec; --ink-dim:#a8b3ad; --line:#38423e;
+    --prod:#4fb6a8; --prod-soft:#1e3532;
+    --cost:#e08a5f; --cost-soft:#3a2a20;
+    --rev:#a89bef; --rev-soft:#2c2748;
+    --profit:#e0b558; --profit-soft:#3a2f16;
+    --good:#6fce93; --bad:#e2837a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161b19; --surface:#1e2523; --surface-2:#242c29;
+  --ink:#eef1ec; --ink-dim:#a8b3ad; --line:#38423e;
+  --prod:#4fb6a8; --prod-soft:#1e3532;
+  --cost:#e08a5f; --cost-soft:#3a2a20;
+  --rev:#a89bef; --rev-soft:#2c2748;
+  --profit:#e0b558; --profit-soft:#3a2f16;
+  --good:#6fce93; --bad:#e2837a;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  font-size:15px; line-height:1.55;
+  padding-inline:0;
+}
+h1,h2,h3{font-family:'Literata',Georgia,serif; text-wrap:balance; margin:0 0 .3em}
+.mono{font-family:'IBM Plex Mono',monospace}
+.wrap{max-width:880px; margin:0 auto; padding-inline:20px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:50;
+  background:var(--surface); border-bottom:1px solid var(--line);
+}
+.topbar-inner{max-width:880px; margin:0 auto; padding:10px 20px;}
+.brand{display:flex; align-items:baseline; gap:10px; margin-bottom:8px}
+.brand h1{font-size:1.15rem; margin:0}
+.brand .tag{font-size:.72rem; color:var(--ink-dim); font-family:'IBM Plex Mono',monospace; letter-spacing:.04em}
+.nav-scroll{display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:thin}
+.nav-scroll a{
+  flex:none; font-size:.78rem; padding:6px 11px; border-radius:99px;
+  background:var(--surface-2); color:var(--ink-dim); text-decoration:none;
+  border:1px solid transparent; white-space:nowrap;
+}
+.nav-scroll a:hover{color:var(--ink); border-color:var(--line)}
+.mode-toggle{display:flex; gap:0; margin-left:auto; flex:none}
+.mode-toggle button{
+  font:inherit; font-size:.78rem; padding:6px 12px; border:1px solid var(--line);
+  background:var(--surface); color:var(--ink-dim); cursor:pointer;
+}
+.mode-toggle button:first-child{border-radius:99px 0 0 99px}
+.mode-toggle button:last-child{border-radius:0 99px 99px 0; border-left:none}
+.mode-toggle button.active{background:var(--prod); color:#fff; border-color:var(--prod)}
+
+/* ---------- hero ---------- */
+.hero{padding:34px 20px 20px}
+.hero .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--prod)}
+.hero h1{font-size:clamp(1.7rem,4.5vw,2.3rem); margin:.2em 0 .35em}
+.hero p{color:var(--ink-dim); max-width:60ch}
+
+/* ---------- sections ---------- */
+section.topic{padding:26px 20px 8px; border-top:1px solid var(--line); scroll-margin-top:calc(96px + env(safe-area-inset-top,0px))}
+section.topic > .wrap{padding-inline:0}
+.topic-head{display:flex; align-items:center; gap:10px; margin-bottom:4px}
+.topic-num{
+  font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:#fff;
+  background:var(--accent,var(--prod)); width:26px; height:26px; border-radius:7px;
+  display:flex; align-items:center; justify-content:center; flex:none;
+}
+.topic-head h2{font-size:1.35rem; margin:0}
+.topic.production{--accent:var(--prod)}
+.topic.cost{--accent:var(--cost)}
+.topic.revenue{--accent:var(--rev)}
+.topic.profit{--accent:var(--profit)}
+
+.card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:14px 0}
+.chart-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:10px 14px 4px; margin:14px 0}
+.chart-card figcaption{font-size:.82rem; color:var(--ink-dim); padding:0 4px 10px; text-align:center}
+svg text{font-family:'IBM Plex Sans',sans-serif}
+svg .axis{stroke:var(--ink-dim); stroke-width:1}
+svg .gridline{stroke:var(--line); stroke-width:1; stroke-dasharray:3 3}
+svg .lbl{fill:var(--ink); font-size:11px}
+svg .lbl-dim{fill:var(--ink-dim); font-size:10px}
+
+.keyword-row{display:flex; flex-wrap:wrap; gap:7px; margin:14px 0}
+.kw{
+  background:var(--cost-soft,var(--accent-soft)); color:var(--ink);
+  border:1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+  font-size:.78rem; padding:4px 10px; border-radius:99px; font-weight:500;
+}
+.topic.production .kw{background:var(--prod-soft); border-color:color-mix(in srgb, var(--prod) 35%, var(--line))}
+
+.formula{
+  font-family:'IBM Plex Mono',monospace; background:var(--surface-2);
+  border:1px solid var(--line); border-radius:10px; padding:10px 14px;
+  font-size:.86rem; margin:8px 0; display:inline-block;
+}
+
+table{width:100%; border-collapse:collapse; font-size:.85rem}
+th,td{padding:8px 10px; text-align:left; border-bottom:1px solid var(--line)}
+th{font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-dim); font-weight:600}
+.table-wrap{overflow-x:auto; margin:14px 0}
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+.pill-label{
+  display:inline-block; font-size:.7rem; font-family:'IBM Plex Mono',monospace;
+  padding:2px 8px; border-radius:6px; margin-bottom:6px; font-weight:600;
+}
+.pill-label.internal{background:var(--prod-soft); color:var(--prod)}
+.pill-label.external{background:var(--rev-soft); color:var(--rev)}
+
+.callout{
+  border-left:3px solid var(--accent,var(--prod)); background:var(--surface-2);
+  border-radius:0 10px 10px 0; padding:12px 16px; margin:14px 0; font-size:.93rem;
+}
+.callout b{color:var(--accent,var(--prod))}
+.qa{margin:10px 0}
+.qa .q{font-weight:600; margin-bottom:3px}
+.qa .a{color:var(--ink-dim)}
+
+footer{padding:28px 20px 40px; text-align:center; color:var(--ink-dim); font-size:.8rem; border-top:1px solid var(--line); margin-top:20px}
+
+/* ---------- practice mode ---------- */
+#practice{display:none}
+body.mode-practice #learn{display:none}
+body.mode-practice #practice{display:block}
+.prompt-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:16px 0}
+.prompt-card h3{font-size:1.02rem; margin-bottom:2px}
+.prompt-card .ctx{font-size:.82rem; color:var(--ink-dim); margin-bottom:10px}
+.draw-box{
+  border:1.5px dashed var(--line); border-radius:10px; height:150px;
+  display:flex; align-items:center; justify-content:center; color:var(--ink-dim);
+  font-size:.78rem; margin-bottom:10px; background:var(--surface-2);
+}
+.prompt-card textarea{
+  width:100%; min-height:70px; border:1px solid var(--line); border-radius:8px;
+  background:var(--bg); color:var(--ink); font:inherit; font-size:.88rem;
+  padding:9px 11px; resize:vertical;
+}
+.prompt-card textarea:focus{outline:2px solid var(--prod); outline-offset:1px}
+.applywrap{margin-top:8px}
+.applywrap label{font-size:.72rem; font-family:'IBM Plex Mono',monospace; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.03em}
+
+@media(prefers-reduced-motion:no-preference){
+  .card,.chart-card,.prompt-card{transition:border-color .15s}
+}
+a{color:var(--prod)}
+</style>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><h1>Firm in Focus</h1><span class="tag">CIE A Level · Ch. 34</span></div>
+    <div class="nav-scroll" id="navScroll">
+      <a href="#srprod">SR production</a>
+      <a href="#srcost">SR costs</a>
+      <a href="#lrprod">LR production</a>
+      <a href="#lrcost">LR costs</a>
+      <a href="#scale">Economies of scale</a>
+      <a href="#revenue">Revenue</a>
+      <a href="#profit">Profit</a>
+      <div class="mode-toggle" style="margin-left:auto">
+        <button id="btnLearn" class="active" onclick="setMode('learn')">Explainer</button>
+        <button id="btnPractice" onclick="setMode('practice')">Practice</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="learn">
+<div class="hero wrap">
+  <div class="eyebrow">Costs, production &amp; profit</div>
+  <h1>How a firm turns inputs into output — and output into profit</h1>
+  <p>Short-run and long-run production, the shape of every cost curve, economies of scale, and why the firm's revenue curve decides how much of a market it can win. Built around Chapter 34 of the CIE A Level coursebook.</p>
+</div>
+
+<!-- ============ SHORT RUN PRODUCTION ============ -->
+<section class="topic production" id="srprod">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">1</span><h2>Short-run production function</h2></div>
+    <p>In the short run at least one factor is fixed — almost always <b>capital</b> (the factory, the machines). <b>Labour</b> is the usual variable factor: the firm adjusts output by hiring more or fewer workers onto a fixed amount of kit.</p>
+
+    <div class="keyword-row">
+      <span class="kw">total product</span>
+      <span class="kw">marginal product</span>
+      <span class="kw">average product</span>
+      <span class="kw">law of diminishing returns</span>
+      <span class="kw">fixed factor</span>
+      <span class="kw">variable factor</span>
+      <span class="kw">short run</span>
+      <span class="kw">production function</span>
+    </div>
+
+    <div class="callout" style="border-color:var(--prod)"><b>SR vs LR production, in brief:</b> short run = <i>one</i> factor fixed (usually capital), labour is varied, and the law of diminishing returns governs TP/AP/MP. Long run = <i>no</i> factor is fixed — the firm can rescale everything, so the question shifts from "how much labour on this plant" to "what size of plant" (isoquants/isocosts, returns to scale).</div>
+
+    <div class="card">
+      <p style="margin-top:0"><b>Total product (TP)</b> — total output from a given number of workers on the fixed factor.<br>
+      <b>Marginal product (MP)</b> — the extra output from one more worker.<br>
+      <b>Average product (AP)</b> — output per worker, TP ÷ number of workers.</p>
+      <p style="margin-bottom:0">As workers are added to a fixed factory, MP rises at first (better use of kit, some division of labour) then falls — the <b>law of diminishing returns</b>: each extra worker has less fixed capital to share, so adds less than the one before. TP keeps rising while MP is positive, but its slope flattens; TP is at its maximum exactly where MP = 0.</p>
+    </div>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 620 300" width="100%">
+        <!-- TP panel -->
+        <line class="axis" x1="55" y1="20" x2="55" y2="130"/>
+        <line class="axis" x1="55" y1="130" x2="600" y2="130"/>
+        <text class="lbl-dim" x="10" y="24">Output</text>
+        <text class="lbl-dim" x="560" y="146">Workers</text>
+        <path d="M55,130 C120,60 180,35 260,26 C360,15 480,12 580,10" fill="none" stroke="var(--prod)" stroke-width="2.4"/>
+        <text class="lbl" x="470" y="24" fill="var(--prod)" font-weight="600">TP</text>
+        <line class="gridline" x1="300" y1="130" x2="300" y2="20"/>
+        <text class="lbl-dim" x="303" y="144">MP = 0 → TP max</text>
+
+        <!-- AP/MP panel -->
+        <line class="axis" x1="55" y1="170" x2="55" y2="280"/>
+        <line class="axis" x1="55" y1="280" x2="600" y2="280"/>
+        <text class="lbl-dim" x="10" y="174">Product / worker</text>
+        <path d="M55,280 C110,150 150,140 190,144 C260,150 380,190 500,260 C530,278 550,290 570,300" fill="none" stroke="var(--cost)" stroke-width="2.2"/>
+        <text class="lbl" x="200" y="152" fill="var(--cost)" font-weight="600">MP</text>
+        <path d="M55,280 C130,190 190,168 260,164 C360,160 460,178 560,220" fill="none" stroke="var(--prod)" stroke-width="2.2"/>
+        <text class="lbl" x="420" y="185" fill="var(--prod)" font-weight="600">AP</text>
+        <circle cx="260" cy="164" r="3.5" fill="var(--ink)"/>
+        <text class="lbl-dim" x="264" y="160">MP = AP → AP at its own max</text>
+        <line class="gridline" x1="300" y1="280" x2="300" y2="170"/>
+      </svg>
+      <figcaption>Diminishing returns: MP rises then falls; TP keeps rising until MP = 0, then flattens. AP is pulled up while MP is above it, and down once MP falls below it — so MP always cuts AP at AP's maximum.</figcaption>
+    </figure>
+
+    <div class="card" style="border-color:color-mix(in srgb, var(--prod) 35%, var(--line))">
+      <p style="margin:0"><b>Worked numbers, from the coursebook's example</b> — 1 worker: TP 100 (AP 100); 2 workers: TP 180, MP 80 (AP 90); 3 workers: TP 240, MP 60 (AP 80); 4 workers: TP 280, MP 40 (AP 70); 5 workers: TP 306, MP 15 (AP 51.2); 6 workers: TP 306, MP 0 (AP 51). Notice MP is already falling from worker 2 onward — diminishing returns set in almost immediately — while TP only stops rising once the 6th worker adds nothing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHORT RUN COST ============ -->
+<section class="topic cost" id="srcost">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">2</span><h2>Short-run cost function</h2></div>
+    <p>Costs are the mirror image of production. Because one factor is fixed in the short run, costs split into two kinds:</p>
+    <div class="keyword-row">
+      <span class="kw" style="background:var(--cost-soft)">fixed costs (FC)</span>
+      <span class="kw" style="background:var(--cost-soft)">variable costs (VC)</span>
+      <span class="kw" style="background:var(--cost-soft)">total cost (TC)</span>
+      <span class="kw" style="background:var(--cost-soft)">AFC</span>
+      <span class="kw" style="background:var(--cost-soft)">AVC</span>
+      <span class="kw" style="background:var(--cost-soft)">ATC</span>
+      <span class="kw" style="background:var(--cost-soft)">MC</span>
+      <span class="kw" style="background:var(--cost-soft)">optimum output</span>
+    </div>
+
+    <div class="callout"><b>SR vs LR cost, in brief:</b> short-run cost splits into fixed and variable (FC/VC), because one factor can't be changed — that split is what gives AFC/AVC/ATC/MC their shapes. Long-run cost has no fixed/variable split at all — every cost is variable, so there's just one curve, LRAC, built by choosing the lowest-cost plant size (SRAC) for each output level.</div>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Measure</th><th>Formula</th><th>Behaviour as output rises</th></tr>
+        <tr><td class="mono">TC</td><td class="mono">FC + VC</td><td>Rises throughout</td></tr>
+        <tr><td class="mono">AFC</td><td class="mono">FC ÷ Q</td><td>Falls continuously — a fixed sum spread over more units ("spreading the overheads")</td></tr>
+        <tr><td class="mono">AVC</td><td class="mono">VC ÷ Q</td><td>U-shaped: falls, then rises as diminishing returns bite</td></tr>
+        <tr><td class="mono">ATC</td><td class="mono">TC ÷ Q  (= AFC + AVC)</td><td>U-shaped, sits above AVC by the (shrinking) gap of AFC</td></tr>
+        <tr><td class="mono">MC</td><td class="mono">ΔTC ÷ ΔQ</td><td>U-shaped, falls then rises faster than AVC/ATC</td></tr>
+      </table>
+    </div>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 620 290" width="100%">
+        <line class="axis" x1="55" y1="15" x2="55" y2="255"/>
+        <line class="axis" x1="55" y1="255" x2="600" y2="255"/>
+        <text class="lbl-dim" x="10" y="20">Costs ($)</text>
+        <text class="lbl-dim" x="560" y="272">Output</text>
+        <!-- AFC hyperbola, falls continuously -->
+        <path d="M75,60 C130,150 220,205 340,230 C420,244 500,250 580,253" fill="none" stroke="var(--ink-dim)" stroke-width="2"/>
+        <text class="lbl-dim" x="470" y="246">AFC</text>
+        <!-- AVC: high at low output, falls to a minimum, rises again -->
+        <path d="M75,55 C160,150 260,213 300,220 C355,214 450,175 530,100" fill="none" stroke="var(--prod)" stroke-width="2.2"/>
+        <text class="lbl" x="80" y="48" fill="var(--prod)" font-weight="600">AVC</text>
+        <!-- ATC: sits above AVC, minimum a little further right, gap with AVC narrows -->
+        <path d="M100,30 C195,145 300,193 330,200 C375,195 460,165 560,90" fill="none" stroke="var(--cost)" stroke-width="2.4"/>
+        <text class="lbl" x="105" y="24" fill="var(--cost)" font-weight="600">ATC</text>
+        <!-- MC: falls to its own (lower-output) minimum, then rises steeply through AVC-min then ATC-min -->
+        <path d="M75,150 C120,210 155,232 185,234 C230,236 270,225 300,220 C315,213 322,206 330,200 C360,180 420,125 480,70 C510,50 535,35 560,25" fill="none" stroke="var(--rev)" stroke-width="2.4"/>
+        <text class="lbl" x="505" y="45" fill="var(--rev)" font-weight="600">MC</text>
+        <circle cx="300" cy="220" r="3.2" fill="var(--ink)"/>
+        <circle cx="330" cy="200" r="3.2" fill="var(--ink)"/>
+        <text class="lbl-dim" x="230" y="246">MC crosses AVC</text>
+        <text class="lbl-dim" x="345" y="205">MC crosses ATC</text>
+        <text class="lbl-dim" x="345" y="218">— both at their minimum</text>
+      </svg>
+      <figcaption>MC cuts AVC and ATC exactly at their lowest points — pulling each average down while MC is below it, and up once MC rises above it. Where MC = ATC is the firm's <b>optimum output</b>, the lowest cost per unit it can produce in the short run.</figcaption>
+    </figure>
+
+    <div class="callout"><b>Why the U-shape:</b> AVC and MC fall at first because a small workforce is under-using the fixed capital — hiring more gets more out of it. Once diminishing returns set in, each extra worker adds less output for the same wage, so the cost of producing one more unit (MC) starts climbing, dragging AVC and then ATC up behind it. The optimum output (MC = ATC) is the firm's most cost-efficient point — not necessarily its most profitable one, which depends on revenue too.</div>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 560 300" width="100%">
+        <line class="axis" x1="70" y1="15" x2="70" y2="255"/>
+        <line class="axis" x1="70" y1="255" x2="530" y2="255"/>
+        <text class="lbl-dim" x="14" y="18">Costs ($)</text>
+        <text class="lbl-dim" x="490" y="272">Output</text>
+        <!-- MC: falls to its own minimum left of ATC's, then rises steeply through ATC's minimum -->
+        <path d="M110,110 C145,190 175,225 190,230 C215,232 238,220 255,205 C295,160 345,100 390,60 C405,48 415,40 425,32" fill="none" stroke="var(--rev)" stroke-width="2.6"/>
+        <text class="lbl" x="395" y="30" fill="var(--rev)" font-weight="600">MC</text>
+        <!-- ATC: shallower minimum, meets MC exactly at its own lowest point -->
+        <path d="M100,40 C160,140 220,195 255,205 C305,197 365,155 420,90" fill="none" stroke="var(--cost)" stroke-width="2.8"/>
+        <text class="lbl" x="430" y="86" fill="var(--cost)" font-weight="600">ATC</text>
+        <!-- intersection at ATC's minimum -->
+        <circle cx="255" cy="205" r="4.5" fill="var(--ink)"/>
+        <line class="gridline" x1="255" y1="205" x2="255" y2="255"/>
+        <line class="gridline" x1="70" y1="205" x2="255" y2="205"/>
+        <text class="lbl-dim" x="42" y="209">C</text>
+        <text class="lbl-dim" x="248" y="272">Q</text>
+        <text class="lbl" x="290" y="238">• Optimum output</text>
+        <text class="lbl" x="290" y="254">  MC = ATC</text>
+        <text class="lbl-dim" x="95" y="70">Increasing</text>
+        <text class="lbl-dim" x="95" y="84">returns</text>
+        <text class="lbl-dim" x="330" y="115">Diminishing</text>
+        <text class="lbl-dim" x="330" y="129">returns</text>
+      </svg>
+      <figcaption>Left of Q, ATC and MC are still falling — the firm is getting increasing returns from adding workers to its fixed plant. Right of Q, diminishing returns have pushed both curves back up. Q is the optimum output: the single lowest-cost point, where MC = ATC = C.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ LONG RUN PRODUCTION ============ -->
+<section class="topic production" id="lrprod">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">3</span><h2>Long-run production function</h2></div>
+    <p>In the long run <b>every</b> factor is variable — there is no fixed factor left. "Short run" and "long run" aren't fixed lengths of calendar time; they're defined by whether the firm can still vary all its inputs (installing a new factory takes longer than hiring a worker, so capital is what stays fixed while it's still "short run").</p>
+
+    <div class="keyword-row">
+      <span class="kw">isoquant</span>
+      <span class="kw">isocost</span>
+      <span class="kw">long run</span>
+      <span class="kw">increasing returns to scale</span>
+      <span class="kw">decreasing returns to scale</span>
+      <span class="kw">least-cost combination</span>
+    </div>
+
+    <div class="card">
+      <p style="margin-top:0">An <b>isoquant</b> joins every combination of labour and capital that produces the <i>same</i> level of output. An <b>isocost</b> joins every combination of labour and capital that costs the firm the <i>same</i> total spend, given current factor prices — its slope is the ratio of the two factor prices. The firm's least-cost way to produce a given output is where an isocost line is <b>tangent</b> to that isoquant.</p>
+      <p style="margin-bottom:0">This is why the best combination of factors holds when the marginal product per dollar spent is equalised across every factor:</p>
+      <div class="formula">MP<sub>A</sub> ÷ price<sub>A</sub> = MP<sub>B</sub> ÷ price<sub>B</sub> = MP<sub>C</sub> ÷ price<sub>C</sub> …</div>
+      <p style="margin:8px 0 0">If a dollar spent on labour bought more extra output than a dollar spent on capital, the firm would gain by shifting spending toward labour — it will keep doing so until a dollar buys the <i>same</i> extra output whichever factor it lands on. That's the tangency point.</p>
+    </div>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 560 300" width="100%">
+        <text class="lbl-dim" x="60" y="16" font-weight="600">a</text>
+        <line class="axis" x1="60" y1="25" x2="60" y2="265"/>
+        <line class="axis" x1="60" y1="265" x2="540" y2="265"/>
+        <text class="lbl-dim" x="14" y="28">Capital</text>
+        <text class="lbl-dim" x="480" y="282">Labour</text>
+        <!-- isoquant map: 5 curves, output 100-500, convex to the origin (bowed in toward it, not away), spacing widening outward (decreasing returns to scale) -->
+        <path d="M90,60 C90,192 205,215 225,215" fill="none" stroke="#4fb3d8" stroke-width="2.2"/>
+        <text class="lbl" x="228" y="219" fill="#4fb3d8" font-weight="600">100</text>
+        <path d="M115,50 C115,199 255,225 280,225" fill="none" stroke="var(--ink)" stroke-width="2.2"/>
+        <text class="lbl" x="283" y="229">200</text>
+        <path d="M148,42 C148,206 320,235 350,235" fill="none" stroke="var(--rev)" stroke-width="2.2"/>
+        <text class="lbl" x="353" y="239" fill="var(--rev)" font-weight="600">300</text>
+        <path d="M195,36 C195,211 386,242 420,242" fill="none" stroke="var(--good)" stroke-width="2.2"/>
+        <text class="lbl" x="423" y="246" fill="var(--good)" font-weight="600">400</text>
+        <path d="M258,30 C258,214 469,247 505,247" fill="none" stroke="var(--cost)" stroke-width="2.2"/>
+        <text class="lbl" x="508" y="251" fill="var(--cost)" font-weight="600">500</text>
+      </svg>
+      <figcaption>Isoquant map — each curve joins every labour/capital combination that produces that same output. Curves for equal 100-unit steps sit closer together near the origin (increasing returns to scale) and spread further apart further out (decreasing returns to scale).</figcaption>
+    </figure>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 560 300" width="100%">
+        <text class="lbl-dim" x="60" y="16" font-weight="600">b</text>
+        <line class="axis" x1="60" y1="25" x2="60" y2="265"/>
+        <line class="axis" x1="60" y1="265" x2="540" y2="265"/>
+        <text class="lbl-dim" x="14" y="28">Capital</text>
+        <text class="lbl-dim" x="480" y="282">Labour</text>
+        <!-- three isoquants, convex to the origin (bowed in toward it) -->
+        <path d="M90,150 C90,218 171,230 185,230" fill="none" stroke="#4fb3d8" stroke-width="2"/>
+        <path d="M120,110 C120,216 235,235 255,235" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M160,75 C160,215 309,240 335,240" fill="none" stroke="var(--rev)" stroke-width="2"/>
+        <!-- isocost lines: each just touches (is tangent to) one isoquant, matching its local slope, and doesn't cross it -->
+        <line x1="70" y1="182.5" x2="215.5" y2="260" stroke="var(--ink-dim)" stroke-width="1.4"/>
+        <line x1="95" y1="162.5" x2="261.6" y2="260" stroke="var(--ink-dim)" stroke-width="1.4"/>
+        <line x1="155" y1="160.7" x2="321.6" y2="260" stroke="var(--ink-dim)" stroke-width="1.4"/>
+        <!-- expansion path through the tangency points -->
+        <path d="M132,215.5 C150,214 165,213 180,212.25 C200,211 220,210.5 238,210" fill="none" stroke="var(--prod)" stroke-width="2.4"/>
+        <text class="lbl" x="220" y="195" fill="var(--prod)" font-weight="600">Long-run production function</text>
+        <circle cx="132" cy="215.5" r="4" fill="var(--prod)"/>
+        <circle cx="180" cy="212.25" r="4" fill="var(--prod)"/>
+        <circle cx="238" cy="210" r="4" fill="var(--prod)"/>
+      </svg>
+      <figcaption>Isoquants and isocosts together: each dot is where an isocost line just touches — is tangent to — an isoquant, without crossing over it. Because each isoquant is convex to the origin, that touching point is the single combination on it nearest to the origin the firm can reach for that spend: the least-cost way to produce that output. Joining the dots traces the firm's long-run expansion path.</figcaption>
+    </figure>
+
+    <p><b>Returns to scale</b> describe what happens to output when <i>every</i> factor is increased in the same proportion:</p>
+    <div class="two-col">
+      <div class="card" style="margin:8px 0">
+        <p class="pill-label internal">increasing returns to scale</p>
+        <p style="margin:0">Output rises by a <i>larger</i> percentage than inputs — e.g. inputs +50%, output +80%. On an isoquant map this shows as isoquants for equal output steps (100, 200, 300…) getting <b>closer together</b> as you move out from the origin — less extra input needed for the next chunk of output.</p>
+      </div>
+      <div class="card" style="margin:8px 0">
+        <p class="pill-label external">decreasing returns to scale</p>
+        <p style="margin:0">Output rises by a <i>smaller</i> percentage than inputs. Isoquants spread <b>further apart</b> — more and more extra labour and capital needed to add the same 100 units, exactly the pattern in the coursebook's isoquant map for output levels 100→500.</p>
+      </div>
+    </div>
+    <p style="color:var(--ink-dim); font-size:.88rem">Joining the tangency points across a whole isoquant map traces the firm's long-run expansion path — its lowest-cost route to any output level once it can vary every factor.</p>
+  </div>
+</section>
+
+<!-- ============ LONG RUN COST ============ -->
+<section class="topic cost" id="lrcost">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">4</span><h2>Long-run cost function</h2></div>
+    <p>The <b>long-run average cost (LRAC)</b> curve shows the lowest average cost achievable at each output level, once the firm is free to choose any scale of plant. It's built from a whole family of short-run average cost curves (SRACs) — one for each possible factory size.</p>
+    <div class="keyword-row">
+      <span class="kw" style="background:var(--cost-soft)">SRAC</span>
+      <span class="kw" style="background:var(--cost-soft)">LRAC (envelope curve)</span>
+      <span class="kw" style="background:var(--cost-soft)">minimum efficient scale (MES)</span>
+    </div>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 620 300" width="100%">
+        <line class="axis" x1="55" y1="15" x2="55" y2="260"/>
+        <line class="axis" x1="55" y1="260" x2="600" y2="260"/>
+        <text class="lbl-dim" x="10" y="18">Cost ($)</text>
+        <text class="lbl-dim" x="560" y="277">Output</text>
+        <!-- five SRAC scallops, each a valley (low cost = large y, near the axis) -->
+        <path d="M75,40 C105,85 130,105 150,110 C175,108 200,85 220,50" fill="none" stroke="var(--ink-dim)" stroke-width="1.6" opacity=".8"/>
+        <path d="M150,60 C185,120 215,145 235,150 C260,148 295,120 325,70" fill="none" stroke="var(--ink-dim)" stroke-width="1.6" opacity=".8"/>
+        <path d="M235,75 C270,150 305,182 330,190 C360,186 400,150 430,80" fill="none" stroke="var(--ink-dim)" stroke-width="1.6" opacity=".8"/>
+        <path d="M340,80 C375,125 415,145 440,150 C465,145 495,115 530,75" fill="none" stroke="var(--ink-dim)" stroke-width="1.6" opacity=".8"/>
+        <path d="M440,70 C470,95 505,108 530,110 C550,105 575,80 590,45" fill="none" stroke="var(--ink-dim)" stroke-width="1.6" opacity=".8"/>
+        <text class="lbl-dim" x="90" y="35">SRAC1</text>
+        <text class="lbl-dim" x="270" y="70">SRAC3</text>
+        <text class="lbl-dim" x="545" y="40">SRAC5</text>
+        <!-- LRAC envelope: U-shaped, touching the very bottom of every SRAC scallop -->
+        <path d="M78,50 C90,60 123.8,93.3 150,110 C176.2,126.7 205,136.7 235,150 C265,163.3 295.8,190 330,190 C364.2,190 406.7,163.3 440,150 C473.3,136.7 505,126.7 530,110 C555,93.3 580,60 590,50" fill="none" stroke="var(--cost)" stroke-width="2.8"/>
+        <text class="lbl" x="470" y="100" fill="var(--cost)" font-weight="600">LRAC</text>
+        <circle cx="330" cy="190" r="4" fill="var(--ink)"/>
+        <line class="gridline" x1="330" y1="190" x2="330" y2="260"/>
+        <text class="lbl-dim" x="310" y="273">MES</text>
+        <text class="lbl-dim" x="120" y="230">economies of scale</text>
+        <text class="lbl-dim" x="440" y="230">diseconomies of scale</text>
+      </svg>
+      <figcaption>The LRAC is itself U-shaped, running through the lowest point of every SRAC scallop — "enveloping" the lowest cost achievable at each output level as the firm resizes its plant.</figcaption>
+    </figure>
+
+    <div class="callout"><b>Minimum efficient scale (MES)</b> is the lowest output at which LRAC reaches its minimum — the smallest scale a firm needs to be fully cost-efficient. A low MES relative to the market (e.g. a bakery) allows many small firms to coexist; a high MES relative to the market (e.g. car manufacturing, aircraft) means only a few large firms can compete on cost, pushing the industry toward concentration.</div>
+  </div>
+</section>
+
+<!-- ============ ECONOMIES OF SCALE ============ -->
+<section class="topic cost" id="scale">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">5</span><h2>Internal &amp; external economies (and diseconomies) of scale</h2></div>
+    <p><b>Internal</b> economies come from the firm's own growth — the falling-LRAC portion of the curve above. <b>External</b> economies come from the whole industry or area growing, lowering every firm's costs regardless of its own size — shifting the entire LRAC curve down, not just moving along it.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Type</th><th>Internal (firm's own scale)</th><th>External (industry / location)</th></tr>
+        <tr><td><b>Purchasing / input costs</b></td><td>Bulk-buying raw materials and components at a discount</td><td>A cluster of suppliers nearby means every local firm gets components cheaply and fast</td></tr>
+        <tr><td><b>Technical</b></td><td>Large-scale machinery, specialisation and division of labour spread across more output</td><td>Shared local infrastructure — ports, power, roads — built for the whole industry</td></tr>
+        <tr><td><b>Managerial</b></td><td>Affording specialist managers (finance, HR, logistics) instead of generalists</td><td>A deep local pool of skilled, industry-trained labour to hire from (e.g. Silicon Valley engineers)</td></tr>
+        <tr><td><b>Financial</b></td><td>Large firms borrow more cheaply — lenders see them as lower risk</td><td>Knowledge / R&amp;D spillovers — university links, shared research, information networks</td></tr>
+        <tr><td><b>Marketing</b></td><td>Advertising and distribution costs spread over far more units sold</td><td>Reputation of a whole cluster or region (e.g. "Made in Germany" engineering)</td></tr>
+      </table>
+    </div>
+
+    <div class="two-col" style="margin-top:8px">
+      <div class="card" style="margin:0">
+        <p class="pill-label internal">internal diseconomies</p>
+        <p style="margin:0">A firm grows too large to manage well: communication breaks down, decision-making slows, workers feel alienated and less motivated. Rising LRAC beyond MES.</p>
+      </div>
+      <div class="card" style="margin:0">
+        <p class="pill-label external">external diseconomies</p>
+        <p style="margin:0">An overcrowded industry/location pushes up costs for every firm in it — traffic congestion, bidding up local land prices, or a shortage of skilled labour as every firm competes for the same pool.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REVENUE ============ -->
+<section class="topic revenue" id="revenue">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">6</span><h2>Total, average and marginal revenue</h2></div>
+    <div class="keyword-row">
+      <span class="kw" style="background:var(--rev-soft)">total revenue (TR)</span>
+      <span class="kw" style="background:var(--rev-soft)">average revenue (AR)</span>
+      <span class="kw" style="background:var(--rev-soft)">marginal revenue (MR)</span>
+      <span class="kw" style="background:var(--rev-soft)">price taker</span>
+      <span class="kw" style="background:var(--rev-soft)">price maker</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Measure</th><th>Formula</th><th>Meaning</th></tr>
+        <tr><td class="mono">TR</td><td class="mono">P × Q</td><td>Total sales revenue</td></tr>
+        <tr><td class="mono">AR</td><td class="mono">TR ÷ Q  (= P)</td><td>Revenue per unit sold — always equals price</td></tr>
+        <tr><td class="mono">MR</td><td class="mono">ΔTR ÷ ΔQ</td><td>Extra revenue from selling one more unit</td></tr>
+      </table>
+    </div>
+    <p>A <b>price taker</b> (perfect competition) faces a horizontal demand curve at the market price — it can sell any quantity at that price, so <span class="mono">D = AR = MR</span>, all flat. A <b>price maker</b> faces the market's own downward-sloping demand curve: to sell more it must cut price on <i>every</i> unit, so MR falls faster than AR and sits below it throughout.</p>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 620 300" width="100%">
+        <line class="axis" x1="55" y1="15" x2="55" y2="255"/>
+        <line class="axis" x1="55" y1="255" x2="600" y2="255"/>
+        <text class="lbl-dim" x="10" y="18">Revenue ($)</text>
+        <text class="lbl-dim" x="555" y="272">Quantity</text>
+        <!-- AR (demand) straight line -->
+        <line x1="70" y1="35" x2="560" y2="245" stroke="var(--rev)" stroke-width="2.4"/>
+        <text class="lbl" x="510" y="215" fill="var(--rev)" font-weight="600">AR (= demand)</text>
+        <!-- MR straight line, twice the slope, same intercept -->
+        <line x1="70" y1="35" x2="315" y2="255" stroke="var(--cost)" stroke-width="2.4"/>
+        <text class="lbl" x="200" y="150" fill="var(--cost)" font-weight="600">MR</text>
+        <!-- elastic / inelastic markers -->
+        <line class="gridline" x1="315" y1="255" x2="315" y2="30"/>
+        <circle cx="315" cy="140" r="4" fill="var(--ink)"/>
+        <text class="lbl" x="322" y="120">PED = 1</text>
+        <text class="lbl-dim" x="322" y="135">MR = 0</text>
+        <text class="lbl-dim" x="322" y="150">TR at its maximum</text>
+        <text class="lbl-dim" x="120" y="60">elastic (PED &gt; 1)</text>
+        <text class="lbl-dim" x="380" y="80">inelastic (PED &lt; 1)</text>
+      </svg>
+      <figcaption>MR starts at the same price-intercept as AR but falls twice as fast (a straight-line demand curve halves in this way). Where MR crosses zero, AR is exactly at its mid-point — the price-elastic upper half of demand meets the price-inelastic lower half, and that's precisely where PED = 1.</figcaption>
+    </figure>
+
+    <div class="callout"><b>Revenue-maximising relationship:</b> <span class="mono">MR = 0 ⇔ PED = 1 ⇔ TR at its maximum.</span> Above that point demand is elastic — cutting price raises TR (the extra units sold outweigh the lower price on each). Below it demand is inelastic — cutting price further actually lowers TR (the price cut on all units outweighs the small extra quantity sold). A firm aiming purely to maximise revenue (not profit) should produce exactly where MR = 0.</div>
+  </div>
+</section>
+
+<!-- ============ PROFIT ============ -->
+<section class="topic profit" id="profit">
+  <div class="wrap">
+    <div class="topic-head"><span class="topic-num">7</span><h2>Normal, subnormal and supernormal profit</h2></div>
+    <p>Profit = total revenue − total costs. But an economist's "costs" already include <b>normal profit</b> — the minimum return the entrepreneur needs to bother staying in this line of business at all, given what their capital and effort could earn elsewhere. It's the opportunity cost of enterprise, and it's built into TC, not paid out on top of it.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Profit type</th><th>Condition</th><th>What it means</th></tr>
+        <tr><td><b>Normal profit</b></td><td class="mono">TR = TC (TC includes normal profit)</td><td>The firm exactly covers all its costs, including the opportunity cost of the entrepreneur's own capital and effort. Enough to keep the firm in business — no more, no less.</td></tr>
+        <tr><td><b>Supernormal profit</b></td><td class="mono">TR &gt; TC</td><td>Profit above and beyond normal profit. Signals other firms to enter the market, chasing the same excess return.</td></tr>
+        <tr><td><b>Subnormal profit</b></td><td class="mono">TR &lt; TC</td><td>The firm is earning less than the opportunity cost of staying in business — a warning sign it may exit in the long run.</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="qa">
+        <p class="q">"If normal profit is basically covering costs, is subnormal profit actually a loss?"</p>
+        <p class="a">In accounting terms, not necessarily — the firm can still be covering its cash costs and even turning an accounting profit. In economic terms, yes, in the sense that matters for decisions: because normal profit is already folded into TC, "subnormal" means the firm is earning <i>less than</i> what its resources could earn doing something else. That's a real economic loss even if the bank balance is technically positive — the entrepreneur would be financially better off redeploying their capital and labour elsewhere.</p>
+      </div>
+      <div class="qa">
+        <p class="q">Real-world example: an independent café earning just enough to pay itself the owner's old salary</p>
+        <p class="a">If the return exactly matches what the owner gave up (their previous job's salary plus a normal return on the capital tied up), that's normal profit — rational to keep operating, not spectacular, not a warning sign.</p>
+      </div>
+      <div class="qa" style="margin-bottom:0">
+        <p class="q">Real-world example: a high-street shop competing with online retailers</p>
+        <p class="a">If it earns less than the owner could get investing that capital and time elsewhere, it's running subnormal profit — economically a loss, even if it isn't technically insolvent — and a classic reason independent shops close even while still "making money" on paper.</p>
+      </div>
+    </div>
+
+    <div class="callout"><b>Supernormal profit as a market signal:</b> new firms entering a market chasing supernormal profit is exactly the mechanism that (in a competitive market) erodes it back toward normal profit over time — supply expands, price falls, until TR = TC again.</div>
+  </div>
+</section>
+
+<footer class="wrap">Firm in Focus — built from CIE A Level Economics Chapter 34. For revision use alongside the coursebook, not a substitute for it.</footer>
+</div>
+
+<!-- ============ PRACTICE MODE ============ -->
+<div id="practice">
+<div class="hero wrap">
+  <div class="eyebrow">Classnotes practice</div>
+  <h1>Draw it. Explain it. Apply it.</h1>
+  <p>For each prompt: sketch the chart on paper (or in your notebook), then use the box below to explain what's happening in your own words and connect it to a real firm or industry. Your typed answers save in this browser only.</p>
+</div>
+
+<div class="wrap" id="promptList"></div>
+<footer class="wrap">Answers are stored locally in this browser tab only — they won't sync anywhere, so keep a copy of anything you don't want to lose.</footer>
+</div>
+
+<script>
+function setMode(m){
+  document.body.classList.toggle('mode-practice', m==='practice');
+  document.getElementById('btnLearn').classList.toggle('active', m==='learn');
+  document.getElementById('btnPractice').classList.toggle('active', m==='practice');
+  try{ localStorage.setItem('firm-focus-mode', m); }catch(e){}
+}
+(function(){
+  try{
+    var saved = localStorage.getItem('firm-focus-mode');
+    if(saved==='practice') setMode('practice');
+  }catch(e){}
+})();
+
+var PROMPTS = [
+  {
+    id:'p1', title:'1 — Total, average and marginal product',
+    ctx:'Sketch TP against number of workers, then AP and MP on a second set of axes below it.',
+    ask:'Explain why MP rises then falls, and identify the point where MP = AP. Apply it: think of a small business (e.g. a restaurant kitchen) — at what point would adding another worker start doing more harm than good?'
+  },
+  {
+    id:'p2', title:'2 — Short-run cost curves',
+    ctx:'Sketch AFC, AVC, ATC and MC on one set of axes.',
+    ask:'Explain why MC cuts AVC and ATC at their minimum points, and why AFC never has a U-shape. Apply it: for a firm you know of, what counts as its fixed cost and what counts as its variable cost?'
+  },
+  {
+    id:'p3', title:'3 — Isoquants and isocosts',
+    ctx:'Sketch two isoquants (Q1 and Q2) with an isocost line tangent to Q1.',
+    ask:'Explain what the tangency point represents, and why a firm would move away from any other point on the isoquant. Apply it: for a real industry, would you expect its least-cost combination to use more labour or more capital, and why?'
+  },
+  {
+    id:'p4', title:'4 — SRAC envelope and the LRAC curve',
+    ctx:'Sketch several SRAC curves and the LRAC envelope curve that wraps around them, marking the minimum efficient scale.',
+    ask:'Explain why the LRAC only touches each SRAC at one point. Apply it: name an industry with a high minimum efficient scale and one with a low minimum efficient scale, and explain what that implies about how many firms compete in each.'
+  },
+  {
+    id:'p5', title:'5 — Economies and diseconomies of scale',
+    ctx:'No chart needed here — instead, list two examples each of internal and external economies of scale for a real company you know.',
+    ask:'Explain the difference between an internal and an external economy of scale using your examples. Apply it: what might cause that company to run into diseconomies of scale if it kept growing?'
+  },
+  {
+    id:'p6', title:'6 — Average and marginal revenue',
+    ctx:'Sketch a downward-sloping AR curve with its MR curve below it, marking the point where MR = 0.',
+    ask:'Explain the relationship between MR = 0, PED = 1, and total revenue at that point. Apply it: for a real product, would cutting the price to sell more raise or lower total revenue right now — what would you need to know to answer that?'
+  },
+  {
+    id:'p7', title:'7 — Normal, subnormal and supernormal profit',
+    ctx:'No chart needed — instead, write TR and TC for three imagined scenarios: one earning normal profit, one supernormal, one subnormal.',
+    ask:'Explain, using your own numbers, why normal profit is included in total costs rather than sitting on top of them. Apply it: describe a real or plausible business currently earning subnormal profit, and explain what you would expect to happen to it over the next few years if that continues.'
+  }
+];
+
+var list = document.getElementById('promptList');
+PROMPTS.forEach(function(p){
+  var card = document.createElement('div');
+  card.className = 'prompt-card';
+  card.innerHTML =
+    '<h3>'+p.title+'</h3>'+
+    '<p class="ctx">'+p.ctx+'</p>'+
+    '<div class="draw-box">sketch your chart here (on paper / in your notebook)</div>'+
+    '<div class="applywrap"><label for="'+p.id+'">Explain &amp; apply</label><br>'+
+    '<textarea id="'+p.id+'" placeholder="'+p.ask.replace(/"/g,'&quot;')+'"></textarea></div>';
+  list.appendChild(card);
+});
+
+// best-effort local persistence per textarea
+PROMPTS.forEach(function(p){
+  var ta = document.getElementById(p.id);
+  if(!ta) return;
+  try{
+    var saved = localStorage.getItem('firm-focus-'+p.id);
+    if(saved) ta.value = saved;
+  }catch(e){}
+  ta.addEventListener('input', function(){
+    try{ localStorage.setItem('firm-focus-'+p.id, ta.value); }catch(e){}
+  });
+});
+</script>
+
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover{background:rgba(255,255,255,.18)}@media print{.site-pill{display:none}}</style><div class="site-pill"><a href="../../a-econ/a-level/ch-34/">← Chapter 34</a><a href="../../">Home</a></div></body></html>

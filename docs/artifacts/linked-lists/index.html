@@ -1,0 +1,1320 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Linked Lists</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#faf8f3;
+    --surface:#ffffff;
+    --surface-2:#f2efe6;
+    --ink:#1c211f;
+    --ink-soft:#3c443f;
+    --muted:#6b756e;
+    --line:#e1ddd0;
+    --accent:#0f6b5c;
+    --accent-soft:#e3f0eb;
+    --accent2:#b5541c;
+    --accent2-soft:#f7e9de;
+    --code-bg:#f3f0e6;
+    --code-ink:#2c332d;
+    --node-fill:#ffffff;
+    --node-stroke:#22403a;
+    --ptr-color:#b5541c;
+    --shadow: 0 1px 2px rgba(20,20,10,0.06), 0 6px 20px rgba(20,20,10,0.05);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121613;
+      --surface:#191f1b;
+      --surface-2:#20271f;
+      --ink:#eef1ec;
+      --ink-soft:#c9d1c9;
+      --muted:#8fa094;
+      --line:#2b332c;
+      --accent:#4fd6b8;
+      --accent-soft:#1a3630;
+      --accent2:#e6a06a;
+      --accent2-soft:#332319;
+      --code-bg:#161c17;
+      --code-ink:#dbe6dd;
+      --node-fill:#1c231e;
+      --node-stroke:#7fd9c1;
+      --ptr-color:#e6a06a;
+      --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121613;
+    --surface:#191f1b;
+    --surface-2:#20271f;
+    --ink:#eef1ec;
+    --ink-soft:#c9d1c9;
+    --muted:#8fa094;
+    --line:#2b332c;
+    --accent:#4fd6b8;
+    --accent-soft:#1a3630;
+    --accent2:#e6a06a;
+    --accent2-soft:#332319;
+    --code-bg:#161c17;
+    --code-ink:#dbe6dd;
+    --node-fill:#1c231e;
+    --node-stroke:#7fd9c1;
+    --ptr-color:#e6a06a;
+    --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Source Sans 3', system-ui, sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    padding-inline:16px;
+  }
+  ::selection{ background: var(--accent-soft); color:var(--ink); }
+
+  a{ color:var(--accent); }
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding-block: 28px 80px;
+  }
+
+  header.hero{
+    padding-block: 8px 28px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 600;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size: clamp(2rem, 5vw, 2.7rem);
+    line-height:1.08;
+    margin: 8px 0 10px;
+    text-wrap: balance;
+  }
+  .dek{
+    color: var(--muted);
+    font-size: 1.02rem;
+    max-width: 60ch;
+  }
+  .meta-row{
+    margin-top:16px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    padding:4px 9px;
+    border-radius:99px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+  }
+
+  nav.toc{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 8px;
+    margin: 22px 0 8px;
+    padding: 12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+  }
+  nav.toc a{
+    font-size:13px;
+    font-family:'IBM Plex Mono', monospace;
+    text-decoration:none;
+    color:var(--ink-soft);
+    padding:5px 9px;
+    border-radius:6px;
+  }
+  nav.toc a:hover{ background:var(--surface-2); color:var(--accent); }
+
+  section{
+    margin-top:44px;
+    scroll-margin-top: 16px;
+  }
+  h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size: 1.55rem;
+    margin: 0 0 6px;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  h2 .num{
+    font-family:'IBM Plex Mono', monospace;
+    color: var(--accent2);
+    font-size: 0.95rem;
+    font-weight:600;
+  }
+  h3{
+    font-family:'Source Sans 3', sans-serif;
+    font-weight:700;
+    font-size:1.08rem;
+    margin: 22px 0 8px;
+    color:var(--ink);
+  }
+  p{ margin: 10px 0; }
+  .lede{ color:var(--ink-soft); }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+    margin: 14px 0;
+  }
+  .note{
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size:0.95rem;
+  }
+  .note strong{ color: var(--accent); }
+  .warn{
+    border-left: 3px solid var(--accent2);
+    background: var(--accent2-soft);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size:0.95rem;
+  }
+  .warn strong{ color: var(--accent2); }
+
+  code{
+    font-family:'IBM Plex Mono', monospace;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 1px 5px;
+    border-radius:4px;
+    font-size: 0.9em;
+  }
+  pre{
+    font-family:'IBM Plex Mono', monospace;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 14px 16px;
+    border-radius: 10px;
+    overflow-x:auto;
+    font-size: 13.2px;
+    line-height:1.55;
+    border:1px solid var(--line);
+    margin: 10px 0;
+  }
+  pre code{ background:none; padding:0; }
+
+  table{
+    border-collapse: collapse;
+    width:100%;
+    font-size: 14px;
+    margin: 10px 0;
+  }
+  th, td{
+    border:1px solid var(--line);
+    padding: 7px 10px;
+    text-align:left;
+    font-variant-numeric: tabular-nums;
+  }
+  th{
+    background: var(--surface-2);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--muted);
+  }
+  .tbl-wrap{ overflow-x:auto; }
+
+  ul, ol{ padding-left: 22px; margin: 10px 0; }
+  li{ margin: 5px 0; }
+
+  .glossary dt{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    color:var(--accent);
+    margin-top:12px;
+  }
+  .glossary dd{ margin:2px 0 0 0; color:var(--ink-soft); }
+
+  /* tab switcher for pseudocode/python/java */
+  .tabs{ display:flex; gap:4px; margin: 12px 0 0; flex-wrap:wrap; }
+  .tab-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    padding:6px 12px;
+    border-radius: 7px 7px 0 0;
+    border:1px solid var(--line);
+    border-bottom:none;
+    background:var(--surface-2);
+    color:var(--muted);
+    cursor:pointer;
+  }
+  .tab-btn[aria-selected="true"]{
+    background:var(--code-bg);
+    color:var(--ink);
+    font-weight:600;
+  }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+  .tab-panel pre{ margin-top:0; border-top-left-radius:0; }
+
+  /* SVG diagram */
+  .diagram-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding: 18px 14px;
+    box-shadow: var(--shadow);
+    margin:14px 0;
+    overflow-x:auto;
+  }
+  .diagram-card svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+  .cap{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--muted);
+    text-align:center;
+    margin-top:8px;
+  }
+
+  /* exam question card */
+  .exam-card{
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    margin:16px 0;
+    box-shadow: var(--shadow);
+  }
+  .exam-head{
+    background: var(--surface-2);
+    padding:10px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .exam-src{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--muted);
+  }
+  .marks{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    background: var(--accent);
+    color: var(--surface);
+    padding:2px 9px;
+    border-radius:99px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .exam-body{ padding: 14px 16px; background:var(--surface); }
+  .examiner{
+    background: var(--surface-2);
+    border-top:1px dashed var(--line);
+    padding:12px 16px;
+    font-size:0.92rem;
+  }
+  .examiner .who{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--accent2);
+    font-weight:700;
+    display:block;
+    margin-bottom:4px;
+  }
+
+  details.answer{
+    margin-top:10px;
+    border:1px dashed var(--line);
+    border-radius:8px;
+    background:var(--surface-2);
+  }
+  details.answer summary{
+    cursor:pointer;
+    padding:8px 12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--accent);
+  }
+  details.answer .answer-body{ padding: 0 14px 12px; font-size:0.93rem; }
+
+  footer{
+    margin-top:56px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:12.5px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  @media (max-width:480px){
+    h1{ font-size:1.7rem; }
+    .exam-head{ flex-direction:column; align-items:flex-start; }
+  }
+
+  /* step-through visualiser */
+  .stepper{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding: 14px 14px 16px;
+    margin: 18px 0;
+    box-shadow: var(--shadow);
+  }
+  .stepper-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--accent2);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .stepper-controls{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+  .step-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    padding:7px 12px;
+    border-radius:7px;
+    border:1px solid var(--line);
+    background:var(--surface-2);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .step-btn:hover:not(:disabled){ border-color:var(--accent); color:var(--accent); }
+  .step-btn:disabled{ opacity:0.4; cursor:default; }
+  .step-btn.primary{ background:var(--accent); border-color:var(--accent); color:var(--surface); font-weight:600; }
+  .step-btn.primary:hover:not(:disabled){ filter:brightness(1.08); color:var(--surface); }
+  .step-count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--muted);
+    margin-left:auto;
+    font-variant-numeric: tabular-nums;
+  }
+  .stepper-pointers{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .ptr-badge{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    padding:4px 10px;
+    border-radius:99px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+  }
+  .ptr-badge.hl{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); font-weight:600; }
+  .stepper-array{ margin-bottom:8px; }
+  .stepper-array-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--muted);
+    margin-bottom:4px;
+  }
+  .stepper-row{
+    display:flex;
+    gap:4px;
+    overflow-x:auto;
+    padding-bottom:4px;
+  }
+  .stepper-row .cell{
+    flex: 0 0 auto;
+    min-width:36px;
+    border:1.5px solid var(--line);
+    border-radius:7px;
+    background:var(--surface-2);
+    text-align:center;
+    padding:4px 2px 6px;
+  }
+  .stepper-row .cell-idx{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px;
+    color:var(--muted);
+  }
+  .stepper-row .cell-val{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink);
+    margin-top:1px;
+  }
+  .stepper-row .cell-cur, .stepper-row .cell-new{
+    border-color:var(--accent);
+    background:var(--accent-soft);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+  }
+  .stepper-row .cell-prev{
+    border-color:var(--accent2);
+    background:var(--accent2-soft);
+  }
+  .stepper-caption{
+    font-size:0.92rem;
+    color:var(--ink-soft);
+    background:var(--surface-2);
+    border-radius:8px;
+    padding:10px 12px;
+    margin-top:10px;
+    min-height:2.6em;
+  }
+  .stepper-caption code{ background:none; padding:0; color:var(--accent); }
+
+  .stepper-code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.3px;
+    line-height:1.6;
+    background:var(--code-bg);
+    color:var(--code-ink);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding: 10px 0;
+    overflow-x:auto;
+    margin-top:4px;
+  }
+  .code-line{
+    display:block;
+    padding: 1px 14px;
+    white-space:pre;
+    border-left:3px solid transparent;
+  }
+  .code-line.active{
+    background: var(--accent-soft);
+    border-left-color: var(--accent);
+    color: var(--ink);
+    font-weight:600;
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">A-Level Computer Science &middot; 9618 &middot; Data Structures &amp; ADTs</div>
+    <h1>Linked Lists</h1>
+    <p class="dek">How an array-based linked list actually works: nodes, pointers, the heap of free space, and the find / insert / delete algorithms &mdash; with real Cambridge exam questions and examiner-report warnings built in.</p>
+    <div class="meta-row">
+      <span class="tag">Coursebook 19.1 &amp; 10.4</span>
+      <span class="tag">Syllabus 9618</span>
+      <span class="tag">Papers 2 &amp; 3</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Contents">
+    <a href="#concept">1. The idea</a>
+    <a href="#anatomy">2. Anatomy</a>
+    <a href="#find">3. Finding an item</a>
+    <a href="#insert">4. Inserting</a>
+    <a href="#delete">5. Deleting</a>
+    <a href="#compare">6. vs. arrays</a>
+    <a href="#exam">7. Exam corner</a>
+    <a href="#glossary">8. Glossary</a>
+  </nav>
+
+  <section id="concept">
+    <h2><span class="num">01</span> The idea</h2>
+    <p class="lede">A <strong>linked list</strong> is an Abstract Data Type (ADT): a collection of data plus a defined set of operations on it &mdash; find, add, delete &mdash; where you only care <em>what</em> those operations do, not how they're built underneath.</p>
+    <p>Every item in the list ("node") is stored together with a pointer to the <em>next</em> item. A <code>startPointer</code> marks the first node. The last node's pointer is set to <code>&minus;1</code>, a <strong>null pointer</strong> &mdash; the signal that there's nothing further to follow.</p>
+
+    <div class="diagram-card">
+      <svg viewBox="0 0 720 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A linked list of four nodes: 27, 34, 82, 79, with a start pointer arrow into 27 and pointer arrows chaining each node to the next, ending in a null pointer.">
+        <text x="8" y="20" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--muted)">startPointer</text>
+        <line x1="8" y1="30" x2="55" y2="30" stroke="var(--ptr-color)" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- node 1 -->
+        <g transform="translate(55,45)">
+          <rect width="76" height="46" rx="6" fill="var(--node-fill)" stroke="var(--node-stroke)" stroke-width="1.6"/>
+          <line x1="54" y1="0" x2="54" y2="46" stroke="var(--node-stroke)" stroke-width="1.2"/>
+          <text x="27" y="29" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="600" fill="var(--ink)">27</text>
+          <text x="65" y="27" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--ptr-color)">&#8226;</text>
+        </g>
+        <line x1="131" y1="68" x2="215" y2="68" stroke="var(--ptr-color)" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- node 2 -->
+        <g transform="translate(215,45)">
+          <rect width="76" height="46" rx="6" fill="var(--node-fill)" stroke="var(--node-stroke)" stroke-width="1.6"/>
+          <line x1="54" y1="0" x2="54" y2="46" stroke="var(--node-stroke)" stroke-width="1.2"/>
+          <text x="27" y="29" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="600" fill="var(--ink)">34</text>
+        </g>
+        <line x1="291" y1="68" x2="375" y2="68" stroke="var(--ptr-color)" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- node 3 -->
+        <g transform="translate(375,45)">
+          <rect width="76" height="46" rx="6" fill="var(--node-fill)" stroke="var(--node-stroke)" stroke-width="1.6"/>
+          <line x1="54" y1="0" x2="54" y2="46" stroke="var(--node-stroke)" stroke-width="1.2"/>
+          <text x="27" y="29" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="600" fill="var(--ink)">82</text>
+        </g>
+        <line x1="451" y1="68" x2="535" y2="68" stroke="var(--ptr-color)" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- node 4 -->
+        <g transform="translate(535,45)">
+          <rect width="76" height="46" rx="6" fill="var(--node-fill)" stroke="var(--node-stroke)" stroke-width="1.6"/>
+          <line x1="54" y1="0" x2="54" y2="46" stroke="var(--node-stroke)" stroke-width="1.2"/>
+          <text x="27" y="29" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="600" fill="var(--ink)">79</text>
+          <text x="65" y="27" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--muted)">&#8709;</text>
+        </g>
+        <text x="573" y="30" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">null pointer</text>
+
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--ptr-color)"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="cap">Fig. 1 &mdash; a populated linked list (coursebook Fig. 10.12)</div>
+    </div>
+
+    <div class="note"><strong>Why bother?</strong> Linked lists keep data in order (usually ascending or descending) without having to shuffle every element along, the way inserting into the middle of a sorted array would. You only ever rewrite two pointers.</div>
+  </section>
+
+  <section id="anatomy">
+    <h2><span class="num">02</span> Anatomy: two arrays, one heap</h2>
+    <p>On the exam, a linked list is almost always <strong>implemented using two parallel 1D arrays</strong> of the same fixed size &mdash; never real pointers/memory addresses. This is the detail examiners repeatedly say candidates skip.</p>
+    <ul>
+      <li><code>myLinkedList</code> &mdash; holds the actual data, one item per index.</li>
+      <li><code>myLinkedListPointers</code> &mdash; holds, for the same index, the index of the <em>next</em> node in the list.</li>
+      <li><code>startPointer</code> &mdash; the index of the first node in the ordered list (<code>&minus;1</code> if the list is empty).</li>
+      <li><code>heapStartPointer</code> &mdash; the index of the first <em>free</em> slot. The unused array positions are themselves managed as a linked list &mdash; the "heap" or free list.</li>
+    </ul>
+    <p>Together, one array index represents one <strong>node</strong>: the data at <code>myLinkedList[i]</code> and the "next" pointer at <code>myLinkedListPointers[i]</code> belong to the same node.</p>
+
+    <h3>Worked example</h3>
+    <p>Starting from an empty 12-element list and adding <code>27, 19, 36, 42, 16</code> in that order &mdash; using the <strong>ordered insert</strong> algorithm in section 4, which walks the chain to splice each new node into its correct sorted position &mdash; the arrays end up like this:</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Index</th><th>myLinkedList</th><th>myLinkedListPointers</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>27</td><td>2</td><td></td></tr>
+          <tr><td>1</td><td>19</td><td>0</td><td></td></tr>
+          <tr><td>2</td><td>36</td><td>3</td><td></td></tr>
+          <tr><td>3</td><td>42</td><td>&minus;1</td><td></td></tr>
+          <tr><td>4</td><td>16</td><td>1</td><td><span class="tag">start&nbsp;pointer&nbsp;=&nbsp;4</span></td></tr>
+          <tr><td>5</td><td></td><td>6</td><td></td></tr>
+          <tr><td>6</td><td></td><td>7</td><td></td></tr>
+          <tr><td>7</td><td></td><td>8</td><td></td></tr>
+          <tr><td>8</td><td></td><td>9</td><td></td></tr>
+          <tr><td>9</td><td></td><td>10</td><td></td></tr>
+          <tr><td>10</td><td></td><td>11</td><td></td></tr>
+          <tr><td>11</td><td></td><td>&minus;1</td><td><span class="tag">heap&nbsp;start&nbsp;=&nbsp;5</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Read it by following the chain: <code>startPointer</code> is 4 &rarr; index 4 holds <strong>16</strong>, whose pointer is 1 &rarr; index 1 holds <strong>19</strong>, pointer 0 &rarr; <strong>27</strong>, pointer 2 &rarr; <strong>36</strong>, pointer 3 &rarr; <strong>42</strong>, pointer &minus;1 &rarr; end of list. So the pointers give the list order <strong>16, 19, 27, 36, 42</strong> &mdash; genuinely ascending, even though the items sit at whatever array index they happened to be allocated from the heap (in insertion order: 27, 19, 36, 42, 16). Only the pointer chain decides the list's real order; the physical array positions are just where each node's data happens to live.</p>
+    <div class="note"><strong>This is not insertion sort.</strong> Insertion sort (section 19.1.2) repeatedly shifts array elements along to sort a whole array that's already fully populated. This is different: it's inserting <em>one new node</em> into a linked list that is already sorted, by walking pointers to find the right gap and splicing it in &mdash; no data ever moves, only two pointers change. That's the entire point of using a linked list for ordered data instead of a plain array.</div>
+
+    <h3>To set up an empty linked list (pseudocode)</h3>
+    <pre><code>DECLARE myLinkedList ARRAY[0:11] OF INTEGER
+DECLARE myLinkedListPointers ARRAY[0:11] OF INTEGER
+DECLARE startPointer : INTEGER
+DECLARE heapStartPointer : INTEGER
+DECLARE index : INTEGER
+
+heapStartPointer &larr; 0
+startPointer &larr; -1        // list empty
+
+FOR index &larr; 0 TO 11
+    myLinkedListPointers[index] &larr; index + 1
+NEXT index
+
+// the heap is itself a linked list of every free space,
+// set up once when the linked list is initialised
+myLinkedListPointers[11] &larr; -1
+// the final heap pointer is -1: no further free links</code></pre>
+
+    <div class="stepper" id="stepper-setup">
+      <div class="stepper-title">Step through it &mdash; click Next</div>
+    </div>
+  </section>
+
+  <section id="find">
+    <h2><span class="num">03</span> Finding an item</h2>
+    <p>To search, start at <code>startPointer</code> and follow the chain of "next" pointers &mdash; comparing the data at each index &mdash; until either the item is found, or the pointer reaches <code>&minus;1</code> (not found). This is <strong>not</strong> a linear scan of the array from index 0; you must follow the links.</p>
+
+    <div class="tabs" role="tablist" data-group="find">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="find-pseudo">Pseudocode</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="find-py">Python</button>
+    </div>
+    <div class="tab-panel active" id="find-pseudo">
+      <pre><code>FUNCTION find(itemSearch) RETURNS INTEGER
+    DECLARE found : BOOLEAN
+    CONSTANT nullPointer = -1
+    itemPointer &larr; startPointer
+    found &larr; FALSE
+
+    WHILE (itemPointer &lt;&gt; nullPointer) AND NOT found DO
+        IF myLinkedList[itemPointer] = itemSearch
+          THEN
+            found &larr; TRUE
+          ELSE
+            itemPointer &larr; myLinkedListPointers[itemPointer]
+        ENDIF
+    ENDWHILE
+
+    RETURN itemPointer
+    // returns the item's index, or -1 if not found
+ENDFUNCTION</code></pre>
+    </div>
+    <div class="tab-panel" id="find-py">
+      <pre><code>def find(itemSearch):
+    found = False
+    itemPointer = startPointer
+    while itemPointer != nullPointer and not found:
+        if myLinkedList[itemPointer] == itemSearch:
+            found = True
+        else:
+            itemPointer = myLinkedListPointers[itemPointer]
+    return itemPointer</code></pre>
+    </div>
+
+    <div class="note"><strong>Trace tables come up constantly.</strong> Examiners set questions that ask you to trace <code>itemPointer</code> step by step. Practise writing out the pointer value on every loop iteration &mdash; not just the final answer.</div>
+
+    <h3>Worked trace: searching for 42</h3>
+    <p>Using the linked list from the worked example above (<code>startPointer = 4</code>, values <code>16&rarr;19&rarr;27&rarr;36&rarr;42</code> in that pointer order), here's <code>find(42)</code> traced iteration by iteration:</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Iteration</th><th>itemPointer</th><th>myLinkedList[itemPointer]</th><th>= itemSearch (42)?</th><th>next itemPointer &larr;</th><th>found</th></tr></thead>
+        <tbody>
+          <tr><td>start</td><td>4</td><td>16</td><td>no</td><td><code>myLinkedListPointers[4]</code></td><td>FALSE</td></tr>
+          <tr><td>1</td><td>1</td><td>19</td><td>no</td><td><code>myLinkedListPointers[1]</code></td><td>FALSE</td></tr>
+          <tr><td>2</td><td>0</td><td>27</td><td>no</td><td><code>myLinkedListPointers[0]</code></td><td>FALSE</td></tr>
+          <tr><td>3</td><td>2</td><td>36</td><td>no</td><td><code>myLinkedListPointers[2]</code></td><td>FALSE</td></tr>
+          <tr><td>4</td><td>3</td><td>42</td><td><strong>yes</strong></td><td>&mdash;</td><td>TRUE</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Loop exits because <code>found</code> is now <code>TRUE</code>. <code>RETURN itemPointer</code> gives back <strong>3</strong> &mdash; the array index where 42 happens to be stored. It took four hops to get there because 42 is the <em>last</em> item in sorted order, even though it only sits three slots into the physical array.</p>
+
+    <div class="exam-card">
+      <div class="exam-head">
+        <span class="exam-src">9618/12 &middot; Nov 2022 &middot; Question 11 (adapted pattern)</span>
+        <span class="marks">trace-table style</span>
+      </div>
+      <div class="exam-body">
+        <p>This is exactly the style examiners use: give a populated linked list and its pointers, then ask you to complete a trace table showing <code>itemPointer</code> at every pass of the loop for a given search value, before stating whether the item is found.</p>
+        <div class="examiner">
+          <span class="who">Examiner report &mdash; November 2022, Q11(a)</span>
+          "The vast majority of candidates recognised how <code>NextPointer</code> was used to order the linked list. Many candidates gave fully correct answers." &mdash; but full marks on the accompanying pseudocode/trace parts were rarer: "very few candidates achieved full marks. Typical errors included an incorrect WHILE condition, incorrect assignment of the next value of Pointer, missing out THEN in the IF statement..."
+        </div>
+      </div>
+    </div>
+
+    <div class="stepper" id="stepper-find">
+      <div class="stepper-title">Step through it &mdash; searching for 42</div>
+    </div>
+  </section>
+
+  <section id="insert">
+    <h2><span class="num">04</span> Inserting an item</h2>
+    <p>Adding an item always means the same first step &mdash; take the next free slot from the <strong>heap</strong> and write the data there. What changes is where the new node gets stitched into the chain.</p>
+
+    <h3>Ordered insert &mdash; keeps the list sorted</h3>
+    <p>This is the version behind the worked example in section 2. It walks the pointers to find the correct sorted position (the node whose data is just larger than the new item), then splices the new node in between its predecessor and that node &mdash; no data ever moves, only pointers.</p>
+    <pre><code>PROCEDURE linkedListAdd(itemAdd)
+  IF heapStartPointer = nullPointer
+    THEN
+      OUTPUT "Linked list full"
+    ELSE
+      // claim the next free slot from the heap
+      newPointer &larr; heapStartPointer
+      heapStartPointer &larr; myLinkedListPointers[heapStartPointer]
+      myLinkedList[newPointer] &larr; itemAdd
+
+      IF (startPointer = nullPointer) OR (itemAdd &lt; myLinkedList[startPointer])
+        THEN
+          // itemAdd is the new smallest value: insert at the head
+          myLinkedListPointers[newPointer] &larr; startPointer
+          startPointer &larr; newPointer
+        ELSE
+          // walk the chain to find the node just before the right spot
+          previousPointer &larr; startPointer
+          currentPointer &larr; myLinkedListPointers[startPointer]
+          WHILE (currentPointer &lt;&gt; nullPointer) AND (myLinkedList[currentPointer] &lt; itemAdd) DO
+              previousPointer &larr; currentPointer
+              currentPointer &larr; myLinkedListPointers[currentPointer]
+          ENDWHILE
+          // splice the new node in between previousPointer and currentPointer
+          myLinkedListPointers[newPointer] &larr; currentPointer
+          myLinkedListPointers[previousPointer] &larr; newPointer
+      ENDIF
+  ENDIF
+ENDPROCEDURE</code></pre>
+
+    <h3>Simple insert &mdash; the version given in the coursebook</h3>
+    <p>The AS-level pseudocode Cambridge actually gives (coursebook Table 19.16) is simpler: it skips the search entirely and always makes the new item the new head of the list. Fine for a stack-like structure, but it will <strong>not</strong> keep the list sorted &mdash; each new item just lands in front of whatever was already there.</p>
+    <pre><code>PROCEDURE linkedListAdd(itemAdd)
+  IF heapStartPointer = nullPointer
+    THEN
+      OUTPUT "Linked list full"
+    ELSE
+      tempPointer &larr; startPointer          // keep old start pointer
+      startPointer &larr; heapStartPointer     // new node claims this slot
+      heapStartPointer &larr; myLinkedListPointers[heapStartPointer]  // heap moves on
+      myLinkedList[startPointer] &larr; itemAdd
+      myLinkedListPointers[startPointer] &larr; tempPointer
+  ENDIF
+ENDPROCEDURE</code></pre>
+
+    <div class="warn"><strong>Exam trap:</strong> always check <code>heapStartPointer = &minus;1</code> (list full) before writing to the heap. Cambridge mark schemes give a method point specifically for this check &mdash; in both versions above.</div>
+
+    <div class="stepper" id="stepper-insert">
+      <div class="stepper-title">Step through it &mdash; building the worked example (27, 19, 36, 42, 16)</div>
+    </div>
+  </section>
+
+  <section id="delete">
+    <h2><span class="num">05</span> Deleting an item</h2>
+    <p>Deleting doesn't shuffle data along, unlike a plain array. Instead: find the node, splice it out by pointing its <em>predecessor</em> directly at its successor, then return the freed index to the front of the heap so it can be reused.</p>
+    <pre><code>PROCEDURE linkedListDelete(itemDelete)
+  IF startPointer = nullPointer
+    THEN
+      OUTPUT "Linked list empty"
+    ELSE
+      index &larr; startPointer
+      WHILE myLinkedList[index] &lt;&gt; itemDelete AND (index &lt;&gt; nullPointer) DO
+          oldIndex &larr; index
+          index &larr; myLinkedListPointers[index]
+      ENDWHILE
+
+      IF index = nullPointer
+        THEN
+          OUTPUT "Item ", itemDelete, " not found"
+        ELSE
+          // unhook the node and return its slot to the heap
+          tempPointer &larr; myLinkedListPointers[index]
+          myLinkedListPointers[index] &larr; heapStartPointer
+          heapStartPointer &larr; index
+          myLinkedListPointers[oldIndex] &larr; tempPointer
+      ENDIF
+  ENDIF
+ENDPROCEDURE</code></pre>
+    <div class="note"><strong>2022 examiner report, verbatim:</strong> "candidates are asked to explain how the simplified linked list structure could be improved... expected to explain how the spaces where data had been deleted could be re-used using a free list pointer." That free list <em>is</em> the heap above &mdash; know the term.</div>
+
+    <div class="stepper" id="stepper-delete">
+      <div class="stepper-title">Step through it &mdash; deleting 36</div>
+    </div>
+  </section>
+
+  <section id="compare">
+    <h2><span class="num">06</span> Linked list vs. plain array</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th></th><th>Sorted array</th><th>Linked list</th></tr></thead>
+        <tbody>
+          <tr><td>Insert in order</td><td>Shift every element after the insertion point</td><td>Rewrite two pointers</td></tr>
+          <tr><td>Delete</td><td>Shift every element after the deleted one</td><td>Rewrite two pointers; slot returned to heap</td></tr>
+          <tr><td>Direct access by position</td><td>O(1) &mdash; <code>array[i]</code></td><td>O(n) &mdash; must follow pointers from the start</td></tr>
+          <tr><td>Memory overhead</td><td>None extra</td><td>Second array needed, purely for pointers</td></tr>
+          <tr><td>Fixed capacity?</td><td>Yes</td><td>Yes (both use fixed-size arrays here)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>This trade-off &mdash; cheap insert/delete vs. expensive direct access &mdash; is exactly what several past-paper "explain the advantage / disadvantage" questions are testing. Say <em>why</em>, not just <em>that</em> it's faster or slower.</p>
+  </section>
+
+  <section id="exam">
+    <h2><span class="num">07</span> Exam corner</h2>
+    <p class="lede">Two real Cambridge 9618 questions, with the examiner-report commentary that followed them.</p>
+
+    <div class="note">
+      <strong>Which paper are you actually revising for?</strong> The 9618 syllabus tests linked lists in two very different formats, and the prep is different for each.
+      <div class="tbl-wrap" style="margin-top:10px;">
+        <table>
+          <thead><tr><th></th><th>Papers 2 &amp; 3</th><th>Paper 4</th></tr></thead>
+          <tbody>
+            <tr><td>Format</td><td>Written, on paper</td><td>Practical, on a computer</td></tr>
+            <tr><td>What you write</td><td>Cambridge pseudocode, by hand</td><td>Real code (usually Python) in an IDE</td></tr>
+            <tr><td>Can you test it?</td><td>No &mdash; it has to be right on paper, no computer in the room</td><td>Yes &mdash; you run it against test data and screenshot the output</td></tr>
+            <tr><td>What's actually hard</td><td>Recalling the correct logic and writing it out flawlessly from memory, unaided</td><td>Typing fluent, working code fast enough, and debugging under time pressure &mdash; no coursebook or internet either</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:10px 0 0;">Everything on this page &mdash; the pseudocode, the trace tables, the step-through visualisers &mdash; is aimed squarely at Papers 2 &amp; 3, where you genuinely have to hold the algorithm's logic in your head and write it correctly with no way to test it first. For Paper 4, the same underlying logic matters, but the goal shifts to being able to type it fluently as working Python (or Java/VB) and debug it live, since you'll have a real IDE and immediate feedback in that exam.</p>
+    </div>
+
+    <div class="exam-card">
+      <div class="exam-head">
+        <span class="exam-src">9618/21/O/N/22 &middot; Question 4</span>
+        <span class="marks">8 marks total</span>
+      </div>
+      <div class="exam-body">
+        <p><strong>(a)</strong> An ordered linked list stores single characters, accessed alphabetically. The diagram shows nodes <code>'C'</code>, <code>'J'</code>, <code>'L'</code> chained from the start pointer, with <code>'L'</code> pointing to a null pointer.</p>
+        <p><strong>(i)</strong> Nodes with data <code>'A'</code> and <code>'K'</code> are added; nodes <code>'J'</code> and <code>'L'</code> are deleted. Complete the diagram to show the new state, still accessible in alphabetical order. <em>[4]</em></p>
+        <p><strong>(ii)</strong> The same data could be stored in a 1D array (<code>'C'</code>, <code>'J'</code>, <code>'L'</code> in three consecutive elements). Explain the <strong>advantages</strong> of making the same changes to the linked list instead of to the array. <em>[2]</em></p>
+        <p><strong>(iii)</strong> Explain the <strong>disadvantages</strong> of making those changes to the linked list instead of the array. <em>[2]</em></p>
+        <details class="answer">
+          <summary>Show worked answer</summary>
+          <div class="answer-body">
+            <p><strong>(i)</strong> Start pointer &rarr; <code>'A'</code> &rarr; <code>'C'</code> &rarr; <code>'K'</code> &rarr; null. <code>'A'</code> takes a free heap slot and points to <code>'C'</code>'s old index; <code>'C'</code>'s pointer is redirected to <code>'K'</code>'s new slot; <code>'K'</code>'s pointer is set to null (&minus;1). The <code>'J'</code> and <code>'L'</code> slots return to the heap.</p>
+            <p><strong>(ii)</strong> Advantage: no need to shift every following element up/down to keep alphabetical order &mdash; only pointers change, which is faster for frequent insertions/deletions.</p>
+            <p><strong>(iii)</strong> Disadvantage: extra memory is needed for the second (pointer) array; to reach a given position you must follow pointers from the start rather than jumping straight to an index, so search by position is slower.</p>
+          </div>
+        </details>
+        <div class="examiner">
+          <span class="who">Examiner report &mdash; November 2022</span>
+          "Many fully correct answers were seen [in (a)(i)]... This was not well answered by most [in (ii)/(iii)], with few candidates gaining credit... Many answers did not make the connection with the task from part (a)(i), as directed in the question, and offered very generic answers."
+        </div>
+      </div>
+    </div>
+
+    <div class="exam-card">
+      <div class="exam-head">
+        <span class="exam-src">9618/21/O/N/22 &middot; Question 4(b)</span>
+        <span class="marks">4 marks</span>
+      </div>
+      <div class="exam-body">
+        <p>"A program will store data using a linked list like the one shown in part (a). Explain how the linked list <strong>can be implemented</strong>."</p>
+        <details class="answer">
+          <summary>Show worked answer</summary>
+          <div class="answer-body">
+            <p>Two 1D arrays are declared: one holds the data (characters), the other holds pointers (integers) to the index of the next node. Array elements sharing the same index form one node. A start-pointer variable holds the index of the first node; the last node's pointer is set to &minus;1 (null), which is not a valid index and signals the end of the list.</p>
+          </div>
+        </details>
+        <div class="examiner">
+          <span class="who">Examiner report &mdash; November 2022</span>
+          "Many candidates seemed to overlook the word 'implemented' and gave an abstract description of how a linked list operates [instead of the two-array structure]. Candidates should not assume that because a question shares key phrases with those from a past paper, the required answer is the same."
+        </div>
+      </div>
+    </div>
+
+    <div class="warn">
+      <strong>The single most repeated examiner complaint:</strong> confusing an abstract description of a linked list ("items point to the next item") with how it's actually <em>implemented</em> in pseudocode/an array (two parallel 1D arrays, a start pointer, a heap/free-list pointer). If a question says "implemented", you must name the two arrays and both pointers.
+    </div>
+  </section>
+
+  <section id="glossary">
+    <h2><span class="num">08</span> Glossary</h2>
+    <dl class="glossary">
+      <dt>Node</dt>
+      <dd>One item of data stored together with a pointer to the next item &mdash; on paper, one shared array index across <code>myLinkedList</code> and <code>myLinkedListPointers</code>.</dd>
+      <dt>Start pointer</dt>
+      <dd>Index of the first node in the ordered list; &minus;1 when the list is empty.</dd>
+      <dt>Null pointer</dt>
+      <dd>A pointer value (conventionally &minus;1) that is not a valid array index, marking the end of a chain.</dd>
+      <dt>Heap / free list</dt>
+      <dd>The set of unused array positions, itself managed as a linked list of available slots via a <code>heapStartPointer</code>.</dd>
+      <dt>Abstract Data Type (ADT)</dt>
+      <dd>A collection of data plus a defined set of operations on it (e.g. find, add, delete), independent of how it's implemented underneath.</dd>
+      <dt>Traversal</dt>
+      <dd>Following the chain of pointers from the start pointer to visit every node in order.</dd>
+    </dl>
+  </section>
+
+  <footer>
+    Built from A-Level Computer Science 2023 (Hodder, Ch. 10 &amp; 19.1), the Cambridge 9618 syllabus, and Cambridge 9618 past papers &amp; examiner reports 2021&ndash;2025.
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tabs').forEach(function(tabs){
+    var btns = tabs.querySelectorAll('.tab-btn');
+    btns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        btns.forEach(function(b){ b.setAttribute('aria-selected','false'); });
+        btn.setAttribute('aria-selected','true');
+        var container = tabs.parentElement;
+        container.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+        var target = container.querySelector('#' + btn.dataset.tab);
+        if(target) target.classList.add('active');
+      });
+    });
+  });
+
+  // ---- linked-list step-through visualiser ----
+  (function(){
+    var N = 12;
+
+    function emptyState(){
+      return { list: new Array(N).fill(null), ptr: new Array(N).fill(null), start: -1, heapStart: -1 };
+    }
+    function clone(s){
+      return { list: s.list.slice(), ptr: s.ptr.slice(), start: s.start, heapStart: s.heapStart };
+    }
+    function fmt(v){ return v === null ? '&mdash;' : (v === -1 ? '&minus;1' : String(v)); }
+
+    // ---- full pseudocode blocks, matched line-for-line to the <pre> blocks in the article ----
+    var CODE = {
+      setup: [
+        'DECLARE myLinkedList ARRAY[0:11] OF INTEGER',
+        'DECLARE myLinkedListPointers ARRAY[0:11] OF INTEGER',
+        'DECLARE startPointer : INTEGER',
+        'DECLARE heapStartPointer : INTEGER',
+        'DECLARE index : INTEGER',
+        '',
+        'heapStartPointer ← 0',
+        'startPointer ← -1        // list empty',
+        '',
+        'FOR index ← 0 TO 11',
+        '    myLinkedListPointers[index] ← index + 1',
+        'NEXT index',
+        '',
+        '// the heap is itself a linked list of every free space,',
+        '// set up once when the linked list is initialised',
+        'myLinkedListPointers[11] ← -1',
+        '// the final heap pointer is -1: no further free links'
+      ],
+      find: [
+        'FUNCTION find(itemSearch) RETURNS INTEGER',
+        '    DECLARE found : BOOLEAN',
+        '    CONSTANT nullPointer = -1',
+        '    itemPointer ← startPointer',
+        '    found ← FALSE',
+        '',
+        '    WHILE (itemPointer <> nullPointer) AND NOT found DO',
+        '        IF myLinkedList[itemPointer] = itemSearch',
+        '          THEN',
+        '            found ← TRUE',
+        '          ELSE',
+        '            itemPointer ← myLinkedListPointers[itemPointer]',
+        '        ENDIF',
+        '    ENDWHILE',
+        '',
+        '    RETURN itemPointer',
+        "    // returns the item's index, or -1 if not found",
+        'ENDFUNCTION'
+      ],
+      insert: [
+        'PROCEDURE linkedListAdd(itemAdd)',
+        '  IF heapStartPointer = nullPointer',
+        '    THEN',
+        '      OUTPUT "Linked list full"',
+        '    ELSE',
+        '      // claim the next free slot from the heap',
+        '      newPointer ← heapStartPointer',
+        '      heapStartPointer ← myLinkedListPointers[heapStartPointer]',
+        '      myLinkedList[newPointer] ← itemAdd',
+        '',
+        '      IF (startPointer = nullPointer) OR (itemAdd < myLinkedList[startPointer])',
+        '        THEN',
+        '          // itemAdd is the new smallest value: insert at the head',
+        '          myLinkedListPointers[newPointer] ← startPointer',
+        '          startPointer ← newPointer',
+        '        ELSE',
+        '          // walk the chain to find the node just before the right spot',
+        '          previousPointer ← startPointer',
+        '          currentPointer ← myLinkedListPointers[startPointer]',
+        '          WHILE (currentPointer <> nullPointer) AND (myLinkedList[currentPointer] < itemAdd) DO',
+        '              previousPointer ← currentPointer',
+        '              currentPointer ← myLinkedListPointers[currentPointer]',
+        '          ENDWHILE',
+        '          // splice the new node in between previousPointer and currentPointer',
+        '          myLinkedListPointers[newPointer] ← currentPointer',
+        '          myLinkedListPointers[previousPointer] ← newPointer',
+        '      ENDIF',
+        '  ENDIF',
+        'ENDPROCEDURE'
+      ],
+      del: [
+        'PROCEDURE linkedListDelete(itemDelete)',
+        '  IF startPointer = nullPointer',
+        '    THEN',
+        '      OUTPUT "Linked list empty"',
+        '    ELSE',
+        '      index ← startPointer',
+        '      WHILE myLinkedList[index] <> itemDelete AND (index <> nullPointer) DO',
+        '          oldIndex ← index',
+        '          index ← myLinkedListPointers[index]',
+        '      ENDWHILE',
+        '',
+        '      IF index = nullPointer',
+        '        THEN',
+        '          OUTPUT "Item ", itemDelete, " not found"',
+        '        ELSE',
+        '          // unhook the node and return its slot to the heap',
+        '          tempPointer ← myLinkedListPointers[index]',
+        '          myLinkedListPointers[index] ← heapStartPointer',
+        '          heapStartPointer ← index',
+        '          myLinkedListPointers[oldIndex] ← tempPointer',
+        '      ENDIF',
+        '  ENDIF',
+        'ENDPROCEDURE'
+      ]
+    };
+
+    // ---- setup: build the empty list + heap chain ----
+    function genSetupSteps(){
+      var steps = [];
+      var s = emptyState();
+      steps.push({ state: clone(s), caption: 'Arrays are declared but nothing is initialised yet.', hl: {}, lines: [0,1,2,3,4] });
+
+      s.heapStart = 0;
+      steps.push({ state: clone(s), caption: '<code>heapStartPointer &larr; 0</code> &mdash; the free-slot chain will start at index 0.', hl: { heap: true }, lines: [6] });
+
+      s.start = -1;
+      steps.push({ state: clone(s), caption: '<code>startPointer &larr; -1</code> &mdash; the list is empty.', hl: { start: true }, lines: [7] });
+
+      for (var i = 0; i < N; i++){
+        s.ptr[i] = i + 1;
+        steps.push({ state: clone(s), caption: '<code>index = ' + i + '</code>: <code>myLinkedListPointers[' + i + '] &larr; ' + (i+1) + '</code> &mdash; slot ' + i + ' points to the next free slot.', hl: { cell: i, kind: 'cur' }, lines: [9,10] });
+      }
+
+      s.ptr[N-1] = -1;
+      steps.push({ state: clone(s), caption: '<code>myLinkedListPointers[' + (N-1) + '] &larr; -1</code> &mdash; the loop would have set the last slot to ' + N + ' (out of range), so this line corrects it to a null pointer, properly ending the heap chain.', hl: { cell: N-1, kind: 'cur' }, lines: [15] });
+
+      return { steps: steps, finalState: clone(s) };
+    }
+
+    // ---- insert: ordered insert of one value, returns steps + mutates a working state ----
+    function insertOne(state, val){
+      var steps = [];
+      function push(caption, hl, lines){ steps.push({ state: clone(state), caption: caption, hl: hl || {}, lines: lines || [] }); }
+
+      if (state.heapStart === -1){
+        push('Heap is full &mdash; cannot insert ' + val + '.', {}, [1,3]);
+        return steps;
+      }
+
+      var newPointer = state.heapStart;
+      push('<code>newPointer &larr; heapStartPointer = ' + newPointer + '</code> &mdash; claim this free slot from the heap.', { cell: newPointer, kind: 'new' }, [1,6]);
+
+      state.heapStart = state.ptr[newPointer];
+      push('<code>heapStartPointer &larr; myLinkedListPointers[' + newPointer + '] = ' + fmt(state.heapStart) + '</code> &mdash; heap pointer moves on.', { heap: true }, [7]);
+
+      state.list[newPointer] = val;
+      push('<code>myLinkedList[' + newPointer + '] &larr; ' + val + '</code> &mdash; the data is written into the new node.', { cell: newPointer, kind: 'new' }, [8]);
+
+      if (state.start === -1){
+        state.ptr[newPointer] = -1;
+        state.start = newPointer;
+        push('List was empty, so ' + val + ' becomes the only node: <code>myLinkedListPointers[' + newPointer + '] &larr; -1</code>, <code>startPointer &larr; ' + newPointer + '</code>.', { cell: newPointer, kind: 'new', start: true }, [10,11,13,14]);
+      } else if (val < state.list[state.start]){
+        var oldStart = state.start;
+        state.ptr[newPointer] = oldStart;
+        state.start = newPointer;
+        push(val + ' &lt; myLinkedList[startPointer] (' + state.list[oldStart] + '), so it becomes the new smallest value: <code>myLinkedListPointers[' + newPointer + '] &larr; ' + oldStart + '</code> (old start), <code>startPointer &larr; ' + newPointer + '</code>.', { cell: newPointer, kind: 'new', start: true }, [10,11,13,14]);
+      } else {
+        var previousPointer = state.start;
+        var currentPointer = state.ptr[state.start];
+        push(val + ' &ge; myLinkedList[startPointer] (' + state.list[state.start] + ') &mdash; walk the chain: <code>previousPointer &larr; startPointer = ' + previousPointer + '</code>, <code>currentPointer &larr; ' + fmt(currentPointer) + '</code>.', { cell: previousPointer, kind: 'prev' }, [15,16,17,18]);
+
+        while (currentPointer !== -1 && state.list[currentPointer] < val){
+          push('myLinkedList[currentPointer] (' + state.list[currentPointer] + ') &lt; ' + val + ' &mdash; keep walking.', { cell: currentPointer, kind: 'cur' }, [19]);
+          previousPointer = currentPointer;
+          currentPointer = state.ptr[currentPointer];
+          push('<code>previousPointer &larr; ' + previousPointer + '</code>, <code>currentPointer &larr; ' + fmt(currentPointer) + '</code>.', { cell: previousPointer, kind: 'prev' }, [20,21]);
+        }
+
+        push('Found the gap &mdash; splice ' + val + ' in between index ' + previousPointer + ' and ' + (currentPointer === -1 ? 'the end of the list' : 'index ' + currentPointer) + '.', { cell: previousPointer, kind: 'prev' }, [19,22]);
+
+        state.ptr[newPointer] = currentPointer;
+        state.ptr[previousPointer] = newPointer;
+        push('<code>myLinkedListPointers[' + newPointer + '] &larr; ' + fmt(currentPointer) + '</code>, <code>myLinkedListPointers[' + previousPointer + '] &larr; ' + newPointer + '</code>.', { cell: newPointer, kind: 'new' }, [23,24,25]);
+      }
+
+      return steps;
+    }
+
+    function genInsertSteps(initialState, values){
+      var state = clone(initialState);
+      var steps = [{ state: clone(state), caption: 'Starting point: empty list, full heap (from the setup above).', hl: {}, lines: [0] }];
+      values.forEach(function(val){
+        steps.push({ state: clone(state), caption: '&mdash; Inserting ' + val + ' &mdash;', hl: {}, lines: [0] });
+        steps = steps.concat(insertOne(state, val));
+      });
+      return { steps: steps, finalState: clone(state) };
+    }
+
+    // ---- find: search for a value ----
+    function genFindSteps(initialState, target){
+      var state = clone(initialState);
+      var steps = [];
+      var itemPointer = state.start;
+      steps.push({ state: clone(state), caption: '<code>itemPointer &larr; startPointer = ' + itemPointer + '</code>', hl: { cell: itemPointer, kind: 'cur' }, lines: [3] });
+
+      var found = false;
+      while (itemPointer !== -1 && !found){
+        if (state.list[itemPointer] === target){
+          found = true;
+          steps.push({ state: clone(state), caption: 'myLinkedList[' + itemPointer + '] (' + state.list[itemPointer] + ') = ' + target + ' &rarr; <code>found &larr; TRUE</code>', hl: { cell: itemPointer, kind: 'cur' }, lines: [6,7,8,9] });
+        } else {
+          steps.push({ state: clone(state), caption: 'myLinkedList[' + itemPointer + '] (' + state.list[itemPointer] + ') &ne; ' + target, hl: { cell: itemPointer, kind: 'cur' }, lines: [6,7,10,11] });
+          itemPointer = state.ptr[itemPointer];
+          steps.push({ state: clone(state), caption: '<code>itemPointer &larr; myLinkedListPointers[...] = ' + fmt(itemPointer) + '</code>', hl: { cell: itemPointer, kind: 'cur' }, lines: [11] });
+        }
+      }
+      steps.push({ state: clone(state), caption: 'Loop ends. <code>RETURN itemPointer</code> = ' + (itemPointer === -1 ? '&minus;1 (not found)' : itemPointer) + '.', hl: { cell: itemPointer, kind: 'cur' }, lines: [13,15] });
+      return { steps: steps, finalState: state };
+    }
+
+    // ---- delete: remove a value ----
+    function genDeleteSteps(initialState, target){
+      var state = clone(initialState);
+      var steps = [];
+      var index = state.start;
+      var oldIndex = null;
+      steps.push({ state: clone(state), caption: '<code>index &larr; startPointer = ' + index + '</code>', hl: { cell: index, kind: 'cur' }, lines: [5] });
+
+      while (index !== -1 && state.list[index] !== target){
+        steps.push({ state: clone(state), caption: 'myLinkedList[' + index + '] (' + state.list[index] + ') &ne; ' + target, hl: { cell: index, kind: 'cur' }, lines: [6] });
+        oldIndex = index;
+        index = state.ptr[index];
+        steps.push({ state: clone(state), caption: '<code>oldIndex &larr; ' + oldIndex + '</code>, <code>index &larr; myLinkedListPointers[' + oldIndex + '] = ' + fmt(index) + '</code>', hl: { cell: index, kind: 'cur', prevCell: oldIndex }, lines: [7,8] });
+      }
+
+      steps.push({ state: clone(state), caption: 'myLinkedList[' + index + '] (' + state.list[index] + ') = ' + target + ' &mdash; found it at index ' + index + '; predecessor is index ' + oldIndex + '.', hl: { cell: index, kind: 'cur', prevCell: oldIndex }, lines: [6,11] });
+
+      var tempPointer = state.ptr[index];
+      steps.push({ state: clone(state), caption: '<code>tempPointer &larr; myLinkedListPointers[' + index + '] = ' + fmt(tempPointer) + '</code> &mdash; save where the deleted node used to point.', hl: { cell: index, kind: 'cur' }, lines: [16] });
+
+      state.ptr[index] = state.heapStart;
+      steps.push({ state: clone(state), caption: '<code>myLinkedListPointers[' + index + '] &larr; heapStartPointer = ' + state.heapStart + '</code> &mdash; the freed slot joins the front of the heap chain.', hl: { cell: index, kind: 'cur' }, lines: [17] });
+
+      state.heapStart = index;
+      steps.push({ state: clone(state), caption: '<code>heapStartPointer &larr; ' + index + '</code> &mdash; heap now starts at the freed slot.', hl: { heap: true }, lines: [18] });
+
+      state.ptr[oldIndex] = tempPointer;
+      steps.push({ state: clone(state), caption: '<code>myLinkedListPointers[' + oldIndex + '] &larr; tempPointer = ' + fmt(tempPointer) + '</code> &mdash; predecessor now points straight past the deleted node.', hl: { cell: oldIndex, kind: 'prev' }, lines: [19] });
+
+      return { steps: steps, finalState: state };
+    }
+
+    // ---- renderer, shared by all four widgets ----
+    function renderStepper(container, steps, codeLines){
+      var title = container.querySelector('.stepper-title');
+      container.innerHTML = '';
+      if (title) container.appendChild(title);
+
+      container.insertAdjacentHTML('beforeend',
+        '<div class="stepper-controls">' +
+          '<button class="step-btn" data-action="reset" type="button">Reset</button>' +
+          '<button class="step-btn" data-action="prev" type="button">&larr; Back</button>' +
+          '<span class="step-count"></span>' +
+          '<button class="step-btn primary" data-action="next" type="button">Next &rarr;</button>' +
+        '</div>' +
+        '<div class="stepper-pointers"></div>' +
+        '<div class="stepper-array">' +
+          '<div class="stepper-array-label">myLinkedList</div>' +
+          '<div class="stepper-row" data-row="list"></div>' +
+        '</div>' +
+        '<div class="stepper-array">' +
+          '<div class="stepper-array-label">myLinkedListPointers</div>' +
+          '<div class="stepper-row" data-row="ptr"></div>' +
+        '</div>' +
+        '<pre class="stepper-code" data-code></pre>' +
+        '<div class="stepper-caption"></div>'
+      );
+
+      var els = {
+        count: container.querySelector('.step-count'),
+        pointers: container.querySelector('.stepper-pointers'),
+        rowList: container.querySelector('[data-row="list"]'),
+        rowPtr: container.querySelector('[data-row="ptr"]'),
+        code: container.querySelector('[data-code]'),
+        caption: container.querySelector('.stepper-caption'),
+        btnReset: container.querySelector('[data-action="reset"]'),
+        btnPrev: container.querySelector('[data-action="prev"]'),
+        btnNext: container.querySelector('[data-action="next"]')
+      };
+
+      // build the full code block once; each line is its own element so we can
+      // just toggle a class on it per step rather than re-render the text
+      var lineEls = codeLines.map(function(text){
+        var span = document.createElement('span');
+        span.className = 'code-line';
+        span.textContent = text.length ? text : ' ';
+        els.code.appendChild(span);
+        return span;
+      });
+
+      var i = 0;
+
+      function cellClass(idx, hl){
+        if (!hl) return '';
+        if (hl.cell === idx) return ' cell-' + (hl.kind || 'cur');
+        if (hl.prevCell === idx) return ' cell-prev';
+        return '';
+      }
+
+      function render(){
+        var step = steps[i];
+        var s = step.state;
+        els.count.textContent = 'Step ' + (i+1) + ' of ' + steps.length;
+        els.btnPrev.disabled = i === 0;
+        els.btnNext.disabled = i === steps.length - 1;
+
+        els.pointers.innerHTML =
+          '<span class="ptr-badge' + (step.hl.start ? ' hl' : '') + '">startPointer = ' + fmt(s.start) + '</span>' +
+          '<span class="ptr-badge' + (step.hl.heap ? ' hl' : '') + '">heapStartPointer = ' + fmt(s.heapStart) + '</span>';
+
+        els.rowList.innerHTML = s.list.map(function(v, idx){
+          return '<div class="cell' + cellClass(idx, step.hl) + '"><span class="cell-idx">' + idx + '</span><span class="cell-val">' + (v === null ? '&nbsp;' : v) + '</span></div>';
+        }).join('');
+
+        els.rowPtr.innerHTML = s.ptr.map(function(v, idx){
+          return '<div class="cell' + cellClass(idx, step.hl) + '"><span class="cell-idx">' + idx + '</span><span class="cell-val">' + (v === null ? '&nbsp;' : fmt(v)) + '</span></div>';
+        }).join('');
+
+        lineEls.forEach(function(el, idx){
+          el.classList.toggle('active', step.lines.indexOf(idx) !== -1);
+        });
+        if (step.lines.length){
+          lineEls[step.lines[0]].scrollIntoView({ block: 'nearest' });
+        }
+
+        els.caption.innerHTML = step.caption;
+      }
+
+      els.btnNext.addEventListener('click', function(){ if (i < steps.length - 1){ i++; render(); } });
+      els.btnPrev.addEventListener('click', function(){ if (i > 0){ i--; render(); } });
+      els.btnReset.addEventListener('click', function(){ i = 0; render(); });
+
+      render();
+    }
+
+    // ---- build the four demos, sharing one consistent worked example ----
+    var setupResult = genSetupSteps();
+    var insertResult = genInsertSteps(setupResult.finalState, [27, 19, 36, 42, 16]);
+    var findResult = genFindSteps(insertResult.finalState, 42);
+    var deleteResult = genDeleteSteps(insertResult.finalState, 36);
+
+    var mounts = {
+      'stepper-setup': { steps: setupResult.steps, code: CODE.setup },
+      'stepper-insert': { steps: insertResult.steps, code: CODE.insert },
+      'stepper-find': { steps: findResult.steps, code: CODE.find },
+      'stepper-delete': { steps: deleteResult.steps, code: CODE.del }
+    };
+    Object.keys(mounts).forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) renderStepper(el, mounts[id].steps, mounts[id].code);
+    });
+  })();
+</script>
+
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover{background:rgba(255,255,255,.18)}@media print{.site-pill{display:none}}</style><div class="site-pill"><a href="../../a-cs/as/ch-10/">← Chapter 10</a><a href="../../">Home</a></div></body></html>

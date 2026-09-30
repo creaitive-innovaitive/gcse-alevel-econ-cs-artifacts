@@ -1,0 +1,474 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>IGCSE CS Internet and WWW</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: single readable column with a sticky topic nav; concept sections, a card-sort flowchart, blockchain demo, exam-style questions, tips */
+:root{
+  --bg:#EFF2FA; --surface:#FFFFFF; --ink:#111A33; --muted:#4F5B7A; --line:#CFD6EA;
+  --accent:#2946D0; --accent-soft:#DDE3FB; --amber:#A65A00; --amber-soft:#F8E8CF; --bad:#B3372F; --bad-soft:#F8DEDB; --good:#1F7A4D; --good-soft:#D6EFE1;
+  --display:'Bricolage Grotesque','Segoe UI',sans-serif; --body:'Source Sans 3','Segoe UI',sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D1226; --surface:#151C36; --ink:#E6EAFA; --muted:#98A3C7; --line:#283154;
+  --accent:#8DA0FF; --accent-soft:#1F2A5C; --amber:#F0A04B; --amber-soft:#3A2A14; --bad:#F0857D; --bad-soft:#3E1D1B; --good:#6CCB9B; --good-soft:#123A28; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D1226; --surface:#151C36; --ink:#E6EAFA; --muted:#98A3C7; --line:#283154;
+  --accent:#8DA0FF; --accent-soft:#1F2A5C; --amber:#F0A04B; --amber-soft:#3A2A14; --bad:#F0857D; --bad-soft:#3E1D1B; --good:#6CCB9B; --good-soft:#123A28; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 var(--body);padding-inline:16px;padding-block:32px 64px;margin:0}
+.wrap{max-width:820px;margin-inline:auto;display:grid;gap:34px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,6vw,3rem);letter-spacing:-.02em}
+h2{font-size:1.55rem;letter-spacing:-.01em}
+h3{font-size:1.1rem}
+p{margin:0 0 .7em}
+code,.mono{font-family:var(--mono);font-size:.88em}
+.eyebrow{font:500 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+section{display:grid;gap:14px}
+section>*{min-width:0}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+nav a{white-space:nowrap;font:500 .74rem var(--mono);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:6px 10px;border-radius:99px;border:1px solid var(--line);background:var(--surface)}
+nav a:hover,nav a:focus-visible{color:var(--accent);border-color:var(--accent);outline:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card>:last-child{margin-bottom:0}
+.big{background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:18px 22px}
+.big p{margin:0;font:500 1.15rem/1.45 var(--display)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.two>*{min-width:0}
+.lbl{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 6px}
+.note{font-size:.85rem;color:var(--muted)}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chain span{font:500 .8rem var(--mono);padding:6px 10px;border-radius:6px;background:var(--accent-soft);color:var(--accent)}
+.chain i{font-style:normal;color:var(--muted)}
+.steps{display:grid;padding:0;margin:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:12px;padding-block:9px;position:relative}
+.steps li::before{content:counter(s);width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--bg);font:600 .85rem var(--mono);display:grid;place-items:center}
+.steps li:not(:last-child)::after{content:'';position:absolute;left:13px;top:38px;bottom:-4px;width:2px;background:var(--line)}
+.steps b{display:block}.steps span{color:var(--muted);font-size:.95rem}
+.flag{border:1px solid var(--amber);background:var(--amber-soft);border-radius:10px;padding:14px 18px;font-size:.95rem}
+.flag b{color:var(--amber)}
+.flag ul{margin:6px 0 0;padding-left:1.2em}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+button{font:inherit;cursor:pointer}
+button:focus-visible,summary:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn{font:500 .8rem var(--mono);letter-spacing:.04em;padding:9px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--bg)}
+.btn.alt{background:transparent;color:var(--accent)}
+.btn:hover{filter:brightness(1.08)}
+.tag{font:500 .68rem var(--mono);padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.tag.amber{background:var(--amber-soft);color:var(--amber)}
+.tag.good{background:var(--good-soft);color:var(--good)}
+.tag.bad{background:var(--bad-soft);color:var(--bad)}
+
+/* URL anatomy */
+.url{display:flex;flex-wrap:wrap;font:500 clamp(.85rem,3.4vw,1.15rem) var(--mono);gap:0;line-height:2.2;word-break:break-all}
+.url button{font:inherit;background:none;border:0;border-bottom:3px solid var(--c);color:var(--ink);padding:0 1px;margin:0;border-radius:3px 3px 0 0}
+.url button[aria-pressed=true]{background:var(--c-soft)}
+.url button:hover{background:var(--c-soft)}
+.url .sep{color:var(--muted)}
+.u1{--c:var(--accent);--c-soft:var(--accent-soft)}
+.u2{--c:var(--good);--c-soft:var(--good-soft)}
+.u3{--c:var(--amber);--c-soft:var(--amber-soft)}
+.u4{--c:var(--bad);--c-soft:var(--bad-soft)}
+#urlinfo{margin-top:8px;padding:12px 16px;border-radius:8px;background:var(--bg);border:1px solid var(--line);min-height:5.2em}
+#urlinfo b{font-family:var(--display)}
+
+/* Flowchart sorter */
+.sorter{display:grid;gap:16px}
+.slots{display:grid;gap:0}
+.slot{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:stretch;border:2px dashed var(--line);border-radius:10px;padding:8px 10px;min-height:64px;background:var(--surface);cursor:pointer}
+.slot>*{min-width:0}
+.slot.active{border-color:var(--accent);background:var(--accent-soft)}
+.slot.over{border-color:var(--accent);border-style:solid}
+.slot.filled{border-style:solid;cursor:default}
+.slot.ok{border-color:var(--good);background:var(--good-soft)}
+.slot.no{border-color:var(--bad);background:var(--bad-soft)}
+.slot .n{font:600 .78rem var(--mono);color:var(--muted);align-self:center;width:3.6em}
+.slot .ph{align-self:center;color:var(--muted);font-size:.9rem}
+.arrow{height:22px;display:grid;place-items:center;color:var(--muted);font:600 1rem var(--mono);line-height:1}
+.pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;border:1px dashed var(--line);border-radius:10px;min-height:64px}
+.pool.over{border-color:var(--accent)}
+.pc{flex:1 1 230px;min-width:0;text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:8px;padding:8px 12px;display:grid;gap:4px;font-size:.95rem;line-height:1.35;cursor:grab}
+.pc:hover{border-color:var(--c)}
+.pc .who{font:600 .66rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
+.slot .pc{cursor:pointer;flex:1}
+.pc.dragging{opacity:.4}
+.slot .why{font-size:.84rem;color:var(--muted);margin-top:2px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+#score{font:600 .95rem var(--mono);color:var(--muted)}
+#score.good{color:var(--good)}
+.who-legend{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Blockchain */
+.chainrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.blk{border:2px solid var(--good);border-radius:10px;background:var(--surface);padding:12px;display:grid;gap:6px;font-family:var(--mono);font-size:.78rem;min-width:0}
+.blk.broken{border-color:var(--bad);background:var(--bad-soft)}
+.blk input{font:inherit;font-size:.82rem;width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.blk .h{word-break:break-all}
+.blk small{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:.66rem}
+.blk .st{font-weight:600}
+.blk:not(.broken) .st{color:var(--good)}
+.blk.broken .st{color:var(--bad)}
+
+/* Questions */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 20px;display:grid;gap:10px}
+.q>*{min-width:0}
+.qh{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.qh b{font:500 .74rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.qh .mk{font:600 .8rem var(--mono);color:var(--muted);white-space:nowrap}
+.q p{margin:0}
+.q details{border-top:1px solid var(--line);padding-top:8px}
+.q summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.q .ans{margin-top:8px;display:grid;gap:8px}
+.q .ans ul{margin:0;padding-left:1.2em}
+.q .ans li{margin-bottom:3px}
+.q .why{background:var(--amber-soft);border-radius:8px;padding:10px 14px;font-size:.93rem}
+.q .why b{color:var(--amber)}
+.tips{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.tips>*{min-width:0}
+.tip h3{font-size:1rem;margin-bottom:4px}
+.tip p{margin:0;font-size:.96rem;color:var(--muted)}
+.tip .x{color:var(--bad);font:600 .7rem var(--mono);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:6px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+<header>
+<div class="eyebrow">Cambridge IGCSE Computer Science 0478 · Chapter 5.1</div>
+<h1>The Internet and the World Wide Web</h1>
+<p style="color:var(--muted);font-size:1.1rem">What the internet is, how the web sits on top of it, how a URL turns into a page on your screen, and what cookies, HTTPS and blockchain are doing behind the scenes.</p>
+</header>
+
+<nav aria-label="Sections">
+<a href="#ideas">Concepts</a><a href="#cookie">Cookie flowchart</a><a href="#chain">Blockchain</a><a href="#pp">Exam questions</a><a href="#tips">Top tips</a>
+</nav>
+
+<section id="ideas">
+<h2>The core idea</h2>
+<div class="big"><p>The internet is the network. The World Wide Web is one service that runs on it. When you type a web address, your browser uses the internet to ask a web server for a page, and DNS is what turns the name you typed into an address the network can use.</p></div>
+
+<div class="card">
+<div class="lbl">1 · Internet versus WWW</div>
+<div class="two">
+<div><h3>The internet</h3><p style="margin-top:6px">A huge worldwide network made of many smaller networks joined together. It is the hardware and connections: cables, routers, servers, satellites. It carries data for lots of services.</p></div>
+<div><h3>The World Wide Web</h3><p style="margin-top:6px">A collection of web pages and other resources stored on web servers. You reach them with a web browser, using URLs and the HTTP or HTTPS protocol. Pages are written in HTML.</p></div>
+</div>
+<p style="margin-top:12px"><b>Example.</b> Email, video calls (VoIP) and online games all use the internet, but they are not the web. Reading a news site in Chrome is the web. Think of the internet as the road network and the web as one of the things that drives along it.</p>
+</div>
+
+<div class="card">
+<div class="lbl">2 · URL, tap each part</div>
+<div class="url" role="group" aria-label="URL parts">
+<button class="u1" data-k="proto" aria-pressed="true">https</button><span class="sep">://</span><button class="u2" data-k="domain">www.school-shoes.com</button><button class="u3" data-k="path">/shop</button><button class="u4" data-k="file">/trainers.html</button>
+</div>
+<div id="urlinfo" aria-live="polite"></div>
+<p class="note" style="margin:8px 0 0">A URL (Uniform Resource Locator) is the full address of one resource on the web. A domain name is the human-friendly name of the website's host. A web page name or file name is the specific page.</p>
+</div>
+
+<div class="two">
+<div class="card"><div class="lbl">3 · HTML</div>
+<p>HyperText Markup Language is the code a page is written in. It describes the <b>structure and content</b>: headings, paragraphs, images, links. CSS handles how it looks. The browser reads the HTML and renders it as the page you see.</p>
+<p class="mono" style="background:var(--bg);padding:8px 10px;border-radius:6px;margin:0">&lt;h1&gt;Trainers&lt;/h1&gt;<br>&lt;p&gt;New stock in.&lt;/p&gt;</p></div>
+<div class="card"><div class="lbl">4 · Web browser</div>
+<p>Software that requests web pages and renders HTML so a person can read them. Typical functions:</p>
+<ul style="margin:0;padding-left:1.2em"><li>renders HTML and shows the page</li><li>address bar to enter a URL</li><li>stores bookmarks, history and cookies</li><li>tabs, back and forward buttons</li><li>can store saved passwords and form data</li></ul></div>
+</div>
+
+<div class="card">
+<div class="lbl">5 · HTTP and HTTPS</div>
+<p><b>HTTP</b> (HyperText Transfer Protocol) is the set of rules browsers and web servers use to request and send pages. Data sent this way is not encrypted, so anyone intercepting it can read it.</p>
+<p><b>HTTPS</b> is HTTP with encryption added, using <b>SSL/TLS</b>. The server proves who it is with a digital certificate, and the data travelling between browser and server is scrambled. The browser shows a padlock.</p>
+<p style="margin:0"><b>Example.</b> A card number typed into a shop's checkout is encrypted on the way, so someone capturing the traffic sees gibberish.</p>
+</div>
+
+<div class="card">
+<div class="lbl">6 · IP addresses and DNS</div>
+<p>Every device on a network has an <b>IP address</b>, a unique number that lets data be sent to the right place. Web servers have one too. People remember names, not numbers, so the <b>Domain Name System (DNS)</b> translates the domain name into an IP address.</p>
+<div class="two" style="margin-bottom:10px">
+<div><h3>IPv4</h3><p class="mono" style="margin:4px 0">192.168.1.10</p><p class="note" style="margin:0">32 bits, four numbers 0 to 255. About 4.3 billion addresses, which ran short.</p></div>
+<div><h3>IPv6</h3><p class="mono" style="margin:4px 0;word-break:break-all">2001:0db8:85a3:0000:0000:8a2e:0370:7334</p><p class="note" style="margin:0">128 bits, written in hexadecimal. Far more addresses.</p></div>
+</div>
+<div class="lbl">How DNS resolves a URL</div>
+<ol class="steps">
+<li><div><b>Browser sends the domain name to a DNS server</b><span>For example <code>www.school-shoes.com</code>.</span></div></li>
+<li><div><b>DNS server looks it up in its database</b><span>If it does not have the record, it passes the request on to another DNS server.</span></div></li>
+<li><div><b>The IP address is returned to the browser</b><span>If no record exists anywhere, an error such as "server not found" is shown.</span></div></li>
+<li><div><b>Browser contacts the web server at that IP address</b><span>It requests the page using HTTP or HTTPS.</span></div></li>
+</ol>
+</div>
+
+<div class="card">
+<div class="lbl">7 · Web server</div>
+<p style="margin:0">A computer that stores websites and sends pages to browsers on request. It listens for HTTP or HTTPS requests, finds the page, and sends it back. It can also create cookies and store user account data.</p>
+</div>
+
+<div class="card">
+<div class="lbl">8 · Cookies</div>
+<p>A cookie is a <b>small text file</b> a website's server creates and the browser stores on the user's device. It holds data such as an ID, preferences or basket contents. On later visits the browser sends it back so the site can recognise the user. Cookies are just data. They are not programs and cannot run or spread like a virus.</p>
+<div class="tblwrap"><table>
+<thead><tr><th></th><th>Session cookie</th><th>Persistent cookie</th></tr></thead>
+<tbody>
+<tr><td><b>Stored</b></td><td>In temporary memory</td><td>On the device's storage</td></tr>
+<tr><td><b>Lifetime</b></td><td>Deleted when the browser is closed</td><td>Kept until its expiry date or until the user deletes it</td></tr>
+<tr><td><b>Used for</b></td><td>Items in a shopping basket, staying logged in during one visit</td><td>Remembering a login, language or saved preferences, tracking browsing over time</td></tr>
+</tbody></table></div>
+<p style="margin:12px 0 0"><b>Uses:</b> saving login details, holding a shopping basket, remembering preferences, and recording browsing habits so a site can show targeted adverts. <b>Concern:</b> tracking cookies build a picture of what a person does online, which is a privacy issue.</p>
+</div>
+
+<div class="card">
+<div class="lbl">9 · Digital currency</div>
+<p style="margin:0">Money that exists only in electronic form, with no coins or notes. Some digital currency is controlled by a central body such as a bank. <b>Cryptocurrencies</b> like Bitcoin are <b>decentralised</b>: no single bank or government controls them, and transactions are checked and recorded by a network of computers. Cryptocurrency uses encryption and a blockchain to record who owns what.</p>
+</div>
+</section>
+
+<section id="cookie">
+<h2>Cookie flowchart: put the steps in order</h2>
+<p style="margin:0">Seven cards, one correct sequence. The coloured tag shows who is acting. Tap a card to drop it in the highlighted step, or drag it on a computer. Tap a placed card to send it back.</p>
+<div class="sorter">
+<div class="who-legend" id="legend"></div>
+<div class="slots" id="slots" aria-label="Flowchart steps"></div>
+<div class="pool" id="pool" aria-label="Cards to place"></div>
+<div class="bar"><button class="btn" id="check">Check order</button><button class="btn alt" id="reveal">Show answer</button><button class="btn alt" id="reset">Shuffle and restart</button><span id="score" aria-live="polite"></span></div>
+</div>
+<div class="flag"><b>Order trap.</b> The web server sends the page and creates the cookie in the same response. The browser then stores the cookie. The cookie only travels back to the server on the <i>next</i> visit, so "browser sends cookie" cannot come before "browser stores cookie".</div>
+</section>
+
+<section id="chain">
+<h2>Blockchain: why tampering shows</h2>
+<p style="margin:0">A blockchain is a digital ledger split into linked blocks. Each block holds transaction data, a timestamp, its own <b>hash</b> and the hash of the block before it. A hash is a fixed-length code worked out from the block's contents, so changing any data changes the hash.</p>
+<div class="card">
+<div class="lbl">Try it: edit a transaction</div>
+<div class="chainrow" id="bc"></div>
+<div class="bar" style="margin-top:12px"><button class="btn alt" id="bcreset">Restore original</button><span class="note" id="bcmsg" aria-live="polite"></span></div>
+<p class="note" style="margin:10px 0 0">Demo hash only, a simple stand-in for the real thing (real blockchains use SHA-256). The point is the behaviour: alter block 2 and block 3's stored "previous hash" no longer matches.</p>
+</div>
+<div class="two">
+<div class="card"><h3>Why it is hard to cheat</h3><p style="margin-top:6px">To hide a change, an attacker would have to recalculate every later block. And copies of the chain are held by many computers, so the altered version would not match the others.</p></div>
+<div class="card"><h3>Where it is used</h3><p style="margin-top:6px">Recording cryptocurrency transactions. It can also record other data that must not be changed later, such as ownership records.</p></div>
+</div>
+</section>
+
+<section id="pp">
+<h2>Exam-style questions</h2>
+<p class="note" style="margin:0">Written in the style, wording and mark allocations of Cambridge 0478 Paper 1, and marked with point-based schemes like the real ones. They are practice questions, not copied past-paper items. Try each before opening the answer.</p>
+
+<div class="q"><div class="qh"><b>Question 1</b><span class="mk">[2 marks]</span></div>
+<p>Give <b>two</b> differences between the internet and the World Wide Web.</p>
+<details><summary>Mark scheme and explainer</summary><div class="ans">
+<ul><li>The internet is the global network of networks / the infrastructure; the WWW is a collection of web pages and websites</li><li>The WWW is accessed using a web browser; the internet can be used without one</li><li>The WWW uses URLs and HTTP/HTTPS and is written in HTML; the internet also carries email, VoIP, file transfer</li><li>The WWW runs on top of / is a service using the internet</li></ul>
+<div class="why"><b>Examiner view.</b> You need two <i>contrasting</i> statements, each about a different thing. "The internet is bigger" gains nothing. Say what each one <i>is</i>.</div>
+</div></details></div>
+
+<div class="q"><div class="qh"><b>Question 2</b><span class="mk">[4 marks]</span></div>
+<p>The URL <code>https://www.school-shoes.com/shop/trainers.html</code> is entered into a web browser. Identify the <b>protocol</b>, the <b>domain name</b>, the <b>path</b> and the <b>web page name</b>.</p>
+<details><summary>Mark scheme and explainer</summary><div class="ans">
+<ul><li>Protocol: <code>https</code></li><li>Domain name: <code>www.school-shoes.com</code></li><li>Path: <code>/shop</code></li><li>Web page name (file): <code>trainers.html</code></li></ul>
+<div class="why"><b>Examiner view.</b> One mark each. Do not include <code>://</code> or slashes in the protocol and page name. A frequent slip is calling <code>.com</code> the domain name: it is only the top-level part.</div>
+</div></details></div>
+
+<div class="q"><div class="qh"><b>Question 3</b><span class="mk">[3 marks]</span></div>
+<p>Describe how the Domain Name System (DNS) is used to find a website when a URL is entered.</p>
+<details><summary>Mark scheme and explainer</summary><div class="ans">
+<ul><li>The browser sends the domain name / URL to a DNS server</li><li>The DNS server looks up the domain name in its database and finds the matching IP address</li><li>If not found, the request is passed on to another DNS server</li><li>The IP address is sent back to the browser, which uses it to contact the web server</li></ul>
+<div class="why"><b>Examiner view.</b> The answer is a translation from <i>name to IP address</i>. Do not say DNS "finds the web page" or "sends the page". The web server does that.</div>
+</div></details></div>
+
+<div class="q"><div class="qh"><b>Question 4</b><span class="mk">[2 marks]</span></div>
+<p>State <b>two</b> differences between a session cookie and a persistent cookie.</p>
+<details><summary>Mark scheme and explainer</summary><div class="ans">
+<ul><li>A session cookie is deleted when the browser is closed; a persistent cookie stays until it expires or the user deletes it</li><li>A session cookie is held in temporary memory; a persistent cookie is stored on the device's storage</li><li>Session cookies suit a shopping basket or single visit; persistent cookies suit remembered logins or preferences</li></ul>
+<div class="why"><b>Examiner view.</b> Write the answer as "session: X, persistent: Y". Saying only "one lasts longer" is too vague.</div>
+</div></details></div>
+
+<div class="q"><div class="qh"><b>Question 5</b><span class="mk">[4 marks]</span></div>
+<p>A customer visits an online shop for the first time, leaves, and later returns. Describe how the shop's web server uses a cookie to recognise the customer on the second visit.</p>
+<details><summary>Mark scheme and explainer</summary><div class="ans">
+<ul><li>On the first visit the web server creates a cookie containing data such as a customer ID</li><li>The cookie is sent to the browser and stored on the customer's device</li><li>On the return visit the browser sends the stored cookie to the web server with its request</li><li>The server reads the cookie, recognises the customer, and can load their saved details / preferences / basket</li></ul>
+<div class="why"><b>Examiner view.</b> This is the flowchart above written as prose. Four marks means four separate steps, in order. Say who does each thing (server creates, browser stores, browser sends back, server reads).</div>
+</div></details></div>
+
+<div class="q"><div class="qh"><b>Question 6</b><span class="mk">[3 marks]</span></div>
+<p>Explain why a bank's website uses HTTPS rather than HTTP.</p>
+<details><summary>Mark scheme and explainer</summary><div class="ans">
+<ul><li>HTTPS encrypts the data sent between the browser and the web server (using SSL/TLS)</li><li>So if the data is intercepted, it cannot be read / understood</li><li>Customers' login and account details are therefore protected</li><li>(Also accepted) HTTPS uses a digital certificate to show the site is genuine</li></ul>
+<div class="why"><b>Examiner view.</b> "It is more secure" earns nothing on its own. The mark is the word <b>encrypted</b>, followed by the consequence: intercepted data is unreadable.</div>
+</div></details></div>
+
+<div class="q"><div class="qh"><b>Question 7</b><span class="mk">[2 marks]</span></div>
+<p>Give <b>two</b> reasons why a person types a domain name into a browser instead of an IP address.</p>
+<details><summary>Mark scheme and explainer</summary><div class="ans">
+<ul><li>A domain name is easier to remember / type than a long number</li><li>A domain name is more meaningful and reflects the site's name</li><li>An IP address can change while the domain name stays the same</li></ul>
+<div class="why"><b>Examiner view.</b> "Easier" needs a reason to be safe: easier to <i>remember</i>. Then mention DNS does the conversion in the background.</div>
+</div></details></div>
+
+<div class="q"><div class="qh"><b>Question 8</b><span class="mk">[4 marks]</span></div>
+<p>Describe how a blockchain makes it difficult for someone to change a past transaction without being noticed.</p>
+<details><summary>Mark scheme and explainer</summary><div class="ans">
+<ul><li>Each block stores a hash calculated from its own data</li><li>Each block also stores the hash of the previous block, linking them in a chain</li><li>If data in a block is altered, its hash changes</li><li>The next block's stored previous hash no longer matches, so the chain is broken / tampering is detected</li><li>The chain is copied on many computers, so the altered copy can be compared against the others</li></ul>
+<div class="why"><b>Examiner view.</b> Take any four. The key chain of reasoning is: change data, so hash changes, so next block no longer matches. Use the words hash and previous block.</div>
+</div></details></div>
+
+<div class="q"><div class="qh"><b>Question 9</b><span class="mk">[2 marks]</span></div>
+<p>A student says: "Cookies are viruses that copy themselves onto my computer." Explain why the student is wrong.</p>
+<details><summary>Mark scheme and explainer</summary><div class="ans">
+<ul><li>A cookie is a small text file / data, not a program</li><li>It cannot run or replicate itself, or damage files</li><li>(Also accepted) it is created by a website the user visited, and only holds data such as preferences or an ID</li></ul>
+<div class="why"><b>Examiner view.</b> Cookies do raise a <i>privacy</i> concern through tracking. That is different from being malware, and the question only asks about the second.</div>
+</div></details></div>
+</section>
+
+<section id="tips">
+<h2>Top tips for the exam</h2>
+<div class="tips">
+<div class="card tip"><span class="x">Trap</span><h3>Internet is not the web</h3><p>Do not use the words as if they mean the same thing. Internet: the network. Web: pages reached through a browser. Email is internet, not web.</p></div>
+<div class="card tip"><span class="x">Trap</span><h3>Cookies are not viruses</h3><p>They are small text files holding data. They cannot run code. Say "text file" or "data", never "program".</p></div>
+<div class="card tip"><span class="x">Trap</span><h3>HTTPS means encrypted, not "safe"</h3><p>A padlock means the connection is encrypted. It does not prove the site is honest or free of malware. Use the word <b>encrypted</b>.</p></div>
+<div class="card tip"><span class="x">Trap</span><h3>DNS returns an IP address</h3><p>It does not fetch the page. The sequence is: name to DNS, IP back, browser contacts web server, page sent.</p></div>
+<div class="card tip"><h3>Match the command word</h3><p><b>State/Give</b>: short fact. <b>Describe</b>: what happens, in order. <b>Explain</b>: a point plus "because" or "so that". Marks are almost always one per point.</p></div>
+<div class="card tip"><h3>Say who does what</h3><p>In cookie and DNS questions, name the actor in every sentence: the server creates, the browser stores and sends, the DNS server looks up.</p></div>
+<div class="card tip"><h3>Session versus persistent</h3><p>Give the deletion rule for each: session ends when the browser closes, persistent stays until expiry or manual deletion. Add an example use.</p></div>
+<div class="card tip"><h3>Blockchain chain of reasoning</h3><p>Data changes, so the hash changes, so the next block's previous-hash no longer matches. Then mention many copies on many computers.</p></div>
+<div class="card tip"><h3>Learn the URL parts by heart</h3><p>Protocol, domain name, path, page name. Easy marks for labelling a URL, so practise splitting a few every week.</p></div>
+<div class="card tip"><h3>Use exact terms</h3><p>Web server, web browser, domain name, IP address, HTML, SSL/TLS, hash. Vague words like "the computer" and "the internet thing" lose marks.</p></div>
+</div>
+</section>
+
+<p class="note">Revision notes for Cambridge IGCSE Computer Science (0478), Chapter 5.1. Check details against your syllabus and textbook.</p>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+
+/* URL anatomy */
+const urlText={
+ proto:['Protocol','<code>https</code> is the set of rules used to request and send the page. The S means the data is encrypted. It is followed by <code>://</code>.'],
+ domain:['Domain name','<code>www.school-shoes.com</code> is the name of the website\'s host. DNS converts it into the IP address of the web server.'],
+ path:['Path','<code>/shop</code> is the folder on the web server where the page is stored.'],
+ file:['Web page name','<code>trainers.html</code> is the specific file requested. The <code>.html</code> shows it is a page written in HTML.']
+};
+function showUrl(k){
+ document.querySelectorAll('.url button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));
+ $('#urlinfo').innerHTML='<b>'+urlText[k][0]+'.</b> '+urlText[k][1];
+}
+document.querySelectorAll('.url button').forEach(b=>b.addEventListener('click',()=>showUrl(b.dataset.k)));
+showUrl('proto');
+
+/* Cookie flowchart sorter */
+const ACTORS={user:['User','var(--accent)'],browser:['Browser','var(--good)'],dns:['DNS server','var(--amber)'],server:['Web server','var(--bad)']};
+const CARDS=[
+ {a:'user',t:'The user types the website\'s URL into the browser for the first time.',w:'Everything starts with a request from the user.'},
+ {a:'dns',t:'A DNS server finds the IP address that matches the domain name and sends it back.',w:'The browser needs an IP address before it can reach the server.'},
+ {a:'browser',t:'The browser sends a request for the page to the web server at that IP address.',w:'This is the HTTP or HTTPS request.'},
+ {a:'server',t:'The web server sends the web page and creates a cookie containing a user ID and preferences.',w:'The server makes the cookie and returns it with the page.'},
+ {a:'browser',t:'The browser stores the cookie on the user\'s device.',w:'Session cookies go in temporary memory, persistent ones onto storage.'},
+ {a:'browser',t:'On the next visit, the browser sends the stored cookie to the web server with its request.',w:'This only happens on a return visit, after the cookie is stored.'},
+ {a:'server',t:'The web server reads the cookie, recognises the user and sends a personalised page.',w:'The server can now load saved preferences or basket.'}
+];
+const N=CARDS.length;
+let slots=Array(N).fill(null), pool=[], active=0, checked=false, dragId=null;
+function shuffle(){
+ const a=[...Array(N).keys()];
+ do{for(let i=N-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}while(a.every((v,i)=>v===i));
+ return a;
+}
+function reset(){slots=Array(N).fill(null);pool=shuffle();active=0;checked=false;$('#score').textContent='';$('#score').className='';render()}
+function firstEmpty(){const i=slots.indexOf(null);return i<0?-1:i}
+function cardEl(id,inSlot,ok){
+ const c=CARDS[id],el=document.createElement('div');
+ el.className='pc';el.style.setProperty('--c',ACTORS[c.a][1]);el.draggable=true;el.tabIndex=0;el.dataset.id=id;
+ el.setAttribute('role','button');
+ el.innerHTML='<span class="who">'+ACTORS[c.a][0]+'</span><span>'+c.t+'</span>'+(inSlot&&ok?'<span class="why">'+c.w+'</span>':'');
+ el.addEventListener('dragstart',e=>{dragId=id;el.classList.add('dragging');e.dataTransfer.setData('text/plain',String(id));e.dataTransfer.effectAllowed='move'});
+ el.addEventListener('dragend',()=>{el.classList.remove('dragging');dragId=null;document.querySelectorAll('.over').forEach(x=>x.classList.remove('over'))});
+ const act=()=>inSlot!==false&&inSlot!==undefined?removeAt(inSlot):place(id);
+ el.addEventListener('click',act);
+ el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act()}});
+ return el;
+}
+function clearMarks(){if(checked){checked=false;$('#score').textContent='';$('#score').className=''}}
+function place(id,at){
+ clearMarks();
+ let i=at!==undefined?at:(slots[active]===null?active:firstEmpty());
+ if(i<0)return;
+ const old=slots[i];
+ const from=slots.indexOf(id);
+ if(from>=0)slots[from]=null; else pool=pool.filter(x=>x!==id);
+ if(old!==null&&old!==id)pool.push(old);
+ slots[i]=id;
+ const e=firstEmpty();active=e<0?i:e;
+ render();
+}
+function removeAt(i){clearMarks();const id=slots[i];slots[i]=null;pool.push(id);active=i;render()}
+function render(){
+ const S=$('#slots');S.innerHTML='';
+ slots.forEach((id,i)=>{
+  const ok=checked&&id!==null?(id===i?'ok':'no'):'';
+  const s=document.createElement('div');
+  s.className='slot'+(id!==null?' filled':'')+(i===active&&id===null?' active':'')+(ok?' '+ok:'');
+  s.dataset.i=i;
+  s.innerHTML='<div class="n">STEP '+(i+1)+'</div>';
+  if(id!==null)s.appendChild(cardEl(id,i,ok==='ok'));
+  else{const p=document.createElement('div');p.className='ph';p.textContent='Tap a card below, or drag one here';s.appendChild(p);s.addEventListener('click',()=>{active=i;render()})}
+  s.addEventListener('dragover',e=>{e.preventDefault();s.classList.add('over')});
+  s.addEventListener('dragleave',()=>s.classList.remove('over'));
+  s.addEventListener('drop',e=>{e.preventDefault();s.classList.remove('over');if(dragId!==null)place(dragId,i)});
+  S.appendChild(s);
+  if(i<N-1){const a=document.createElement('div');a.className='arrow';a.setAttribute('aria-hidden','true');a.textContent='↓';S.appendChild(a)}
+ });
+ const P=$('#pool');P.innerHTML='';
+ pool.forEach(id=>P.appendChild(cardEl(id,undefined)));
+ if(!pool.length){const d=document.createElement('div');d.className='note';d.style.alignSelf='center';d.textContent='All cards placed. Check your order.';P.appendChild(d)}
+}
+const P=$('#pool');
+P.addEventListener('dragover',e=>{e.preventDefault();P.classList.add('over')});
+P.addEventListener('dragleave',()=>P.classList.remove('over'));
+P.addEventListener('drop',e=>{e.preventDefault();P.classList.remove('over');if(dragId===null)return;const f=slots.indexOf(dragId);if(f>=0){clearMarks();slots[f]=null;pool.push(dragId);active=f;render()}});
+$('#check').addEventListener('click',()=>{
+ checked=true;render();
+ const filled=slots.filter(x=>x!==null).length,right=slots.filter((x,i)=>x===i).length;
+ const sc=$('#score');
+ if(filled<N){sc.textContent=right+' of '+filled+' placed cards are in the right step. '+(N-filled)+' still to place.';sc.className=''}
+ else if(right===N){sc.textContent='All '+N+' correct. That is the full cookie cycle.';sc.className='good'}
+ else{sc.textContent=right+' of '+N+' correct. Red steps are in the wrong place.';sc.className=''}
+});
+$('#reveal').addEventListener('click',()=>{slots=CARDS.map((_,i)=>i);pool=[];checked=true;active=0;render();$('#score').textContent='Answer shown.';$('#score').className=''});
+$('#reset').addEventListener('click',reset);
+$('#legend').innerHTML=Object.values(ACTORS).map(a=>'<span class="tag" style="color:'+a[1]+'">'+a[0]+'</span>').join('');
+reset();
+
+/* Blockchain demo */
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(16).padStart(8,'0')}
+const DATA0=['Asha pays Ben £5','Ben pays Cai £2','Cai pays Dev £1'];
+let data=[...DATA0],prevStored=[];
+(function init(){let p='00000000';DATA0.forEach((d,i)=>{prevStored[i]=p;p=hash(p+d)})})();
+function bcRender(editIdx){
+ const cur=data.map((d,i)=>hash(prevStored[i]+d));
+ const B=$('#bc');
+ if(!B.children.length){
+  data.forEach((d,i)=>{
+   const el=document.createElement('div');el.className='blk';el.id='b'+i;
+   el.innerHTML='<b>BLOCK '+(i+1)+'</b><small>Data</small><input id="bd'+i+'" value="'+d+'" aria-label="Block '+(i+1)+' data"><small>Previous hash</small><span class="h" id="bp'+i+'"></span><small>Hash</small><span class="h" id="bh'+i+'"></span><span class="st" id="bs'+i+'"></span>';
+   B.appendChild(el);
+   el.querySelector('input').addEventListener('input',e=>{data[i]=e.target.value;bcRender()});
+  });
+ }
+ let broken=0;
+ data.forEach((d,i)=>{
+  const link=i===0||prevStored[i]===cur[i-1];
+  $('#bp'+i).textContent=prevStored[i];
+  $('#bh'+i).textContent=cur[i];
+  const bad=!link;if(bad)broken++;
+  $('#b'+i).classList.toggle('broken',bad);
+  $('#bs'+i).textContent=bad?'Link broken: does not match block '+i:(i===0?'First block':'Link valid');
+ });
+ const changed=data.some((d,i)=>d!==DATA0[i]);
+ $('#bcmsg').textContent=!changed?'Chain is intact.':(broken?'Tampering detected: later block(s) no longer match.':'Changed the last block only. Nothing after it points to it here, but its hash still changed.');
+}
+$('#bcreset').addEventListener('click',()=>{data=[...DATA0];DATA0.forEach((d,i)=>{$('#bd'+i).value=d});bcRender()});
+bcRender();
+</script>
+
+</body></html>
