@@ -4,6 +4,7 @@ Run: python3 build.py
 GitHub Pages serves the docs/ folder.
 """
 import html
+import json
 import re
 import shutil
 from pathlib import Path
@@ -39,7 +40,7 @@ def rel_root(path):
     return "../" * depth
 
 
-def layout(title, body, path, active, crumbs=None, accent=None):
+def layout(title, body, path, active, crumbs=None, accent=None, auth=False, extra=""):
     root = rel_root(path)
     nav = "".join(
         f'<a href="{root}{href}"{" class=on aria-current=page" if key == active else ""}>{label}</a>'
@@ -73,8 +74,15 @@ def layout(title, body, path, active, crumbs=None, accent=None):
 </main>
 <footer class="site"><p>Made for students at SIS Danang. Revision and classroom use.</p></footer>
 <script src="{root}assets/site.js"></script>
+{auth_scripts(root) if auth else ""}{extra}
 </body></html>
 """
+
+
+def auth_scripts(root):
+    return (f'<script src="{root}assets/config.js"></script>'
+            '<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
+            f'<script src="{root}assets/app.js"></script>')
 
 
 def plural(n, word):
@@ -162,8 +170,10 @@ def chapter_page(ckey, key):
     label = f"Chapter {ch['label']}" if ch["n"] else "Exam preparation"
     if arts:
         items = "".join(
-            f'<a class="card art" href="{rel_root(info["path"])}artifacts/{a["slug"]}/"><span class="tag">{esc(a["kind"])}</span>'
-            f'<span class="t">{esc(a["title"])}</span><span class="sub">{esc(a["desc"])}</span><span class="go">Open →</span></a>'
+            f'<div class="card art"><span class="tag">{esc(a["kind"])}</span>'
+            f'<a class="t" href="{rel_root(info["path"])}artifacts/{a["slug"]}/">{esc(a["title"])}</a><span class="sub">{esc(a["desc"])}</span>'
+            f'<span class="foot"><a class="go" href="{rel_root(info["path"])}artifacts/{a["slug"]}/">Open →</a>'
+            f'<button class="done" data-done-slug="{a["slug"]}" hidden></button></span></div>'
             for a in arts
         )
         body = f'<div class="grid arts">{items}</div>'
@@ -172,7 +182,7 @@ def chapter_page(ckey, key):
     crumbs = [("Home", ""), (c["title"], f"{ckey}/")] + [(l, h) for l, h in info["parents"]] + [(f"{label}", None)]
     write(info["path"] + "index.html",
           layout(f"{ch['title']}", head(ch["title"], "", f"{c['title']} · {label}") + body,
-                 info["path"], ckey, crumbs, c["accent"]))
+                 info["path"], ckey, crumbs, c["accent"], auth=True))
     return info
 
 
@@ -260,25 +270,51 @@ def build_other_profile():
             + ph("Extra-curricular activities", "Clubs, competitions and projects.") + ph("Side projects", "Things built for fun.") + "</div>")
     write("other/index.html", layout("Other", body, "other/", "other", [("Home", ""), ("Other", None)]))
 
-    body = (head("Profile", "Student accounts are coming soon.", "Students")
-            + '<div class="placeholder"><h2>What is planned</h2><ul>'
-              "<li>Sign up with your school email ending in <b>@danang.sis.edu.vn</b>. Other addresses will not be accepted.</li>"
-              "<li>Password reset by email, sent from the school account.</li>"
-              "<li>Your own area: progress, assessment scores, and access to the subjects you are currently studying.</li>"
-              "</ul><p>Nothing to sign in to yet. Check back soon.</p></div>")
-    write("profile/index.html", layout("Profile", body, "profile/", "profile", [("Home", ""), ("Profile", None)]))
+    body = (head("Profile", "Your details, subjects and progress.", "Students")
+            + '<div id="profile-root"><noscript>This page needs JavaScript.</noscript></div>')
+    write("profile/index.html", layout("Profile", body, "profile/", "profile", [("Home", ""), ("Profile", None)],
+                                       auth=True, extra='<script src="../assets/profile.js"></script>'))
+
+
+def build_catalog():
+    """Machine-readable course map used by the profile page for progress."""
+    arts = {a["slug"]: a for a in ARTIFACTS}
+    courses, artifacts = {}, {}
+    for ckey, c in COURSES.items():
+        if c["kind"] == "chapters":
+            raw = [("Chapters", [(ch, ch["id"]) for ch in c["chapters"]])]
+        elif c["kind"] == "sections":
+            raw = [(f"Section {sec['n']}: {sec['title']}", [(ch, ch["id"]) for ch in sec["chapters"]]) for sec in c["sections"]]
+        else:
+            raw = [(lv["title"], [(ch, f"{lv['id']}/{ch['id']}") for ch in lv["chapters"]]) for lv in c["levels"]]
+        groups, slugs = [], []
+        for title, chs in raw:
+            items = []
+            for ch, key in chs:
+                sl = [a["slug"] for a in by_chapter.get((ckey, key), [])]
+                for x in sl:
+                    if x not in slugs:
+                        slugs.append(x)
+                    artifacts.setdefault(x, {"title": arts[x]["title"], "url": f"artifacts/{x}/",
+                                             "chapterTitle": f"{c['title']}: {ch['title']}"})
+                items.append({"label": ch["label"], "title": ch["title"], "url": chapter_info[(ckey, key)]["path"], "slugs": sl})
+            groups.append({"title": title, "chapters": items})
+        courses[ckey] = {"title": c["title"], "accent": c["accent"], "url": f"{ckey}/", "groups": groups, "slugs": slugs}
+    order = [a["slug"] for a in ARTIFACTS]
+    write("assets/catalog.json", json.dumps({"courses": courses, "artifacts": artifacts, "order": order}, separators=(",", ":")))
 
 
 PILL_CSS = ("<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;"
             "font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);"
             "border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;"
-            "padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover{background:rgba(255,255,255,.18)}"
+            "padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}"
             "@media print{.site-pill{display:none}}</style>")
 
 
-def inject_pill(text, back_href, back_label, home_href):
+def inject_pill(text, back_href, back_label, home_href, slug):
     pill = (f'{PILL_CSS}<div class="site-pill"><a href="{back_href}">← {esc(back_label)}</a>'
-            f'<a href="{home_href}">Home</a></div>')
+            f'<a href="{home_href}">Home</a><button data-done-slug="{slug}" hidden></button></div>'
+            f'{auth_scripts(home_href)}')
     if "</body>" in text:
         i = text.rfind("</body>")
         return text[:i] + pill + text[i:]
@@ -300,7 +336,7 @@ def build_artifacts():
             target = dest / f.relative_to(src)
             target.parent.mkdir(parents=True, exist_ok=True)
             if f.suffix == ".html":
-                target.write_text(inject_pill(f.read_text(encoding="utf-8"), back, label, depth_root), encoding="utf-8")
+                target.write_text(inject_pill(f.read_text(encoding="utf-8"), back, label, depth_root, a["slug"]), encoding="utf-8")
             else:
                 shutil.copy2(f, target)
 
@@ -314,6 +350,7 @@ def main():
     build_home()
     build_courses()
     build_other_profile()
+    build_catalog()
     build_artifacts()
     n = sum(1 for _ in OUT.rglob("index.html"))
     print(f"Built {n} index pages, {len(ARTIFACTS)} artifacts -> {OUT}")
