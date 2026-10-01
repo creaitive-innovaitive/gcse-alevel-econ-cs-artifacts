@@ -27,6 +27,7 @@ create table if not exists public.profiles (
   last_seen    timestamptz
 );
 alter table public.profiles add column if not exists password text not null default '';
+alter table public.profiles add column if not exists classes text[] not null default '{}';    -- ig1-cs, ig2-cs, a-cs, ig2-econ, a-econ
 alter table public.profiles add column if not exists requested text[] not null default '{}';  -- subjects awaiting approval
 
 create table if not exists public.progress (

@@ -170,3 +170,6 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 .card .row.row { align-items: center; }
 .admintabs { margin: 4px 0 16px; }
 .tabpanel[hidden] { display: none; }
+details.cls summary { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; cursor: pointer; }
+details.cls[open] summary { margin-bottom: 8px; }
+details.cls .tablewrap { margin-top: 4px; }

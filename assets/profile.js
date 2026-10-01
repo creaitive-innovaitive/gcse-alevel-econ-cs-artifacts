@@ -4,7 +4,18 @@
   const root = document.getElementById("profile-root");
   const DOMAIN = "@danang.sis.edu.vn";
   const COURSE_KEYS = ["ig-econ", "ig-cs", "a-econ", "a-cs"];
-  let catalog, adminMe = "", adminTab = null;
+  let catalog, adminMe = "", adminTab = null, openClass = null;
+
+  // The five teaching groups. Joining a class gives the student that class's subject.
+  const CLASSES = [
+    { id: "ig1-cs", title: "IG1 CS", subject: "ig-cs" },
+    { id: "ig2-cs", title: "IG2 CS", subject: "ig-cs" },
+    { id: "a-cs", title: "A CS", subject: "a-cs" },
+    { id: "ig2-econ", title: "IG2 Econ", subject: "ig-econ" },
+    { id: "a-econ", title: "A Econ", subject: "a-econ" },
+  ];
+  const classSubjects = (ids) => [...new Set(CLASSES.filter((c) => ids.includes(c.id)).map((c) => c.subject))];
+  const union = (a, b) => [...new Set([...a, ...b])];
 
   // Academic words for assigned passwords: two words and two digits, e.g. OutcomeMethod47.
   const WORDS = ("analyse approach assess assume benefit concept consist context contrast create data define derive "
@@ -167,15 +178,42 @@
   const subjectBoxes = (chosen = []) => COURSE_KEYS.map((k) =>
     `<label class="chk"><input type="checkbox" name="subj" value="${k}" ${chosen.includes(k) ? "checked" : ""}> ${esc(catalog.courses[k].title)}</label>`).join("");
 
-  function adminRows(state) {
-    return state.people.map((p) => {
+  const classBoxes = (chosen = []) => CLASSES.map((c) =>
+    `<label class="chk"><input type="checkbox" name="cls" value="${c.id}" ${chosen.includes(c.id) ? "checked" : ""}> ${esc(c.title)}</label>`).join("");
+
+  const progressOf = (state, p) => {
+    const all = subjectSlugs(p.subjects), d = state.byEmail.get(p.email) || new Map();
+    const n = [...all].filter((s) => d.has(s)).length;
+    return { n, total: all.size, pct: pct(n, all.size) };
+  };
+
+  function classTable(state, list) {
+    return `<div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Subjects</th><th>Status</th><th>Progress</th><th></th></tr></thead>
+      <tbody class="stu">${adminRows(state, list)}</tbody></table></div>`;
+  }
+
+  function classAccordion(state) {
+    const groups = CLASSES.map((c) => ({ id: c.id, title: c.title, list: state.people.filter((p) => (p.classes || []).includes(c.id)) }));
+    const loose = state.people.filter((p) => !(p.classes || []).length);
+    if (loose.length) groups.unshift({ id: "none", title: "Not in a class", list: loose });
+    return groups.map((g) => {
+      const avg = g.list.length ? Math.round(g.list.reduce((t, p) => t + progressOf(state, p).pct, 0) / g.list.length) : 0;
+      return `<details class="card block cls" name="cls" data-cls="${g.id}" ${openClass === g.id ? "open" : ""}>
+        <summary><h3>${esc(g.title)}</h3><span class="hint">${plural(g.list.length, "student")}${g.list.length ? ` · average progress ${avg}%` : ""}</span></summary>
+        ${g.list.length ? classTable(state, g.list) : '<p class="hint">No students in this class yet.</p>'}</details>`;
+    }).join("");
+  }
+  const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+
+  function adminRows(state, list) {
+    return list.map((p) => {
       const all = subjectSlugs(p.subjects), d = state.byEmail.get(p.email) || new Map();
       const n = [...all].filter((s) => d.has(s)).length;
       const status = p.signed_up_at ? (p.last_seen ? "Active " + fmt(p.last_seen) : "Signed up") : "Not signed up";
       return `<tr data-email="${esc(p.email)}"><td><b>${esc(p.name)}</b><br><span class="hint">${esc(p.email)}</span></td>
         <td><div class="pills">${pills(p.subjects)}</div></td><td>${esc(status)}</td><td>${pct(n, all.size)}%<br><span class="hint">${n}/${all.size}</span></td>
         <td class="acts"><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Reset login</button><button class="mini danger" data-act="del">Delete</button></td></tr>`;
-    }).join("") || `<tr><td colspan="5" class="hint">No students yet. Add some above.</td></tr>`;
+    }).join("");
   }
 
   async function renderAdmin(host) {
@@ -186,9 +224,10 @@
 
     const pending = state.people.flatMap((p) => (p.requested || []).filter((k) => catalog.courses[k]).map((k) => ({ p, k })));
     const tab = adminTab || (pending.length ? "approvals" : "students");
+    const toggleClass = (d) => d.addEventListener("toggle", () => { if (d.open) openClass = d.dataset.cls; else if (openClass === d.dataset.cls) openClass = null; });
     host.innerHTML = `
       <div class="tabs admintabs" role="tablist">
-        <button data-at="approvals">Approvals${pending.length ? ` (${pending.length})` : ""}</button><button data-at="students">Students (${state.people.length})</button>
+        <button data-at="approvals">Approvals${pending.length ? ` (${pending.length})` : ""}</button><button data-at="students">Classes (${state.people.length})</button>
         <button data-at="add">Add students</button><button data-at="pw">Passwords</button><button data-at="me">My profile</button></div>
       <div class="tabpanel" data-panel="approvals"><section class="card block ${pending.length ? "attn" : ""}"><div class="row"><h3>Pending approvals (${pending.length})</h3>${pending.length > 1 ? '<button class="mini" id="approveall">Approve all</button>' : ""}</div>
         ${pending.length ? `<ul class="plain">${pending.map(({ p, k }) => `<li class="row" data-email="${esc(p.email)}" data-subj="${k}">
@@ -197,7 +236,7 @@
       <div class="tabpanel" data-panel="add"><section class="card block"><h3>Add students</h3>
         <form id="f-add"><label>One student per line: <b>Name, email</b> (a password is generated for each)
           <textarea name="lines" rows="5" required placeholder="An Nguyen, an.nguyen${DOMAIN}"></textarea></label>
-          <div class="chks">${subjectBoxes()}</div>
+          <div class="chks">${classBoxes()}</div>
           <button class="btn" type="submit">Add students</button><p class="msg" hidden></p></form></section></div>
       <div class="tabpanel" data-panel="pw"><section class="card block"><h3>Student passwords (${state.people.length})</h3>
         <p class="hint">Assigned passwords, visible to admins only. Students sign in with these. If a student changes their own password this list is out of date; Reset login puts it back to the listed one.</p>
@@ -205,9 +244,8 @@
         <div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Email</th><th>Password</th></tr></thead><tbody>
         ${state.people.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.email)}</td><td><code>${esc(p.password)}</code></td></tr>`).join("") || `<tr><td colspan="3" class="hint">No students yet.</td></tr>`}
         </tbody></table></div></section></div>
-      <div class="tabpanel" data-panel="students"><section class="card block"><div class="row"><h3>Students (${state.people.length})</h3><button class="mini" id="csv">Export CSV</button></div>
-        <div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Subjects</th><th>Status</th><th>Progress</th><th></th></tr></thead>
-        <tbody id="stu">${adminRows(state)}</tbody></table></div></section></div>
+      <div class="tabpanel" data-panel="students"><div class="row"><h3>Classes</h3><button class="mini" id="csv">Export CSV</button></div>
+        <p class="hint">Open a class to manage its students.</p>${classAccordion(state)}</div>
       <div class="tabpanel" data-panel="me">${adminMe}</div>
       <dialog id="dlg"><form method="dialog" id="f-edit"></form></dialog>`;
     const showTab = (t) => {
@@ -222,7 +260,9 @@
     $("#f-add").addEventListener("submit", async (e) => {
       e.preventDefault();
       const f = e.target, m = $(".msg", f);
-      const subjects = [...f.querySelectorAll("[name=subj]:checked")].map((c) => c.value);
+      const classes = [...f.querySelectorAll("[name=cls]:checked")].map((c) => c.value);
+      if (!classes.length) return msg(m, "Tick at least one class.", false);
+      const subjects = classSubjects(classes);
       const taken = new Set(state.people.map((x) => x.password));
       const have = new Map(state.people.map((x) => [x.email, x]));
       const fresh = [], existing = [], bad = [];
@@ -230,9 +270,9 @@
         const parts = l.split(/[,\t;]/).map((x) => x.trim());
         const email = (parts.pop() || "").toLowerCase(), name = parts.join(" ").trim();
         if (!name || !email.endsWith(DOMAIN)) return bad.push(l);
-        if (have.has(email)) return existing.push({ email, name, subjects });
+        if (have.has(email)) return existing.push({ email, name, subjects, classes });
         const password = genPassword(taken); taken.add(password);
-        fresh.push({ email, name, subjects, password });
+        fresh.push({ email, name, subjects, classes, password });
       });
       if (bad.length) return msg(m, `Check these lines (need a name and a ${DOMAIN} email): ${bad.join(" | ")}`, false);
       if (fresh.length) {
@@ -244,7 +284,8 @@
         }
       }
       for (const r of existing) {
-        const { error } = await sb.from("profiles").update({ name: r.name, subjects: r.subjects }).eq("email", r.email);
+        const old = have.get(r.email);
+        const { error } = await sb.from("profiles").update({ name: r.name, subjects: union(old.subjects, r.subjects), classes: union(old.classes || [], r.classes) }).eq("email", r.email);
         if (error) return msg(m, error.message, false);
       }
       renderAdmin(host);
@@ -270,17 +311,18 @@
     $("#approveall")?.addEventListener("click", async () => { for (const { p, k } of pending) await decide(p, k, true); renderAdmin(host); });
 
     $("#csv").addEventListener("click", () => {
-      const head = ["Name", "Email", "Subjects", "Done", "Total", "Percent"];
+      const head = ["Name", "Email", "Classes", "Subjects", "Done", "Total", "Percent"];
       const lines = state.people.map((p) => {
         const all = subjectSlugs(p.subjects), d = state.byEmail.get(p.email) || new Map(), n = [...all].filter((s) => d.has(s)).length;
-        return [p.name, p.email, p.subjects.join(" "), n, all.size, pct(n, all.size)].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",");
+        return [p.name, p.email, (p.classes || []).join(" "), p.subjects.join(" "), n, all.size, pct(n, all.size)].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",");
       });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([[head.join(","), ...lines].join("\n")], { type: "text/csv" }));
       a.download = "progress.csv"; a.click();
     });
 
-    host.querySelector("#stu").addEventListener("click", async (e) => {
+    host.querySelectorAll("details.cls").forEach(toggleClass);
+    host.querySelectorAll(".stu").forEach((tb) => tb.addEventListener("click", async (e) => {
       const btn = e.target.closest("[data-act]");
       if (!btn) return;
       const email = btn.closest("tr").dataset.email, p = state.people.find((x) => x.email === email);
@@ -299,18 +341,20 @@
           <label>Name<input name="name" value="${esc(p.name)}" required></label>
           <label>Assigned password<input name="password" value="${esc(p.password)}" required minlength="8"></label>
           <p class="hint">Changing the password only affects a new login. Use Reset login to apply it to a student who already has one.</p>
-          <div class="chks">${subjectBoxes(p.subjects)}</div>
+          <p class="hint">Classes</p><div class="chks">${classBoxes(p.classes || [])}</div>
+          <p class="hint">Subjects (a class adds its own subject automatically)</p><div class="chks">${subjectBoxes(p.subjects)}</div>
           <p class="hint">To change an email address, delete the student and add them again.</p>
           <div class="row"><button class="btn" value="save">Save</button><button class="btn ghost" value="cancel" formnovalidate>Cancel</button></div>`;
         dlg.showModal();
         f.onsubmit = async (ev) => {
           if (ev.submitter?.value !== "save") return;
-          const subjects = [...f.querySelectorAll("[name=subj]:checked")].map((c) => c.value);
-          const { error } = await sb.from("profiles").update({ name: f.elements.name.value.trim(), subjects, password: f.elements.password.value.trim() }).eq("email", email);
+          const classes = [...f.querySelectorAll("[name=cls]:checked")].map((c) => c.value);
+          const subjects = union([...f.querySelectorAll("[name=subj]:checked")].map((c) => c.value), classSubjects(classes));
+          const { error } = await sb.from("profiles").update({ name: f.elements.name.value.trim(), subjects, classes, password: f.elements.password.value.trim() }).eq("email", email);
           if (error) alert(error.message); else renderAdmin(host);
         };
       }
-    });
+    }));
   }
 
   // ---------- boot ----------
