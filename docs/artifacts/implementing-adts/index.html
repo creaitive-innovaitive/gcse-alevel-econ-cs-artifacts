@@ -403,26 +403,28 @@ ENDFUNCTION</pre>
 
   <h3 style="margin-top:34px">Real past paper questions</h3>
   <div class="tip"><b>Paper 3 and Paper 4</b>Paper 3 (Advanced Theory, 9618/31, 32, 33) asks you to identify, compare and justify ADTs in words, 1 to 3 marks at a time. Paper 4 (Practical, and the old 9608/4x) asks you to show an ADT working: pointer diagrams, trace tables and pseudocode for a stack, queue or linked list. Learn the wording for Paper 3 and the pointer manipulation for Paper 4.</div>
-  <p style="color:var(--muted);font-size:.95rem">Questions are from Cambridge 9618 Paper 3 sessions as listed. Answers are condensed from the mark scheme points, so use them to check ideas, not as exact wording.</p>
+  <p style="color:var(--muted);font-size:.95rem">These come from Cambridge 9618 papers in the local Past Papers folder. Mark points follow the published mark schemes, shortened. Examiner report comments are summarised from the Principal Examiner Reports.</p>
 
   <details><summary>Paper 3 · 9618/32 Oct/Nov 2023, Q9(b) <span class="marks">2 marks</span> <span class="cmd">Justify</span></summary><div class="inner">
     <p>Justify the use of a linked list instead of an array to implement a stack.</p>
     <div class="tip"><b>Reminder</b>"Justify" means give a reason <i>and</i> tie it to the stack. One mark per developed point.</div>
-    <ul class="mp"><li><b>1</b>A linked list is dynamic: it is not limited to a fixed size and can grow or shrink as nodes are added or removed</li><li><b>2</b>An array is static: once it is full, the stack cannot be extended, so push fails (overflow)</li><li><b>3</b>Pushing and popping only change pointers, with no shifting of data (accept either of 1 or 3 with 2)</li></ul>
-    <p><b>Advice:</b> contrast the two structures in the same sentence. "Linked lists are dynamic" alone is a description, not a justification.</p>
+    <p><i>Scheme: one mark for a linked list point and one for an array point (max 2).</i></p>
+    <ul class="mp"><li><b>LL</b>A linked list is a dynamic data structure, not restricted in size</li><li><b>LL</b>It can expand or contract by adding or removing nodes as necessary</li><li><b>LL</b>Editing is more efficient using pointers instead of moving the data</li><li><b>Array</b>An array is a static data structure, generally fixed in size</li><li><b>Array</b>When the array is full, the stack cannot be extended any further</li></ul>
+    <p><b>Advice:</b> you need one point from each side to reach 2/2. Contrast the two structures in the same sentence. "Linked lists are dynamic" alone is a description, not a justification.</p>
   </div></details>
 
   <details><summary>Paper 3 · 9618/31 Oct/Nov 2023, Q10(c) <span class="marks">2 marks</span> <span class="cmd">Compare and contrast</span></summary><div class="inner">
     <p>Compare and contrast the queue and stack Abstract Data Types (ADT).</p>
     <div class="tip"><b>Reminder</b>Compare means similarities, contrast means differences. Give at least one of each.</div>
-    <ul class="mp"><li><b>1</b>Similarity: both are ADTs that can vary in size and hold items in order of insertion</li><li><b>2</b>Queue is first in first out (FIFO); a stack is last in first out (LIFO)</li><li><b>3</b>A stack pushes and pops at the same end, so it needs one top pointer</li><li><b>4</b>A queue adds at the rear and removes from the front, so it needs front and rear pointers</li></ul>
+    <p><i>Scheme: any two of these four points (max 2).</i></p>
+    <ul class="mp"><li><b>1</b>A queue is FIFO and a stack is LIFO (data leaves a queue in the order received, a stack in reverse order)</li><li><b>2</b>Both ADTs can vary in size (indeterminate length)</li><li><b>3</b>A stack pushes and pops at the same end; a queue enqueues and dequeues at opposite ends</li><li><b>4</b>A stack has one moveable pointer, a queue has two</li></ul>
     <p><b>Advice:</b> a table or "whereas" sentence keeps both sides of every point visible. Mention the pointers: that links straight back to how each is implemented.</p>
   </div></details>
 
-  <details><summary>Paper 3 · 9618/31 Oct/Nov 2021, Q10(b) and (c) <span class="marks">5 marks</span> <span class="cmd">Explain, Identify</span></summary><div class="inner">
+  <details><summary>Paper 3 · 9618/31 and 32 Oct/Nov 2021, Q10(b) and (c) <span class="marks">5 marks</span> <span class="cmd">Explain, Identify</span></summary><div class="inner">
     <p>(b) Explain the reasons why a stack is a suitable ADT to implement recursion. [3]<br>(c) Identify two ADTs other than a stack. [2]</p>
-    <ul class="mp"><li><b>1</b>(b) Each recursive call pushes its data (return address, local variables) onto the stack</li><li><b>2</b>(b) The stack is LIFO, so the most recent call is the first to finish and be popped</li><li><b>3</b>(b) Popping in reverse order gives the correct unwinding back through the calls</li><li><b>4</b>(c) Any two of: queue, linked list, binary tree, graph</li><li><b>5</b>(c) Second ADT from the same list</li></ul>
-    <p><b>Advice:</b> the three marks in (b) are three links in one chain: what is stored, why LIFO matters, what that gives you. Do not list ADTs that are only data types (array, record).</p>
+    <ul class="mp"><li><b>1</b>(b) A stack is a LIFO data structure</li><li><b>2</b>(b) Each recursive call is pushed onto the stack and popped as the function ends</li><li><b>3</b>(b) This enables backtracking or unwinding, maintaining the required order (max 3)</li><li><b>4</b>(c) Linked list</li><li><b>5</b>(c) Queue, or binary tree (two correct ADTs for 2 marks)</li></ul>
+    <p><b>Advice:</b> the three marks in (b) are three links in one chain: what is stored, why LIFO matters, what that gives you. The mark scheme for (c) lists linked list, queue and binary tree. Do not list data types such as array or record.</p>
   </div></details>
 
   <details><summary>Paper 3 · 9618/33 May/June 2025, Q12(a) <span class="marks">1 mark</span> <span class="cmd">Identify</span></summary><div class="inner">
@@ -457,6 +459,106 @@ ENDFUNCTION</pre>
 ENDPROCEDURE</pre>
     <ul class="mp"><li><b>8</b>Test for no free nodes and report an error</li><li><b>9</b>Store the name in the free node, then move FreePointer on to the next free node (before overwriting the node's pointer)</li><li><b>10</b>Set the new node's pointer to 0</li><li><b>11</b>Link the old tail to the new node (or set HeadPointer if the queue was empty), then update TailPointer</li></ul>
     <div class="warn"><b>Paper 4 advice</b>Do the first-item case separately: with an empty queue there is no old tail to link from. Update FreePointer <i>before</i> you change the pointer field, or you lose the rest of the free list. Pointer diagrams score on the three header pointers as much as on the nodes, so label them all.</div>
+  </div></details>
+
+  <details><summary>Paper 3 · 9618/32 Oct/Nov 2022, Q11 <span class="marks">10 marks</span> <span class="cmd">Complete, Explain</span></summary><div class="inner">
+    <p>A simplified linked list stores flower names in alphabetical order using two 1D arrays: <code>Flower</code> (the names) and <code>NextPointer</code>. <code>HeadPointer</code> is the index of the first name, and 0 marks the end of the list. Initially <code>HeadPointer = 6</code>.</p>
+    <div class="tablewrap"><table><thead><tr><th>Index</th><th>Flower</th><th>NextPointer</th></tr></thead><tbody>
+      <tr><td class="m">1</td><td>Rose</td><td class="m">7</td></tr><tr><td class="m">2</td><td>Marigold</td><td class="m">1</td></tr><tr><td class="m">3</td><td>Foxglove</td><td class="m">10</td></tr><tr><td class="m">4</td><td>Iris</td><td class="m">9</td></tr><tr><td class="m">5</td><td>Daisy</td><td class="m">3</td></tr><tr><td class="m">6</td><td>Dahlia</td><td class="m">5</td></tr><tr><td class="m">7</td><td>Saxifrage</td><td class="m">0</td></tr><tr><td class="m">8</td><td>Lupin</td><td class="m">2</td></tr><tr><td class="m">9</td><td>Lily</td><td class="m">8</td></tr><tr><td class="m">10</td><td>Hydrangea</td><td class="m">4</td></tr></tbody></table></div>
+    <p><b>(a)</b> Marigold, Dahlia, Saxifrage and Hydrangea are deleted. Show the new <code>HeadPointer</code> and <code>NextPointer</code> values that keep the remaining names in alphabetical order. [3]</p>
+    <p><b>(b)</b> Complete the pseudocode to input a flower name, search the list in order, and output whether it is found. The search ends when the pointer is 0. [5]</p>
+    <p><b>(c)</b> Explain how you could improve the simplified linked list structure. [2]</p>
+    <div class="tip"><b>Reminder</b>In (a), follow the order Daisy, Foxglove, Iris, Lily, Lupin, Rose, and make each pointer hold the index of the next name. Deleted rows are left blank.</div>
+    <p><b>(a)</b> HeadPointer 5. Rose 0, Foxglove 4, Iris 9, Daisy 3, Lupin 1, Lily 8.</p>
+    <ul class="mp"><li><b>1</b>(a) Correct HeadPointer (5, Daisy)</li><li><b>2</b>(a) Any three correct NextPointer</li><li><b>3</b>(a) All six NextPointer correct</li></ul>
+<pre>Pointer ← HeadPointer
+Found ← 0
+OUTPUT "Enter a flower name "
+INPUT FlowerName
+WHILE Pointer <> 0
+   IF Flower[Pointer] = FlowerName THEN
+      Found ← Pointer
+      Pointer ← 0
+   ELSE
+      Pointer ← NextPointer[Pointer]
+   ENDIF
+ENDWHILE
+IF Found <> 0 THEN
+   OUTPUT Flower[Found], " is found"
+ELSE
+   OUTPUT "The flower you wanted is not in the list"
+ENDIF</pre>
+    <ul class="mp"><li><b>4</b>(b) One mark for each correct completed line (5 lines)</li><li><b>5</b>(c) Include a free list pointer</li><li><b>6</b>(c) ...to reuse the unused space, as a linked list of free space</li></ul>
+    <div class="warn"><b>Examiner report</b>Very few candidates got full marks in (b). Typical errors: a wrong WHILE condition, a wrong assignment for the next value of Pointer, missing THEN, or outputting <code>Flower[Found]</code> when the name is not found (it is not in the array). In (c) many candidates improved the search instead of using a free list pointer to reuse deleted nodes. Read what the question asks you to improve.</div>
+    <p><b>Advice:</b> this is the textbook's heap idea in an exam. A free list pointer is the <code>heapStartPointer</code> from the linked list tab. If an improvement is asked for on a linked list, think about the unused nodes.</p>
+  </div></details>
+
+  <details><summary>Paper 3 · 9618/31 May/June 2023, Q11 <span class="marks">11 marks</span> <span class="cmd">Write, Complete, Explain</span></summary><div class="inner">
+    <p>A queue ADT of strings is implemented with: <code>FrontPointer</code> (INTEGER, start of the queue), <code>RearPointer</code> (INTEGER, end of the queue), <code>Length</code> (INTEGER, current size) and <code>Queue</code> (a 1D STRING array). A constant <code>MaxSize</code> limits the queue to 60 items.</p>
+    <p><b>(a)</b> Write the pseudocode to declare MaxSize, FrontPointer, RearPointer, Length and Queue. [3]</p>
+    <p><b>(b)</b> Complete the function <code>Dequeue</code> so it removes the front item (the function stores the item, moves the front pointer, reduces the length, and wraps the pointer round when it passes MaxSize). [4]</p>
+    <p><b>(c)</b> Explain how a new element can be added to the queue if it is implemented using <b>two stacks</b>. [4]</p>
+    <div class="tip"><b>Reminder</b>(c) is a direct example of implementing one ADT from another: a queue built from two stacks. Two LIFO stacks back to back reverse the order twice, which gives FIFO.</div>
+<pre>CONSTANT MaxSize = 60
+DECLARE Queue : ARRAY[1:60] OF STRING
+DECLARE FrontPointer : INTEGER
+DECLARE RearPointer : INTEGER
+DECLARE Length : INTEGER</pre>
+    <ul class="mp"><li><b>1</b>(a) Correctly defined constant</li><li><b>2</b>(a) Correctly defined array (1:60, 0:59, or using MaxSize)</li><li><b>3</b>(a) Three correctly defined integers</li></ul>
+<pre>FUNCTION Dequeue RETURNS STRING
+   DECLARE Item : STRING
+   IF Length > 0 THEN
+      Item ← Queue[FrontPointer]
+      FrontPointer ← FrontPointer + 1
+      Length ← Length - 1
+      IF Length = 0 THEN
+         CALL Initialise            // reset the pointers
+      ELSE
+         IF FrontPointer > MaxSize THEN
+            FrontPointer ← 1
+         ENDIF
+      ENDIF
+   ELSE
+      OUTPUT "The print queue was empty - error"
+      Item ← ""
+   ENDIF
+   RETURN Item
+ENDFUNCTION</pre>
+    <ul class="mp"><li><b>4</b>(b) One mark for each correctly completed line (max 4)</li><li><b>5</b>(c) Two stacks are needed so the second can reverse the order of the first</li><li><b>6</b>(c) Stack 1 acts as the queue with the newest elements at the bottom; stack 2 is empty</li><li><b>7</b>(c) To add: pop all elements from stack 1 and push them onto stack 2, push the new element, then pop everything from stack 2 back onto stack 1</li></ul>
+    <div class="warn"><b>Examiner report</b>Most candidates got at least one mark for the three integers, but few declared all parts. Part (b) was awarded as 4 marks to every candidate because of a wording problem in the printed question, so do not treat that part as a guide to difficulty. In (c), candidates generally understood that items must leave in the order they entered, which needs data moved between the two stacks.</div>
+    <p><b>Advice:</b> in (c), say what each stack does and in what order you move items. "Use two stacks to make a queue" earns nothing without the reversal.</p>
+  </div></details>
+
+  <details><summary>Paper 4 · 9618/41 May/June 2026, Q1(a), (b), (c)(i) <span class="marks">15 marks</span> <span class="cmd">Write program code</span></summary><div class="inner">
+    <p>A program stores integer data in a linear queue. The queue is a global 1D array with space for 10 elements. A global head pointer, initialised to -1, points to the first element. A global tail pointer, initialised to -1, points to the last element.</p>
+    <p><b>(a)</b> Write program code to declare the global variables and initialise the queue and pointers. [3]</p>
+    <p><b>(b)</b> Write the function <code>Enqueue()</code>. It takes an integer parameter, returns Boolean FALSE if the queue is full, and otherwise stores the parameter, updates the appropriate pointer(s) and returns TRUE. [7]</p>
+    <p><b>(c)(i)</b> Extend the main program to take 11 integers as input, insert each using the function, output a message whenever the queue is full, and output the final content of the array. Do not dequeue. [5]</p>
+    <div class="tip"><b>Reminder</b>Paper 4 is marked on working code that you save and screenshot. Write it in your exam language. Python is shown below.</div>
+<pre>Queue = []
+HeadPointer = -1
+TailPointer = -1
+for x in range(10):
+    Queue.append(-1)
+
+def Enqueue(Data):
+    global Queue, TailPointer, HeadPointer
+    if TailPointer < 9:
+        TailPointer = TailPointer + 1
+        Queue[TailPointer] = Data
+        if HeadPointer == -1:
+            HeadPointer = 0
+        return True
+    else:
+        return False
+
+for x in range(11):
+    Returned = Enqueue(int(input("Enter a number ")))
+    if not Returned:
+        print("Queue full")
+print(Queue)</pre>
+    <ul class="mp"><li><b>1</b>(a) Global array of 10 integers</li><li><b>2</b>(a) Head and tail pointers both initialised to -1</li><li><b>3</b>(a) Queue values initialised to -1</li><li><b>4</b>(b) Header taking one integer parameter, with the full check returning False</li><li><b>5</b>(b) Otherwise store the parameter at tail pointer + 1</li><li><b>6</b>(b) Increment the tail pointer and return True</li><li><b>7</b>(b) Deal with the first element and set the head pointer to 0</li><li><b>8</b>(c)(i) Take 11 integers as input, call <code>Enqueue()</code> with each, store or check the return value, output a message on False, output the array</li></ul>
+    <div class="warn"><b>Paper 4 advice</b>Queue full means the tail pointer is at the last index (9 for 10 elements). Set the head pointer only when the first value goes in. The 11th value must produce the message, so test with 11 inputs and keep the screenshot as evidence. No examiner report is available for this session.</div>
   </div></details>
 </section>
 
