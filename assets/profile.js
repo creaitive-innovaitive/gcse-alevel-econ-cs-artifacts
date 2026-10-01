@@ -1,10 +1,28 @@
-// Profile page: sign in / sign up / reset, student dashboard, admin console.
+// Profile page: sign in, student dashboard, admin console.
 (function () {
   const S = window.Site;
   const root = document.getElementById("profile-root");
   const DOMAIN = "@danang.sis.edu.vn";
   const COURSE_KEYS = ["ig-econ", "ig-cs", "a-econ", "a-cs"];
   let catalog;
+
+  // Academic words for assigned passwords: two words and two digits, e.g. OutcomeMethod47.
+  const WORDS = ("analyse approach assess assume benefit concept consist context contrast create data define derive "
+    + "design device distinct economy element evaluate evidence factor feature final focus formula function "
+    + "framework hypothesis identify illustrate impact indicate input interpret issue labour layer logic margin "
+    + "method model monitor network norm obtain outcome output parallel phase policy predict principle process "
+    + "project quote range ratio region relevant research resource response restrict role sector select sequence "
+    + "source specific structure survey symbol target theory tradition transfer trend unique valid variable version "
+    + "volume").split(" ");
+  const cap = (w) => w[0].toUpperCase() + w.slice(1);
+  const rnd = (n) => crypto.getRandomValues(new Uint32Array(1))[0] % n;
+  function genPassword(taken = new Set()) {
+    for (;;) {
+      const a = WORDS[rnd(WORDS.length)], b = WORDS[rnd(WORDS.length)];
+      const pw = cap(a) + cap(b) + String(10 + rnd(90));
+      if (a !== b && !taken.has(pw)) return pw;
+    }
+  }
 
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const fmt = (d) => (d ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "");
@@ -18,82 +36,31 @@
   }
   const sb = S.sb;
 
-  // ---------- signed-out views ----------
-  function viewSignedOut(initialTab = "in", note = "") {
+  // ---------- signed-out view ----------
+  // First sign-in creates the login: the database only accepts it when the password matches the one
+  // the teacher assigned, so there is no separate sign-up step for students.
+  function viewSignedOut() {
     root.innerHTML = `
-      <div class="auth-card">
-        <div class="tabs" role="tablist">
-          <button data-tab="in">Sign in</button><button data-tab="up">Create account</button><button data-tab="forgot">Forgot password</button>
-        </div>
-        <p class="msg ok" id="note" ${note ? "" : "hidden"}>${esc(note)}</p>
-        <form id="f-in" hidden>
+      <div class="auth-card"><h2>Sign in</h2>
+        <form id="f-in">
           <label>School email<input type="email" name="email" autocomplete="username" required placeholder="name${DOMAIN}"></label>
           <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
           <button class="btn" type="submit">Sign in</button><p class="msg" hidden></p>
-        </form>
-        <form id="f-up" hidden>
-          <p class="hint">Use your school email (<b>${DOMAIN}</b>). Your teacher must have added you to the class list first.</p>
-          <label>School email<input type="email" name="email" autocomplete="username" required placeholder="name${DOMAIN}"></label>
-          <label>Choose a password<input type="password" name="password" autocomplete="new-password" minlength="8" required></label>
-          <label>Confirm password<input type="password" name="confirm" autocomplete="new-password" minlength="8" required></label>
-          <button class="btn" type="submit">Create account</button><p class="msg" hidden></p>
-        </form>
-        <form id="f-forgot" hidden>
-          <p class="hint">Enter your school email and we will send you a link to set a new password.</p>
-          <label>School email<input type="email" name="email" autocomplete="username" required placeholder="name${DOMAIN}"></label>
-          <button class="btn" type="submit">Send reset link</button><p class="msg" hidden></p>
+          <p class="hint">Use the email and password your teacher gave you. If you cannot sign in, ask your teacher.</p>
         </form>
       </div>`;
-    const show = (t) => {
-      root.querySelectorAll(".tabs button").forEach((b) => b.classList.toggle("on", b.dataset.tab === t));
-      ["in", "up", "forgot"].forEach((k) => ($("#f-" + k).hidden = k !== t));
-    };
-    root.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.tab)));
-    show(initialTab);
-
-    const emailOf = (f) => f.email.value.trim().toLowerCase();
-
     $("#f-in").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const f = e.target, m = $(".msg", f);
-      const { error } = await sb.auth.signInWithPassword({ email: emailOf(f), password: f.password.value });
-      if (error) return msg(m, error.message.includes("Email not confirmed") ? "Please confirm your email first. Check your inbox." : "Wrong email or password.", false);
-      boot();
-    });
-
-    $("#f-up").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const f = e.target, m = $(".msg", f), email = emailOf(f);
-      if (!email.endsWith(DOMAIN)) return msg(m, `Use your school email ending ${DOMAIN}.`, false);
-      if (f.password.value !== f.confirm.value) return msg(m, "Passwords do not match.", false);
-      const { error } = await sb.auth.signUp({ email, password: f.password.value, options: { emailRedirectTo: S.profileUrl } });
+      const f = e.target, m = $(".msg", f), btn = $("button", f);
+      const email = f.email.value.trim().toLowerCase(), password = f.password.value;
+      btn.disabled = true;
+      let { error } = await sb.auth.signInWithPassword({ email, password });
       if (error) {
-        const notListed = /database error|registered by their teacher/i.test(error.message);
-        return msg(m, notListed ? "That email is not on the class list. Ask your teacher to add you." : error.message, false);
+        const r = await sb.auth.signUp({ email, password });
+        error = r.error || (r.data.session ? null : { message: "no session" });
       }
-      msg(m, "Almost done. Check your school email and click the confirmation link.", true);
-    });
-
-    $("#f-forgot").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const f = e.target, m = $(".msg", f);
-      await sb.auth.resetPasswordForEmail(emailOf(f), { redirectTo: S.profileUrl });
-      msg(m, "If that email is registered, a reset link is on its way. Check your inbox.", true);
-    });
-  }
-
-  function viewRecovery() {
-    root.innerHTML = `<div class="auth-card"><h2>Set a new password</h2>
-      <form id="f-new"><label>New password<input type="password" name="password" autocomplete="new-password" minlength="8" required></label>
-      <label>Confirm<input type="password" name="confirm" autocomplete="new-password" minlength="8" required></label>
-      <button class="btn" type="submit">Save password</button><p class="msg" hidden></p></form></div>`;
-    $("#f-new").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const f = e.target, m = $(".msg", f);
-      if (f.password.value !== f.confirm.value) return msg(m, "Passwords do not match.", false);
-      const { error } = await sb.auth.updateUser({ password: f.password.value });
-      if (error) return msg(m, error.message, false);
-      history.replaceState(null, "", location.pathname);
+      btn.disabled = false;
+      if (error) return msg(m, "Wrong email or password.", false);
       boot();
     });
   }
@@ -197,7 +164,7 @@
       const status = p.signed_up_at ? (p.last_seen ? "Active " + fmt(p.last_seen) : "Signed up") : "Not signed up";
       return `<tr data-email="${esc(p.email)}"><td><b>${esc(p.name)}</b><br><span class="hint">${esc(p.email)}</span></td>
         <td><div class="pills">${pills(p.subjects)}</div></td><td>${esc(status)}</td><td>${pct(n, all.size)}%<br><span class="hint">${n}/${all.size}</span></td>
-        <td class="acts"><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Send reset</button><button class="mini danger" data-act="del">Delete</button></td></tr>`;
+        <td class="acts"><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Reset login</button><button class="mini danger" data-act="del">Delete</button></td></tr>`;
     }).join("") || `<tr><td colspan="5" class="hint">No students yet. Add some above.</td></tr>`;
   }
 
@@ -209,10 +176,16 @@
 
     host.innerHTML = `
       <details class="card block" open><summary><h3>Add students</h3></summary>
-        <form id="f-add"><label>One student per line: <b>Name, email</b>
+        <form id="f-add"><label>One student per line: <b>Name, email</b> (a password is generated for each)
           <textarea name="lines" rows="5" required placeholder="An Nguyen, an.nguyen${DOMAIN}"></textarea></label>
           <div class="chks">${subjectBoxes()}</div>
           <button class="btn" type="submit">Add students</button><p class="msg" hidden></p></form></details>
+      <details class="card block"><summary><h3>Student passwords (${state.people.length})</h3></summary>
+        <p class="hint">Assigned passwords, visible to admins only. Students sign in with these; if they later change their own password this list is out of date, use Reset login to start them again.</p>
+        <div class="row"><span></span><button class="mini" id="copypw">Copy as table</button></div>
+        <div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Email</th><th>Password</th></tr></thead><tbody>
+        ${state.people.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.email)}</td><td><code>${esc(p.password)}</code></td></tr>`).join("") || `<tr><td colspan="3" class="hint">No students yet.</td></tr>`}
+        </tbody></table></div></details>
       <section class="card block"><div class="row"><h3>Students (${state.people.length})</h3><button class="mini" id="csv">Export CSV</button></div>
         <div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Subjects</th><th>Status</th><th>Progress</th><th></th></tr></thead>
         <tbody>${adminRows(state)}</tbody></table></div></section>
@@ -222,16 +195,33 @@
       e.preventDefault();
       const f = e.target, m = $(".msg", f);
       const subjects = [...f.querySelectorAll("[name=subj]:checked")].map((c) => c.value);
-      const rows = [], bad = [];
+      const taken = new Set(state.people.map((x) => x.password));
+      const have = new Map(state.people.map((x) => [x.email, x]));
+      const fresh = [], existing = [], bad = [];
       f.lines.value.split("\n").map((l) => l.trim()).filter(Boolean).forEach((l) => {
         const parts = l.split(/[,\t;]/).map((x) => x.trim());
         const email = (parts.pop() || "").toLowerCase(), name = parts.join(" ").trim();
-        if (name && email.endsWith(DOMAIN)) rows.push({ name, email, subjects }); else bad.push(l);
+        if (!name || !email.endsWith(DOMAIN)) return bad.push(l);
+        if (have.has(email)) return existing.push({ email, name, subjects });
+        const password = genPassword(taken); taken.add(password);
+        fresh.push({ email, name, subjects, password });
       });
       if (bad.length) return msg(m, `Check these lines (need a name and a ${DOMAIN} email): ${bad.join(" | ")}`, false);
-      const { error } = await sb.from("profiles").upsert(rows, { onConflict: "email" });
-      if (error) return msg(m, error.message, false);
+      if (fresh.length) {
+        const { error } = await sb.from("profiles").insert(fresh);
+        if (error) return msg(m, error.message, false);
+      }
+      for (const r of existing) {
+        const { error } = await sb.from("profiles").update({ name: r.name, subjects: r.subjects }).eq("email", r.email);
+        if (error) return msg(m, error.message, false);
+      }
       renderAdmin(host);
+    });
+
+    $("#copypw").addEventListener("click", async () => {
+      const text = ["Name\tEmail\tPassword", ...state.people.map((p) => [p.name, p.email, p.password].join("\t"))].join("\n");
+      await navigator.clipboard.writeText(text);
+      $("#copypw").textContent = "Copied";
     });
 
     $("#csv").addEventListener("click", () => {
@@ -250,8 +240,10 @@
       if (!btn) return;
       const email = btn.closest("tr").dataset.email, p = state.people.find((x) => x.email === email);
       if (btn.dataset.act === "reset") {
-        const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: S.profileUrl });
-        alert(error ? "Could not send: " + error.message : "Reset link sent to " + email);
+        if (!confirm(`Reset the login for ${p.name}? They keep their progress and sign in again with the password on the list.`)) return;
+        const { error } = await sb.rpc("admin_reset_login", { target: email });
+        alert(error ? "Could not reset: " + error.message : "Done. " + p.name + " can sign in again with: " + p.password);
+        if (!error) renderAdmin(host);
       } else if (btn.dataset.act === "del") {
         if (!confirm(`Delete ${p.name} (${email}) and all their progress? This cannot be undone.`)) return;
         const { error } = await sb.rpc("admin_delete_student", { target: email });
@@ -260,6 +252,8 @@
         const dlg = $("#dlg"), f = $("#f-edit");
         f.innerHTML = `<h3>Edit student</h3><p class="hint">${esc(email)}</p>
           <label>Name<input name="name" value="${esc(p.name)}" required></label>
+          <label>Assigned password<input name="password" value="${esc(p.password)}" required minlength="8"></label>
+          <p class="hint">Changing the password only affects a new login. Use Reset login to apply it to a student who already has one.</p>
           <div class="chks">${subjectBoxes(p.subjects)}</div>
           <p class="hint">To change an email address, delete the student and add them again.</p>
           <div class="row"><button class="btn" value="save">Save</button><button class="btn ghost" value="cancel" formnovalidate>Cancel</button></div>`;
@@ -267,7 +261,7 @@
         f.onsubmit = async (ev) => {
           if (ev.submitter?.value !== "save") return;
           const subjects = [...f.querySelectorAll("[name=subj]:checked")].map((c) => c.value);
-          const { error } = await sb.from("profiles").update({ name: f.name.value.trim(), subjects }).eq("email", email);
+          const { error } = await sb.from("profiles").update({ name: f.elements.name.value.trim(), subjects, password: f.elements.password.value.trim() }).eq("email", email);
           if (error) alert(error.message); else renderAdmin(host);
         };
       }
@@ -292,7 +286,5 @@
     if (me.is_admin) renderAdmin($("#admin"));
   }
 
-  sb.auth.onAuthStateChange((event) => { if (event === "PASSWORD_RECOVERY") viewRecovery(); });
-  const isRecovery = /type=recovery/.test(location.hash);
-  if (isRecovery) viewRecovery(); else boot();
+  boot();
 })();

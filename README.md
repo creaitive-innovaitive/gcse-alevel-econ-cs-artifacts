@@ -12,14 +12,13 @@ Course structure (chapters, sections, AS/A Level split) also lives in `site_data
 
 ## Profile setup (Supabase)
 
-The profile page needs a Supabase project (free tier is fine). Until `assets/config.js` is filled in, the page shows "Accounts are not switched on yet".
+No emails are involved. Admins add each student with an assigned password (generated from academic words, e.g. `OutcomeMethod47`) and give it to them. A student signs in on the Profile page with their school email and that password; the first sign-in creates the login, and the database only accepts it when the password matches the class list.
 
-1. Create a project at supabase.com. Note the Project URL and the `anon` public key (Project Settings > API).
-2. SQL Editor > New query > paste `supabase/schema.sql` > Run. This creates the tables, row-level security rules, the sign-up gate and the admin functions. The two admin emails are listed at the top of the file.
-3. Put the URL and anon key in `assets/config.js`, run `python3 build.py`, commit and push. The anon key is safe to publish.
-4. Authentication > URL Configuration: set Site URL to `https://creaitive-innovaitive.github.io/gcse-alevel-econ-cs-artifacts/` and add `.../profile/` to Redirect URLs.
-5. Authentication > Providers: leave Email on, "Confirm email" on, everything else off. Set minimum password length to 8.
-6. Authentication > SMTP Settings: enable custom SMTP so confirmation and reset emails come from the school account (Microsoft 365: `smtp.office365.com`, port 587, your school login; the school may need to allow SMTP AUTH for that mailbox). Without this Supabase sends from its own address at a low rate limit.
-7. Sign up on the Profile page with `gary.byatt@danang.sis.edu.vn` first (admin). Then add students from the Admin panel.
+1. Create a Supabase project. Put its URL and public (publishable) key in `assets/config.js`, run `python3 build.py`, push.
+2. SQL Editor: paste the contents of `supabase/schema.sql` and run it. Safe to re-run.
+3. Authentication > Sign In / Providers > Email: turn **Confirm email OFF**. Leave other providers off.
+4. Set admin passwords by hand (never commit them):
+   `update public.admins set initial_password = '...' where email = '...';`
+5. Sign in on the Profile page as an admin once, then add students from the Admin panel.
 
-How it works: an admin adds students (name, school email, subjects) to the class list. Only listed emails can create an account, enforced by a database trigger. Students confirm their email, set a password, and see their subjects and progress. Students mark artifacts done from the chapter page or the button on the artifact itself. Admins can add, edit and delete students, change subjects, send password-reset emails and export progress as CSV. Passwords are never visible to anyone, including admins.
+Admin panel: add students, edit name/subjects/password, collapsible list of assigned passwords (name, email, password), Reset login (deletes the login but keeps progress; the student signs in again with the list password), delete student, progress CSV. Students can change their own password; the list then shows the original, so use Reset login if one is forgotten.
