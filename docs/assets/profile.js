@@ -71,7 +71,16 @@
   function pills(subjects) {
     return subjects.length
       ? subjects.filter((k) => catalog.courses[k]).map((k) => `<a class="pill" data-accent="${catalog.courses[k].accent}" href="${S.base}${catalog.courses[k].url}">${esc(catalog.courses[k].title)}</a>`).join("")
-      : `<span class="hint">No subjects assigned yet. Ask your teacher.</span>`;
+      : `<span class="hint">No subjects yet.</span>`;
+  }
+
+  function subjectPanel(me) {
+    const pend = (me.requested || []).filter((k) => catalog.courses[k]);
+    const avail = COURSE_KEYS.filter((k) => !me.subjects.includes(k) && !pend.includes(k));
+    const pendHtml = pend.map((k) => `<span class="pill pending" data-accent="${catalog.courses[k].accent}">${esc(catalog.courses[k].title)} · waiting for approval <button class="x" data-cancel="${k}" title="Cancel request">×</button></span>`).join("");
+    const req = !me.is_admin && avail.length
+      ? `<p class="hint">Join a subject: ${avail.map((k) => `<button class="mini" data-req="${k}">+ ${esc(catalog.courses[k].title)}</button>`).join(" ")}</p>` : "";
+    return `<div class="pills">${pills(me.subjects.filter((k) => catalog.courses[k]))}${pendHtml}</div>${req}`;
   }
 
   function chapterMap(course, done) {
@@ -102,7 +111,7 @@
     const nextA = next && catalog.artifacts[next];
 
     return `
-      <section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}</p><div class="pills">${pills(me.subjects)}</div></section>
+      <section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}</p>${subjectPanel(me)}</section>
       <div class="grid two dash">
         <section class="card block"><h3>Overall progress</h3><div class="row"><span class="big">${pct(doneN, all.size)}%</span><span class="hint">${doneN} of ${all.size} activities</span></div>
           <div class="bar2"><i style="width:${pct(doneN, all.size)}%"></i></div></section>
@@ -125,6 +134,12 @@
   }
 
   function wireAccount() {
+    root.querySelectorAll("[data-req],[data-cancel]").forEach((b) => b.addEventListener("click", async () => {
+      b.disabled = true;
+      const { error } = b.dataset.req ? await sb.rpc("request_subject", { subject: b.dataset.req }) : await sb.rpc("cancel_request", { subject: b.dataset.cancel });
+      if (error) { alert(error.message); b.disabled = false; return; }
+      boot();
+    }));
     $("#f-pw")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const f = e.target, m = $(".msg", f);
@@ -169,7 +184,12 @@
     try { state = await loadAdmin(); }
     catch (e) { host.innerHTML = `<p class="msg err">Could not load students: ${esc(e.message)}. Has schema.sql been run?</p>`; return; }
 
+    const pending = state.people.flatMap((p) => (p.requested || []).filter((k) => catalog.courses[k]).map((k) => ({ p, k })));
     host.innerHTML = `
+      <section class="card block ${pending.length ? "attn" : ""}"><div class="row"><h3>Pending approvals (${pending.length})</h3>${pending.length > 1 ? '<button class="mini" id="approveall">Approve all</button>' : ""}</div>
+        ${pending.length ? `<ul class="plain">${pending.map(({ p, k }) => `<li class="row" data-email="${esc(p.email)}" data-subj="${k}">
+          <span><b>${esc(p.name)}</b> <span class="hint">${esc(p.email)}</span> wants <span class="pill" data-accent="${catalog.courses[k].accent}">${esc(catalog.courses[k].title)}</span></span>
+          <span><button class="mini ok" data-ap="yes">Approve</button> <button class="mini danger" data-ap="no">Decline</button></span></li>`).join("")}</ul>` : '<p class="hint">Nothing waiting.</p>'}</section>
       <details class="card block" open><summary><h3>Add students</h3></summary>
         <form id="f-add"><label>One student per line: <b>Name, email</b> (a password is generated for each)
           <textarea name="lines" rows="5" required placeholder="An Nguyen, an.nguyen${DOMAIN}"></textarea></label>
@@ -223,6 +243,19 @@
       $("#copypw").textContent = "Copied";
     });
 
+    const decide = async (p, k, yes) => {
+      const subjects = yes && !p.subjects.includes(k) ? [...p.subjects, k] : p.subjects;
+      const { error } = await sb.from("profiles").update({ subjects, requested: (p.requested || []).filter((x) => x !== k) }).eq("email", p.email);
+      if (error) alert(error.message);
+      p.subjects = subjects; p.requested = (p.requested || []).filter((x) => x !== k);
+    };
+    host.querySelectorAll("[data-ap]").forEach((b) => b.addEventListener("click", async () => {
+      const li = b.closest("li");
+      await decide(state.people.find((x) => x.email === li.dataset.email), li.dataset.subj, b.dataset.ap === "yes");
+      renderAdmin(host);
+    }));
+    $("#approveall")?.addEventListener("click", async () => { for (const { p, k } of pending) await decide(p, k, true); renderAdmin(host); });
+
     $("#csv").addEventListener("click", () => {
       const head = ["Name", "Email", "Subjects", "Done", "Total", "Percent"];
       const lines = state.people.map((p) => {
@@ -270,7 +303,11 @@
   // ---------- boot ----------
   async function boot() {
     catalog = catalog || (await S.catalog());
-    const me = await S.whoami();
+    const me = await S.whoami(true);
+    if (me) {
+      const next = sessionStorage.getItem("site.next");
+      if (next) { sessionStorage.removeItem("site.next"); if (next.startsWith(S.base)) { location.href = next; return; } }
+    }
     if (!me) {
       if (await S.session()) {
         root.innerHTML = `<div class="placeholder"><h2>Not on the class list</h2><p>You are signed in, but this email has not been added by your teacher.</p>

@@ -12,11 +12,19 @@
 
   Site.session = async () => (sb ? (await sb.auth.getSession()).data.session : null);
 
-  // Returns {email, name, subjects, is_admin} or null when signed out / not on the roster.
-  Site.whoami = async () => {
-    if (!sb || !(await Site.session())) return null;
+  // Returns {email, name, subjects, requested, is_admin} or null when signed out / not on the roster.
+  // Cached briefly so every page load does not wait on the database; pass force to refresh.
+  Site.whoami = async (force) => {
+    if (!sb || !(await Site.session())) { sessionStorage.removeItem("site.me"); Site.me = null; return null; }
+    if (!force) {
+      try {
+        const c = JSON.parse(sessionStorage.getItem("site.me") || "null");
+        if (c && Date.now() - c.t < 60000) return (Site.me = c.me);
+      } catch (e) {}
+    }
     const { data } = await sb.rpc("whoami");
     Site.me = data || null;
+    try { sessionStorage.setItem("site.me", JSON.stringify({ t: Date.now(), me: Site.me })); } catch (e) {}
     return Site.me;
   };
 

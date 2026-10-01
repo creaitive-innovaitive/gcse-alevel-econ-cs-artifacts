@@ -161,3 +161,10 @@ details summary { cursor: pointer; } details summary h3 { display: inline; }
 .tbl .acts { white-space: nowrap; } .tbl .acts .mini { margin-right: 4px; }
 dialog { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); max-width: 420px; width: 92%; }
 dialog::backdrop { background: rgba(0, 0, 0, .45); }
+[hidden] { display: none !important; }
+
+.pill.pending { background: transparent; color: var(--accent); border: 1.5px dashed var(--accent); }
+.pill .x { background: none; border: 0; color: inherit; font-size: 1rem; line-height: 1; cursor: pointer; padding: 0 0 0 4px; }
+.block.attn { border-color: var(--accent); }
+.mini.ok { color: #1f7a4d; border-color: #1f7a4d; }
+.card .row.row { align-items: center; }

@@ -43,7 +43,7 @@ def rel_root(path):
 def layout(title, body, path, active, crumbs=None, accent=None, auth=False, extra=""):
     root = rel_root(path)
     nav = "".join(
-        f'<a href="{root}{href}"{" class=on aria-current=page" if key == active else ""}>{label}</a>'
+        f'<a href="{root}{href}"{" class=on aria-current=page" if key == active else ""}{f" data-course={key}" if key in COURSES else ""}>{label}</a>'
         for key, label, href in NAV
     )
     crumb_html = ""
@@ -53,13 +53,14 @@ def layout(title, body, path, active, crumbs=None, accent=None, auth=False, extr
             parts.append(f'<a href="{root}{href}">{esc(label)}</a>' if href is not None else f"<span>{esc(label)}</span>")
         crumb_html = f'<nav class="crumbs" aria-label="Breadcrumb">{"<i>/</i>".join(parts)}</nav>'
     acc = f' data-accent="{accent}"' if accent else ""
+    gate = [active] if active in COURSES else []
     full_title = SITE_TITLE if title == SITE_TITLE else f"{title} · {SITE_TITLE}"
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(full_title)}</title>
 <link rel="stylesheet" href="{root}assets/style.css">
-</head>
+{GATE_HEAD if gate else ""}</head>
 <body{acc}>
 <header class="site">
 <div class="bar">
@@ -74,15 +75,20 @@ def layout(title, body, path, active, crumbs=None, accent=None, auth=False, extr
 </main>
 <footer class="site"><p>Made for students at SIS Danang. Revision and classroom use.</p></footer>
 <script src="{root}assets/site.js"></script>
-{auth_scripts(root) if auth else ""}{extra}
+{auth_scripts(root, gate)}{extra}
 </body></html>
 """
 
 
-def auth_scripts(root):
+GATE_HEAD = ('<script>document.documentElement.classList.add("gated")</script>'
+             '<style>html.gated{visibility:hidden!important}</style>')
+
+
+def auth_scripts(root, gate=()):
     return (f'<script src="{root}assets/config.js"></script>'
             '<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
-            f'<script src="{root}assets/app.js"></script>')
+            f'<script src="{root}assets/app.js"></script>'
+            f'<script src="{root}assets/gate.js" data-courses="{",".join(gate)}"></script>')
 
 
 def plural(n, word):
@@ -250,7 +256,7 @@ def build_home():
     for ckey in ["ig-econ", "ig-cs", "a-econ", "a-cs"]:
         c = COURSES[ckey]
         n = len({a["slug"] for a in ARTIFACTS if any(p[0] == ckey for p in a["places"])})
-        cards.append(f'<a class="card course" data-accent="{c["accent"]}" href="{ckey}/"><span class="num">{esc(c["nav"])}</span>'
+        cards.append(f'<a class="card course" data-accent="{c["accent"]}" data-course="{ckey}" href="{ckey}/"><span class="num">{esc(c["nav"])}</span>'
                      f'<span class="t">{esc(c["title"])}</span><span class="sub">{esc(c["blurb"])}</span>'
                      f'<span class="count">{plural(n, "activity")}</span></a>')
     body = (f'<section class="hero"><p class="kicker">GCSE and A-Level</p><h1>Economics and Computer Science, made interactive.</h1>'
@@ -311,10 +317,11 @@ PILL_CSS = ("<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12p
             "@media print{.site-pill{display:none}}</style>")
 
 
-def inject_pill(text, back_href, back_label, home_href, slug):
+def inject_pill(text, back_href, back_label, home_href, slug, courses):
     pill = (f'{PILL_CSS}<div class="site-pill"><a href="{back_href}">← {esc(back_label)}</a>'
             f'<a href="{home_href}">Home</a><button data-done-slug="{slug}" hidden></button></div>'
-            f'{auth_scripts(home_href)}')
+            f'{auth_scripts(home_href, courses)}')
+    text = text.replace("<head>", "<head>" + GATE_HEAD, 1) if "<head>" in text else GATE_HEAD + text
     if "</body>" in text:
         i = text.rfind("</body>")
         return text[:i] + pill + text[i:]
@@ -336,7 +343,7 @@ def build_artifacts():
             target = dest / f.relative_to(src)
             target.parent.mkdir(parents=True, exist_ok=True)
             if f.suffix == ".html":
-                target.write_text(inject_pill(f.read_text(encoding="utf-8"), back, label, depth_root, a["slug"]), encoding="utf-8")
+                target.write_text(inject_pill(f.read_text(encoding="utf-8"), back, label, depth_root, a["slug"], sorted({c for c, _ in a["places"]})), encoding="utf-8")
             else:
                 shutil.copy2(f, target)
 

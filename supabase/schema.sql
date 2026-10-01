@@ -27,6 +27,7 @@ create table if not exists public.profiles (
   last_seen    timestamptz
 );
 alter table public.profiles add column if not exists password text not null default '';
+alter table public.profiles add column if not exists requested text[] not null default '{}';  -- subjects awaiting approval
 
 create table if not exists public.progress (
   email   text not null check (email = lower(email)),
@@ -107,11 +108,11 @@ begin
   select * into a from admins where email = e;
   if found then
     return json_build_object('email', e, 'name', a.name, 'is_admin', true,
-                             'subjects', array['ig-econ','ig-cs','a-econ','a-cs']);
+                             'subjects', array['ig-econ','ig-cs','a-econ','a-cs'], 'requested', array[]::text[]);
   end if;
   update profiles set last_seen = now() where email = e returning * into p;
   if not found then return null; end if;
-  return json_build_object('email', e, 'name', p.name, 'is_admin', false, 'subjects', p.subjects);
+  return json_build_object('email', e, 'name', p.name, 'is_admin', false, 'subjects', p.subjects, 'requested', p.requested);
 end $$;
 
 -- Admin: every progress row in one JSON value (avoids the 1000-row API cap).
@@ -178,6 +179,22 @@ begin
   if pw is null or pw = '' then raise exception 'No password set for %', target; end if;
   delete from auth.users where email = target;
   perform _create_login(target, pw);
+end $$;
+
+-- Student asks to join a subject; an admin approves or declines from the admin panel.
+create or replace function public.request_subject(subject text) returns void
+language plpgsql security definer set search_path = public as $$
+declare e text := lower(auth.jwt() ->> 'email');
+begin
+  if subject <> all (array['ig-econ','ig-cs','a-econ','a-cs']) then raise exception 'Unknown subject'; end if;
+  update profiles set requested = array_append(requested, subject)
+   where email = e and not (subject = any (subjects)) and not (subject = any (requested));
+end $$;
+
+create or replace function public.cancel_request(subject text) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  update profiles set requested = array_remove(requested, subject) where email = lower(auth.jwt() ->> 'email');
 end $$;
 
 -- Bootstrap: create the admin logins from admins.initial_password.
