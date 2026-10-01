@@ -37,8 +37,7 @@
   const sb = S.sb;
 
   // ---------- signed-out view ----------
-  // First sign-in creates the login: the database only accepts it when the password matches the one
-  // the teacher assigned, so there is no separate sign-up step for students.
+  // Logins are created by the admin panel, so students only ever sign in.
   function viewSignedOut() {
     root.innerHTML = `
       <div class="auth-card"><h2>Sign in</h2>
@@ -54,11 +53,7 @@
       const f = e.target, m = $(".msg", f), btn = $("button", f);
       const email = f.email.value.trim().toLowerCase(), password = f.password.value;
       btn.disabled = true;
-      let { error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) {
-        const r = await sb.auth.signUp({ email, password });
-        error = r.error || (r.data.session ? null : { message: "no session" });
-      }
+      const { error } = await sb.auth.signInWithPassword({ email, password });
       btn.disabled = false;
       if (error) return msg(m, "Wrong email or password.", false);
       boot();
@@ -181,7 +176,7 @@
           <div class="chks">${subjectBoxes()}</div>
           <button class="btn" type="submit">Add students</button><p class="msg" hidden></p></form></details>
       <details class="card block"><summary><h3>Student passwords (${state.people.length})</h3></summary>
-        <p class="hint">Assigned passwords, visible to admins only. Students sign in with these; if they later change their own password this list is out of date, use Reset login to start them again.</p>
+        <p class="hint">Assigned passwords, visible to admins only. Students sign in with these. If a student changes their own password this list is out of date; Reset login puts it back to the listed one.</p>
         <div class="row"><span></span><button class="mini" id="copypw">Copy as table</button></div>
         <div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Email</th><th>Password</th></tr></thead><tbody>
         ${state.people.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.email)}</td><td><code>${esc(p.password)}</code></td></tr>`).join("") || `<tr><td colspan="3" class="hint">No students yet.</td></tr>`}
@@ -210,6 +205,10 @@
       if (fresh.length) {
         const { error } = await sb.from("profiles").insert(fresh);
         if (error) return msg(m, error.message, false);
+        for (const r of fresh) {
+          const { error: e2 } = await sb.rpc("admin_create_login", { target: r.email });
+          if (e2) return msg(m, `Added ${r.name} but could not create the login: ${e2.message}`, false);
+        }
       }
       for (const r of existing) {
         const { error } = await sb.from("profiles").update({ name: r.name, subjects: r.subjects }).eq("email", r.email);
@@ -240,9 +239,9 @@
       if (!btn) return;
       const email = btn.closest("tr").dataset.email, p = state.people.find((x) => x.email === email);
       if (btn.dataset.act === "reset") {
-        if (!confirm(`Reset the login for ${p.name}? They keep their progress and sign in again with the password on the list.`)) return;
+        if (!confirm(`Recreate the login for ${p.name} with the password on the list? They keep their progress.`)) return;
         const { error } = await sb.rpc("admin_reset_login", { target: email });
-        alert(error ? "Could not reset: " + error.message : "Done. " + p.name + " can sign in again with: " + p.password);
+        alert(error ? "Could not reset: " + error.message : "Done. " + p.name + " can sign in with: " + p.password);
         if (!error) renderAdmin(host);
       } else if (btn.dataset.act === "del") {
         if (!confirm(`Delete ${p.name} (${email}) and all their progress? This cannot be undone.`)) return;

@@ -133,16 +133,55 @@ begin
   delete from profiles where email = target;
 end $$;
 
--- Admin: delete only the login (keeps profile and progress). The student signs in again with the
--- password on the class list and the login is recreated.
+-- Creates a ready-to-use, already-confirmed login directly (no sign-up, no email, no Confirm-email setting).
+-- Internal: not callable from the website. Used by the admin functions below and by the bootstrap line at the end.
+create or replace function public._create_login(_email text, _password text) returns void
+language plpgsql security definer set search_path = public, extensions, auth as $$
+declare uid uuid := gen_random_uuid(); e text := lower(_email);
+begin
+  if exists (select 1 from auth.users where email = e) then return; end if;
+  insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+      raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+      confirmation_token, recovery_token, email_change_token_new, email_change,
+      email_change_token_current, phone_change, phone_change_token, reauthentication_token)
+  values ('00000000-0000-0000-0000-000000000000', uid, 'authenticated', 'authenticated', e,
+      crypt(_password, gen_salt('bf')), now(),
+      '{"provider":"email","providers":["email"]}', '{}', now(), now(), '', '', '', '', '', '', '', '');
+  insert into auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+  values (gen_random_uuid(), uid, uid::text,
+      jsonb_build_object('sub', uid::text, 'email', e, 'email_verified', true, 'phone_verified', false),
+      'email', now(), now(), now());
+  update profiles set signed_up_at = now() where email = e;
+end $$;
+revoke all on function public._create_login(text, text) from public, anon, authenticated;
+
+-- Admin: create the login for a student already on the list, using the password on the list.
+create or replace function public.admin_create_login(target text) returns void
+language plpgsql security definer set search_path = public as $$
+declare pw text;
+begin
+  if not is_admin() then raise exception 'Admins only'; end if;
+  select password into pw from profiles where email = lower(target);
+  if pw is null or pw = '' then raise exception 'No password set for %', target; end if;
+  perform _create_login(target, pw);
+end $$;
+
+-- Admin: recreate a student's login with the password currently on the list (keeps their progress).
 create or replace function public.admin_reset_login(target text) returns void
 language plpgsql security definer set search_path = public, auth as $$
+declare pw text;
 begin
   if not is_admin() then raise exception 'Admins only'; end if;
   target := lower(target);
   if exists (select 1 from admins where email = target) then raise exception 'Cannot reset an admin'; end if;
+  select password into pw from profiles where email = target;
+  if pw is null or pw = '' then raise exception 'No password set for %', target; end if;
   delete from auth.users where email = target;
-  update profiles set signed_up_at = null, last_seen = null where email = target;
+  perform _create_login(target, pw);
 end $$;
 
-select email, name, (initial_password is not null) as has_password from public.admins;
+-- Bootstrap: create the admin logins from admins.initial_password.
+select public._create_login(email, initial_password) from public.admins where initial_password is not null and initial_password <> '';
+
+select a.email, (a.initial_password is not null) as has_password, exists (select 1 from auth.users u where u.email = a.email) as login_exists
+from public.admins a;
