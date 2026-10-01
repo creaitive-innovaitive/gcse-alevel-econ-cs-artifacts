@@ -6,14 +6,14 @@
   const COURSE_KEYS = ["ig-econ", "ig-cs", "a-econ", "a-cs"];
   let catalog, adminMe = "", adminTab = null, openClass = null;
 
-  // The five teaching groups. Joining a class gives the student that class's subject.
-  const CLASSES = [
-    { id: "ig1-cs", title: "IG1 CS", subject: "ig-cs" },
-    { id: "ig2-cs", title: "IG2 CS", subject: "ig-cs" },
-    { id: "a-cs", title: "A CS", subject: "a-cs" },
-    { id: "ig2-econ", title: "IG2 Econ", subject: "ig-econ" },
-    { id: "a-econ", title: "A Econ", subject: "a-econ" },
+  // Three classes, five class-subject groups. Student membership is stored per group (the ids below);
+  // joining a group gives the student that group's course.
+  const CLASS_LIST = [
+    { id: "ig1", title: "IG1", groups: [{ id: "ig1-cs", label: "CS", subject: "ig-cs" }] },
+    { id: "ig2", title: "IG2", groups: [{ id: "ig2-cs", label: "CS", subject: "ig-cs" }, { id: "ig2-econ", label: "Econ", subject: "ig-econ" }] },
+    { id: "al", title: "AL", groups: [{ id: "a-cs", label: "CS", subject: "a-cs" }, { id: "a-econ", label: "Econ", subject: "a-econ" }] },
   ];
+  const CLASSES = CLASS_LIST.flatMap((c) => c.groups.map((g) => ({ ...g, cls: c.title, title: `${c.title} ${g.label}` })));
   const classSubjects = (ids) => [...new Set(CLASSES.filter((c) => ids.includes(c.id)).map((c) => c.subject))];
   const union = (a, b) => [...new Set([...a, ...b])];
 
@@ -190,8 +190,9 @@
   const subjectBoxes = (chosen = []) => COURSE_KEYS.map((k) =>
     `<label class="chk"><input type="checkbox" name="subj" value="${k}" ${chosen.includes(k) ? "checked" : ""}> ${esc(catalog.courses[k].title)}</label>`).join("");
 
-  const classBoxes = (chosen = []) => CLASSES.map((c) =>
-    `<label class="chk"><input type="checkbox" name="cls" value="${c.id}" ${chosen.includes(c.id) ? "checked" : ""}> ${esc(c.title)}</label>`).join("");
+  const classBoxes = (chosen = []) => CLASS_LIST.map((c) =>
+    `<div class="clsrow"><b>${esc(c.title)}</b>${c.groups.map((g) =>
+      `<label class="chk"><input type="checkbox" name="cls" value="${g.id}" ${chosen.includes(g.id) ? "checked" : ""}> ${esc(g.label)}</label>`).join("")}</div>`).join("");
 
   const progressOf = (state, p) => {
     const all = subjectSlugs(p.subjects), d = state.byEmail.get(p.email) || new Map();
@@ -205,15 +206,23 @@
   }
 
   function classAccordion(state) {
-    const groups = CLASSES.map((c) => ({ id: c.id, title: c.title, list: state.people.filter((p) => (p.classes || []).includes(c.id)) }));
+    const inGroup = (g) => state.people.filter((p) => (p.classes || []).includes(g.id));
+    const avgOf = (list) => (list.length ? Math.round(list.reduce((t, p) => t + progressOf(state, p).pct, 0) / list.length) : 0);
+    const bar = (id, title, list, inner) => `<details class="card block cls" name="cls" data-cls="${id}" ${openClass === id ? "open" : ""}>
+        <summary><h3>${esc(title)}</h3><span class="hint">${plural(list.length, "student")}${list.length ? ` · average progress ${avgOf(list)}%` : ""}</span></summary>${inner}</details>`;
+    const out = [];
     const loose = state.people.filter((p) => !(p.classes || []).length);
-    if (loose.length) groups.unshift({ id: "none", title: "Not in a class", list: loose });
-    return groups.map((g) => {
-      const avg = g.list.length ? Math.round(g.list.reduce((t, p) => t + progressOf(state, p).pct, 0) / g.list.length) : 0;
-      return `<details class="card block cls" name="cls" data-cls="${g.id}" ${openClass === g.id ? "open" : ""}>
-        <summary><h3>${esc(g.title)}</h3><span class="hint">${plural(g.list.length, "student")}${g.list.length ? ` · average progress ${avg}%` : ""}</span></summary>
-        ${g.list.length ? classTable(state, g.list) : '<p class="hint">No students in this class yet.</p>'}</details>`;
-    }).join("");
+    if (loose.length) out.push(bar("none", "Not in a class", loose, classTable(state, loose)));
+    CLASS_LIST.forEach((c) => {
+      const ids = c.groups.map((g) => g.id);
+      const everyone = state.people.filter((p) => (p.classes || []).some((x) => ids.includes(x)));
+      const inner = c.groups.map((g) => {
+        const list = inGroup(g);
+        return `<div class="subj"><h4>${esc(c.title)} ${esc(g.label)} <span class="hint">${plural(list.length, "student")}</span></h4>${list.length ? classTable(state, list) : '<p class="hint">No students yet.</p>'}</div>`;
+      }).join("");
+      out.push(bar(c.id, c.title, everyone, inner));
+    });
+    return out.join("");
   }
   const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 

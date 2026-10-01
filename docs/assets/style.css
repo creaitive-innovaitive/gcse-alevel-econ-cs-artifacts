@@ -173,3 +173,6 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 details.cls summary { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; cursor: pointer; }
 details.cls[open] summary { margin-bottom: 8px; }
 details.cls .tablewrap { margin-top: 4px; }
+.clsrow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 6px; }
+.clsrow b { min-width: 42px; }
+.subj h4 { font: 700 .8rem var(--sans); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 16px 0 4px; }
