@@ -1,2 +1,6 @@
 .DS_Store
 __pycache__/
+
+# local reference papers, too large to commit
+Past Papers/
+.DS_Store
