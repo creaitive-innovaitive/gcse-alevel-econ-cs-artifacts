@@ -1,5 +1,4 @@
-<!doctype html><html><head><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Linked Lists</title>
+<script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><title>Linked Lists</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -522,6 +521,37 @@
     color: var(--ink);
     font-weight:600;
   }
+
+  /* top-level section tabs */
+  .section-tabs{
+    display:flex;
+    gap:4px;
+    overflow-x:auto;
+    margin: 22px 0 0;
+    padding-bottom:1px;
+    border-bottom:1px solid var(--line);
+  }
+  .section-tab-btn{
+    flex:0 0 auto;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    padding:9px 13px;
+    border:none;
+    background:none;
+    color:var(--muted);
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+  }
+  .section-tab-btn .num{ color:var(--accent2); margin-right:5px; }
+  .section-tab-btn[aria-selected="true"]{
+    color:var(--ink);
+    font-weight:600;
+    border-bottom-color:var(--accent);
+  }
+  .section-tab-btn:hover{ color:var(--ink); }
+  section[data-panel]{ display:none; margin-top:28px; }
+  section[data-panel].active{ display:block; }
 </style>
 
 <div class="wrap">
@@ -529,26 +559,26 @@
   <header class="hero">
     <div class="eyebrow">A-Level Computer Science &middot; 9618 &middot; Data Structures &amp; ADTs</div>
     <h1>Linked Lists</h1>
-    <p class="dek">How an array-based linked list actually works: nodes, pointers, the heap of free space, and the find / insert / delete algorithms &mdash; with real Cambridge exam questions and examiner-report warnings built in.</p>
+    <p class="dek">How an array-based linked list actually works: nodes, pointers, the heap of free space, and the find / insert / delete algorithms &mdash; built for A2 Paper 3 theory and Paper 4 practical, with real Cambridge exam questions and mark schemes built in.</p>
     <div class="meta-row">
       <span class="tag">Coursebook 19.1 &amp; 10.4</span>
       <span class="tag">Syllabus 9618</span>
-      <span class="tag">Papers 2 &amp; 3</span>
+      <span class="tag">Paper 3 &amp; Paper 4</span>
     </div>
   </header>
 
-  <nav class="toc" aria-label="Contents">
-    <a href="#concept">1. The idea</a>
-    <a href="#anatomy">2. Anatomy</a>
-    <a href="#find">3. Finding an item</a>
-    <a href="#insert">4. Inserting</a>
-    <a href="#delete">5. Deleting</a>
-    <a href="#compare">6. vs. arrays</a>
-    <a href="#exam">7. Exam corner</a>
-    <a href="#glossary">8. Glossary</a>
+  <nav class="section-tabs" role="tablist" aria-label="Contents">
+    <button class="section-tab-btn" role="tab" aria-selected="true" data-panel-tab="concept"><span class="num">01</span>The idea</button>
+    <button class="section-tab-btn" role="tab" aria-selected="false" data-panel-tab="anatomy"><span class="num">02</span>Anatomy</button>
+    <button class="section-tab-btn" role="tab" aria-selected="false" data-panel-tab="find"><span class="num">03</span>Finding</button>
+    <button class="section-tab-btn" role="tab" aria-selected="false" data-panel-tab="insert"><span class="num">04</span>Inserting</button>
+    <button class="section-tab-btn" role="tab" aria-selected="false" data-panel-tab="delete"><span class="num">05</span>Deleting</button>
+    <button class="section-tab-btn" role="tab" aria-selected="false" data-panel-tab="compare"><span class="num">06</span>vs. arrays</button>
+    <button class="section-tab-btn" role="tab" aria-selected="false" data-panel-tab="exam"><span class="num">07</span>Exam corner</button>
+    <button class="section-tab-btn" role="tab" aria-selected="false" data-panel-tab="glossary"><span class="num">08</span>Glossary</button>
   </nav>
 
-  <section id="concept">
+  <section id="concept" data-panel="concept" class="active">
     <h2><span class="num">01</span> The idea</h2>
     <p class="lede">A <strong>linked list</strong> is an Abstract Data Type (ADT): a collection of data plus a defined set of operations on it &mdash; find, add, delete &mdash; where you only care <em>what</em> those operations do, not how they're built underneath.</p>
     <p>Every item in the list ("node") is stored together with a pointer to the <em>next</em> item. A <code>startPointer</code> marks the first node. The last node's pointer is set to <code>&minus;1</code>, a <strong>null pointer</strong> &mdash; the signal that there's nothing further to follow.</p>
@@ -604,7 +634,7 @@
     <div class="note"><strong>Why bother?</strong> Linked lists keep data in order (usually ascending or descending) without having to shuffle every element along, the way inserting into the middle of a sorted array would. You only ever rewrite two pointers.</div>
   </section>
 
-  <section id="anatomy">
+  <section id="anatomy" data-panel="anatomy">
     <h2><span class="num">02</span> Anatomy: two arrays, one heap</h2>
     <p>On the exam, a linked list is almost always <strong>implemented using two parallel 1D arrays</strong> of the same fixed size &mdash; never real pointers/memory addresses. This is the detail examiners repeatedly say candidates skip.</p>
     <ul>
@@ -639,8 +669,13 @@
     <p>Read it by following the chain: <code>startPointer</code> is 4 &rarr; index 4 holds <strong>16</strong>, whose pointer is 1 &rarr; index 1 holds <strong>19</strong>, pointer 0 &rarr; <strong>27</strong>, pointer 2 &rarr; <strong>36</strong>, pointer 3 &rarr; <strong>42</strong>, pointer &minus;1 &rarr; end of list. So the pointers give the list order <strong>16, 19, 27, 36, 42</strong> &mdash; genuinely ascending, even though the items sit at whatever array index they happened to be allocated from the heap (in insertion order: 27, 19, 36, 42, 16). Only the pointer chain decides the list's real order; the physical array positions are just where each node's data happens to live.</p>
     <div class="note"><strong>This is not insertion sort.</strong> Insertion sort (section 19.1.2) repeatedly shifts array elements along to sort a whole array that's already fully populated. This is different: it's inserting <em>one new node</em> into a linked list that is already sorted, by walking pointers to find the right gap and splicing it in &mdash; no data ever moves, only two pointers change. That's the entire point of using a linked list for ordered data instead of a plain array.</div>
 
-    <h3>To set up an empty linked list (pseudocode)</h3>
-    <pre><code>DECLARE myLinkedList ARRAY[0:11] OF INTEGER
+    <h3>To set up an empty linked list</h3>
+    <div class="tabs" role="tablist" data-group="setup">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="setup-pseudo">Pseudocode</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="setup-py">Python</button>
+    </div>
+    <div class="tab-panel active" id="setup-pseudo">
+      <pre><code>DECLARE myLinkedList ARRAY[0:11] OF INTEGER
 DECLARE myLinkedListPointers ARRAY[0:11] OF INTEGER
 DECLARE startPointer : INTEGER
 DECLARE heapStartPointer : INTEGER
@@ -657,13 +692,30 @@ NEXT index
 // set up once when the linked list is initialised
 myLinkedListPointers[11] &larr; -1
 // the final heap pointer is -1: no further free links</code></pre>
+    </div>
+    <div class="tab-panel" id="setup-py">
+      <pre><code># set up an empty linked list of 12 elements
+myLinkedList = [None] * 12
+myLinkedListPointers = [None] * 12
+
+heapStartPointer = 0
+startPointer = -1        # list empty
+
+for index in range(12):
+    myLinkedListPointers[index] = index + 1
+
+# the heap is itself a linked list of every free space,
+# set up once when the linked list is initialised
+myLinkedListPointers[11] = -1
+# the final heap pointer is -1: no further free links</code></pre>
+    </div>
 
     <div class="stepper" id="stepper-setup">
       <div class="stepper-title">Step through it &mdash; click Next</div>
     </div>
   </section>
 
-  <section id="find">
+  <section id="find" data-panel="find">
     <h2><span class="num">03</span> Finding an item</h2>
     <p>To search, start at <code>startPointer</code> and follow the chain of "next" pointers &mdash; comparing the data at each index &mdash; until either the item is found, or the pointer reaches <code>&minus;1</code> (not found). This is <strong>not</strong> a linear scan of the array from index 0; you must follow the links.</p>
 
@@ -740,13 +792,18 @@ ENDFUNCTION</code></pre>
     </div>
   </section>
 
-  <section id="insert">
+  <section id="insert" data-panel="insert">
     <h2><span class="num">04</span> Inserting an item</h2>
     <p>Adding an item always means the same first step &mdash; take the next free slot from the <strong>heap</strong> and write the data there. What changes is where the new node gets stitched into the chain.</p>
 
     <h3>Ordered insert &mdash; keeps the list sorted</h3>
     <p>This is the version behind the worked example in section 2. It walks the pointers to find the correct sorted position (the node whose data is just larger than the new item), then splices the new node in between its predecessor and that node &mdash; no data ever moves, only pointers.</p>
-    <pre><code>PROCEDURE linkedListAdd(itemAdd)
+    <div class="tabs" role="tablist" data-group="insert-ordered">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="insert-ordered-pseudo">Pseudocode</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="insert-ordered-py">Python</button>
+    </div>
+    <div class="tab-panel active" id="insert-ordered-pseudo">
+      <pre><code>PROCEDURE linkedListAdd(itemAdd)
   IF heapStartPointer = nullPointer
     THEN
       OUTPUT "Linked list full"
@@ -775,10 +832,43 @@ ENDFUNCTION</code></pre>
       ENDIF
   ENDIF
 ENDPROCEDURE</code></pre>
+    </div>
+    <div class="tab-panel" id="insert-ordered-py">
+      <pre><code>def linkedListAdd(itemAdd):
+    global startPointer, heapStartPointer
+    if heapStartPointer == nullPointer:
+        print("Linked list full")
+        return
+
+    # claim the next free slot from the heap
+    newPointer = heapStartPointer
+    heapStartPointer = myLinkedListPointers[heapStartPointer]
+    myLinkedList[newPointer] = itemAdd
+
+    if startPointer == nullPointer or itemAdd < myLinkedList[startPointer]:
+        # itemAdd is the new smallest value: insert at the head
+        myLinkedListPointers[newPointer] = startPointer
+        startPointer = newPointer
+    else:
+        # walk the chain to find the node just before the right spot
+        previousPointer = startPointer
+        currentPointer = myLinkedListPointers[startPointer]
+        while currentPointer != nullPointer and myLinkedList[currentPointer] < itemAdd:
+            previousPointer = currentPointer
+            currentPointer = myLinkedListPointers[currentPointer]
+        # splice the new node in between previousPointer and currentPointer
+        myLinkedListPointers[newPointer] = currentPointer
+        myLinkedListPointers[previousPointer] = newPointer</code></pre>
+    </div>
 
     <h3>Simple insert &mdash; the version given in the coursebook</h3>
     <p>The AS-level pseudocode Cambridge actually gives (coursebook Table 19.16) is simpler: it skips the search entirely and always makes the new item the new head of the list. Fine for a stack-like structure, but it will <strong>not</strong> keep the list sorted &mdash; each new item just lands in front of whatever was already there.</p>
-    <pre><code>PROCEDURE linkedListAdd(itemAdd)
+    <div class="tabs" role="tablist" data-group="insert-simple">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="insert-simple-pseudo">Pseudocode</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="insert-simple-py">Python</button>
+    </div>
+    <div class="tab-panel active" id="insert-simple-pseudo">
+      <pre><code>PROCEDURE linkedListAdd(itemAdd)
   IF heapStartPointer = nullPointer
     THEN
       OUTPUT "Linked list full"
@@ -790,6 +880,20 @@ ENDPROCEDURE</code></pre>
       myLinkedListPointers[startPointer] &larr; tempPointer
   ENDIF
 ENDPROCEDURE</code></pre>
+    </div>
+    <div class="tab-panel" id="insert-simple-py">
+      <pre><code>def linkedListAdd(itemAdd):
+    global startPointer, heapStartPointer
+    if heapStartPointer == nullPointer:
+        print("Linked list full")
+        return
+
+    tempPointer = startPointer              # keep old start pointer
+    startPointer = heapStartPointer         # new node claims this slot
+    heapStartPointer = myLinkedListPointers[heapStartPointer]  # heap moves on
+    myLinkedList[startPointer] = itemAdd
+    myLinkedListPointers[startPointer] = tempPointer</code></pre>
+    </div>
 
     <div class="warn"><strong>Exam trap:</strong> always check <code>heapStartPointer = &minus;1</code> (list full) before writing to the heap. Cambridge mark schemes give a method point specifically for this check &mdash; in both versions above.</div>
 
@@ -798,10 +902,15 @@ ENDPROCEDURE</code></pre>
     </div>
   </section>
 
-  <section id="delete">
+  <section id="delete" data-panel="delete">
     <h2><span class="num">05</span> Deleting an item</h2>
     <p>Deleting doesn't shuffle data along, unlike a plain array. Instead: find the node, splice it out by pointing its <em>predecessor</em> directly at its successor, then return the freed index to the front of the heap so it can be reused.</p>
-    <pre><code>PROCEDURE linkedListDelete(itemDelete)
+    <div class="tabs" role="tablist" data-group="delete-code">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="delete-pseudo">Pseudocode</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="delete-py">Python</button>
+    </div>
+    <div class="tab-panel active" id="delete-pseudo">
+      <pre><code>PROCEDURE linkedListDelete(itemDelete)
   IF startPointer = nullPointer
     THEN
       OUTPUT "Linked list empty"
@@ -824,6 +933,29 @@ ENDPROCEDURE</code></pre>
       ENDIF
   ENDIF
 ENDPROCEDURE</code></pre>
+    </div>
+    <div class="tab-panel" id="delete-py">
+      <pre><code>def linkedListDelete(itemDelete):
+    global startPointer, heapStartPointer
+    if startPointer == nullPointer:
+        print("Linked list empty")
+        return
+
+    index = startPointer
+    oldIndex = None
+    while myLinkedList[index] != itemDelete and index != nullPointer:
+        oldIndex = index
+        index = myLinkedListPointers[index]
+
+    if index == nullPointer:
+        print("Item", itemDelete, "not found")
+    else:
+        # unhook the node and return its slot to the heap
+        tempPointer = myLinkedListPointers[index]
+        myLinkedListPointers[index] = heapStartPointer
+        heapStartPointer = index
+        myLinkedListPointers[oldIndex] = tempPointer</code></pre>
+    </div>
     <div class="note"><strong>2022 examiner report, verbatim:</strong> "candidates are asked to explain how the simplified linked list structure could be improved... expected to explain how the spaces where data had been deleted could be re-used using a free list pointer." That free list <em>is</em> the heap above &mdash; know the term.</div>
 
     <div class="stepper" id="stepper-delete">
@@ -831,7 +963,7 @@ ENDPROCEDURE</code></pre>
     </div>
   </section>
 
-  <section id="compare">
+  <section id="compare" data-panel="compare">
     <h2><span class="num">06</span> Linked list vs. plain array</h2>
     <div class="tbl-wrap">
       <table>
@@ -842,83 +974,185 @@ ENDPROCEDURE</code></pre>
           <tr><td>Direct access by position</td><td>O(1) &mdash; <code>array[i]</code></td><td>O(n) &mdash; must follow pointers from the start</td></tr>
           <tr><td>Memory overhead</td><td>None extra</td><td>Second array needed, purely for pointers</td></tr>
           <tr><td>Fixed capacity?</td><td>Yes</td><td>Yes (both use fixed-size arrays here)</td></tr>
+          <tr><td>Data structure type</td><td>Static &mdash; generally fixed in size</td><td>Dynamic &mdash; freedom to expand/contract as nodes are added or removed</td></tr>
         </tbody>
       </table>
     </div>
     <p>This trade-off &mdash; cheap insert/delete vs. expensive direct access &mdash; is exactly what several past-paper "explain the advantage / disadvantage" questions are testing. Say <em>why</em>, not just <em>that</em> it's faster or slower.</p>
+    <div class="note"><strong>Paper 3 mark-scheme language.</strong> The "static vs dynamic" framing is the actual wording Cambridge examiners credit (9618/32, Oct/Nov 2023, Q9(b) &mdash; see Exam corner): "a linked list is a dynamic data structure / not restricted in size... has greater freedom to expand or contract by adding or removing nodes as necessary", vs. "an array is a static data structure, generally fixed in size... when the array is full, [it] cannot be extended any further." Use those exact terms &mdash; <em>static</em>, <em>dynamic</em>, <em>fixed in size</em> &mdash; rather than vaguer phrasing like "more flexible".</div>
   </section>
 
-  <section id="exam">
+  <section id="exam" data-panel="exam">
     <h2><span class="num">07</span> Exam corner</h2>
-    <p class="lede">Two real Cambridge 9618 questions, with the examiner-report commentary that followed them.</p>
+    <p class="lede">Three real Cambridge 9618 questions &mdash; two from the A2 written paper (Paper 3) and one full practical question from Paper 4 &mdash; with mark schemes and examiner-report commentary built in.</p>
 
     <div class="note">
-      <strong>Which paper are you actually revising for?</strong> The 9618 syllabus tests linked lists in two very different formats, and the prep is different for each.
+      <strong>Paper 3 vs Paper 4 &mdash; same logic, two different formats.</strong>
       <div class="tbl-wrap" style="margin-top:10px;">
         <table>
-          <thead><tr><th></th><th>Papers 2 &amp; 3</th><th>Paper 4</th></tr></thead>
+          <thead><tr><th></th><th>Paper 3</th><th>Paper 4</th></tr></thead>
           <tbody>
-            <tr><td>Format</td><td>Written, on paper</td><td>Practical, on a computer</td></tr>
-            <tr><td>What you write</td><td>Cambridge pseudocode, by hand</td><td>Real code (usually Python) in an IDE</td></tr>
-            <tr><td>Can you test it?</td><td>No &mdash; it has to be right on paper, no computer in the room</td><td>Yes &mdash; you run it against test data and screenshot the output</td></tr>
+            <tr><td>Format</td><td>Written, on paper (A2 Advanced Theory)</td><td>Practical, on a computer (A2)</td></tr>
+            <tr><td>What you write</td><td>Cambridge pseudocode, by hand</td><td>Real code &mdash; usually Python &mdash; in an IDE</td></tr>
+            <tr><td>Can you test it?</td><td>No &mdash; it has to be right on paper, no computer in the room</td><td>Yes &mdash; you run it against test data and screenshot the output into an Evidence Document</td></tr>
             <tr><td>What's actually hard</td><td>Recalling the correct logic and writing it out flawlessly from memory, unaided</td><td>Typing fluent, working code fast enough, and debugging under time pressure &mdash; no coursebook or internet either</td></tr>
           </tbody>
         </table>
       </div>
-      <p style="margin:10px 0 0;">Everything on this page &mdash; the pseudocode, the trace tables, the step-through visualisers &mdash; is aimed squarely at Papers 2 &amp; 3, where you genuinely have to hold the algorithm's logic in your head and write it correctly with no way to test it first. For Paper 4, the same underlying logic matters, but the goal shifts to being able to type it fluently as working Python (or Java/VB) and debug it live, since you'll have a real IDE and immediate feedback in that exam.</p>
+      <p style="margin:10px 0 0;">Sections 1&ndash;6 of this page are Paper 3's territory &mdash; the pseudocode, trace tables and step-through visualisers are exactly what you need to hold in your head and reproduce by hand, unaided. The Paper 4 question below shows the same underlying node/pointer idea implemented a completely different way: as an OOP <code>Node</code>/<code>LinkedList</code> class in Python, run and tested live rather than traced on paper.</p>
     </div>
 
     <div class="exam-card">
       <div class="exam-head">
-        <span class="exam-src">9618/21/O/N/22 &middot; Question 4</span>
-        <span class="marks">8 marks total</span>
+        <span class="exam-src">9618/32 &middot; Paper 3 &middot; Oct/Nov 2023 &middot; Question 9(b)</span>
+        <span class="marks">2 marks</span>
       </div>
       <div class="exam-body">
-        <p><strong>(a)</strong> An ordered linked list stores single characters, accessed alphabetically. The diagram shows nodes <code>'C'</code>, <code>'J'</code>, <code>'L'</code> chained from the start pointer, with <code>'L'</code> pointing to a null pointer.</p>
-        <p><strong>(i)</strong> Nodes with data <code>'A'</code> and <code>'K'</code> are added; nodes <code>'J'</code> and <code>'L'</code> are deleted. Complete the diagram to show the new state, still accessible in alphabetical order. <em>[4]</em></p>
-        <p><strong>(ii)</strong> The same data could be stored in a 1D array (<code>'C'</code>, <code>'J'</code>, <code>'L'</code> in three consecutive elements). Explain the <strong>advantages</strong> of making the same changes to the linked list instead of to the array. <em>[2]</em></p>
-        <p><strong>(iii)</strong> Explain the <strong>disadvantages</strong> of making those changes to the linked list instead of the array. <em>[2]</em></p>
+        <p>Following on from pseudocode to set up and push onto an array-based stack: <strong>"Justify the use of a linked list instead of an array to implement a stack."</strong></p>
         <details class="answer">
-          <summary>Show worked answer</summary>
+          <summary>Show mark scheme</summary>
           <div class="answer-body">
-            <p><strong>(i)</strong> Start pointer &rarr; <code>'A'</code> &rarr; <code>'C'</code> &rarr; <code>'K'</code> &rarr; null. <code>'A'</code> takes a free heap slot and points to <code>'C'</code>'s old index; <code>'C'</code>'s pointer is redirected to <code>'K'</code>'s new slot; <code>'K'</code>'s pointer is set to null (&minus;1). The <code>'J'</code> and <code>'L'</code> slots return to the heap.</p>
-            <p><strong>(ii)</strong> Advantage: no need to shift every following element up/down to keep alphabetical order &mdash; only pointers change, which is faster for frequent insertions/deletions.</p>
-            <p><strong>(iii)</strong> Disadvantage: extra memory is needed for the second (pointer) array; to reach a given position you must follow pointers from the start rather than jumping straight to an index, so search by position is slower.</p>
+            <p>One mark for a correct point about each structure (max 2):</p>
+            <p><strong>Linked list</strong> &mdash; a linked list is a <em>dynamic</em> data structure, not restricted in size; it has greater freedom to expand or contract by adding or removing nodes as necessary; it allows more efficient editing using pointers (instead of moving the data).</p>
+            <p><strong>Array</strong> &mdash; an array is a <em>static</em> data structure, generally fixed in size; when the array is full, the stack cannot be extended any further.</p>
           </div>
         </details>
         <div class="examiner">
-          <span class="who">Examiner report &mdash; November 2022</span>
-          "Many fully correct answers were seen [in (a)(i)]... This was not well answered by most [in (ii)/(iii)], with few candidates gaining credit... Many answers did not make the connection with the task from part (a)(i), as directed in the question, and offered very generic answers."
+          <span class="who">Why this is a 2-mark trap</span>
+          Most candidates only argue one side (just the linked list, or just the array) and cap themselves at 1 mark. The mark scheme awards a point <em>per structure</em> &mdash; you need a correct statement about <strong>both</strong> to get full marks, and the reward words are <em>dynamic</em>/<em>static</em>, not looser phrasing like "more flexible".
         </div>
       </div>
     </div>
 
     <div class="exam-card">
       <div class="exam-head">
-        <span class="exam-src">9618/21/O/N/22 &middot; Question 4(b)</span>
-        <span class="marks">4 marks</span>
+        <span class="exam-src">9618/31 &middot; Paper 3 &middot; Oct/Nov 2024 &middot; Question 11</span>
+        <span class="marks">12 marks total</span>
       </div>
       <div class="exam-body">
-        <p>"A program will store data using a linked list like the one shown in part (a). Explain how the linked list <strong>can be implemented</strong>."</p>
+        <p>An ordered binary tree (Red &rarr; Green/Yellow &rarr; Blue/Orange/Violet &rarr; Indigo) is to be stored as <strong>a linked list of nodes, where each node has a left pointer, the data, and a right pointer</strong> &mdash; the same node/pointer idea as this page, just with two pointers per node instead of one.</p>
+        <p><strong>(a)</strong> Complete the linked list (as a node diagram) to represent the given binary tree, including correct null pointers. <em>[4]</em></p>
+        <p><strong>(b)</strong> The linked list from (a) is stored in a 1D array of records (<code>LeftPtr</code>, <code>Data</code>, <code>RightPtr</code>). Complete the array. <em>[4]</em></p>
+        <p><strong>(c)</strong> This pseudocode searches the array <code>BinTree</code> for an item, returning its index or a null pointer if not found. Complete the gaps:</p>
+        <pre><code>FUNCTION SearchTree(Item : STRING) RETURNS .....................
+    NowPtr &larr; .....................
+    WHILE NowPtr &lt;&gt; -1
+        IF ..................................................... THEN
+            NowPtr &larr; BinTree[NowPtr].LeftPtr
+        ELSE
+            IF BinTree[NowPtr].Data &lt; Item THEN
+                .....................................................
+            ELSE
+                RETURN NowPtr
+            ENDIF
+        ENDIF
+    ENDWHILE
+    RETURN NowPtr
+ENDFUNCTION</code></pre>
         <details class="answer">
-          <summary>Show worked answer</summary>
+          <summary>Show mark scheme</summary>
           <div class="answer-body">
-            <p>Two 1D arrays are declared: one holds the data (characters), the other holds pointers (integers) to the index of the next node. Array elements sharing the same index form one node. A start-pointer variable holds the index of the first node; the last node's pointer is set to &minus;1 (null), which is not a valid index and signals the end of the list.</p>
+            <p><strong>(a)</strong> Four nodes added (Blue, Orange, Indigo, Violet) with correct data values; correct null pointers (&minus;1) in all six leaf-side pointers where there's no child; correct arrows joining each parent node to its left/right child; all nodes in the correct left-smaller/right-larger order.</p>
+            <p><strong>(b)</strong> With <code>RootPtr = 0</code>: index 0 = Red (LeftPtr 1, RightPtr 2), index 1 = Green (3, 4), index 2 = Yellow (6, &minus;1), index 3 = Blue (&minus;1, &minus;1), index 4 = Orange (5, &minus;1), index 5 = Indigo (&minus;1, &minus;1), index 6 = Violet (&minus;1, &minus;1), with <code>FreePtr = 7</code> and index 7 blank.</p>
+            <p><strong>(c)</strong> <code>RETURNS INTEGER</code> &middot; <code>NowPtr &larr; RootPtr</code> &middot; <code>IF BinTree[NowPtr].Data &gt; Item THEN</code> &middot; <code>NowPtr &larr; BinTree[NowPtr].RightPtr</code>. One mark awarded per correct line (max 4).</p>
           </div>
         </details>
         <div class="examiner">
-          <span class="who">Examiner report &mdash; November 2022</span>
-          "Many candidates seemed to overlook the word 'implemented' and gave an abstract description of how a linked list operates [instead of the two-array structure]. Candidates should not assume that because a question shares key phrases with those from a past paper, the required answer is the same."
+          <span class="who">How this connects to the rest of this page</span>
+          This is the exact same array-of-records pattern as sections 2&ndash;5, just with <strong>two</strong> next-pointers per node (left/right) instead of one &mdash; so <code>NowPtr</code> moving via <code>.LeftPtr</code> or <code>.RightPtr</code> is doing the same job as <code>itemPointer &larr; myLinkedListPointers[itemPointer]</code> in the <code>find</code> function in section 3. Notice <code>BinTree[NowPtr].Data</code> &mdash; this only works because each array element is a <strong>record</strong> (a user-defined type bundling LeftPtr/Data/RightPtr together), not a single value, so <code>.Data</code> picks out just one field of that record.
+        </div>
+      </div>
+    </div>
+
+    <div class="exam-card">
+      <div class="exam-head">
+        <span class="exam-src">9618/43 &middot; Paper 4 &middot; May/June 2025 &middot; Question 3</span>
+        <span class="marks">29 marks total</span>
+      </div>
+      <div class="exam-body">
+        <p>A full practical question: build a linked list using <strong>Object-Oriented Programming</strong>. A <code>Node</code> class stores <code>TheData</code> and <code>NextNode</code>; a <code>LinkedList</code> class stores <code>HeadNode</code> and implements <code>InsertNode()</code>, <code>RemoveNode()</code> and <code>Traverse()</code>. This is the Paper 4 equivalent of everything in sections 2&ndash;5 &mdash; same node/pointer idea, built as objects instead of two parallel arrays.</p>
+        <p><strong>(a)</strong> Write the <code>Node</code> class with its constructor <em>[4]</em>; its two get methods <em>[3]</em>; and <code>SetNextNode()</code> <em>[2]</em>.</p>
+        <p><strong>(b)</strong> Write the <code>LinkedList</code> class with its constructor <em>[2]</em>; <code>InsertNode()</code>, which creates a new node, uses <code>SetNextNode()</code> to point it at the current head, then replaces the head with it <em>[4]</em>; <code>Traverse()</code>, concatenating every node's data into one string <em>[3]</em>; and <code>RemoveNode()</code>, which finds and unhooks the first node matching a given value <em>[6]</em>.</p>
+        <p><strong>(c)</strong> Insert the values <code>10, 20, 30, 40, 50</code>, call <code>Traverse()</code>, remove <code>30</code>, then call <code>Traverse()</code> again and screenshot the output. <em>[5]</em></p>
+        <details class="answer">
+          <summary>Show example mark-scheme code (Python)</summary>
+          <div class="answer-body">
+            <pre><code>class Node:
+    def __init__(self, NodeData):
+        self._TheData = NodeData   # Integer
+        self._NextNode = None      # Node
+
+    def GetData(self):
+        return self._TheData
+
+    def GetNextNode(self):
+        return self._NextNode
+
+    def SetNextNode(self, pNextNode):
+        self._NextNode = pNextNode
+
+
+class LinkedList:
+    def __init__(self):
+        self._HeadNode = None      # Node
+
+    def InsertNode(self, NodeData):
+        TheNode = Node(NodeData)
+        TheNode.SetNextNode(self._HeadNode)
+        self._HeadNode = TheNode
+
+    def Traverse(self):
+        ReturnValue = ""
+        CurrentNode = self._HeadNode
+        while CurrentNode != None:
+            ReturnValue = ReturnValue + str(CurrentNode.GetData()) + " "
+            CurrentNode = CurrentNode.GetNextNode()
+        return ReturnValue
+
+    def RemoveNode(self, DataToRemove):
+        if self._HeadNode == None:
+            return False
+        elif self._HeadNode.GetData() == DataToRemove:
+            self._HeadNode = self._HeadNode.GetNextNode()
+            return True
+        Found = False
+        CurrentNode = self._HeadNode
+        while not(Found) and CurrentNode != None:
+            if (CurrentNode.GetNextNode()).GetData() == DataToRemove:
+                CurrentNode.SetNextNode(CurrentNode.GetNextNode().GetNextNode())
+                Found = True
+            else:
+                CurrentNode = CurrentNode.GetNextNode()
+        return False
+
+
+# (c) test program
+CreateList = LinkedList()
+CreateList.InsertNode(10)
+CreateList.InsertNode(20)
+CreateList.InsertNode(30)
+CreateList.InsertNode(40)
+CreateList.InsertNode(50)
+ReturnValue1 = CreateList.Traverse()
+CreateList.RemoveNode(30)
+ReturnValue2 = CreateList.Traverse()
+# ReturnValue1: "50 40 30 20 10 "
+# ReturnValue2: "50 40 20 10 "</code></pre>
+          </div>
+        </details>
+        <div class="examiner">
+          <span class="who">Why the output isn't 10, 20, 30, 40, 50</span>
+          <code>InsertNode()</code> always points the new node at the current <code>HeadNode</code> and then replaces it &mdash; exactly the "simple insert" pseudocode from section 4, translated into OOP. That means every insert goes to the <strong>front</strong> of the list, so inserting 10 then 20 then 30 then 40 then 50 produces the list <strong>50, 40, 30, 20, 10</strong> when traversed &mdash; the official mark scheme's own expected output. If you expected ascending order here, you're thinking of the <em>ordered insert</em> from section 4, which this exam question deliberately doesn't ask for.
         </div>
       </div>
     </div>
 
     <div class="warn">
-      <strong>The single most repeated examiner complaint:</strong> confusing an abstract description of a linked list ("items point to the next item") with how it's actually <em>implemented</em> in pseudocode/an array (two parallel 1D arrays, a start pointer, a heap/free-list pointer). If a question says "implemented", you must name the two arrays and both pointers.
+      <strong>The thread connecting all three questions above:</strong> every single one is really testing the same node/pointer idea from section 1 &mdash; a static array-of-records version (Paper 3, Q11), an abstract justify-the-choice version (Paper 3, Q9), and a fully object-oriented version (Paper 4, Q3). Learn the <em>concept</em> once, and recognise it under each of these three disguises.
     </div>
   </section>
 
-  <section id="glossary">
+  <section id="glossary" data-panel="glossary">
     <h2><span class="num">08</span> Glossary</h2>
     <dl class="glossary">
       <dt>Node</dt>
@@ -943,6 +1177,24 @@ ENDPROCEDURE</code></pre>
 </div>
 
 <script>
+  // ---- top-level section tabs ----
+  (function(){
+    var btns = document.querySelectorAll('.section-tab-btn');
+    var panels = document.querySelectorAll('section[data-panel]');
+    btns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        btns.forEach(function(b){ b.setAttribute('aria-selected','false'); });
+        btn.setAttribute('aria-selected','true');
+        panels.forEach(function(p){ p.classList.remove('active'); });
+        var target = document.querySelector('section[data-panel="' + btn.dataset.panelTab + '"]');
+        if (target){
+          target.classList.add('active');
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+      });
+    });
+  })();
+
   document.querySelectorAll('.tabs').forEach(function(tabs){
     var btns = tabs.querySelectorAll('.tab-btn');
     btns.forEach(function(btn){
@@ -1316,5 +1568,4 @@ ENDPROCEDURE</code></pre>
     });
   })();
 </script>
-
-<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}</style><div class="site-pill"><a href="../../a-cs/a-level/ch-19/">← Chapter 19</a><a href="../../">Home</a><button data-done-slug="linked-lists" hidden></button></div><script src="../../assets/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js"></script><script src="../../assets/gate.js" data-courses="a-cs"></script></body></html>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}</style><div class="site-pill"><a href="../../a-cs/a-level/ch-19/">← Chapter 19</a><a href="../../">Home</a><button data-done-slug="linked-lists" hidden></button></div><script src="../../assets/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js"></script><script src="../../assets/gate.js" data-courses="a-cs"></script>
