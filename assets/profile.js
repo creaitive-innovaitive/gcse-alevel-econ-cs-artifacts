@@ -121,6 +121,22 @@
     }).join("");
     const nextA = next && catalog.artifacts[next];
 
+    const account = `<section class="card block"><h3>Account</h3>
+        <form id="f-pw" class="inline"><label>New password<input type="password" name="password" autocomplete="new-password" minlength="8" required></label>
+        <label>Confirm<input type="password" name="confirm" autocomplete="new-password" minlength="8" required></label>
+        <button class="btn" type="submit">Change password</button><p class="msg" hidden></p></form>
+        <p><button class="btn ghost" id="signout">Sign out</button></p></section>`;
+
+    // Teachers get the chapter map only: no percentages, up next, history or scores.
+    if (me.is_admin) {
+      const maps = mine.map((k) => {
+        const c = catalog.courses[k];
+        return `<section class="card block" data-accent="${c.accent}"><h3><a href="${S.base}${c.url}">${esc(c.title)}</a></h3>${chapterMap(c, done)}</section>`;
+      }).join("");
+      return `<section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}</p>${subjectPanel(me)}</section><!--split-->
+        <p class="hint">Course map. Each square is a coursebook chapter: filled means every activity is done, half means started, grey means nothing there yet.</p>${maps}${account}`;
+    }
+
     return `
       <section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}</p>${subjectPanel(me)}</section><!--split-->
       <div class="grid two dash">
@@ -137,11 +153,7 @@
           : `<p class="hint">Mark an activity as done and it will show up here.</p>`}</section>
         <section class="card block empty"><h3>Assessment scores</h3><p class="hint">Coming soon.</p></section>
       </div>
-      <section class="card block"><h3>Account</h3>
-        <form id="f-pw" class="inline"><label>New password<input type="password" name="password" autocomplete="new-password" minlength="8" required></label>
-        <label>Confirm<input type="password" name="confirm" autocomplete="new-password" minlength="8" required></label>
-        <button class="btn" type="submit">Change password</button><p class="msg" hidden></p></form>
-        <p><button class="btn ghost" id="signout">Sign out</button></p></section>`;
+      ${account}`;
   }
 
   function wireAccount() {
