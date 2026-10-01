@@ -263,21 +263,15 @@ DECLARE index            : INTEGER</pre>
     <div class="tablewrap"><table class="nodes"><thead><tr><th>Index</th><th>keys[i].item</th><th>keys[i].pointer</th><th>values[i]</th></tr></thead><tbody id="dtbody"></tbody></table></div>
   </div>
 
-  <h3>Dictionaries in the languages you use</h3>
-  <p>The syllabus languages provide a built-in dictionary type, so you rarely build one by hand. You still need to know it can be built from a linked list.</p>
-  <div class="grid2">
-    <div class="card"><h3 style="margin-top:0">Python</h3><pre class="mini">studentdict = {
-  "Leon": 27,
-  "Ahmad": 78,
-  "Susie": 64
-}</pre></div>
-    <div class="card"><h3 style="margin-top:0">VB.NET</h3><pre class="mini">Dim studentdict As _
-  New Dictionary(Of String, Integer)
-studentdict.Add("Leon", 27)
-studentdict.Add("Ahmad", 78)
-studentdict.Add("Susie", 64)</pre></div>
-  </div>
-  <p style="color:var(--muted);font-size:.95rem">Java no longer uses Dictionary. It is implemented with a hash table, for example <code>new Hashtable&lt;Integer, String&gt;()</code> with <code>put(27,"Leon")</code>.</p>
+  <h3>A dictionary in Python</h3>
+  <p>Python has a built-in dictionary type, so you rarely build one by hand. You still need to know it can be built from a linked list.</p>
+<pre>studentdict = {
+    "Leon": 27,
+    "Ahmad": 78,
+    "Susie": 64
+}
+studentdict["Ahmad"]        # 78, found from the key
+studentdict["Ahmad"] = 80   # same key again replaces the value</pre>
 </section>
 
 <section class="panel" role="tabpanel" id="others">
