@@ -168,3 +168,5 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 .block.attn { border-color: var(--accent); }
 .mini.ok { color: #1f7a4d; border-color: #1f7a4d; }
 .card .row.row { align-items: center; }
+.admintabs { margin: 4px 0 16px; }
+.tabpanel[hidden] { display: none; }

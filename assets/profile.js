@@ -4,7 +4,7 @@
   const root = document.getElementById("profile-root");
   const DOMAIN = "@danang.sis.edu.vn";
   const COURSE_KEYS = ["ig-econ", "ig-cs", "a-econ", "a-cs"];
-  let catalog;
+  let catalog, adminMe = "", adminTab = null;
 
   // Academic words for assigned passwords: two words and two digits, e.g. OutcomeMethod47.
   const WORDS = ("analyse approach assess assume benefit concept consist context contrast create data define derive "
@@ -111,7 +111,7 @@
     const nextA = next && catalog.artifacts[next];
 
     return `
-      <section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}</p>${subjectPanel(me)}</section>
+      <section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}</p>${subjectPanel(me)}</section><!--split-->
       <div class="grid two dash">
         <section class="card block"><h3>Overall progress</h3><div class="row"><span class="big">${pct(doneN, all.size)}%</span><span class="hint">${doneN} of ${all.size} activities</span></div>
           <div class="bar2"><i style="width:${pct(doneN, all.size)}%"></i></div></section>
@@ -185,26 +185,39 @@
     catch (e) { host.innerHTML = `<p class="msg err">Could not load students: ${esc(e.message)}. Has schema.sql been run?</p>`; return; }
 
     const pending = state.people.flatMap((p) => (p.requested || []).filter((k) => catalog.courses[k]).map((k) => ({ p, k })));
+    const tab = adminTab || (pending.length ? "approvals" : "students");
     host.innerHTML = `
-      <section class="card block ${pending.length ? "attn" : ""}"><div class="row"><h3>Pending approvals (${pending.length})</h3>${pending.length > 1 ? '<button class="mini" id="approveall">Approve all</button>' : ""}</div>
+      <div class="tabs admintabs" role="tablist">
+        <button data-at="approvals">Approvals${pending.length ? ` (${pending.length})` : ""}</button><button data-at="students">Students (${state.people.length})</button>
+        <button data-at="add">Add students</button><button data-at="pw">Passwords</button><button data-at="me">My profile</button></div>
+      <div class="tabpanel" data-panel="approvals"><section class="card block ${pending.length ? "attn" : ""}"><div class="row"><h3>Pending approvals (${pending.length})</h3>${pending.length > 1 ? '<button class="mini" id="approveall">Approve all</button>' : ""}</div>
         ${pending.length ? `<ul class="plain">${pending.map(({ p, k }) => `<li class="row" data-email="${esc(p.email)}" data-subj="${k}">
           <span><b>${esc(p.name)}</b> <span class="hint">${esc(p.email)}</span> wants <span class="pill" data-accent="${catalog.courses[k].accent}">${esc(catalog.courses[k].title)}</span></span>
-          <span><button class="mini ok" data-ap="yes">Approve</button> <button class="mini danger" data-ap="no">Decline</button></span></li>`).join("")}</ul>` : '<p class="hint">Nothing waiting.</p>'}</section>
-      <details class="card block" open><summary><h3>Add students</h3></summary>
+          <span><button class="mini ok" data-ap="yes">Approve</button> <button class="mini danger" data-ap="no">Decline</button></span></li>`).join("")}</ul>` : '<p class="hint">Nothing waiting.</p>'}</section></div>
+      <div class="tabpanel" data-panel="add"><section class="card block"><h3>Add students</h3>
         <form id="f-add"><label>One student per line: <b>Name, email</b> (a password is generated for each)
           <textarea name="lines" rows="5" required placeholder="An Nguyen, an.nguyen${DOMAIN}"></textarea></label>
           <div class="chks">${subjectBoxes()}</div>
-          <button class="btn" type="submit">Add students</button><p class="msg" hidden></p></form></details>
-      <details class="card block"><summary><h3>Student passwords (${state.people.length})</h3></summary>
+          <button class="btn" type="submit">Add students</button><p class="msg" hidden></p></form></section></div>
+      <div class="tabpanel" data-panel="pw"><section class="card block"><h3>Student passwords (${state.people.length})</h3>
         <p class="hint">Assigned passwords, visible to admins only. Students sign in with these. If a student changes their own password this list is out of date; Reset login puts it back to the listed one.</p>
         <div class="row"><span></span><button class="mini" id="copypw">Copy as table</button></div>
         <div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Email</th><th>Password</th></tr></thead><tbody>
         ${state.people.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.email)}</td><td><code>${esc(p.password)}</code></td></tr>`).join("") || `<tr><td colspan="3" class="hint">No students yet.</td></tr>`}
-        </tbody></table></div></details>
-      <section class="card block"><div class="row"><h3>Students (${state.people.length})</h3><button class="mini" id="csv">Export CSV</button></div>
+        </tbody></table></div></section></div>
+      <div class="tabpanel" data-panel="students"><section class="card block"><div class="row"><h3>Students (${state.people.length})</h3><button class="mini" id="csv">Export CSV</button></div>
         <div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Subjects</th><th>Status</th><th>Progress</th><th></th></tr></thead>
-        <tbody>${adminRows(state)}</tbody></table></div></section>
+        <tbody id="stu">${adminRows(state)}</tbody></table></div></section></div>
+      <div class="tabpanel" data-panel="me">${adminMe}</div>
       <dialog id="dlg"><form method="dialog" id="f-edit"></form></dialog>`;
+    const showTab = (t) => {
+      adminTab = t;
+      host.querySelectorAll("[data-at]").forEach((b) => b.classList.toggle("on", b.dataset.at === t));
+      host.querySelectorAll(".tabpanel").forEach((d) => (d.hidden = d.dataset.panel !== t));
+    };
+    host.querySelectorAll("[data-at]").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.at)));
+    showTab(tab);
+    wireAccount();
 
     $("#f-add").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -267,7 +280,7 @@
       a.download = "progress.csv"; a.click();
     });
 
-    host.querySelector("tbody").addEventListener("click", async (e) => {
+    host.querySelector("#stu").addEventListener("click", async (e) => {
       const btn = e.target.closest("[data-act]");
       if (!btn) return;
       const email = btn.closest("tr").dataset.email, p = state.people.find((x) => x.email === email);
@@ -317,9 +330,15 @@
       return viewSignedOut();
     }
     const done = await S.loadProgress();
-    root.innerHTML = viewDashboard(me, done) + (me.is_admin ? `<h2 class="group">Admin</h2><div id="admin"></div>` : "");
-    wireAccount();
-    if (me.is_admin) renderAdmin($("#admin"));
+    const [head, body] = viewDashboard(me, done).split("<!--split-->");
+    if (me.is_admin) {
+      adminMe = body;
+      root.innerHTML = head + `<div id="admin"></div>`;
+      renderAdmin($("#admin"));
+    } else {
+      root.innerHTML = head + body;
+      wireAccount();
+    }
   }
 
   boot();
