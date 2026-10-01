@@ -106,6 +106,18 @@ svg{ display:block; margin:0 auto; }
 .code-line.active .n{ color:var(--accent); opacity:1; }
 .code-line.dim-inactive{ opacity:0.45; }
 
+.lang{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.lang .lbl{ font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--sub); font-weight:700; margin-right:4px; }
+.arr{ overflow-x:auto; }
+.arr table{ border-collapse:collapse; width:100%; font-family:"JetBrains Mono",monospace; font-size:13px; }
+.arr th,.arr td{ text-align:left; padding:6px 12px; border-bottom:1px solid var(--line); }
+.arr th{ font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--sub); font-weight:700; }
+.arr tr.cur td{ background:var(--keybg); }
+.arr tr.new td{ background:var(--code-hl); color:var(--code-ink); }
+.arr .ptrs{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px; font-family:"JetBrains Mono",monospace; font-size:13px; }
+.arr .ptrs span{ background:var(--keybg); border:1px solid var(--line); border-radius:6px; padding:3px 10px; }
+.note{ color:var(--sub); font-size:15px; line-height:1.55; max-width:68ch; margin:0 0 10px; }
+.note code{ background:var(--keybg); color:var(--key); padding:1px 5px; border-radius:4px; font-family:"JetBrains Mono",monospace; font-size:0.9em; }
 footer{ color:var(--sub); font-size:13px; text-align:center; }
 
 @media (max-width:480px){
@@ -145,8 +157,24 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
     </div>
   </div>
 
+  <div class="lang" id="langTabs"><span class="lbl">Code</span></div>
   <div class="code-panel">
     <pre id="codeBlock"></pre>
+  </div>
+
+  <div class="panel arr">
+    <div class="eyebrow">Exam view</div>
+    <h2 style="font-family:Fraunces,Georgia,serif;font-size:22px;margin:4px 0 8px">The same tree as an array of records</h2>
+    <p class="note">In the pseudocode, the tree is stored in an array of records. Each node holds <code>LeftPtr</code>, <code>Data</code> and <code>RightPtr</code>, where the pointers are array indexes and <code>-1</code> means null. Nodes fill the array in the order they were inserted. Step through the tree above and watch this table fill in.</p>
+    <div class="ptrs" id="arrPtrs"></div>
+    <table><thead><tr><th>Index</th><th>LeftPtr</th><th>Data</th><th>RightPtr</th></tr></thead><tbody id="arrBody"></tbody></table>
+  </div>
+
+  <div class="panel">
+    <div class="eyebrow">Pseudocode</div>
+    <h2 style="font-family:Fraunces,Georgia,serif;font-size:22px;margin:4px 0 8px">Tree traversals</h2>
+    <p class="note">Each traversal visits every node once. They differ only in when the node is output. In-order on a binary search tree gives the values in ascending order. For this tree the three outputs are: in-order 20 30 40 50 60 70 80, pre-order 50 30 20 40 70 60 80, post-order 20 40 30 60 80 70 50.</p>
+    <div class="code-panel"><pre id="travBlock"></pre></div>
   </div>
 
   <footer>Built from <code style="background:var(--code-hl); color:var(--code-ink); padding:1px 6px; border-radius:5px;">[50, 30, 70, 20, 40, 60, 80]</code> inserted in that order — the exact tree the sequence above produces.</footer>
@@ -205,6 +233,87 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
     "        else:",
     "            return self._search(node.right, value)",
   ];
+  const psLines = [
+    "TYPE TreeNode",
+    "   DECLARE LeftPtr  : INTEGER",
+    "   DECLARE Data     : INTEGER",
+    "   DECLARE RightPtr : INTEGER",
+    "ENDTYPE",
+    "",
+    "DECLARE BinTree : ARRAY[0:99] OF TreeNode",
+    "DECLARE RootPtr, FreePtr, NewPtr, NowPtr : INTEGER",
+    "RootPtr ← -1   // empty tree",
+    "FreePtr ← 0    // next unused index",
+    "",
+    "PROCEDURE Insert(Value : INTEGER)",
+    "   DECLARE Placed : BOOLEAN",
+    "   NewPtr ← FreePtr",
+    "   FreePtr ← FreePtr + 1",
+    "   BinTree[NewPtr].Data ← Value",
+    "   BinTree[NewPtr].LeftPtr ← -1",
+    "   BinTree[NewPtr].RightPtr ← -1",
+    "   IF RootPtr = -1",
+    "      THEN",
+    "         RootPtr ← NewPtr",
+    "      ELSE",
+    "         NowPtr ← RootPtr",
+    "         Placed ← FALSE",
+    "         WHILE Placed = FALSE",
+    "            IF Value < BinTree[NowPtr].Data",
+    "               THEN",
+    "                  IF BinTree[NowPtr].LeftPtr = -1",
+    "                     THEN",
+    "                        BinTree[NowPtr].LeftPtr ← NewPtr",
+    "                        Placed ← TRUE",
+    "                     ELSE",
+    "                        NowPtr ← BinTree[NowPtr].LeftPtr",
+    "                  ENDIF",
+    "               ELSE",
+    "                  IF BinTree[NowPtr].RightPtr = -1",
+    "                     THEN",
+    "                        BinTree[NowPtr].RightPtr ← NewPtr",
+    "                        Placed ← TRUE",
+    "                     ELSE",
+    "                        NowPtr ← BinTree[NowPtr].RightPtr",
+    "                  ENDIF",
+    "            ENDIF",
+    "         ENDWHILE",
+    "   ENDIF",
+    "ENDPROCEDURE",
+    "",
+    "FUNCTION Search(Value : INTEGER) RETURNS BOOLEAN",
+    "   NowPtr ← RootPtr",
+    "   WHILE NowPtr <> -1",
+    "      IF BinTree[NowPtr].Data = Value",
+    "         THEN",
+    "            RETURN TRUE",
+    "         ELSE",
+    "            IF Value < BinTree[NowPtr].Data",
+    "               THEN",
+    "                  NowPtr ← BinTree[NowPtr].LeftPtr",
+    "               ELSE",
+    "                  NowPtr ← BinTree[NowPtr].RightPtr",
+    "            ENDIF",
+    "      ENDIF",
+    "   ENDWHILE",
+    "   RETURN FALSE",
+    "ENDFUNCTION",
+  ];
+  const travLines = [
+    "PROCEDURE InOrder(Ptr : INTEGER)",
+    "   IF Ptr <> -1",
+    "      THEN",
+    "         CALL InOrder(BinTree[Ptr].LeftPtr)",
+    "         OUTPUT BinTree[Ptr].Data        // visit between the two",
+    "         CALL InOrder(BinTree[Ptr].RightPtr)",
+    "   ENDIF",
+    "ENDPROCEDURE",
+    "",
+    "// PreOrder: OUTPUT first, then left, then right",
+    "// PostOrder: left, then right, then OUTPUT last",
+    "",
+    "CALL InOrder(RootPtr)",
+  ];
   const L = {
     insertCall:10, rootIsNone:11, rootAssign:12, elseCall:14,
     lessTest:17, leftNoneTest:18, leftAssign:19, recurseLeft:21,
@@ -213,6 +322,29 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
     nodeNoneTest:33, returnFalse:34, eqTest:35, returnTrue:36,
     ltTest:37, recurseSearchLeft:38, recurseSearchRight:40,
   };
+
+  // python line index -> pseudocode line index
+  const psMap = {};
+  psMap[L.insertCall]=11; psMap[L.rootIsNone]=18; psMap[L.rootAssign]=20; psMap[L.elseCall]=22;
+  psMap[L.lessTest]=25; psMap[L.leftNoneTest]=27; psMap[L.leftAssign]=29; psMap[L.recurseLeft]=32;
+  psMap[L.greaterTest]=34; psMap[L.rightNoneTest]=35; psMap[L.rightAssign]=37; psMap[L.recurseRight]=40; psMap[L.dup]=34;
+  psMap[L.searchCall]=47; psMap[L.searchDelegate]=48; psMap[L.nodeNoneTest]=49; psMap[L.returnFalse]=62;
+  psMap[L.eqTest]=50; psMap[L.returnTrue]=52; psMap[L.ltTest]=54; psMap[L.recurseSearchLeft]=56; psMap[L.recurseSearchRight]=58;
+
+  function psNote(t){
+    return t
+      .replace(/self\.root is None/, 'RootPtr = -1')
+      .replace(/self\.root = Node\((\d+)\)\./, 'RootPtr ← NewPtr (the new node, index 0).')
+      .replace(/call _insert\(root, (\d+)\) and start comparing from the root/, 'set NowPtr ← RootPtr and start comparing from the root')
+      .replace(/node\.(left|right) is None/, (m,d)=> (d==='left'?'LeftPtr':'RightPtr')+' = -1')
+      .replace(/node\.(left|right) = Node\((\d+)\)\. The new node is planted\./, (m,d)=> (d==='left'?'LeftPtr':'RightPtr')+' of this node ← NewPtr. The new node is linked in.')
+      .replace(/node\.(left|right) already holds (\d+) — recurse into the (left|right) subtree\./, (m,d,v,s2)=> 'The '+s2+' pointer is not -1 — set NowPtr to it and carry on down the '+s2+' subtree.')
+      .replace(/Delegate to _search\(root, (\d+)\)\./, 'NowPtr ← RootPtr.')
+      .replace(/node is None — /, 'NowPtr = -1 — ')
+      .replace(/return False/, 'RETURN FALSE')
+      .replace(/return True/, 'RETURN TRUE')
+      .replace(/_search\(node\.(left|right), (\d+)\)\./, (m,d)=> 'NowPtr ← '+(d==='left'?'LeftPtr':'RightPtr')+' of this node.');
+  }
 
   // ---------- tree simulation ----------
   function cloneNodes(nodes){
@@ -341,7 +473,20 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
   const btnPlay = document.getElementById('btnPlay');
 
   function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
-  codeBlock.innerHTML = codeLines.map((l,i)=>`<span class="code-line" data-line="${i}">${l.trim()===''?'':`<span class="n">${i}</span>`}${escapeHtml(l)}</span>`).join('\n');
+  let lang = 'ps';
+  function renderCode(){
+    const lines = lang === 'py' ? codeLines : psLines;
+    codeBlock.innerHTML = lines.map((l,i)=>`<span class="code-line" data-line="${i}">${l.trim()===''?'':`<span class="n">${i}</span>`}${escapeHtml(l)}</span>`).join('\n');
+  }
+  document.getElementById('travBlock').innerHTML = travLines.map(l=>`<span class="code-line">${escapeHtml(l)}</span>`).join('\n');
+  const langTabs = document.getElementById('langTabs');
+  [['ps','Pseudocode (exam)'],['py','Python']].forEach(([k,t])=>{
+    const b = document.createElement('button');
+    b.className = 'tab' + (k===lang?' active':''); b.textContent = t; b.dataset.lang = k;
+    b.addEventListener('click', ()=>{ lang = k; langTabs.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active', x.dataset.lang===k)); renderCode(); render(); });
+    langTabs.appendChild(b);
+  });
+  renderCode();
 
   Object.keys(scenarios).forEach(key=>{
     const btn = document.createElement('button');
@@ -424,15 +569,27 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
       svg.appendChild(text);
     });
 
-    narration.textContent = s.note;
+    narration.textContent = lang === 'ps' ? psNote(s.note) : s.note;
+    renderArray(s);
 
     document.querySelectorAll('.code-line').forEach(el=>{
-      el.classList.toggle('active', Number(el.dataset.line) === s.line);
+      el.classList.toggle('active', Number(el.dataset.line) === (lang === 'py' ? s.line : psMap[s.line]));
     });
 
     stepCounter.textContent = `step ${idx+1} / ${steps.length}`;
     document.getElementById('btnPrev').disabled = idx === 0;
     document.getElementById('btnNext').disabled = idx === steps.length - 1;
+  }
+
+  function renderArray(s){
+    const vals = Object.keys(s.nodes).map(Number).sort((a,b)=>buildValues.indexOf(a)-buildValues.indexOf(b));
+    const ix = v => v === null ? -1 : buildValues.indexOf(v);
+    document.getElementById('arrPtrs').innerHTML = `<span>RootPtr = ${s.root === null ? -1 : ix(s.root)}</span><span>FreePtr = ${vals.length}</span>`;
+    document.getElementById('arrBody').innerHTML = vals.map(v=>{
+      const n = s.nodes[v];
+      const cls = s.newValue === v ? 'new' : (s.current === v ? 'cur' : '');
+      return `<tr class="${cls}"><td>${ix(v)}</td><td>${ix(n.left)}</td><td>${v}</td><td>${ix(n.right)}</td></tr>`;
+    }).join('') || '<tr><td colspan="4">(empty: RootPtr = -1)</td></tr>';
   }
 
   function next(){
