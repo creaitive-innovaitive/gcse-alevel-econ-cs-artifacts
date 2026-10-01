@@ -206,7 +206,6 @@
   }
 
   function classAccordion(state) {
-    const inGroup = (g) => state.people.filter((p) => (p.classes || []).includes(g.id));
     const avgOf = (list) => (list.length ? Math.round(list.reduce((t, p) => t + progressOf(state, p).pct, 0) / list.length) : 0);
     const bar = (id, title, list, inner) => `<details class="card block cls" name="cls" data-cls="${id}" ${openClass === id ? "open" : ""}>
         <summary><h3>${esc(title)}</h3><span class="hint">${plural(list.length, "student")}${list.length ? ` · average progress ${avgOf(list)}%` : ""}</span></summary>${inner}</details>`;
@@ -216,10 +215,7 @@
     CLASS_LIST.forEach((c) => {
       const ids = c.groups.map((g) => g.id);
       const everyone = state.people.filter((p) => (p.classes || []).some((x) => ids.includes(x)));
-      const inner = c.groups.map((g) => {
-        const list = inGroup(g);
-        return `<div class="subj"><h4>${esc(c.title)} ${esc(g.label)} <span class="hint">${plural(list.length, "student")}</span></h4>${list.length ? classTable(state, list) : '<p class="hint">No students yet.</p>'}</div>`;
-      }).join("");
+      const inner = everyone.length ? classTable(state, everyone) : '<p class="hint">No students in this class yet.</p>';
       out.push(bar(c.id, c.title, everyone, inner));
     });
     return out.join("");
