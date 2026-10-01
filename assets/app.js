@@ -67,6 +67,7 @@
     await Site.whoami();
     await Site.loadProgress();
     btns.forEach((b) => {
+      b.hidden = false;
       paint(b);
       b.addEventListener("click", async (e) => {
         e.preventDefault();
