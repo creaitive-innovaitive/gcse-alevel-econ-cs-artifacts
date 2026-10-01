@@ -400,6 +400,64 @@ ENDFUNCTION</pre>
     <ul class="mp"><li><b>1</b>Function header and RETURNS INTEGER</li><li><b>2</b>Total initialised to 0 and current set to startPointer</li><li><b>3</b>Loop until the null pointer (-1)</li><li><b>4</b>Increment the total inside the loop</li><li><b>5</b>Move to the next node using the pointer, and return the total</li></ul>
     <p><b>Common mistake:</b> using a FOR loop over the whole array. That counts free heap nodes too.</p>
   </div></details>
+
+  <h3 style="margin-top:34px">Real past paper questions</h3>
+  <div class="tip"><b>Paper 3 and Paper 4</b>Paper 3 (Advanced Theory, 9618/31, 32, 33) asks you to identify, compare and justify ADTs in words, 1 to 3 marks at a time. Paper 4 (Practical, and the old 9608/4x) asks you to show an ADT working: pointer diagrams, trace tables and pseudocode for a stack, queue or linked list. Learn the wording for Paper 3 and the pointer manipulation for Paper 4.</div>
+  <p style="color:var(--muted);font-size:.95rem">Questions are from Cambridge 9618 Paper 3 sessions as listed. Answers are condensed from the mark scheme points, so use them to check ideas, not as exact wording.</p>
+
+  <details><summary>Paper 3 · 9618/32 Oct/Nov 2023, Q9(b) <span class="marks">2 marks</span> <span class="cmd">Justify</span></summary><div class="inner">
+    <p>Justify the use of a linked list instead of an array to implement a stack.</p>
+    <div class="tip"><b>Reminder</b>"Justify" means give a reason <i>and</i> tie it to the stack. One mark per developed point.</div>
+    <ul class="mp"><li><b>1</b>A linked list is dynamic: it is not limited to a fixed size and can grow or shrink as nodes are added or removed</li><li><b>2</b>An array is static: once it is full, the stack cannot be extended, so push fails (overflow)</li><li><b>3</b>Pushing and popping only change pointers, with no shifting of data (accept either of 1 or 3 with 2)</li></ul>
+    <p><b>Advice:</b> contrast the two structures in the same sentence. "Linked lists are dynamic" alone is a description, not a justification.</p>
+  </div></details>
+
+  <details><summary>Paper 3 · 9618/31 Oct/Nov 2023, Q10(c) <span class="marks">2 marks</span> <span class="cmd">Compare and contrast</span></summary><div class="inner">
+    <p>Compare and contrast the queue and stack Abstract Data Types (ADT).</p>
+    <div class="tip"><b>Reminder</b>Compare means similarities, contrast means differences. Give at least one of each.</div>
+    <ul class="mp"><li><b>1</b>Similarity: both are ADTs that can vary in size and hold items in order of insertion</li><li><b>2</b>Queue is first in first out (FIFO); a stack is last in first out (LIFO)</li><li><b>3</b>A stack pushes and pops at the same end, so it needs one top pointer</li><li><b>4</b>A queue adds at the rear and removes from the front, so it needs front and rear pointers</li></ul>
+    <p><b>Advice:</b> a table or "whereas" sentence keeps both sides of every point visible. Mention the pointers: that links straight back to how each is implemented.</p>
+  </div></details>
+
+  <details><summary>Paper 3 · 9618/31 Oct/Nov 2021, Q10(b) and (c) <span class="marks">5 marks</span> <span class="cmd">Explain, Identify</span></summary><div class="inner">
+    <p>(b) Explain the reasons why a stack is a suitable ADT to implement recursion. [3]<br>(c) Identify two ADTs other than a stack. [2]</p>
+    <ul class="mp"><li><b>1</b>(b) Each recursive call pushes its data (return address, local variables) onto the stack</li><li><b>2</b>(b) The stack is LIFO, so the most recent call is the first to finish and be popped</li><li><b>3</b>(b) Popping in reverse order gives the correct unwinding back through the calls</li><li><b>4</b>(c) Any two of: queue, linked list, binary tree, graph</li><li><b>5</b>(c) Second ADT from the same list</li></ul>
+    <p><b>Advice:</b> the three marks in (b) are three links in one chain: what is stored, why LIFO matters, what that gives you. Do not list ADTs that are only data types (array, record).</p>
+  </div></details>
+
+  <details><summary>Paper 3 · 9618/33 May/June 2025, Q12(a) <span class="marks">1 mark</span> <span class="cmd">Identify</span></summary><div class="inner">
+    <p>An array is an Abstract Data Type (ADT). Identify two other ADTs.</p>
+    <ul class="mp"><li><b>1</b>Any two of: stack, queue, linked list, binary tree, graph (both needed for the mark)</li></ul>
+    <p><b>Advice:</b> this identify question appears in different sessions. Learn the five names above and you have a free mark.</p>
+  </div></details>
+
+  <details><summary>Paper 4 style · Queue as a linked list of nodes <span class="marks">11 marks</span> <span class="cmd">Show, Write</span></summary><div class="inner">
+    <p><i>Cambridge 9608 Paper 4, as printed in the Cambridge A Level textbook's end-of-chapter questions. The session is not given in the extract, and this version of the mark scheme is my own worked answer.</i></p>
+    <p>A queue ADT has the operations create queue, add item to queue and remove item from queue. It is implemented as a linked list of nodes, each with data and a pointer to the next node. Nodes are stored in <code>DECLARE Queue : ARRAY[1:10] OF Node</code>, where <code>Node</code> has <code>Name : STRING</code> and <code>Pointer : INTEGER</code>. A pointer of 0 means null.</p>
+    <p><b>(a)</b> These operations are carried out: CreateQueue, AddName("Ali"), AddName("Jack"), AddName("Ben"), AddName("Ahmed"), RemoveName, AddName("Jatinder"), RemoveName. Show the final state of the queue. [3]</p>
+    <ul class="mp"><li><b>1</b>Ali then Jack are removed from the front (FIFO)</li><li><b>2</b>Final order from head to tail: Ben, Ahmed, Jatinder</li><li><b>3</b>Nodes drawn linked in that order, with the last pointer null</li></ul>
+    <p><b>(b)(i)</b> Show the value of HeadPointer, TailPointer, FreePointer and every node's Pointer straight after CreateQueue. [4]</p>
+    <ul class="mp"><li><b>4</b>HeadPointer = 0 and TailPointer = 0 (queue is empty)</li><li><b>5</b>FreePointer = 1 (first free node)</li><li><b>6</b>Pointers of nodes 1 to 9 are 2 to 10 (each linked to the next)</li><li><b>7</b>Pointer of node 10 = 0 (end of the free list)</li></ul>
+    <p><b>(b)(ii)</b> Complete the procedure <code>AddName(NewName)</code>. [4]</p>
+<pre>PROCEDURE AddName(BYVALUE NewName : STRING)
+   IF FreePointer = 0
+      THEN
+         Report Error               // no free nodes
+      ELSE
+         CurrentPointer ← FreePointer
+         Queue[CurrentPointer].Name ← NewName
+         FreePointer ← Queue[FreePointer].Pointer
+         Queue[CurrentPointer].Pointer ← 0
+         IF HeadPointer = 0
+            THEN HeadPointer ← CurrentPointer     // first item
+            ELSE Queue[TailPointer].Pointer ← CurrentPointer
+         ENDIF
+         TailPointer ← CurrentPointer
+   ENDIF
+ENDPROCEDURE</pre>
+    <ul class="mp"><li><b>8</b>Test for no free nodes and report an error</li><li><b>9</b>Store the name in the free node, then move FreePointer on to the next free node (before overwriting the node's pointer)</li><li><b>10</b>Set the new node's pointer to 0</li><li><b>11</b>Link the old tail to the new node (or set HeadPointer if the queue was empty), then update TailPointer</li></ul>
+    <div class="warn"><b>Paper 4 advice</b>Do the first-item case separately: with an empty queue there is no old tail to link from. Update FreePointer <i>before</i> you change the pointer field, or you lose the rest of the free list. Pointer diagrams score on the three header pointers as much as on the nodes, so label them all.</div>
+  </div></details>
 </section>
 
 <section class="panel" role="tabpanel" id="rw">
