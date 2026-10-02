@@ -218,3 +218,7 @@ pre.code { background: var(--accent-soft); border: 1px solid var(--line); border
 .q .score { flex-direction: column; gap: 2px; }
 .q .score small { font: 700 .75rem var(--sans); white-space: nowrap; }
 .q .ico { width: 30px; height: 30px; }
+nav.main .bell { display: inline-flex; align-items: center; gap: 4px; position: relative; color: var(--muted); text-decoration: none; padding: 6px 8px; }
+nav.main .bell b { font: 700 .7rem var(--sans); min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: #c0392b; color: #fff; display: grid; place-items: center; }
+nav.main .bell b:empty { display: none; }
+nav.main .bell.has { color: var(--ink); }

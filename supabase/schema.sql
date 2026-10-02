@@ -337,6 +337,7 @@ create table if not exists public.assessment_attempts (
   submitted_at timestamptz not null default now(),
   reset_at     timestamptz            -- set when the teacher allows a retake; row stays as history
 );
+alter table public.assessment_attempts add column if not exists retake_requested_at timestamptz;
 create unique index if not exists attempts_one_live on public.assessment_attempts (email, slug) where reset_at is null;
 alter table public.assessment_attempts enable row level security;   -- reads only through the functions below
 
@@ -414,7 +415,7 @@ begin
                     'opts', q -> 'opts', 'code', q ->> 'code', 'marks', coalesce((q ->> 'marks')::int, 1), 'topic', q ->> 'topic', 'hint', q ->> 'hint'))
                   from jsonb_array_elements(a.questions) q),
     'attempt', case when att.id is null then null else json_build_object('answers', att.answers, 'score', att.score, 'max', att.max_score,
-                    'pct', att.pct, 'result', att.result, 'at', att.submitted_at) end);
+                    'pct', att.pct, 'result', att.result, 'at', att.submitted_at, 'requested', att.retake_requested_at) end);
 end $$;
 
 -- One attempt only. Marks, stores, auto-completes the lesson at/above the pass mark, returns the full feedback.
@@ -471,13 +472,41 @@ begin
   if not found then raise exception 'You can retake an assessment once you have passed it. Otherwise ask your teacher.'; end if;
 end $$;
 
+-- Student: ask the teacher for a retake after not passing.
+create or replace function public.request_retake(_slug text) returns void
+language plpgsql security definer set search_path = public as $$
+declare e text := my_key(); pass int;
+begin
+  select pass_pct into pass from assessments where slug = _slug;
+  update assessment_attempts set retake_requested_at = now()
+   where email = e and slug = _slug and reset_at is null and pct < coalesce(pass, 80) and retake_requested_at is null;
+  if not found then raise exception 'No retake request is needed or one is already waiting.'; end if;
+end $$;
+
+create or replace function public.admin_decline_retake(_id bigint) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not is_admin() then raise exception 'Admins only'; end if;
+  update assessment_attempts set retake_requested_at = null where id = _id;
+end $$;
+
+-- Admin: counts for the navbar bell.
+create or replace function public.admin_notifications() returns json
+language plpgsql security definer set search_path = public as $$
+begin
+  if not is_admin() then return json_build_object('approvals', 0, 'retakes', 0); end if;
+  return json_build_object(
+    'approvals', (select coalesce(sum(cardinality(requested)), 0) from profiles),
+    'retakes', (select count(*) from assessment_attempts where retake_requested_at is not null and reset_at is null));
+end $$;
+
 -- Admin: every attempt (history included) with its feedback.
 create or replace function public.admin_attempts() returns json
 language plpgsql security definer set search_path = public as $$
 begin
   if not is_admin() then raise exception 'Admins only'; end if;
   return coalesce((select json_agg(json_build_object('id', id, 'email', email, 'slug', slug, 'score', score, 'max', max_score, 'pct', pct,
-            'result', result, 'at', submitted_at, 'reset_at', reset_at) order by submitted_at desc) from assessment_attempts), '[]'::json);
+            'result', result, 'at', submitted_at, 'reset_at', reset_at, 'requested_at', retake_requested_at) order by submitted_at desc) from assessment_attempts), '[]'::json);
 end $$;
 
 -- Admin: allow a retake (the old attempt stays as history).

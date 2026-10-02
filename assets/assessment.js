@@ -84,6 +84,7 @@
         ${advice(items, att.pct)}
         <p><a class="btn ghost" href="${lessonUrl()}">Back to the lesson</a> <a class="btn ghost" href="${S.profileUrl}">My profile</a>
           ${pass && !(me.is_admin || me.is_teacher) ? ' <button class="btn" id="retake">Retake for practice</button>' : ""}</p>
+        ${!pass && !(me.is_admin || me.is_teacher) ? (att.requested ? `<p class="hint">Retake requested on ${new Date(att.requested).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}. Your teacher will reset it when they have seen it.</p>` : '<p><button class="btn" id="reqretake">Request a retake</button></p>') : ""}
         ${pass ? '<p class="hint">Retaking is optional. Your pass stays on record and the lesson stays complete, whatever you score next time.</p>' : ""}</section>
       ${items.map((it, i) => {
         const full = it.got >= it.max, part = it.got > 0 && !full;
@@ -93,6 +94,11 @@
           ${full ? "" : `<p><span class="hint">Model answer</span><br>${esc(it.model)}</p>`}
           <p class="fb">${esc(it.feedback)}</p></section>`;
       }).join("")}`;
+    $("#reqretake")?.addEventListener("click", async (e) => {
+      const { error } = await S.sb.rpc("request_retake", { _slug: slug });
+      if (error) return alert(error.message);
+      e.target.outerHTML = '<span class="hint">Retake requested. Your teacher has been notified.</span>';
+    });
     $("#retake")?.addEventListener("click", async () => {
       if (!confirm("Start a fresh attempt? Your current result is kept in your history.")) return;
       const { error } = await S.sb.rpc("retake_assessment", { _slug: slug });

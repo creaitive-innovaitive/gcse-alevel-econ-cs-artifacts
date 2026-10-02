@@ -107,6 +107,28 @@
     });
   }
 
+
+  // Teacher notification bell, to the right of Profile in the navbar.
+  Site.refreshBell = async () => {
+    const nav = document.querySelector("nav.main");
+    if (!nav || !Site.me || !Site.me.is_admin) return;
+    const { data } = await sb.rpc("admin_notifications");
+    const n = data ? (data.approvals || 0) + (data.retakes || 0) : 0;
+    let a = nav.querySelector(".bell");
+    if (!a) {
+      a = document.createElement("a");
+      a.className = "bell"; a.href = Site.profileUrl;
+      a.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a6 6 0 0 0-6 6v3.5L4.5 16h15L18 12.5V9a6 6 0 0 0-6-6zm-2 15a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><b></b>';
+      a.addEventListener("click", () => { try { sessionStorage.setItem("site.admintab", "approvals"); } catch (e) {} });
+      nav.appendChild(a);
+    }
+    a.querySelector("b").textContent = n || "";
+    a.title = n ? `${data.approvals || 0} subject request(s), ${data.retakes || 0} retake request(s)` : "No notifications";
+    a.classList.toggle("has", n > 0);
+  };
+  async function startBell() { if (configured) { await Site.whoami(); Site.refreshBell(); } }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", startBell); else startBell();
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindButtons);
   else bindButtons();
 })();

@@ -4,7 +4,7 @@
   const root = document.getElementById("profile-root");
   const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   const COURSE_KEYS = ["ig-econ", "ig-cs", "a-econ", "a-cs"];
-  let catalog, adminMe = "", adminTab = null, openClass = null;
+  let catalog, adminMe = "", adminTab = (() => { try { const t = sessionStorage.getItem("site.admintab"); sessionStorage.removeItem("site.admintab"); return t; } catch (e) { return null; } })(), openClass = null;
 
   // Three classes, five class-subject groups. Student membership is stored per group (the ids below);
   // joining a group gives the student that group's course.
@@ -251,7 +251,7 @@
       return `<div class="lessonrow" data-slug="${esc(slug)}"><div class="row"><span><b>${esc(a.title)}</b> <span class="hint">${esc(a.chapterTitle)}</span></span>
         <span>${isDone ? `<span class="ok-txt">✓ Complete</span>` : '<span class="no-txt">Not complete</span>'}
         <button class="mini" data-dn="${isDone ? "0" : "1"}">${isDone ? "Mark not done" : "Mark done"}</button></span></div>
-        ${q ? (t ? review(t) + `<button class="mini" data-reset="${t.id}">Allow retake</button>` : '<p class="hint">Assessment not attempted.</p>') : '<p class="hint">No assessment on this lesson.</p>'}
+        ${q ? (t ? review(t) + `${t.requested_at && !t.reset_at ? '<span class="pill soft">Retake requested</span> ' : ""}<button class="mini" data-reset="${t.id}">Allow retake</button>` : '<p class="hint">Assessment not attempted.</p>') : '<p class="hint">No assessment on this lesson.</p>'}
         ${olds(slug).length ? `<p class="hint">Earlier attempts</p>${olds(slug).map(review).join("")}` : ""}</div>`;
     };
     const subj = p.subjects.filter((k) => catalog.courses[k]).map((k) => {
@@ -269,13 +269,18 @@
     catch (e) { host.innerHTML = `<p class="msg err">Could not load students: ${esc(e.message)}. Has schema.sql been run?</p>`; return; }
 
     const pending = state.people.flatMap((p) => (p.requested || []).filter((k) => catalog.courses[k]).map((k) => ({ p, k })));
-    const tab = adminTab || (pending.length ? "approvals" : "students");
+    const retakes = state.attempts.filter((a) => a.requested_at && !a.reset_at).map((a) => ({ a, p: state.people.find((x) => x.email === a.email) })).filter((r) => r.p);
+    const alerts = pending.length + retakes.length;
+    const tab = adminTab || (alerts ? "approvals" : "students");
     const toggleClass = (d) => d.addEventListener("toggle", () => { if (d.open) openClass = d.dataset.cls; else if (openClass === d.dataset.cls) openClass = null; });
     host.innerHTML = `
       <div class="tabs admintabs" role="tablist">
-        <button data-at="approvals">Approvals${pending.length ? ` (${pending.length})` : ""}</button><button data-at="students">Classes</button>
+        <button data-at="approvals">Approvals${alerts ? ` (${alerts})` : ""}</button><button data-at="students">Classes</button>
         <button data-at="add">Add students</button><button data-at="pw">Passwords</button><button data-at="me">My profile</button></div>
-      <div class="tabpanel" data-panel="approvals"><section class="card block ${pending.length ? "attn" : ""}"><div class="row"><h3>Pending approvals (${pending.length})</h3>${pending.length > 1 ? '<button class="mini" id="approveall">Approve all</button>' : ""}</div>
+      <div class="tabpanel" data-panel="approvals"><section class="card block ${retakes.length ? "attn" : ""}"><h3>Retake requests (${retakes.length})</h3>
+        ${retakes.length ? `<ul class="plain">${retakes.map(({ a, p }) => `<li class="row" data-id="${a.id}"><span><b>${esc(p.name)}</b> <span class="hint">${esc(catalog.artifacts[a.slug]?.title || a.slug)} · scored ${a.pct}% · asked ${fmt(a.requested_at)}</span></span>
+          <span><button class="mini ok" data-rt="yes">Allow retake</button> <button class="mini danger" data-rt="no">Decline</button></span></li>`).join("")}</ul>` : '<p class="hint">Nothing waiting.</p>'}</section>
+        <section class="card block ${pending.length ? "attn" : ""}"><div class="row"><h3>Pending approvals (${pending.length})</h3>${pending.length > 1 ? '<button class="mini" id="approveall">Approve all</button>' : ""}</div>
         ${pending.length ? `<ul class="plain">${pending.map(({ p, k }) => `<li class="row" data-email="${esc(p.email)}" data-subj="${k}">
           <span><b>${esc(p.name)}</b> <span class="hint">${esc(p.email)}</span> wants <span class="pill" data-accent="${catalog.courses[k].accent}">${esc(catalog.courses[k].title)}</span></span>
           <span><button class="mini ok" data-ap="yes">Approve</button> <button class="mini danger" data-ap="no">Decline</button></span></li>`).join("")}</ul>` : '<p class="hint">Nothing waiting.</p>'}</section></div>
@@ -367,6 +372,11 @@
       const li = b.closest("li");
       await decide(state.people.find((x) => x.email === li.dataset.email), li.dataset.subj, b.dataset.ap === "yes");
       renderAdmin(host);
+    }));
+    host.querySelectorAll("[data-rt]").forEach((b) => b.addEventListener("click", async () => {
+      const id = Number(b.closest("li").dataset.id);
+      const { error } = await sb.rpc(b.dataset.rt === "yes" ? "admin_reset_attempt" : "admin_decline_retake", { _id: id });
+      if (error) alert(error.message); else { S.refreshBell?.(); renderAdmin(host); }
     }));
     $("#approveall")?.addEventListener("click", async () => { for (const { p, k } of pending) await decide(p, k, true); renderAdmin(host); });
 
