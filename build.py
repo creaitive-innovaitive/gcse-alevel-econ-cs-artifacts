@@ -28,7 +28,17 @@ NAV = [
 esc = html.escape
 
 
+STAMP = str(int(__import__("time").time()))
+
+
+def bust(text):
+    """Version the site's own css/js so browsers fetch fresh copies after each build."""
+    return re.sub(r'(assets/[\w.-]+\.(?:js|css))(")', r"\1?v=" + STAMP + r"\2", text)
+
+
 def write(rel, content):
+    if rel.endswith(".html"):
+        content = bust(content)
     p = OUT / rel
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(content, encoding="utf-8")
@@ -390,7 +400,7 @@ def build_artifacts():
             target = dest / f.relative_to(src)
             target.parent.mkdir(parents=True, exist_ok=True)
             if f.suffix == ".html":
-                target.write_text(inject_pill(f.read_text(encoding="utf-8"), back, label, depth_root, a["slug"], sorted({c for c, _ in a["places"]})), encoding="utf-8")
+                target.write_text(bust(inject_pill(f.read_text(encoding="utf-8"), back, label, depth_root, a["slug"], sorted({c for c, _ in a["places"]}))), encoding="utf-8")
             else:
                 shutil.copy2(f, target)
 
