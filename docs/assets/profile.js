@@ -2,7 +2,7 @@
 (function () {
   const S = window.Site;
   const root = document.getElementById("profile-root");
-  const DOMAIN = "@danang.sis.edu.vn";
+  const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   const COURSE_KEYS = ["ig-econ", "ig-cs", "a-econ", "a-cs"];
   let catalog, adminMe = "", adminTab = null, openClass = null;
 
@@ -53,7 +53,7 @@
     root.innerHTML = `
       <div class="auth-card"><h2>Sign in</h2>
         <form id="f-in">
-          <label>School email<input type="email" name="email" autocomplete="username" required placeholder="name${DOMAIN}"></label>
+          <label>Email<input type="email" name="email" autocomplete="username" required></label>
           <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
           <button class="btn" type="submit">Sign in</button><p class="msg" hidden></p>
           <p class="hint">Use the email and password your teacher gave you. If you cannot sign in, ask your teacher.</p>
@@ -133,12 +133,12 @@
         const c = catalog.courses[k];
         return `<section class="card block" data-accent="${c.accent}"><h3><a href="${S.base}${c.url}">${esc(c.title)}</a></h3>${chapterMap(c, done)}</section>`;
       }).join("");
-      return `<section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}</p>${subjectPanel(me)}</section><!--split-->
+      return `<section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}${me.email2 ? ` · ${esc(me.email2)}` : ""}</p>${subjectPanel(me)}</section><!--split-->
         <p class="hint">Course map. Each square is a coursebook chapter: filled means every activity is done, half means started, grey means nothing there yet.</p>${maps}${account}`;
     }
 
     return `
-      <section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}</p>${subjectPanel(me)}</section><!--split-->
+      <section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}${me.email2 ? ` · ${esc(me.email2)}` : ""}</p>${subjectPanel(me)}</section><!--split-->
       <div class="grid two dash">
         <section class="card block"><h3>Overall progress</h3><div class="row"><span class="big">${pct(doneN, all.size)}%</span><span class="hint">${doneN} of ${all.size} activities</span></div>
           <div class="bar2"><i style="width:${pct(doneN, all.size)}%"></i></div></section>
@@ -167,7 +167,7 @@
       e.preventDefault();
       const f = e.target, m = $(".msg", f);
       if (f.password.value !== f.confirm.value) return msg(m, "Passwords do not match.", false);
-      const { error } = await sb.auth.updateUser({ password: f.password.value });
+      const { error } = await sb.rpc("set_my_password", { new_password: f.password.value });
       if (error) return msg(m, error.message, false);
       f.reset();
       msg(m, "Password changed.", true);
@@ -227,7 +227,7 @@
       const all = subjectSlugs(p.subjects), d = state.byEmail.get(p.email) || new Map();
       const n = [...all].filter((s) => d.has(s)).length;
       const status = p.signed_up_at ? (p.last_seen ? "Active " + fmt(p.last_seen) : "Signed up") : "Not signed up";
-      return `<tr data-email="${esc(p.email)}"><td><b>${esc(p.name)}</b><br><span class="hint">${esc(p.email)}</span></td>
+      return `<tr data-email="${esc(p.email)}"><td><b>${esc(p.name)}</b><br><span class="hint">${esc(p.email)}${p.email2 ? `<br>${esc(p.email2)}` : ""}</span></td>
         <td><div class="pills">${pills(p.subjects)}</div></td><td>${esc(status)}</td><td>${pct(n, all.size)}%<br><span class="hint">${n}/${all.size}</span></td>
         <td class="acts"><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Reset login</button><button class="mini danger" data-act="del">Delete</button></td></tr>`;
     }).join("");
@@ -251,15 +251,15 @@
           <span><b>${esc(p.name)}</b> <span class="hint">${esc(p.email)}</span> wants <span class="pill" data-accent="${catalog.courses[k].accent}">${esc(catalog.courses[k].title)}</span></span>
           <span><button class="mini ok" data-ap="yes">Approve</button> <button class="mini danger" data-ap="no">Decline</button></span></li>`).join("")}</ul>` : '<p class="hint">Nothing waiting.</p>'}</section></div>
       <div class="tabpanel" data-panel="add"><section class="card block"><h3>Add students</h3>
-        <form id="f-add"><label>One student per line: <b>Name, email</b> (a password is generated for each)
-          <textarea name="lines" rows="5" required placeholder="An Nguyen, an.nguyen${DOMAIN}"></textarea></label>
+        <form id="f-add"><label>One student per line: <b>Name, email</b> or <b>Name, email, second email</b> (a password is generated for each)
+          <textarea name="lines" rows="5" required placeholder="An Nguyen, an@school.edu.vn, parent@gmail.com"></textarea></label>
           <div class="chks">${classBoxes()}</div>
           <button class="btn" type="submit">Add students</button><p class="msg" hidden></p></form></section></div>
       <div class="tabpanel" data-panel="pw"><section class="card block"><h3>Student passwords (${state.people.length})</h3>
         <p class="hint">Assigned passwords, visible to admins only. Students sign in with these. If a student changes their own password this list is out of date; Reset login puts it back to the listed one.</p>
         <div class="row"><span></span><button class="mini" id="copypw">Copy as table</button></div>
         <div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Email</th><th>Password</th></tr></thead><tbody>
-        ${state.people.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.email)}</td><td><code>${esc(p.password)}</code></td></tr>`).join("") || `<tr><td colspan="3" class="hint">No students yet.</td></tr>`}
+        ${state.people.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.email)}${p.email2 ? `<br>${esc(p.email2)}` : ""}</td><td><code>${esc(p.password)}</code></td></tr>`).join("") || `<tr><td colspan="3" class="hint">No students yet.</td></tr>`}
         </tbody></table></div></section></div>
       <div class="tabpanel" data-panel="students"><div class="row"><h3>Classes</h3><button class="mini" id="csv">Export CSV</button></div>
         <p class="hint">Open a class to manage its students.</p>${classAccordion(state)}</div>
@@ -282,22 +282,29 @@
       const subjects = classSubjects(classes);
       const taken = new Set(state.people.map((x) => x.password));
       const have = new Map(state.people.map((x) => [x.email, x]));
+      const used = new Set(state.people.flatMap((x) => [x.email, x.email2].filter(Boolean)));
       const fresh = [], existing = [], bad = [];
       f.lines.value.split("\n").map((l) => l.trim()).filter(Boolean).forEach((l) => {
-        const parts = l.split(/[,\t;]/).map((x) => x.trim());
-        const email = (parts.pop() || "").toLowerCase(), name = parts.join(" ").trim();
-        if (!name || !email.endsWith(DOMAIN)) return bad.push(l);
+        const parts = l.split(/[,\t;]/).map((x) => x.trim()).filter(Boolean);
+        const emails = parts.filter((x) => x.includes("@")).map((x) => x.toLowerCase());
+        const name = parts.filter((x) => !x.includes("@")).join(" ").trim();
+        const [email, email2] = emails;
+        if (!name || !email || emails.length > 2 || !emails.every((x) => EMAIL_RE.test(x)) || email === email2) return bad.push(l);
         if (have.has(email)) return existing.push({ email, name, subjects, classes });
+        if (emails.some((x) => used.has(x))) return bad.push(l + " (email already in use)");
+        emails.forEach((x) => used.add(x));
         const password = genPassword(taken); taken.add(password);
-        fresh.push({ email, name, subjects, classes, password });
+        fresh.push({ email, email2: email2 || null, name, subjects, classes, password });
       });
-      if (bad.length) return msg(m, `Check these lines (need a name and a ${DOMAIN} email): ${bad.join(" | ")}`, false);
+      if (bad.length) return msg(m, `Check these lines (need a name and one or two valid emails): ${bad.join(" | ")}`, false);
       if (fresh.length) {
         const { error } = await sb.from("profiles").insert(fresh);
         if (error) return msg(m, error.message, false);
         for (const r of fresh) {
-          const { error: e2 } = await sb.rpc("admin_create_login", { target: r.email });
-          if (e2) return msg(m, `Added ${r.name} but could not create the login: ${e2.message}`, false);
+          for (const addr of [r.email, r.email2].filter(Boolean)) {
+            const { error: e2 } = await sb.rpc("admin_create_login", { target: addr });
+            if (e2) return msg(m, `Added ${r.name} but could not create the login for ${addr}: ${e2.message}`, false);
+          }
         }
       }
       for (const r of existing) {
@@ -309,7 +316,7 @@
     });
 
     $("#copypw").addEventListener("click", async () => {
-      const text = ["Name\tEmail\tPassword", ...state.people.map((p) => [p.name, p.email, p.password].join("\t"))].join("\n");
+      const text = ["Name\tEmail\tEmail 2\tPassword", ...state.people.map((p) => [p.name, p.email, p.email2 || "", p.password].join("\t"))].join("\n");
       await navigator.clipboard.writeText(text);
       $("#copypw").textContent = "Copied";
     });
@@ -328,10 +335,10 @@
     $("#approveall")?.addEventListener("click", async () => { for (const { p, k } of pending) await decide(p, k, true); renderAdmin(host); });
 
     $("#csv").addEventListener("click", () => {
-      const head = ["Name", "Email", "Classes", "Subjects", "Done", "Total", "Percent"];
+      const head = ["Name", "Email", "Email 2", "Classes", "Subjects", "Done", "Total", "Percent"];
       const lines = state.people.map((p) => {
         const all = subjectSlugs(p.subjects), d = state.byEmail.get(p.email) || new Map(), n = [...all].filter((s) => d.has(s)).length;
-        return [p.name, p.email, (p.classes || []).join(" "), p.subjects.join(" "), n, all.size, pct(n, all.size)].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",");
+        return [p.name, p.email, p.email2 || "", (p.classes || []).join(" "), p.subjects.join(" "), n, all.size, pct(n, all.size)].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",");
       });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([[head.join(","), ...lines].join("\n")], { type: "text/csv" }));
@@ -344,7 +351,7 @@
       if (!btn) return;
       const email = btn.closest("tr").dataset.email, p = state.people.find((x) => x.email === email);
       if (btn.dataset.act === "reset") {
-        if (!confirm(`Recreate the login for ${p.name} with the password on the list? They keep their progress.`)) return;
+        if (!confirm(`Recreate the login(s) for ${p.name} with the password on the list? They keep their progress.`)) return;
         const { error } = await sb.rpc("admin_reset_login", { target: email });
         alert(error ? "Could not reset: " + error.message : "Done. " + p.name + " can sign in with: " + p.password);
         if (!error) renderAdmin(host);
@@ -356,19 +363,27 @@
         const dlg = $("#dlg"), f = $("#f-edit");
         f.innerHTML = `<h3>Edit student</h3><p class="hint">${esc(email)}</p>
           <label>Name<input name="name" value="${esc(p.name)}" required></label>
+          <label>Second email (optional)<input type="email" name="email2" value="${esc(p.email2 || "")}"></label>
           <label>Assigned password<input name="password" value="${esc(p.password)}" required minlength="8"></label>
-          <p class="hint">Changing the password only affects a new login. Use Reset login to apply it to a student who already has one.</p>
+          <p class="hint">Changing the password only affects new logins. Use Reset login to apply it to a student who already has one.</p>
           <p class="hint">Classes</p><div class="chks">${classBoxes(p.classes || [])}</div>
           <p class="hint">Subjects (a class adds its own subject automatically)</p><div class="chks">${subjectBoxes(p.subjects)}</div>
-          <p class="hint">To change an email address, delete the student and add them again.</p>
+          <p class="hint">To change the main email address, delete the student and add them again. A second email gets its own login with the same password.</p>
           <div class="row"><button class="btn" value="save">Save</button><button class="btn ghost" value="cancel" formnovalidate>Cancel</button></div>`;
         dlg.showModal();
         f.onsubmit = async (ev) => {
           if (ev.submitter?.value !== "save") return;
           const classes = [...f.querySelectorAll("[name=cls]:checked")].map((c) => c.value);
           const subjects = union([...f.querySelectorAll("[name=subj]:checked")].map((c) => c.value), classSubjects(classes));
+          const e2 = f.elements.email2.value.trim().toLowerCase();
+          if (e2 && !EMAIL_RE.test(e2)) return alert("Second email is not valid.");
           const { error } = await sb.from("profiles").update({ name: f.elements.name.value.trim(), subjects, classes, password: f.elements.password.value.trim() }).eq("email", email);
-          if (error) alert(error.message); else renderAdmin(host);
+          if (error) return alert(error.message);
+          if (e2 !== (p.email2 || "")) {
+            const { error: e3 } = await sb.rpc("admin_set_email2", { target: email, new_email2: e2 });
+            if (e3) alert("Saved, but the second email failed: " + e3.message);
+          }
+          renderAdmin(host);
         };
       }
     }));

@@ -1,6 +1,7 @@
 -- Safe to run more than once. Supabase: SQL Editor > New query > paste the CONTENTS of this file > Run.
 --
--- Access model: no emails, no self-service. An admin adds each student with an assigned password.
+-- Access model: no self-service. A student has one or two login emails (any provider), same password for both.
+-- (Earlier note: no emails are sent.) An admin adds each student with an assigned password.
 -- Sign-up only succeeds when the password typed matches the one on the class list (checked in the
 -- database against the hash), so only the student who was given the password can create the login.
 
@@ -18,7 +19,7 @@ insert into public.admins (email, name) values
 on conflict (email) do nothing;
 
 create table if not exists public.profiles (
-  email        text primary key check (email = lower(email) and email like '%@danang.sis.edu.vn'),
+  email        text primary key check (email = lower(email)),
   name         text not null,
   subjects     text[] not null default '{}',   -- any of: ig-econ, ig-cs, a-econ, a-cs
   password     text not null default '',       -- assigned password, visible to admins only
@@ -26,6 +27,14 @@ create table if not exists public.profiles (
   signed_up_at timestamptz,
   last_seen    timestamptz
 );
+-- v3: any email address allowed, plus an optional second login email.
+alter table public.profiles drop constraint if exists profiles_email_check;
+alter table public.profiles drop constraint if exists profiles_email_lower;
+alter table public.profiles add constraint profiles_email_lower check (email = lower(email));
+alter table public.profiles add column if not exists email2 text;
+alter table public.profiles drop constraint if exists profiles_email2_check;
+alter table public.profiles add constraint profiles_email2_check check (email2 is null or (email2 = lower(email2) and email2 <> email));
+create unique index if not exists profiles_email2_key on public.profiles (email2) where email2 is not null;
 alter table public.profiles add column if not exists password text not null default '';
 alter table public.profiles add column if not exists classes text[] not null default '{}';    -- ig1-cs, ig2-cs, a-cs, ig2-econ, a-econ
 alter table public.profiles add column if not exists requested text[] not null default '{}';  -- subjects awaiting approval
@@ -46,10 +55,18 @@ language sql stable security definer set search_path = public as $$
   select exists (select 1 from admins where email = lower(auth.jwt() ->> 'email'))
 $$;
 
+-- The profile key (primary email) behind whichever login email is signed in.
+create or replace function public.my_key() returns text
+language sql stable security definer set search_path = public as $$
+  select coalesce((select email from profiles
+                    where email = lower(auth.jwt() ->> 'email') or email2 = lower(auth.jwt() ->> 'email') limit 1),
+                  lower(auth.jwt() ->> 'email'))
+$$;
+
 create or replace function public.is_member() returns boolean
 language sql stable security definer set search_path = public as $$
   select exists (select 1 from admins   where email = lower(auth.jwt() ->> 'email'))
-      or exists (select 1 from profiles where email = lower(auth.jwt() ->> 'email'))
+      or exists (select 1 from profiles where email = lower(auth.jwt() ->> 'email') or email2 = lower(auth.jwt() ->> 'email'))
 $$;
 
 drop policy if exists profiles_admin_all on public.profiles;
@@ -58,13 +75,33 @@ create policy profiles_admin_all on public.profiles
 
 drop policy if exists progress_select on public.progress;
 create policy progress_select on public.progress
-  for select using (email = lower(auth.jwt() ->> 'email') or is_admin());
+  for select using (email = my_key() or is_admin());
 drop policy if exists progress_insert on public.progress;
 create policy progress_insert on public.progress
-  for insert with check (email = lower(auth.jwt() ->> 'email') and is_member());
+  for insert with check (email = my_key() and is_member());
 drop policy if exists progress_delete on public.progress;
 create policy progress_delete on public.progress
-  for delete using (email = lower(auth.jwt() ->> 'email'));
+  for delete using (email = my_key());
+
+-- No address may appear twice across primary/second emails, or collide with an admin.
+create or replace function public.check_profile_emails() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  if exists (select 1 from profiles where email <> new.email and (email = new.email or email2 = new.email))
+     or exists (select 1 from admins where email = new.email) then
+    raise exception 'Email % is already in use', new.email;
+  end if;
+  if new.email2 is not null and (
+       exists (select 1 from profiles where email <> new.email and (email = new.email2 or email2 = new.email2))
+       or exists (select 1 from profiles where email = new.email2)
+       or exists (select 1 from admins where email = new.email2)) then
+    raise exception 'Email % is already in use', new.email2;
+  end if;
+  return new;
+end $$;
+drop trigger if exists check_profile_emails on public.profiles;
+create trigger check_profile_emails before insert or update of email, email2 on public.profiles
+  for each row execute function public.check_profile_emails();
 
 -- Sign-up gate: the password supplied must match the assigned one (admins: admins.initial_password).
 create or replace function public.gate_signup() returns trigger
@@ -76,9 +113,9 @@ begin
      and new.encrypted_password = crypt(a.initial_password, new.encrypted_password) then
     return new;
   end if;
-  select * into p from profiles where email = lower(new.email);
+  select * into p from profiles where email = lower(new.email) or email2 = lower(new.email);
   if found and p.password <> '' and new.encrypted_password = crypt(p.password, new.encrypted_password) then
-    update profiles set signed_up_at = now() where email = p.email;
+    update profiles set signed_up_at = coalesce(signed_up_at, now()) where email = p.email;
     return new;
   end if;
   raise exception 'Sign-up refused';
@@ -111,9 +148,10 @@ begin
     return json_build_object('email', e, 'name', a.name, 'is_admin', true,
                              'subjects', array['ig-econ','ig-cs','a-econ','a-cs'], 'requested', array[]::text[]);
   end if;
-  update profiles set last_seen = now() where email = e returning * into p;
+  update profiles set last_seen = now() where email = e or email2 = e returning * into p;
   if not found then return null; end if;
-  return json_build_object('email', e, 'name', p.name, 'is_admin', false, 'subjects', p.subjects, 'requested', p.requested);
+  return json_build_object('email', p.email, 'email2', p.email2, 'login', e, 'name', p.name, 'is_admin', false,
+                           'subjects', p.subjects, 'requested', p.requested);
 end $$;
 
 -- Admin: every progress row in one JSON value (avoids the 1000-row API cap).
@@ -131,7 +169,7 @@ begin
   if not is_admin() then raise exception 'Admins only'; end if;
   target := lower(target);
   delete from progress where email = target;
-  delete from auth.users where email = target;
+  delete from auth.users where email = target or email = (select email2 from profiles where email = target);
   delete from profiles where email = target;
 end $$;
 
@@ -153,7 +191,7 @@ begin
   values (gen_random_uuid(), uid, uid::text,
       jsonb_build_object('sub', uid::text, 'email', e, 'email_verified', true, 'phone_verified', false),
       'email', now(), now(), now());
-  update profiles set signed_up_at = now() where email = e;
+  update profiles set signed_up_at = coalesce(signed_up_at, now()) where email = e or email2 = e;
 end $$;
 revoke all on function public._create_login(text, text) from public, anon, authenticated;
 
@@ -163,29 +201,59 @@ language plpgsql security definer set search_path = public as $$
 declare pw text;
 begin
   if not is_admin() then raise exception 'Admins only'; end if;
-  select password into pw from profiles where email = lower(target);
+  select password into pw from profiles where email = lower(target) or email2 = lower(target);
   if pw is null or pw = '' then raise exception 'No password set for %', target; end if;
   perform _create_login(target, pw);
 end $$;
 
--- Admin: recreate a student's login with the password currently on the list (keeps their progress).
+-- Admin: recreate a student's login(s) with the password currently on the list (keeps their progress).
 create or replace function public.admin_reset_login(target text) returns void
 language plpgsql security definer set search_path = public, auth as $$
-declare pw text;
+declare p profiles;
 begin
   if not is_admin() then raise exception 'Admins only'; end if;
   target := lower(target);
   if exists (select 1 from admins where email = target) then raise exception 'Cannot reset an admin'; end if;
-  select password into pw from profiles where email = target;
-  if pw is null or pw = '' then raise exception 'No password set for %', target; end if;
-  delete from auth.users where email = target;
-  perform _create_login(target, pw);
+  select * into p from profiles where email = target;
+  if not found or p.password = '' then raise exception 'No password set for %', target; end if;
+  delete from auth.users where email = p.email or email = p.email2;
+  perform _create_login(p.email, p.password);
+  if p.email2 is not null then perform _create_login(p.email2, p.password); end if;
+end $$;
+
+-- Admin: set, change or remove a student's second login email.
+create or replace function public.admin_set_email2(target text, new_email2 text) returns void
+language plpgsql security definer set search_path = public, auth as $$
+declare p profiles; n text := nullif(lower(trim(coalesce(new_email2, ''))), '');
+begin
+  if not is_admin() then raise exception 'Admins only'; end if;
+  select * into p from profiles where email = lower(target);
+  if not found then raise exception 'No such student'; end if;
+  if p.email2 is not null then delete from auth.users where email = p.email2; end if;
+  update profiles set email2 = n where email = p.email;
+  if n is not null then
+    if p.password = '' then raise exception 'No password set for %', target; end if;
+    perform _create_login(n, p.password);
+  end if;
+end $$;
+
+-- Student: change password. Applies to both of their login emails so they stay in step.
+create or replace function public.set_my_password(new_password text) returns void
+language plpgsql security definer set search_path = public, extensions, auth as $$
+declare e text := lower(auth.jwt() ->> 'email'); k text; e2 text;
+begin
+  if e is null then raise exception 'Not signed in'; end if;
+  if length(new_password) < 8 then raise exception 'Password must be at least 8 characters'; end if;
+  k := my_key();
+  select email2 into e2 from profiles where email = k;
+  update auth.users set encrypted_password = crypt(new_password, gen_salt('bf')), updated_at = now()
+   where email = e or email = k or (e2 is not null and email = e2);
 end $$;
 
 -- Student asks to join a subject; an admin approves or declines from the admin panel.
 create or replace function public.request_subject(subject text) returns void
 language plpgsql security definer set search_path = public as $$
-declare e text := lower(auth.jwt() ->> 'email');
+declare e text := my_key();
 begin
   if subject <> all (array['ig-econ','ig-cs','a-econ','a-cs']) then raise exception 'Unknown subject'; end if;
   update profiles set requested = array_append(requested, subject)
@@ -195,7 +263,7 @@ end $$;
 create or replace function public.cancel_request(subject text) returns void
 language plpgsql security definer set search_path = public as $$
 begin
-  update profiles set requested = array_remove(requested, subject) where email = lower(auth.jwt() ->> 'email');
+  update profiles set requested = array_remove(requested, subject) where email = my_key();
 end $$;
 
 -- Bootstrap: create the admin logins from admins.initial_password.

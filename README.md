@@ -12,7 +12,7 @@ Course structure (chapters, sections, AS/A Level split) also lives in `site_data
 
 ## Profile setup (Supabase)
 
-No emails and no self sign-up. The Admin panel creates each student's login with a generated password (two academic words plus two digits, e.g. `OutcomeMethod47`), which you give to the student. Students sign in on the Profile page with their school email and that password.
+No emails and no self sign-up. The Admin panel creates each student's login with a generated password (two academic words plus two digits, e.g. `OutcomeMethod47`), which you give to the student. Students sign in on the Profile page with their email and that password. A student can have up to two login emails (any provider), both using the same password.
 
 1. Create a Supabase project. Put its URL and public (publishable) key in `assets/config.js`, run `python3 build.py`, push.
 2. SQL Editor: paste the contents of `supabase/schema.sql` and run it. Safe to re-run.
