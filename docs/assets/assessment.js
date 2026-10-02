@@ -1,0 +1,104 @@
+// Assessment page: ?a=<artifact slug>. Questions come from the database without answer keys;
+// marking happens server-side, so answers are only revealed after the one allowed submission.
+(function () {
+  const S = window.Site;
+  const root = document.getElementById("assess-root");
+  const slug = new URLSearchParams(location.search).get("a") || "";
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const draftKey = "site.draft." + slug;
+  let catalog, quiz, me;
+
+  const lessonUrl = () => S.base + "artifacts/" + slug + "/";
+  const loadDraft = () => { try { return JSON.parse(localStorage.getItem(draftKey) || "{}"); } catch (e) { return {}; } };
+  const saveDraft = (d) => { try { localStorage.setItem(draftKey, JSON.stringify(d)); } catch (e) {} };
+
+  function field(q, val) {
+    if (q.type === "mcq") {
+      return `<div class="opts">${q.opts.map((o, i) => `<label class="opt"><input type="radio" name="${q.id}" value="${i}" ${String(val) === String(i) ? "checked" : ""}> <span>${esc(o)}</span></label>`).join("")}</div>`;
+    }
+    if (q.type === "num") return `<input class="ans" name="${q.id}" inputmode="decimal" autocomplete="off" value="${esc(val || "")}" placeholder="${esc(q.hint || "Enter a number.")}">`;
+    return `<textarea class="ans" name="${q.id}" rows="3" placeholder="${esc(q.hint || "Type your answer.")}">${esc(val || "")}</textarea>`;
+  }
+
+  function viewForm(preview) {
+    const draft = loadDraft();
+    const total = quiz.questions.reduce((t, q) => t + q.marks, 0);
+    root.innerHTML = `<section class="card block"><h3>${esc(quiz.title)}</h3>
+      <p class="hint">${quiz.questions.length} questions, ${total} marks. Pass mark ${quiz.pass}%. Type your answers from memory. You have <b>one attempt</b>: after you submit, answers are locked and you see your score, the model answers and feedback. Spelling does not need to be perfect, but use the key terms.</p>
+      ${preview ? '<p class="msg err">You are signed in as a teacher, so you can read the questions but not submit.</p>' : ""}
+      <p><a class="lnk" href="${lessonUrl()}">Open the lesson</a> if you want to revise first.</p></section>
+      <form id="qf">${quiz.questions.map((q, i) => `<section class="card block q"><div class="row"><b>Question ${i + 1}</b><span class="hint">${q.marks} mark${q.marks === 1 ? "" : "s"}</span></div>
+        <p class="qtext">${esc(q.q)}</p>${field(q, draft[q.id])}</section>`).join("")}
+        <section class="card block"><p class="hint" id="left"></p><p class="msg err" hidden></p><button class="btn" type="submit" ${preview ? "disabled" : ""}>Submit answers</button></section></form>`;
+    const f = $("#qf"), left = $("#left");
+    const read = () => Object.fromEntries(quiz.questions.map((q) => {
+      const el = f.elements[q.id];
+      return [q.id, q.type === "mcq" ? (f.querySelector(`[name=${q.id}]:checked`)?.value ?? "") : (el.value || "").trim()];
+    }));
+    const upd = () => {
+      const a = read(), n = Object.values(a).filter((v) => v !== "").length;
+      left.textContent = `${n} of ${quiz.questions.length} answered. Answers are kept on this device until you submit.`;
+      saveDraft(a);
+    };
+    f.addEventListener("input", upd); upd();
+    f.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const a = read(), blank = Object.values(a).filter((v) => v === "").length;
+      const ok = confirm(`${blank ? blank + " question(s) are blank. " : ""}Submit now? You cannot change your answers afterwards.`);
+      if (!ok) return;
+      const btn = f.querySelector("button[type=submit]"), m = $(".msg", f);
+      btn.disabled = true;
+      const { data, error } = await S.sb.rpc("submit_assessment", { _slug: slug, _answers: a });
+      if (error) { btn.disabled = false; m.textContent = error.message; m.hidden = false; return; }
+      try { localStorage.removeItem(draftKey); } catch (e2) {}
+      S.me && sessionStorage.removeItem("site.me");
+      viewResult({ score: data.score, max: data.max, pct: data.pct, result: data.result }, true);
+      window.scrollTo(0, 0);
+    });
+  }
+
+  function advice(items, pct) {
+    const miss = {};
+    items.filter((i) => i.got < i.max && i.topic).forEach((i) => { miss[i.topic] = (miss[i.topic] || 0) + 1; });
+    const topics = Object.keys(miss);
+    const band = pct >= quiz.pass ? "You have met the pass mark and this lesson now counts as complete."
+      : pct >= 50 ? `You are ${quiz.pass - pct} percentage points from the pass mark. Revise the topics below, then ask your teacher to reset the assessment for another try.`
+      : "This topic needs more work. Go back through the lesson, especially the worked examples, then ask your teacher to reset the assessment.";
+    return `<p>${band}</p>${topics.length ? `<p><b>To improve next time, focus on:</b> ${topics.map((t) => `<span class="pill soft">${esc(t)}</span>`).join(" ")}</p>` : '<p>Nothing to fix. Full marks.</p>'}`;
+  }
+
+  function viewResult(att, fresh) {
+    const items = att.result.items, pass = att.pct >= quiz.pass;
+    root.innerHTML = `<section class="card block result ${pass ? "pass" : "fail"}">
+        <div class="row"><h3>${esc(quiz.title)}</h3><span class="big">${att.pct}%</span></div>
+        <p><b>${att.score} / ${att.max} marks.</b> Pass mark ${quiz.pass}%. ${pass ? "Passed." : "Not yet passed."}${fresh ? "" : ` <span class="hint">Submitted ${att.at ? new Date(att.at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : ""}.</span>`}</p>
+        ${advice(items, att.pct)}
+        <p><a class="btn ghost" href="${lessonUrl()}">Back to the lesson</a> <a class="btn ghost" href="${S.profileUrl}">My profile</a></p></section>
+      ${items.map((it, i) => {
+        const full = it.got >= it.max, part = it.got > 0 && !full;
+        return `<section class="card block q ${full ? "good" : part ? "part" : "bad"}"><div class="row"><b>Question ${i + 1}</b><span class="mark">${full ? "✓" : part ? "◐" : "✗"} ${it.got} / ${it.max}</span></div>
+          <p class="qtext">${esc(it.q)}</p>
+          <p><span class="hint">Your answer</span><br>${it.typed ? esc(it.typed) : "<i>No answer</i>"}</p>
+          ${full ? "" : `<p><span class="hint">Model answer</span><br>${esc(it.model)}</p>`}
+          <p class="fb">${esc(it.feedback)}</p></section>`;
+      }).join("")}`;
+  }
+
+  const $ = (sel, el = root) => el.querySelector(sel);
+
+  async function boot() {
+    if (!slug) { root.innerHTML = `<p class="msg err">No lesson chosen.</p>`; return; }
+    me = await S.whoami();
+    if (!me) {
+      try { sessionStorage.setItem("site.next", location.href); } catch (e) {}
+      root.innerHTML = `<section class="card block"><h3>Sign in to take the assessment</h3><p><a class="btn" href="${S.profileUrl}">Sign in</a></p></section>`;
+      return;
+    }
+    const { data, error } = await S.sb.rpc("get_assessment", { _slug: slug });
+    if (error || !data) { root.innerHTML = `<p class="msg err">${error ? esc(error.message) : "There is no assessment for this lesson yet."}</p>`; return; }
+    quiz = data;
+    if (data.attempt) viewResult(data.attempt, false);
+    else viewForm(!!(me.is_admin || me.is_teacher));
+  }
+  boot();
+})();

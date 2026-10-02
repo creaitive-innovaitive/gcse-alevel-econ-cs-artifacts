@@ -314,6 +314,188 @@ begin
   update profiles set requested = array_remove(requested, subject) where email = my_key();
 end $$;
 
+-- ===================== Assessments (v4) =====================
+-- Answer keys live in a table no client can read. Marking happens inside submit_assessment().
+create table if not exists public.assessments (
+  slug       text primary key,
+  title      text not null,
+  pass_pct   int  not null default 80,
+  questions  jsonb not null,          -- full questions incl. answer keys, feedback
+  updated_at timestamptz not null default now()
+);
+alter table public.assessments enable row level security;   -- no policies: unreadable from the website
+
+create table if not exists public.assessment_attempts (
+  id           bigint generated always as identity primary key,
+  email        text not null,
+  slug         text not null,
+  answers      jsonb not null,
+  score        int not null,
+  max_score    int not null,
+  pct          int not null,
+  result       jsonb not null,
+  submitted_at timestamptz not null default now(),
+  reset_at     timestamptz            -- set when the teacher allows a retake; row stays as history
+);
+create unique index if not exists attempts_one_live on public.assessment_attempts (email, slug) where reset_at is null;
+alter table public.assessment_attempts enable row level security;   -- reads only through the functions below
+
+create or replace function public.has_assessment(_slug text) returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from assessments where slug = _slug)
+$$;
+
+-- Lessons with an assessment are completed by passing it (or by the teacher), not by self-marking.
+drop policy if exists progress_insert on public.progress;
+create policy progress_insert on public.progress
+  for insert with check (email = my_key() and is_member() and not has_assessment(slug));
+drop policy if exists progress_delete on public.progress;
+create policy progress_delete on public.progress
+  for delete using (email = my_key() and not has_assessment(slug));
+
+-- Lowercase, strip punctuation, collapse spaces.
+create or replace function public._norm(t text) returns text
+language sql immutable as $$
+  select trim(regexp_replace(regexp_replace(regexp_replace(lower(replace(coalesce(t, ''), '−', '-')), '[^a-z0-9.% -]+', ' ', 'g'), '\.( |$)', ' ', 'g'), '\s+', ' ', 'g'))
+$$;
+
+-- Does the typed answer contain the phrase? A trailing * allows any word ending (opportunit* matches opportunity/opportunities).
+create or replace function public._hit(typed text, alt text) returns boolean
+language plpgsql immutable as $$
+declare a text := public._norm(replace(alt, '*', '')); pat text;
+begin
+  if a = '' then return false; end if;
+  pat := '(^| )' || regexp_replace(a, '([.%-])', '\\\1', 'g') || case when right(alt, 1) = '*' then '' else '( |$)' end;
+  return public._norm(typed) ~ pat;
+end $$;
+
+create or replace function public._first_number(t text) returns numeric
+language sql immutable as $$
+  select (regexp_match(replace(replace(coalesce(t, ''), ',', ''), '−', '-'), '-?\d+(\.\d+)?'))[1]::numeric
+$$;
+
+-- Mark one question. Returns marks gained.
+create or replace function public._mark(q jsonb, typed text) returns int
+language plpgsql immutable as $$
+declare t text := q ->> 'type'; got int := 0; g jsonb; alt jsonb; n numeric;
+begin
+  if typed is null or btrim(typed) = '' then return 0; end if;
+  if t = 'mcq' then
+    return case when btrim(typed) = (q ->> 'ans') then coalesce((q ->> 'marks')::int, 1) else 0 end;
+  elsif t = 'num' then
+    n := public._first_number(typed);
+    if n is not null and q ->> 'abs' = 'true' then n := abs(n); end if;
+    if n is not null and abs(n - (q ->> 'ans')::numeric) <= coalesce((q ->> 'tol')::numeric, 0) then
+      return coalesce((q ->> 'marks')::int, 1);
+    end if;
+    return 0;
+  else
+    for g in select * from jsonb_array_elements(q -> 'groups') loop
+      for alt in select * from jsonb_array_elements(g) loop
+        if public._hit(typed, alt #>> '{}') then got := got + 1; exit; end if;
+      end loop;
+    end loop;
+    return least(got, coalesce((q ->> 'marks')::int, jsonb_array_length(q -> 'groups')));
+  end if;
+end $$;
+
+-- Questions without keys or feedback, plus this student's live attempt (with feedback) if they have one.
+create or replace function public.get_assessment(_slug text) returns json
+language plpgsql security definer set search_path = public as $$
+declare a assessments; att assessment_attempts; e text := my_key();
+begin
+  if not is_member() then raise exception 'Sign in first'; end if;
+  select * into a from assessments where slug = _slug;
+  if not found then return null; end if;
+  select * into att from assessment_attempts where email = e and slug = _slug and reset_at is null;
+  return json_build_object(
+    'slug', a.slug, 'title', a.title, 'pass', a.pass_pct,
+    'questions', (select json_agg(jsonb_build_object('id', q ->> 'id', 'type', q ->> 'type', 'q', q ->> 'q',
+                    'opts', q -> 'opts', 'marks', coalesce((q ->> 'marks')::int, 1), 'topic', q ->> 'topic', 'hint', q ->> 'hint'))
+                  from jsonb_array_elements(a.questions) q),
+    'attempt', case when att.id is null then null else json_build_object('answers', att.answers, 'score', att.score, 'max', att.max_score,
+                    'pct', att.pct, 'result', att.result, 'at', att.submitted_at) end);
+end $$;
+
+-- One attempt only. Marks, stores, auto-completes the lesson at/above the pass mark, returns the full feedback.
+create or replace function public.submit_assessment(_slug text, _answers jsonb) returns json
+language plpgsql security definer set search_path = public as $$
+declare a assessments; e text := my_key(); q jsonb; typed text; got int; tot int := 0; sc int := 0;
+        items jsonb := '[]'::jsonb; p int; weak text[] := '{}'; res jsonb;
+begin
+  if not is_member() then raise exception 'Sign in first'; end if;
+  if exists (select 1 from admins where email = lower(auth.jwt() ->> 'email'))
+     or exists (select 1 from teachers where email = lower(auth.jwt() ->> 'email')) then
+    raise exception 'Teacher accounts preview the assessment but do not submit it';
+  end if;
+  select * into a from assessments where slug = _slug;
+  if not found then raise exception 'No assessment for this lesson'; end if;
+  if exists (select 1 from assessment_attempts where email = e and slug = _slug and reset_at is null) then
+    raise exception 'Already submitted. Ask your teacher to reset it for a retake.';
+  end if;
+  for q in select * from jsonb_array_elements(a.questions) loop
+    typed := _answers ->> (q ->> 'id');
+    got := _mark(q, typed);
+    tot := tot + coalesce((q ->> 'marks')::int, case when q ->> 'type' = 'text' then jsonb_array_length(q -> 'groups') else 1 end);
+    sc := sc + got;
+    items := items || jsonb_build_array(jsonb_build_object('id', q ->> 'id', 'got', got,
+        'max', coalesce((q ->> 'marks')::int, case when q ->> 'type' = 'text' then jsonb_array_length(q -> 'groups') else 1 end),
+        'q', q ->> 'q', 'typed', case when q ->> 'type' = 'mcq' and typed ~ '^[0-9]+$' then q -> 'opts' ->> typed::int else typed end, 'model', q ->> 'model', 'feedback', case when got >= coalesce((q ->> 'marks')::int, 1) then q ->> 'ok' else q ->> 'fb' end,
+        'topic', q ->> 'topic'));
+  end loop;
+  p := case when tot = 0 then 0 else round(100.0 * sc / tot) end;
+  res := jsonb_build_object('items', items);
+  insert into assessment_attempts (email, slug, answers, score, max_score, pct, result) values (e, _slug, _answers, sc, tot, p, res);
+  if p >= a.pass_pct then
+    insert into progress (email, slug) values (e, _slug) on conflict do nothing;
+  end if;
+  return json_build_object('score', sc, 'max', tot, 'pct', p, 'pass', a.pass_pct, 'result', res);
+end $$;
+
+-- Student: my own scores (slug, pct, when).
+create or replace function public.my_attempts() returns json
+language sql stable security definer set search_path = public as $$
+  select coalesce(json_agg(json_build_object('slug', slug, 'pct', pct, 'score', score, 'max', max_score, 'at', submitted_at) order by submitted_at desc), '[]'::json)
+  from assessment_attempts where email = my_key() and reset_at is null
+$$;
+
+-- Admin: every attempt (history included) with its feedback.
+create or replace function public.admin_attempts() returns json
+language plpgsql security definer set search_path = public as $$
+begin
+  if not is_admin() then raise exception 'Admins only'; end if;
+  return coalesce((select json_agg(json_build_object('id', id, 'email', email, 'slug', slug, 'score', score, 'max', max_score, 'pct', pct,
+            'result', result, 'at', submitted_at, 'reset_at', reset_at) order by submitted_at desc) from assessment_attempts), '[]'::json);
+end $$;
+
+-- Admin: allow a retake (the old attempt stays as history).
+create or replace function public.admin_reset_attempt(_id bigint) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not is_admin() then raise exception 'Admins only'; end if;
+  update assessment_attempts set reset_at = now() where id = _id and reset_at is null;
+end $$;
+
+-- Admin: mark a lesson done / not done for a student, whatever their score.
+create or replace function public.admin_set_done(_email text, _slug text, _done boolean) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not is_admin() then raise exception 'Admins only'; end if;
+  if _done then insert into progress (email, slug) values (lower(_email), _slug) on conflict do nothing;
+  else delete from progress where email = lower(_email) and slug = _slug; end if;
+end $$;
+
+create or replace function public.admin_delete_student(target text) returns void
+language plpgsql security definer set search_path = public, auth as $$
+begin
+  if not is_admin() then raise exception 'Admins only'; end if;
+  target := lower(target);
+  delete from progress where email = target;
+  delete from assessment_attempts where email = target;
+  delete from auth.users where email = target or email = (select email2 from profiles where email = target);
+  delete from profiles where email = target;
+end $$;
+
 -- Bootstrap: create the admin logins from admins.initial_password.
 select public._create_login(email, initial_password) from public.admins where initial_password is not null and initial_password <> '';
 

@@ -1,0 +1,212 @@
+{
+ "slug": "as-comparative-advantage",
+ "title": "Comparative Advantage: assessment",
+ "pass_pct": 80,
+ "questions": [
+  {
+   "id": "q1",
+   "type": "num",
+   "q": "Blue can make at most 40 coats or 160 shirts. How many shirts does Blue give up to make 1 coat?",
+   "ans": 4,
+   "tol": 0,
+   "marks": 1,
+   "topic": "Opportunity cost",
+   "hint": "Enter a number.",
+   "ok": "Correct: 160 ÷ 40 = 4 shirts.",
+   "fb": "Divide what is given up (shirts) by what is gained (coats): 160 ÷ 40 = 4. Revisit Step 2 of the worked example in the Learn tab.",
+   "model": "4"
+  },
+  {
+   "id": "q2",
+   "type": "num",
+   "q": "Red can make at most 120 coats or 240 shirts. How many coats does Red give up to make 1 shirt? (give a decimal)",
+   "ans": 0.5,
+   "tol": 0.01,
+   "marks": 1,
+   "topic": "Opportunity cost",
+   "hint": "Enter a number.",
+   "ok": "Correct: 120 ÷ 240 = 0.5 coat.",
+   "fb": "The opportunity cost of a shirt is the inverse of the coat calculation: coats given up ÷ shirts gained = 120 ÷ 240 = 0.5. Check Step 2 again.",
+   "model": "0.5"
+  },
+  {
+   "id": "q3",
+   "type": "mcq",
+   "q": "Using the figures above, which country has the comparative advantage in coats?",
+   "opts": [
+    "Red",
+    "Blue",
+    "Both countries",
+    "Neither country"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Comparative advantage",
+   "ok": "Correct: Red gives up 2 shirts per coat, Blue gives up 4, so Red's opportunity cost is lower.",
+   "fb": "Compare opportunity costs, not total output. Red gives up 2 shirts per coat and Blue gives up 4, so Red is the lower-cost producer of coats. Re-read the table in Step 2.",
+   "model": "Red"
+  },
+  {
+   "id": "q4",
+   "type": "text",
+   "q": "Define comparative advantage.",
+   "groups": [
+    [
+     "opportunity cost"
+    ],
+    [
+     "lower",
+     "less",
+     "fewer",
+     "smaller",
+     "lowest"
+    ]
+   ],
+   "marks": 2,
+   "topic": "Definitions",
+   "ok": "Full marks: you linked it to opportunity cost and to being lower.",
+   "fb": "Two ideas are needed: it is about opportunity cost, and the country with the lower opportunity cost holds the advantage. Learn the wording in the Tips & keywords tab.",
+   "model": "A country has a comparative advantage in a good if it can produce it at a lower opportunity cost than another country, meaning it gives up fewer other goods to make it.",
+   "hint": "One sentence."
+  },
+  {
+   "id": "q5",
+   "type": "text",
+   "q": "A country can make every good using fewer resources than its trading partner. Could it still gain from trade? Answer yes or no and explain briefly.",
+   "groups": [
+    [
+     "yes",
+     "could",
+     "may"
+    ],
+    [
+     "comparative",
+     "opportunity cost",
+     "specialis*",
+     "lower cost"
+    ]
+   ],
+   "marks": 2,
+   "topic": "Absolute vs comparative",
+   "ok": "Full marks: the gain comes from comparative, not absolute, advantage.",
+   "fb": "Absolute advantage in everything does not stop trade being worthwhile. The gain comes from specialising where the opportunity cost is lower. Re-read 'A country can have an absolute advantage in everything and still gain from trade' in the Learn tab.",
+   "model": "Yes. Even with an absolute advantage in everything, the country is likely to have a lower opportunity cost in some goods. If it specialises in those and trades, both countries could consume more than they could alone."
+  },
+  {
+   "id": "q6",
+   "type": "mcq",
+   "q": "In the worked example a coat costs Red 2 shirts and Blue 4 shirts to make. Between which rates of exchange could both countries gain?",
+   "opts": [
+    "Under 2 shirts per coat",
+    "Between 2 and 4 shirts per coat",
+    "Over 4 shirts per coat",
+    "Exactly 3 shirts per coat only"
+   ],
+   "ans": "1",
+   "marks": 1,
+   "topic": "Terms of trade",
+   "ok": "Correct: Red wants more than 2 shirts per coat, Blue will pay less than 4.",
+   "fb": "Each side must receive a better deal than making the good itself. Red will not sell a coat for under 2 shirts, and Blue will not pay more than 4. Revisit Step 5.",
+   "model": "Between 2 and 4 shirts per coat"
+  },
+  {
+   "id": "q7",
+   "type": "num",
+   "q": "Red makes only coats (120) and Blue makes only shirts (160). How many shirts does the world produce?",
+   "ans": 160,
+   "tol": 0,
+   "marks": 1,
+   "topic": "Specialisation",
+   "hint": "Enter a number.",
+   "ok": "Correct: only Blue makes shirts, so the world total is 160.",
+   "fb": "After specialising, only Blue makes shirts, so world shirt output is Blue's maximum of 160. See Step 4.",
+   "model": "160"
+  },
+  {
+   "id": "q8",
+   "type": "num",
+   "q": "At an exchange rate of 3 shirts per coat, Red sells 40 coats. How many shirts does Red receive?",
+   "ans": 120,
+   "tol": 0,
+   "marks": 1,
+   "topic": "Terms of trade",
+   "hint": "Enter a number.",
+   "ok": "Correct: 40 × 3 = 120 shirts.",
+   "fb": "Shirts received = coats sold × shirts per coat = 40 × 3 = 120. See Step 6.",
+   "model": "120"
+  },
+  {
+   "id": "q9",
+   "type": "text",
+   "q": "Name two limitations or risks of a country specialising heavily according to comparative advantage.",
+   "groups": [
+    [
+     "overspecialis*",
+     "over-specialis*",
+     "over reliance",
+     "overreliance",
+     "over-reliance",
+     "too reliant",
+     "dependen*",
+     "depend on",
+     "relies on",
+     "rely on"
+    ],
+    [
+     "unemploy*",
+     "structural"
+    ],
+    [
+     "transport",
+     "freight",
+     "shipping"
+    ],
+    [
+     "tariff*",
+     "protection*",
+     "quota*",
+     "trade barrier*"
+    ],
+    [
+     "decline",
+     "falling demand",
+     "price fall*",
+     "volatil*",
+     "fluctuat*",
+     "shock*",
+     "commodity prices"
+    ],
+    [
+     "non-renewable",
+     "run out",
+     "exhaust*",
+     "depleted"
+    ],
+    [
+     "diseconom*"
+    ]
+   ],
+   "marks": 2,
+   "topic": "Limitations",
+   "ok": "Full marks: two different limitations.",
+   "fb": "Pick two distinct points, such as over-dependence on a few exports, structural unemployment when an industry declines, or transport costs. A weak answer repeats one point twice. See the Exam questions tab.",
+   "model": "Two examples: the country could become over-dependent on a few exports, so a fall in world prices may hurt it badly; and workers in industries that decline after specialising may become structurally unemployed.",
+   "hint": "Give two different points."
+  },
+  {
+   "id": "q10",
+   "type": "text",
+   "q": "What name is given to the rate at which one country's goods exchange for another's?",
+   "groups": [
+    [
+     "terms of trade"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Terms of trade",
+   "ok": "Correct.",
+   "fb": "The term is 'terms of trade'. Add it to your keyword list in the Tips & keywords tab.",
+   "model": "The terms of trade."
+  }
+ ]
+}

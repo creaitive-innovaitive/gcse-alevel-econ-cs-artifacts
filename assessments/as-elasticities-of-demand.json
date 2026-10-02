@@ -1,0 +1,207 @@
+{
+ "slug": "as-elasticities-of-demand",
+ "title": "Elasticities of Demand: assessment",
+ "pass_pct": 80,
+ "questions": [
+  {
+   "id": "q1",
+   "type": "num",
+   "q": "Price rises from $10 to $12 and quantity demanded falls from 1,000 to 900. Calculate PED (ignore the sign, give one decimal).",
+   "ans": 0.5,
+   "tol": 0.05,
+   "marks": 1,
+   "topic": "PED calculation",
+   "hint": "Enter a number.",
+   "ok": "Correct: %ΔP = 20%, %ΔQ = 10%, PED = 10 ÷ 20 = 0.5.",
+   "fb": "Use percentage changes on the original value: %ΔP = 2 ÷ 10 = 20%, %ΔQ = 100 ÷ 1,000 = 10%. PED = 10 ÷ 20 = 0.5. Revisit the PED formula in the Learn tab.",
+   "model": "0.5",
+   "abs": true
+  },
+  {
+   "id": "q2",
+   "type": "num",
+   "q": "Incomes rise by 5% and demand for a good rises by 15%. Calculate YED.",
+   "ans": 3,
+   "tol": 0.01,
+   "marks": 1,
+   "topic": "YED calculation",
+   "hint": "Enter a number.",
+   "ok": "Correct: 15 ÷ 5 = 3.",
+   "fb": "YED = %ΔQd ÷ %ΔY = 15 ÷ 5 = 3. A figure above 1 suggests a luxury or income-elastic good.",
+   "model": "3"
+  },
+  {
+   "id": "q3",
+   "type": "num",
+   "q": "The price of good B rises by 10% and demand for good A falls by 25%. Calculate XED, including the sign.",
+   "ans": -2.5,
+   "tol": 0.05,
+   "marks": 1,
+   "topic": "XED calculation",
+   "hint": "Include the minus sign if it is negative.",
+   "ok": "Correct: −25 ÷ 10 = −2.5, which suggests complements.",
+   "fb": "XED = %ΔQd of A ÷ %ΔP of B = −25 ÷ 10 = −2.5. Keep the sign for XED, because it shows whether the goods are substitutes or complements.",
+   "model": "-2.5"
+  },
+  {
+   "id": "q4",
+   "type": "mcq",
+   "q": "A good has a PED of 0.4. If its price rises, what is likely to happen to total revenue?",
+   "opts": [
+    "It rises",
+    "It falls",
+    "It stays the same",
+    "It cannot be known"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "PED and revenue",
+   "ok": "Correct: demand is inelastic, so quantity falls proportionally less than price rises.",
+   "fb": "With PED below 1 (inelastic), the % fall in quantity is smaller than the % rise in price, so revenue tends to rise. See the revenue table in the Learn tab.",
+   "model": "It rises"
+  },
+  {
+   "id": "q5",
+   "type": "mcq",
+   "q": "A firm cuts the price of a product with PED = 1.8. What is likely to happen to its revenue?",
+   "opts": [
+    "It rises",
+    "It falls",
+    "No change",
+    "It depends on costs"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "PED and revenue",
+   "ok": "Correct: elastic demand means a price cut tends to raise revenue.",
+   "fb": "PED above 1 (elastic): the % rise in quantity is bigger than the % fall in price, so revenue tends to rise. See Lab 1 in the Explore tab.",
+   "model": "It rises"
+  },
+  {
+   "id": "q6",
+   "type": "mcq",
+   "q": "A negative YED indicates which type of good?",
+   "opts": [
+    "Luxury good",
+    "Normal necessity",
+    "Inferior good",
+    "Complement"
+   ],
+   "ans": "2",
+   "marks": 1,
+   "topic": "YED",
+   "ok": "Correct.",
+   "fb": "A negative income elasticity means demand falls as income rises, which is the definition of an inferior good. Examples include own-brand value ranges.",
+   "model": "Inferior good"
+  },
+  {
+   "id": "q7",
+   "type": "text",
+   "q": "Define price elasticity of demand.",
+   "groups": [
+    [
+     "responsive*",
+     "sensitiv*",
+     "extent",
+     "how much",
+     "degree"
+    ],
+    [
+     "own price",
+     "change in price",
+     "price change",
+     "change in the price",
+     "price of the product",
+     "price of a product",
+     "price of the good",
+     "a change in price",
+     "to price",
+     "to the price",
+     "to its price",
+     "changes in price",
+     "price changes",
+     "change in its price"
+    ]
+   ],
+   "marks": 2,
+   "topic": "Definitions",
+   "ok": "Full marks: responsiveness of quantity demanded to a change in price.",
+   "fb": "Two parts: it measures the responsiveness (how much) of quantity demanded, to a change in the good's own price. Revisit 'Three elasticities of demand' in the Learn tab.",
+   "model": "PED measures the responsiveness of quantity demanded of a product to a change in its own price, ceteris paribus.",
+   "hint": "One sentence."
+  },
+  {
+   "id": "q8",
+   "type": "text",
+   "q": "State three factors that could affect the price elasticity of demand for a product.",
+   "groups": [
+    [
+     "substitut*"
+    ],
+    [
+     "proportion of income",
+     "share of income",
+     "relative expense",
+     "expensive",
+     "percentage of income"
+    ],
+    [
+     "time",
+     "long run",
+     "short run"
+    ],
+    [
+     "necessit*",
+     "luxur*"
+    ],
+    [
+     "addict*",
+     "habit*"
+    ],
+    [
+     "brand loyal*",
+     "loyal*",
+     "brand"
+    ]
+   ],
+   "marks": 3,
+   "topic": "Determinants",
+   "ok": "Full marks: three different determinants.",
+   "fb": "Three different determinants are needed, such as availability of substitutes, relative expense, time period, necessity or luxury, addiction and brand loyalty. See 'What determines PED?' in the Learn tab.",
+   "model": "Availability and closeness of substitutes (more substitutes tends to make demand more elastic); the proportion of income spent on it (larger share, more elastic); and the time period (longer run, more elastic).",
+   "hint": "Three short points."
+  },
+  {
+   "id": "q9",
+   "type": "text",
+   "q": "The XED between butter and margarine is +1.8. What type of relationship does this show?",
+   "groups": [
+    [
+     "substitut*"
+    ]
+   ],
+   "marks": 1,
+   "topic": "XED",
+   "ok": "Correct: a positive XED suggests substitutes.",
+   "fb": "A positive XED means that when the price of one good rises, demand for the other rises too, which is how substitutes behave. Negative would suggest complements.",
+   "model": "Substitutes."
+  },
+  {
+   "id": "q10",
+   "type": "mcq",
+   "q": "Along a straight-line demand curve, where is demand most price elastic?",
+   "opts": [
+    "At a high price, low quantity",
+    "At the midpoint",
+    "At a low price, high quantity",
+    "PED is the same everywhere"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "PED along a curve",
+   "ok": "Correct: at high prices, small absolute changes are large percentage changes.",
+   "fb": "The slope is constant but PED is not, because it uses percentages. At the top left a small change in quantity is a large percentage change, so demand is more elastic. Watch the animation in the Watch tab.",
+   "model": "At a high price, low quantity"
+  }
+ ]
+}

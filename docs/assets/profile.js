@@ -105,7 +105,7 @@
   }
 
   // ---------- student dashboard ----------
-  function viewDashboard(me, done) {
+  function viewDashboard(me, done, attempts = []) {
     const mine = me.subjects.filter((k) => catalog.courses[k]);
     const all = subjectSlugs(mine);
     const doneN = [...all].filter((s) => done.has(s)).length;
@@ -151,7 +151,9 @@
         <section class="card block"><h3>Recently completed</h3>${recent.length
           ? `<ul class="plain">${recent.map(([s, d]) => `<li><a class="lnk" href="${S.base}${catalog.artifacts[s].url}">${esc(catalog.artifacts[s].title)}</a> <span class="hint">${fmt(d)}</span></li>`).join("")}</ul>`
           : `<p class="hint">Mark an activity as done and it will show up here.</p>`}</section>
-        <section class="card block empty"><h3>Assessment scores</h3><p class="hint">Coming soon.</p></section>
+        <section class="card block"><h3>Assessment scores</h3>${attempts.length
+          ? `<ul class="plain">${attempts.filter((t) => catalog.artifacts[t.slug]).map((t) => `<li><a class="lnk" href="${S.base}assess/?a=${encodeURIComponent(t.slug)}">${esc(catalog.artifacts[t.slug].title)}</a> <b class="${t.pct >= (catalog.assessed[t.slug]?.pass ?? 80) ? "ok-txt" : "no-txt"}">${t.pct}%</b> <span class="hint">${fmt(t.at)}</span></li>`).join("")}</ul>`
+          : `<p class="hint">Lessons with an assessment show your score and feedback here. Score ${Math.min(...Object.values(catalog.assessed || {}).map((a) => a.pass), 80)}% or more to complete the lesson.</p>`}</section>
       </div>
       ${account}`;
   }
@@ -177,15 +179,16 @@
 
   // ---------- admin console ----------
   async function loadAdmin() {
-    const [{ data: people, error }, { data: prog }, { data: teachers }] = await Promise.all([
+    const [{ data: people, error }, { data: prog }, { data: teachers }, { data: attempts }] = await Promise.all([
       sb.from("profiles").select("*").order("name"),
       sb.rpc("admin_progress"),
       sb.from("teachers").select("*").order("name"),
+      sb.rpc("admin_attempts"),
     ]);
     if (error) throw error;
     const byEmail = new Map();
     (prog || []).forEach((r) => { if (!byEmail.has(r.email)) byEmail.set(r.email, new Map()); byEmail.get(r.email).set(r.slug, r.done_at); });
-    return { people: people || [], teachers: teachers || [], byEmail };
+    return { people: people || [], teachers: teachers || [], byEmail, attempts: attempts || [] };
   }
 
   const subjectBoxes = (chosen = []) => COURSE_KEYS.map((k) =>
@@ -230,8 +233,33 @@
       const status = p.signed_up_at ? (p.last_seen ? "Active " + fmt(p.last_seen) : "Signed up") : "Not signed up";
       return `<tr data-email="${esc(p.email)}"><td><b>${esc(p.name)}</b><br><span class="hint">${esc(p.email)}${p.email2 ? `<br>${esc(p.email2)}` : ""}</span></td>
         <td><div class="pills">${pills(p.subjects)}</div></td><td>${esc(status)}</td><td>${pct(n, all.size)}%<br><span class="hint">${n}/${all.size}</span></td>
-        <td class="acts"><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Reset login</button><button class="mini danger" data-act="del">Delete</button></td></tr>`;
+        <td class="acts"><button class="mini ok" data-act="view">Progress</button><button class="mini" data-act="edit">Edit</button><button class="mini" data-act="reset">Reset login</button><button class="mini danger" data-act="del">Delete</button></td></tr>`;
     }).join("");
+  }
+
+  // One student's lessons, assessment scores and feedback. Re-rendered in place after each change.
+  function studentDetail(state, p, onChange) {
+    const done = state.byEmail.get(p.email) || new Map();
+    const mine = state.attempts.filter((a) => a.email === p.email);
+    const live = (slug) => mine.find((a) => a.slug === slug && !a.reset_at);
+    const olds = (slug) => mine.filter((a) => a.slug === slug && a.reset_at);
+    const review = (a) => `<details class="attempt"><summary><b>${a.pct}%</b> <span class="hint">${a.score}/${a.max} · ${fmt(a.at)}${a.reset_at ? " · reset " + fmt(a.reset_at) : ""}</span></summary>
+      ${a.result.items.map((it, i) => `<div class="lessonrow"><b>${i + 1}. ${esc(it.q)}</b> <span class="${it.got >= it.max ? "ok-txt" : "no-txt"}">${it.got}/${it.max}</span><br>
+        <span class="hint">Answered:</span> ${it.typed ? esc(it.typed) : "<i>blank</i>"}<br>${it.got >= it.max ? "" : `<span class="hint">Model:</span> ${esc(it.model)}<br>`}<span class="hint">Feedback:</span> ${esc(it.feedback)}</div>`).join("")}</details>`;
+    const lesson = (slug) => {
+      const a = catalog.artifacts[slug], q = catalog.assessed[slug], t = live(slug), isDone = done.has(slug);
+      return `<div class="lessonrow" data-slug="${esc(slug)}"><div class="row"><span><b>${esc(a.title)}</b> <span class="hint">${esc(a.chapterTitle)}</span></span>
+        <span>${isDone ? `<span class="ok-txt">✓ Complete</span>` : '<span class="no-txt">Not complete</span>'}
+        <button class="mini" data-dn="${isDone ? "0" : "1"}">${isDone ? "Mark not done" : "Mark done"}</button></span></div>
+        ${q ? (t ? review(t) + `<button class="mini" data-reset="${t.id}">Allow retake</button>` : '<p class="hint">Assessment not attempted.</p>') : '<p class="hint">No assessment on this lesson.</p>'}
+        ${olds(slug).length ? `<p class="hint">Earlier attempts</p>${olds(slug).map(review).join("")}` : ""}</div>`;
+    };
+    const subj = p.subjects.filter((k) => catalog.courses[k]).map((k) => {
+      const c = catalog.courses[k], n = c.slugs.filter((x) => done.has(x)).length;
+      return `<section class="subj"><h4>${esc(c.title)} · ${n}/${c.slugs.length} complete</h4>${chapterMap(c, done)}
+        ${c.slugs.map(lesson).join("") || '<p class="hint">No lessons yet.</p>'}</section>`;
+    }).join("") || '<p class="hint">No subjects assigned.</p>';
+    return `<div class="row"><h3>${esc(p.name)}</h3><button class="btn ghost" value="close" formnovalidate>Close</button></div><p class="hint">${esc(p.email)}</p>${subj}`;
   }
 
   async function renderAdmin(host) {
@@ -271,7 +299,8 @@
       <div class="tabpanel" data-panel="students"><div class="row"><h3>Classes</h3><button class="mini" id="csv">Export CSV</button></div>
         <p class="hint">Open a class to manage its students.</p>${classAccordion(state)}</div>
       <div class="tabpanel" data-panel="me">${adminMe}</div>
-      <dialog id="dlg"><form method="dialog" id="f-edit"></form></dialog>`;
+      <dialog id="dlg"><form method="dialog" id="f-edit"></form></dialog>
+      <dialog id="dlg2" class="wide"><form method="dialog" id="f-view"></form></dialog>`;
     const showTab = (t) => {
       adminTab = t;
       host.querySelectorAll("[data-at]").forEach((b) => b.classList.toggle("on", b.dataset.at === t));
@@ -375,7 +404,32 @@
       const btn = e.target.closest("[data-act]");
       if (!btn) return;
       const email = btn.closest("tr").dataset.email, p = state.people.find((x) => x.email === email);
-      if (btn.dataset.act === "reset") {
+      if (btn.dataset.act === "view") {
+        const dlg2 = $("#dlg2"), fv = $("#f-view");
+        const draw = () => {
+          const y = dlg2.scrollTop;
+          fv.innerHTML = studentDetail(state, p);
+          dlg2.scrollTop = y;
+        };
+        draw();
+        if (!dlg2.open) dlg2.showModal();
+        const refresh = async () => { Object.assign(state, await loadAdmin()); draw(); };
+        fv.onclick = async (ev) => {
+          const dn = ev.target.closest("[data-dn]"), rs = ev.target.closest("[data-reset]");
+          if (dn) {
+            const slug = dn.closest("[data-slug]").dataset.slug;
+            const { error } = await sb.rpc("admin_set_done", { _email: p.email, _slug: slug, _done: dn.dataset.dn === "1" });
+            if (error) return alert(error.message);
+            await refresh();
+          } else if (rs) {
+            if (!confirm(`Allow ${p.name} to retake this assessment? The current attempt is kept in their history.`)) return;
+            const { error } = await sb.rpc("admin_reset_attempt", { _id: Number(rs.dataset.reset) });
+            if (error) return alert(error.message);
+            await refresh();
+          }
+        };
+        dlg2.addEventListener("close", () => renderAdmin(host), { once: true });
+      } else if (btn.dataset.act === "reset") {
         if (!confirm(`Recreate the login(s) for ${p.name} with the password on the list? They keep their progress.`)) return;
         const { error } = await sb.rpc("admin_reset_login", { target: email });
         alert(error ? "Could not reset: " + error.message : "Done. " + p.name + " can sign in with: " + p.password);
@@ -431,7 +485,9 @@
       return viewSignedOut();
     }
     const done = await S.loadProgress();
-    const [head, body] = viewDashboard(me, done).split("<!--split-->");
+    let attempts = [];
+    if (!me.is_admin && !me.is_teacher) attempts = (await S.sb.rpc("my_attempts")).data || [];
+    const [head, body] = viewDashboard(me, done, attempts).split("<!--split-->");
     if (me.is_admin) {
       adminMe = body;
       root.innerHTML = head + `<div id="admin"></div>`;

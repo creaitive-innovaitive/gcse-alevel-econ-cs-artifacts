@@ -1,0 +1,193 @@
+{
+ "slug": "linked-lists",
+ "title": "Linked Lists: assessment",
+ "pass_pct": 80,
+ "questions": [
+  {
+   "id": "q1",
+   "type": "mcq",
+   "q": "What value is normally used as the null pointer at the end of a linked list?",
+   "opts": [
+    "0",
+    "1",
+    "-1",
+    "The length of the list"
+   ],
+   "ans": "2",
+   "marks": 1,
+   "topic": "Null pointer",
+   "ok": "Correct: the last node's pointer is -1.",
+   "fb": "The end of the list is marked by a null pointer, which the course uses as -1. Revisit section 01 (The idea).",
+   "model": "-1"
+  },
+  {
+   "id": "q2",
+   "type": "text",
+   "q": "State what the heapStartPointer holds.",
+   "groups": [
+    [
+     "first free",
+     "free slot",
+     "free space",
+     "unused",
+     "next free",
+     "empty"
+    ]
+   ],
+   "marks": 1,
+   "topic": "The heap",
+   "ok": "Correct: it points at the first free slot.",
+   "fb": "heapStartPointer holds the index of the first free (unused) slot, because the unused positions are themselves kept as a linked list. See section 02 (Anatomy).",
+   "model": "The index of the first free (unused) position in the arrays.",
+   "hint": "One short phrase."
+  },
+  {
+   "id": "q3",
+   "type": "mcq",
+   "q": "In the array implementation, how many arrays hold the list?",
+   "opts": [
+    "One 2D array",
+    "Two parallel 1D arrays",
+    "Three arrays",
+    "A real memory address list"
+   ],
+   "ans": "1",
+   "marks": 1,
+   "topic": "Anatomy",
+   "ok": "Correct: one array for data, one for pointers.",
+   "fb": "Exam questions use two parallel 1D arrays of the same size: one for data, one for the next-pointers. They do not use real memory addresses. See section 02.",
+   "model": "Two parallel 1D arrays"
+  },
+  {
+   "id": "q4",
+   "type": "num",
+   "q": "Data array: [27, 19, 36, 42, 16] at indexes 0 to 4. Pointer array: [2, 0, 3, -1, 1]. startPointer = 4. What is the third item in the list order? (follow the pointers from startPointer)",
+   "ans": 27,
+   "tol": 0,
+   "marks": 1,
+   "topic": "Tracing",
+   "hint": "Enter a number.",
+   "ok": "Correct: 16, then 19, then 27.",
+   "fb": "Start at index 4 (16), its pointer is 1 so go to index 1 (19), whose pointer is 0, so index 0 (27). The third item is 27. Practise the trace tables in section 03.",
+   "model": "27"
+  },
+  {
+   "id": "q5",
+   "type": "num",
+   "q": "Using the same arrays, at which array index is the item 36 stored?",
+   "ans": 2,
+   "tol": 0,
+   "marks": 1,
+   "topic": "Anatomy",
+   "hint": "Enter a number.",
+   "ok": "Correct: index 2.",
+   "fb": "The data array is [27, 19, 36, 42, 16], so 36 is at index 2. The index where an item is stored is not its position in the list order.",
+   "model": "2"
+  },
+  {
+   "id": "q6",
+   "type": "mcq",
+   "q": "The find function starts its search at which index?",
+   "opts": [
+    "Index 0",
+    "The index in startPointer",
+    "The last index",
+    "heapStartPointer"
+   ],
+   "ans": "1",
+   "marks": 1,
+   "topic": "Finding",
+   "ok": "Correct.",
+   "fb": "You do not scan from index 0. Start at startPointer and follow the chain of pointers. See section 03.",
+   "model": "The index in startPointer"
+  },
+  {
+   "id": "q7",
+   "type": "text",
+   "q": "What does the find function return if the item is not in the list?",
+   "groups": [
+    [
+     "-1",
+     "minus 1",
+     "null pointer",
+     "nullpointer",
+     "null"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Finding",
+   "ok": "Correct.",
+   "fb": "The loop stops when itemPointer reaches the null pointer, so the function returns -1. See section 03.",
+   "model": "-1 (the null pointer).",
+   "hint": "A value."
+  },
+  {
+   "id": "q8",
+   "type": "mcq",
+   "q": "When inserting a new node into the middle of a sorted linked list, which of these is NOT needed?",
+   "opts": [
+    "Moving existing data items along the array",
+    "Taking a free slot from the heap",
+    "Changing the previous node's pointer",
+    "Giving the new node a pointer to the next node"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Inserting",
+   "ok": "Correct: no data ever moves.",
+   "fb": "The point of a linked list is that no data moves. You take a free slot, set the new node's pointer and redirect the previous node's pointer. See section 04.",
+   "model": "Moving existing data items along the array"
+  },
+  {
+   "id": "q9",
+   "type": "text",
+   "q": "Explain one advantage of a linked list over a sorted array when inserting an item.",
+   "groups": [
+    [
+     "no need to shift",
+     "not shift*",
+     "without shifting",
+     "no data moves",
+     "not move*",
+     "avoid* mov*",
+     "avoid* shift*",
+     "don't need to move",
+     "do not need to move",
+     "only pointers",
+     "pointers change",
+     "change pointers",
+     "only two pointers",
+     "not have to move",
+     "not have to shift",
+     "don t need to move",
+     "don t need to shift",
+     "no need to move",
+     "not need to move",
+     "not need to shift",
+     "does not need to move",
+     "doesn t need to move",
+     "doesn t have to"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Linked list vs array",
+   "ok": "Correct.",
+   "fb": "The key idea is that existing items do not need to be shifted along; only pointers are changed. See section 06 (vs. arrays).",
+   "model": "Items do not have to be shifted along to make room, because only a couple of pointers need to change, which may make insertion quicker for large lists.",
+   "hint": "One sentence."
+  },
+  {
+   "id": "q10",
+   "type": "num",
+   "q": "A linked list is made from arrays of 12 elements and currently holds 5 items. How many nodes are on the heap?",
+   "ans": 7,
+   "tol": 0,
+   "marks": 1,
+   "topic": "The heap",
+   "hint": "Enter a number.",
+   "ok": "Correct: 12 − 5 = 7.",
+   "fb": "Every position not in the list is on the heap (the free list). 12 − 5 = 7. See section 02.",
+   "model": "7"
+  }
+ ]
+}

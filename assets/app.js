@@ -50,9 +50,22 @@
     return true;
   };
 
-  // "Mark done" buttons: any element with data-done-slug.
+  // "Mark done" buttons: any element with data-done-slug. Lessons that have an assessment are completed by
+  // passing it, so their button becomes a link to the assessment.
+  Site.assessed = {};
+  Site.attempts = new Map();
+  const assessUrl = (slug) => base + "assess/?a=" + encodeURIComponent(slug);
+
   function paint(btn) {
-    const slug = btn.dataset.doneSlug;
+    const slug = btn.dataset.doneSlug, a = Site.assessed[slug];
+    if (a) {
+      const t = Site.attempts.get(slug), staff = Site.me && (Site.me.is_admin || Site.me.is_teacher);
+      btn.title = `Complete by scoring ${a.pass}% or more`;
+      btn.classList.toggle("is-done", Site.done.has(slug));
+      btn.textContent = !Site.me ? "Sign in to take assessment" : staff ? "Preview assessment"
+        : Site.done.has(slug) ? `✓ Passed${t ? " (" + t.pct + "%)" : ""}` : t ? `Assessment ${t.pct}%` : "Take assessment";
+      return;
+    }
     if (!Site.me) {
       btn.textContent = "Sign in to track";
       btn.classList.remove("is-done");
@@ -74,12 +87,18 @@
     if (!configured) { btns.forEach((b) => (b.hidden = true)); return; }
     await Site.whoami();
     await Site.loadProgress();
+    try { Site.assessed = (await Site.catalog()).assessed || {}; } catch (e) {}
+    if (Site.me && !Site.me.is_admin && !Site.me.is_teacher && Object.keys(Site.assessed).length) {
+      const { data } = await sb.rpc("my_attempts");
+      (data || []).forEach((r) => Site.attempts.set(r.slug, r));
+    }
     btns.forEach((b) => {
       b.hidden = false;
       paint(b);
       b.addEventListener("click", async (e) => {
         e.preventDefault();
         if (!Site.me) { location.href = Site.profileUrl; return; }
+        if (Site.assessed[b.dataset.doneSlug]) { location.href = assessUrl(b.dataset.doneSlug); return; }
         b.disabled = true;
         await Site.toggle(b.dataset.doneSlug);
         b.disabled = false;
