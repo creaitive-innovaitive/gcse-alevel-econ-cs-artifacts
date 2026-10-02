@@ -208,7 +208,7 @@
   function classAccordion(state) {
     const avgOf = (list) => (list.length ? Math.round(list.reduce((t, p) => t + progressOf(state, p).pct, 0) / list.length) : 0);
     const bar = (id, title, list, inner) => `<details class="card block cls" name="cls" data-cls="${id}" ${openClass === id ? "open" : ""}>
-        <summary><h3>${esc(title)}</h3><span class="hint">${plural(list.length, "student")}${list.length ? ` · average progress ${avgOf(list)}%` : ""}</span></summary>${inner}</details>`;
+        <summary><h3>${esc(title)}</h3>${list.length ? `<span class="hint">average progress ${avgOf(list)}%</span>` : ""}</summary>${inner}</details>`;
     const out = [];
     const loose = state.people.filter((p) => !(p.classes || []).length);
     if (loose.length) out.push(bar("none", "Not in a class", loose, classTable(state, loose)));
