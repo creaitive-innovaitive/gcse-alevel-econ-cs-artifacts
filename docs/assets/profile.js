@@ -244,7 +244,7 @@
     const toggleClass = (d) => d.addEventListener("toggle", () => { if (d.open) openClass = d.dataset.cls; else if (openClass === d.dataset.cls) openClass = null; });
     host.innerHTML = `
       <div class="tabs admintabs" role="tablist">
-        <button data-at="approvals">Approvals${pending.length ? ` (${pending.length})` : ""}</button><button data-at="students">Classes (${state.people.length})</button>
+        <button data-at="approvals">Approvals${pending.length ? ` (${pending.length})` : ""}</button><button data-at="students">Classes</button>
         <button data-at="add">Add students</button><button data-at="pw">Passwords</button><button data-at="me">My profile</button></div>
       <div class="tabpanel" data-panel="approvals"><section class="card block ${pending.length ? "attn" : ""}"><div class="row"><h3>Pending approvals (${pending.length})</h3>${pending.length > 1 ? '<button class="mini" id="approveall">Approve all</button>' : ""}</div>
         ${pending.length ? `<ul class="plain">${pending.map(({ p, k }) => `<li class="row" data-email="${esc(p.email)}" data-subj="${k}">
