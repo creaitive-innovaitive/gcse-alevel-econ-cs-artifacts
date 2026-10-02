@@ -107,8 +107,8 @@ $("#lb1").dispatchEvent(new Event("input"));
 
 /* ---------- Lab 3 ---------- */
 Lib.slider($("#g8"), { id: "lc1", label: "Transport cost per coat traded (in shirts)", min: 0, max: 3, step: 0.1, value: 0.5, fmt: (v) => v.toFixed(1), onInput: (v) => {
-  const net = 2 - v; $("#c1").textContent = v.toFixed(1); $("#c2").textContent = net.toFixed(1);
-  $("#cv").textContent = net > 0.05 ? `Trade still gains ${net.toFixed(1)} shirts per coat, shared between the countries.` : net > -0.05 ? "The gain is gone: it is no longer worth trading." : "Transport costs exceed the gain: trade makes the countries worse off, so it will not take place.";
+  const net = 2 - v; $("#e1").textContent = v.toFixed(1); $("#e2").textContent = net.toFixed(1);
+  $("#ev").textContent = net > 0.05 ? `Trade still gains ${net.toFixed(1)} shirts per coat, shared between the countries.` : net > -0.05 ? "The gain is gone: it is no longer worth trading." : "Transport costs exceed the gain: trade makes the countries worse off, so it will not take place.";
 } });
 
 /* ---------- Practise ---------- */

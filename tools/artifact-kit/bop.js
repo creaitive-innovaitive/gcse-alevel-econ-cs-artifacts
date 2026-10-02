@@ -105,10 +105,10 @@ const SC = [
   { x: 0, m: 0, sec: 30, t: "Secondary income. Workers abroad send more money home. A credit item, so the deficit narrows." },
 ];
 $$("[data-sc]").forEach((b) => b.addEventListener("click", () => {
-  const i = +b.dataset.sc; if (i === 5) { $("#m1").textContent = "−125"; $("#m2").textContent = "0"; $("#mv").textContent = "Choose an event."; return; }
+  const i = +b.dataset.sc; if (i === 5) { $("#r1").textContent = "−125"; $("#r2").textContent = "0"; $("#rv").textContent = "Choose an event."; return; }
   const e = SC[i], xg = BASE.xg * (1 + e.x), xs = BASE.xs * (1 + e.x), mg = BASE.mg * (1 + e.m), ms = BASE.ms * (1 + e.m);
   const ca = xg - mg + xs - ms + BASE.p + BASE.sec + e.sec;
-  $("#m1").textContent = Lib.fmtN(ca, 0).replace("-", "−"); $("#m2").textContent = (ca + 125 > 0 ? "+" : "") + Lib.fmtN(ca + 125, 0).replace("-", "−"); $("#mv").textContent = e.t;
+  $("#r1").textContent = Lib.fmtN(ca, 0).replace("-", "−"); $("#r2").textContent = (ca + 125 > 0 ? "+" : "") + Lib.fmtN(ca + 125, 0).replace("-", "−"); $("#rv").textContent = e.t;
 }));
 $("[data-sc='5']").click();
 

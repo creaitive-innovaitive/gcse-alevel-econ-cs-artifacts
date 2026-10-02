@@ -315,4 +315,10 @@ ARTIFACTS = [
     {"src": "as-balance-of-payments", "title": "The Current Account of the Balance of Payments", "kind": "Interactive",
      "desc": "Credits and debits, the four components, calculations, causes and consequences of deficits and surpluses, with exam practice.",
      "places": [("a-econ", "as/ch-27")]},
+    {"src": "as-reasons-for-intervention", "title": "Reasons for Government Intervention in Markets", "kind": "Interactive",
+     "desc": "Public goods and the free rider problem, merit and demerit goods, and why governments set price controls, with diagrams, labs and exam practice.",
+     "places": [("a-econ", "as/ch-12")]},
+    {"src": "as-elasticity-of-supply", "title": "Price Elasticity of Supply", "kind": "Interactive",
+     "desc": "PES values, what determines supply flexibility, and why farm prices swing, with animated diagrams, labs, calculations and exam questions.",
+     "places": [("a-econ", "as/ch-09")]},
 ]

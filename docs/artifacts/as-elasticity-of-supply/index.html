@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en"><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Price Elasticity of Supply</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">AS Level Economics · 9708 · Chapter 9</div>
+  <h1>Price Elasticity of Supply</h1>
+  <p class="lead">How far producers can increase output when price rises, what limits them, and why farm prices swing so wildly while factory prices do not.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p><span class="kw">Price elasticity of supply (PES)</span> measures the <b>responsiveness of the quantity supplied</b> of a product to a change in its own price, <i>ceteris paribus</i>. The key to PES is <b>flexibility</b>: the easier it is for producers to change output, the more elastic supply is.</p>
+    <div class="formula">PES = %ΔQuantity supplied ÷ %ΔPrice</div>
+  </div>
+  <p class="note">Percentage change = (new − original) ÷ original × 100. The supply curve slopes upward, so price and quantity move in the <b>same direction</b> and PES is always <b>positive</b>.</p>
+
+  <h2>PES values</h2>
+  <div class="tw"><table class="t">
+    <tr><th>PES</th><th>Description</th><th>Meaning</th><th>Supply curve</th></tr>
+    <tr><td>0</td><td>Perfectly inelastic</td><td>Quantity cannot change at all</td><td>Vertical</td></tr>
+    <tr><td>between 0 and 1</td><td>Inelastic</td><td>%ΔQs is smaller than %ΔP</td><td>Steep</td></tr>
+    <tr><td>1</td><td>Unitary</td><td>%ΔQs equals %ΔP</td><td>Straight line through the origin</td></tr>
+    <tr><td>above 1</td><td>Elastic</td><td>%ΔQs is bigger than %ΔP</td><td>Shallow</td></tr>
+    <tr><td>infinity</td><td>Perfectly elastic</td><td>Firms supply any amount at one price</td><td>Horizontal</td></tr>
+  </table></div>
+  <div class="tip"><b class="h">Exam favourite</b>Any <b>straight-line supply curve that passes through the origin</b> has PES = 1 at every point, whatever its slope. A straight line that cuts the <b>price axis</b> is <b>elastic</b> (PES above 1). One that cuts the <b>quantity axis</b> is <b>inelastic</b> (PES below 1). Slope alone does not decide it.</div>
+
+  <h3>Worked example</h3>
+  <p>Two Bangladeshi garment makers sell at $10 and supply 100 a day. After a celebrity endorsement, price rises to $12. Producer A supplies 110, producer B supplies 140.</p>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>%ΔQs</th><th>%ΔP</th><th>PES</th><th>So supply is</th></tr>
+    <tr><td>A</td><td>10 ÷ 100 = +10%</td><td>2 ÷ 10 = +20%</td><td>0.5</td><td>inelastic</td></tr>
+    <tr><td>B</td><td>40 ÷ 100 = +40%</td><td>+20%</td><td>2.0</td><td>elastic</td></tr>
+  </table></div>
+
+  <h2>What determines PES?</h2>
+  <div class="grid2">
+    <div class="card"><h3>Stocks</h3><p>If firms can build up and run down <b>stocks</b>, they can meet extra demand quickly from stock. Services (a hotel room, an airline seat, a stadium seat) are perishable and <b>cannot be stored</b>, so supply is fixed in the short run: PES = 0.</p></div>
+    <div class="card"><h3>Time period</h3><p>In the short run, firms with <b>spare capacity</b> are flexible, but a shortage of key inputs (skilled workers, components, fuel) makes supply inelastic. In the long run firms can invest, adopt new technology and new firms can enter, so supply becomes <b>more elastic</b>.</p></div>
+    <div class="card"><h3>Productive capacity</h3><p>The more spare capacity, the easier it is to raise output. A factory running at full capacity cannot respond until it expands. How easily factors of production can be switched between uses also matters.</p></div>
+    <div class="card"><h3>Product type</h3><p><b>Agricultural</b> supply is usually more inelastic than <b>manufacturing</b>: crops take a growing season to produce, yields depend on weather, and switching crops takes time.</p></div>
+  </div>
+
+  <h2>Why PES matters</h2>
+  <ul>
+    <li><b>How businesses respond to changing demand.</b> Elastic supply lets firms meet a rise in demand quickly without big price rises.</li>
+    <li><b>Price stability.</b> When supply is inelastic, any shift in demand or supply causes a <b>large change in price</b>. Agricultural prices and farmers' incomes are therefore unstable.</li>
+    <li><b>Agriculture versus manufacturing.</b> Changes in demand have a bigger effect on price in agricultural markets than in markets for manufactured goods, where PES is higher.</li>
+    <li><b>Link to taxes (Chapter 13).</b> The less elastic side of the market bears more of an indirect tax, and gains more from a subsidy.</li>
+  </ul>
+  <div class="warn"><b class="h">Do not mix up</b>PES uses <b>supply</b> and <b>quantity supplied</b>. PED uses <b>demand</b>. PES is always positive; PED has a negative sign that we ignore.</div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · Elastic, unitary and inelastic supply</h2><div id="stA"></div>
+  <h2>2 · Supply becomes more elastic over time</h2><div id="stB"></div>
+  <h2>3 · Why farm prices swing</h2><div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Price changes, supply responds</h2>
+  <div class="card"><div class="grid2"><div><div id="g1"></div><div id="g2"></div>
+    <div class="readout"><div><small>% change in price</small><strong id="a1"></strong></div><div><small>% change in quantity supplied</small><strong id="a2"></strong></div></div><div class="verdict" id="av"></div></div>
+    <div><svg id="lab1" viewBox="0 0 760 400" role="img" aria-label="Supply curve and the response to a price change"></svg></div></div></div>
+
+  <h2>Lab 2 · Where the line cuts the axis</h2>
+  <p>Slide the intercept of a straight-line supply curve. It passes through the point (50, 50), and the PES shown is at that point.</p>
+  <div class="card"><div class="grid2"><div><div id="g3"></div>
+    <div class="readout"><div><small>PES at the point</small><strong id="b1"></strong></div><div><small>Classification</small><strong id="b2" style="font-size:1rem"></strong></div></div><div class="verdict" id="bv"></div></div>
+    <div><svg id="lab2" viewBox="0 0 760 400" role="img" aria-label="Supply line with a moving intercept"></svg></div></div></div>
+
+  <h2>Lab 3 · A rise in demand: how much of it ends up in price?</h2>
+  <p>Demand rises by a given percentage. Elastic supply absorbs more of it as extra quantity; inelastic supply passes more of it to price.</p>
+  <div class="card"><div class="grid2"><div><div id="g4"></div><div id="g5"></div><div id="g6"></div></div>
+    <div><div class="readout"><div><small>Price rises by about</small><strong id="u1"></strong></div><div><small>Quantity rises by about</small><strong id="u2"></strong></div></div><div class="verdict" id="uv"></div><svg id="lab3" viewBox="0 0 420 230" role="img" aria-label="Price and quantity effects"></svg></div></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Elastic or inelastic supply?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the PES value</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Put the PES calculation in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Calculations</h2>
+  <div id="c1"></div>
+
+  <h2>5 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions follow the coursebook and are kept general. Check current figures before quoting numbers.</p>
+  <div class="rw"><h3>Tanzania's cashew nuts</h3><p>Tanzania is the world's largest producer of cashew nuts, an important source of export revenue. Supply depends on weather and on how much farmers plant, so it is unpredictable and cannot adjust quickly. The government sets an annual guide price and in a year when prices fell below the target it stepped in to buy unsold stock.</p><div class="use"><b>Exam use:</b> an agricultural example of inelastic supply and volatile prices, and why governments intervene (links to buffer stocks, Chapter 13).</div></div>
+  <div class="rw"><h3>The price of onions in India</h3><p>Most onion producers are small farmers whose only income is from selling onions. In early 2017 a bumper harvest raised supply by 11% yet wholesale prices fell by 30 to 40%. In late 2017 a poor harvest pushed wholesale prices up by 170% in a few weeks. As the saying goes: when farmers grow more they get less, and when they grow less they still get less.</p><div class="use"><b>Exam use:</b> prices move far more than quantities, evidence of inelastic supply <i>and</i> inelastic demand. Be ready to say what extra data you would need to calculate PES (the percentage change in price that caused the supply change).</div></div>
+  <div class="rw"><h3>Flowers and perishable products</h3><p>Cut flowers must be sold once ready. The quantity supplied on a given day cannot be varied whatever the price, so PES is zero in the very short run.</p><div class="use"><b>Exam use:</b> the standard example of perfectly inelastic supply, linked to the lack of stocks.</div></div>
+  <div class="rw"><h3>Airline seats, hotel rooms and stadiums</h3><p>Services cannot be stored. An empty seat on a flight or an unsold hotel room is lost revenue, and a stadium cannot admit more people than it has seats. Short-run supply is fixed.</p><div class="use"><b>Exam use:</b> shows the "stocks" factor. When demand rises, price rises sharply (think of peak holiday flights) because supply cannot respond.</div></div>
+  <div class="rw"><h3>Bangladeshi garment makers</h3><p>The coursebook compares two garment makers. One can increase output by only 10% when price rises 20%, the other by 40%. Differences in spare capacity, stocks of materials and flexible workforces could explain the gap.</p><div class="use"><b>Exam use:</b> a numerical example for calculation and for discussing the determinants of PES.</div></div>
+  <div class="rw"><h3>Manufactured goods and spare capacity</h3><p>A factory running below capacity can raise output quickly when demand rises, and can hold finished goods in stock. Over time, firms can build new plants or new firms can enter. That is why manufactured goods usually have more elastic supply than farm products.</p><div class="use"><b>Exam use:</b> contrast manufacturing with agriculture in "why are farm prices more unstable?" questions.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Answers are colour-coded to the mark scheme.</p>
+  <div class="key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Define</span> <span class="mark">2 marks</span> What is meant by price elasticity of supply?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Responsiveness, quantity supplied, own price. Include the formula for security.</div>
+    <div class="ans"><span class="mk k" data-t="K">Price elasticity of supply measures the responsiveness of the quantity supplied of a product</span> <span class="mk k" data-t="K">to a change in its price, calculated as the percentage change in quantity supplied divided by the percentage change in price.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "how supply changes when price changes". The measure is of <i>quantity supplied</i>, in percentages.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate</span> <span class="mark">4 marks</span> The price of a product rises from $5 to $6. Quantity supplied rises from 800 to 880 units. Calculate PES and explain what it shows.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Percentage changes use the original figures. Say whether the answer is above or below 1.</div>
+    <div class="ans"><span class="mk k" data-t="K">PES = %ΔQs ÷ %ΔP.</span> <span class="mk a" data-t="A">%ΔP = 1 ÷ 5 × 100 = +20%. %ΔQs = 80 ÷ 800 × 100 = +10%. PES = 10 ÷ 20 = 0.5.</span> <span class="mk n" data-t="N">Since 0.5 is less than 1, supply is price inelastic: quantity supplied rises by a smaller percentage than price.</span> <span class="mk n" data-t="N">Producers cannot increase output quickly, perhaps because of limited capacity or a lack of stocks.</span></div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">6 marks</span> Explain two factors that influence the price elasticity of supply of a product.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two developed factors. For each: name it, say which way it pushes PES, explain why, give an example.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">One factor is the availability of stocks.</span> <span class="mk n" data-t="N">If firms can build up stocks of finished goods in advance, they can meet an increase in demand by releasing stock quickly, so quantity supplied can rise without waiting to produce more and supply is elastic.</span> <span class="mk a" data-t="A">A manufacturer of tinned food can do this, but a hotel cannot store an unsold room, so its supply is inelastic in the short run.</span></p>
+    <p><span class="mk k" data-t="K">A second factor is the time period.</span> <span class="mk n" data-t="N">In the short run, firms may be unable to increase capacity or recruit skilled workers, so supply is inelastic, but in the long run they can invest in new equipment and new firms can enter, so supply becomes more elastic.</span> <span class="mk a" data-t="A">A wheat farmer cannot change output until the next growing season.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Analyse</span> <span class="mark">6 marks</span> Analyse why the price of agricultural products is usually more unstable than the price of manufactured goods.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Link: inelastic supply → a shift in supply or demand causes a big price change. Then give the reasons for the inelasticity.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">Agricultural supply is generally more price inelastic than the supply of manufactured goods.</span> <span class="mk n" data-t="N">Crops take a growing season to produce, farmers cannot easily store perishable produce or switch crops, and yields depend on weather and disease, so quantity cannot respond quickly to price.</span></p>
+    <p><span class="mk n" data-t="N">When supply is inelastic, a change in demand or a bumper or poor harvest shifts the curves along a steep supply curve, so the price changes by a large percentage while quantity changes little.</span> <span class="mk a" data-t="A">In India, a rise of 11% in the onion harvest was accompanied by a fall of 30 to 40% in wholesale prices.</span> <span class="mk n" data-t="N">In manufacturing, firms hold stocks and have spare capacity, so supply is more elastic and price changes are smaller.</span> <span class="mk e" data-t="E">Demand for many foods is also inelastic, which makes the price swings even larger.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Discuss</span> <span class="mark">8 marks</span> Discuss whether farmers benefit from a bumper harvest.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two sides. Use the idea that revenue depends on both price and quantity, and the elasticity of demand.</div>
+    <div class="ans"><p><span class="mk n" data-t="N">A bumper harvest raises the quantity farmers can sell, which could raise income if the price held up.</span> <span class="mk n" data-t="N">Farmers with more crop to sell and with lower costs per unit may gain.</span></p>
+    <p><span class="mk n" data-t="N">However, with inelastic demand for food and inelastic supply, the larger supply pushes the price down by a bigger percentage than the rise in quantity, so total revenue falls.</span> <span class="mk a" data-t="A">In the onion market, supply rose by 11% while prices fell by 30 to 40%.</span> <span class="mk e" data-t="E">Gains may go to consumers and processors rather than farmers, particularly for small farmers with no control over price.</span></p>
+    <p><span class="mk e" data-t="E">Overall, a bumper harvest is more likely to reduce farmers' income if demand is inelastic, unless there is an export market, government price support or storage that stops the price from falling.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Assess</span> <span class="mark">12 marks</span> Assess whether price elasticity of supply is the most important factor in determining how much the price of a product changes when demand rises.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Open with the question's wording. Consider PES and another factor (PED, the size of the shift, time). Judge which matters most and when.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">When demand rises, the demand curve shifts right, creating excess demand at the original price, and price rises to restore equilibrium. Price elasticity of supply measures how responsively quantity supplied increases as price rises.</span></p>
+    <p><span class="mk n" data-t="N">Price elasticity of supply is the most important factor in determining how much the price of a product changes when demand rises if supply is very inelastic or very elastic.</span> <span class="mk n" data-t="N">If supply is inelastic, firms cannot raise output much, so most of the adjustment comes through price, which rises sharply. If supply is elastic, output rises easily, so price rises only a little.</span> <span class="mk a" data-t="A">Flights in the holiday season, with fixed seats, show a big price rise; a manufacturer with spare capacity can supply more at a similar price.</span> <span class="mk e" data-t="E">PES itself depends on the time period, so the same product may show a bigger price change in the short run than the long run.</span></p>
+    <p><span class="mk n" data-t="N">However, the size of the price change also depends on the size of the shift in demand and on the price elasticity of demand.</span> <span class="mk n" data-t="N">A large shift in demand will raise price a lot even if supply is fairly elastic, and a steep demand curve means that any change in quantity requires a large price change.</span> <span class="mk e" data-t="E">Other influences, such as government price controls or the ability to import, can also limit how far price rises.</span></p>
+    <p><span class="mk e" data-t="E">Overall, PES is a major determinant, particularly in the short run and in markets for perishable or agricultural goods, but it is one of several factors. The judgement depends on the time period, the size of the demand shift and the elasticity of demand.</span></p></div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Show the formula and the working.</b> Percentage change in quantity supplied divided by percentage change in price.</li>
+    <li><b>Use the original figures</b> as the base for every percentage change.</li>
+    <li><b>PES is positive.</b> If you get a negative answer, one of your signs is wrong.</li>
+    <li><b>Compare the answer with 1</b> and use the words elastic or inelastic.</li>
+    <li><b>A straight line through the origin has PES = 1.</b> The slope does not decide PES; the intercept does.</li>
+    <li><b>Name the factor, then say which way it moves PES.</b> Stocks, time period, spare capacity, perishability.</li>
+    <li><b>Contrast agriculture with manufacturing</b> whenever price instability comes up.</li>
+    <li><b>Evaluate with time.</b> Supply is usually more elastic in the long run.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Define</td><td>A precise meaning.</td></tr>
+    <tr><td>Calculate</td><td>Formula, substitution, answer.</td></tr>
+    <tr><td>Explain</td><td>Reason with a developed link and an example.</td></tr>
+    <tr><td>Analyse</td><td>A chain of cause and effect.</td></tr>
+    <tr><td>Discuss / Assess</td><td>Both sides and a justified judgement.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => show(i));
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="decimal" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+window.Lib = { initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+/* Supply through (50,50): P = 50 + (Q-50)/e. Demand: P = 100 - Q (shifted by d). */
+const QX = (q) => 80 + 6 * q, PY = (p) => 360 - 2.7 * p;
+function seg(m, c) { // clip P = mQ + c to the plot
+  let lo = 0, hi = 100;
+  if (m !== 0) { const a = (0 - c) / m, z = (120 - c) / m; lo = Math.max(lo, Math.min(a, z)); hi = Math.min(hi, Math.max(a, z)); }
+  return [lo, m * lo + c, hi, m * hi + c];
+}
+function line(m, c, cls, label, lcls = "t1", extra) {
+  const [q1, p1, q2, p2] = seg(m, c); if (q2 <= q1) return "";
+  let s = SV.line(QX(q1), PY(p1), QX(q2), PY(p2), cls, extra);
+  if (label) s += SV.text(QX(q2) + 6, PY(p2) + 4, label, "lbl bd " + lcls, { "text-anchor": "start" });
+  return s;
+}
+const supply = (e, cls, label, lcls, extra) => e < 0.04 ? SV.line(QX(50), PY(0), QX(50), PY(120), cls, extra) + (label ? SV.text(QX(50) + 6, PY(116), label, "lbl bd " + lcls, { "text-anchor": "start" }) : "") : line(1 / e, 50 - 50 / e, cls, label, lcls, extra);
+const axes = () => SV.line(QX(0), PY(120), QX(0), PY(0)) + SV.line(QX(0), PY(0), QX(104), PY(0)) + SV.text(QX(0) + 6, PY(120) + 6, "Price", "sm") + SV.text(QX(104), PY(0) + 22, "Quantity", "sm", { "text-anchor": "end" });
+const ylab = (p, t) => SV.text(QX(0) - 8, PY(p) + 4, t, "sm", { "text-anchor": "end" });
+const xlab = (q, t) => SV.text(QX(q), PY(0) + 18, t, "sm", { "text-anchor": "middle" });
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+
+/* ---------- 1. three supply curves ---------- */
+function threeChart(s) {
+  let o = axes();
+  o += supply(0.4, "c2", "", "t2") + supply(1, "c1", "", "t1") + supply(2.5, "c3", "", "t3");
+  o += SV.text(QX(80), PY(117), "Inelastic: PES = 0.4", "lbl bd t2", { "text-anchor": "start" });
+  o += SV.text(QX(99), PY(104), "Unitary: PES = 1", "lbl bd t1", { "text-anchor": "end" });
+  o += SV.text(QX(99), PY(73), "Elastic: PES = 2.5", "lbl bd t3", { "text-anchor": "end" });
+  o += SV.circle(QX(50), PY(50), 6, "dot1") + ylab(50, "P = 50") + SV.text(QX(50) - 8, PY(0) + 18, "50", "sm", { "text-anchor": "end" });
+  if (s.pr > 50.01) {
+    o += SV.line(QX(0), PY(s.pr), QX(100), PY(s.pr), "gr") + ylab(s.pr, "P₁ = 55");
+    [[0.4, "t2", "dot2", 18], [1, "t1", "dot1", 32], [2.5, "t3", "dot3", 18]].forEach(([e, t, d, dy]) => {
+      const q = 50 * (1 + (e * (s.pr - 50)) / 50), op = clamp01(s.qs);
+      o += SV.line(QX(q), PY(s.pr), QX(q), PY(0), "gr", { opacity: op }) + SV.circle(QX(q), PY(s.pr), 6, d, { opacity: op });
+      o += SV.text(QX(q), PY(0) + dy, Lib.fmtN(q, 1), "sm bd " + t, { "text-anchor": "middle", opacity: op });
+    });
+  }
+  return o;
+}
+Lib.stepper($("#stA"), { w: 760, h: 400, label: "Elastic, unitary and inelastic supply curves", base: { pr: 50, qs: 0 }, draw: threeChart, steps: [
+  { cap: "Three supply curves all pass through <b>price 50, quantity 50</b> (the black dot). The <b>steep</b> one is inelastic, the one through the <b>origin</b> has PES = 1, and the <b>shallow</b> one is elastic.", s: { pr: 50, qs: 0 } },
+  { cap: "The price rises by <b>10%</b>, from 50 to 55. How much extra will producers supply?", s: { pr: 55, qs: 0 } },
+  { cap: "<b>Inelastic (0.4):</b> quantity rises only 4% (to 52). <b>Unitary (1):</b> quantity rises 10% (to 55). <b>Elastic (2.5):</b> quantity rises 25% (to 62.5). PES × %ΔP = %ΔQs.", s: { pr: 55, qs: 1 } },
+  { cap: "<b>Remember:</b> a straight line through the origin has PES = 1 at every point, however steep. A line cutting the price axis is elastic. A line cutting the quantity axis is inelastic.", s: { pr: 55, qs: 1 } },
+] });
+
+/* ---------- 2. time period ---------- */
+function eqPoint(e, d) { const a = 100 + d; // demand P = a - Q ; supply P = 50 + (Q-50)/e
+  const Q = (a - 50 + 50 / e) / (1 + 1 / e); return [Q, a - Q]; }
+function timeChart(s) {
+  const e = s.e, d = s.d, [q, p] = eqPoint(e, d), [q0, p0] = eqPoint(e, 0);
+  let o = axes();
+  if (d > 0.5) o += line(-1, 100, "c1", "", "t1", { opacity: 0.35 }) + SV.text(QX(100) - 6, PY(0) - 10, "", "sm");
+  o += line(-1, 100 + d, "c1", "D" + (d > 0.5 ? "₁" : ""), "t1") + supply(e, "c3", "S", "t3");
+  o += SV.circle(QX(50), PY(50), 5, "dot4", { opacity: d > 0.5 ? 0.6 : 0 }) + (d > 0.5 ? ylab(50, "P₀ = 50") : "");
+  o += SV.line(QX(0), PY(p), QX(q), PY(p), "gr") + SV.line(QX(q), PY(p), QX(q), PY(0), "gr") + SV.circle(QX(q), PY(p), 7, "dot2") + ylab(p, "P = " + Lib.fmtN(p, 1)) + xlab(q, "Q = " + Lib.fmtN(q, 1));
+  o += SV.text(QX(70), PY(110), e < 0.8 ? "Short run: PES = " + Lib.fmtN(e, 1) : e > 1.5 ? "Long run: PES = " + Lib.fmtN(e, 1) : "Supply becoming more flexible: PES = " + Lib.fmtN(e, 1), "lbl bd", { "text-anchor": "middle" });
+  return o;
+}
+Lib.stepper($("#stB"), { w: 760, h: 400, label: "Demand rises; short-run and long-run supply", base: { e: 0.3, d: 0 }, tween: 1800, draw: timeChart, steps: [
+  { cap: "In the <b>short run</b>, firms have little spare capacity and cannot expand quickly: supply is <b>inelastic</b> (PES about 0.3). Equilibrium at price 50.", s: { e: 0.3, d: 0 } },
+  { cap: "<b>Demand rises.</b> With inelastic supply, quantity can barely increase, so the <b>price jumps</b> to about 65.", s: { e: 0.3, d: 20 } },
+  { cap: "Over time firms invest, hire and new firms enter. Supply becomes <b>more elastic</b> (PES about 2). The price <b>falls back</b> to about 57 and quantity rises further, to about 63.", s: { e: 2, d: 20 } },
+] });
+
+/* ---------- 3. farm price swings ---------- */
+function farmChart(s) {
+  const q = s.q, p = 150 - 2 * q;
+  let o = axes();
+  o += SV.rect(QX(0), PY(p), QX(q) - QX(0), PY(0) - PY(p), "f1");
+  o += line(-2, 150, "c1", "D", "t1") + SV.line(QX(q), PY(0), QX(q), PY(120), "c3") + SV.text(QX(q) + 6, PY(114), "S (fixed harvest)", "lbl bd t3", { "text-anchor": "start" });
+  o += SV.line(QX(0), PY(p), QX(q), PY(p), "gr") + SV.circle(QX(q), PY(p), 7, "dot2") + ylab(p, "P = " + Lib.fmtN(p, 0)) + xlab(q, "Q = " + Lib.fmtN(q, 0));
+  o += SV.text(QX(q / 2), (PY(p) + PY(0)) / 2, "Revenue = " + Lib.fmtN(p * q, 0), "lbl bd t1", { "text-anchor": "middle" });
+  return o;
+}
+Lib.stepper($("#stC"), { w: 760, h: 400, label: "A harvest changes and price swings", base: { q: 50 }, tween: 1400, draw: farmChart, steps: [
+  { cap: "A normal harvest of <b>50</b> sells at a price of <b>50</b>. Revenue is price × quantity = <b>2,500</b>. Demand for food is <b>inelastic</b> (steep) and, for the season, supply is fixed.", s: { q: 50 } },
+  { cap: "<b>Bumper harvest:</b> supply rises 12% to 56. Because demand is inelastic, price must fall by <b>24%</b> to 38 to sell it all. Revenue <b>falls</b> to about 2,128: farmers get less.", s: { q: 56 } },
+  { cap: "<b>Poor harvest:</b> supply falls 12% to 44 and price rockets 24% to 62. Prices swing more than quantities. Farmers hit by bad weather who lose their crop still get less.", s: { q: 44 } },
+  { cap: "<b>Result:</b> inelastic supply with inelastic demand means small changes in output cause big changes in price and in farmers' incomes. That is why governments intervene in farm markets.", s: { q: 50 } },
+] });
+
+/* ---------- Lab 1 ---------- */
+function lab1() {
+  if (!$("#la") || !$("#lb")) return;
+  const pc = +$("#la").value, e = +$("#lb").value, dq = e * pc, p1 = 50 * (1 + pc / 100), q1 = 50 * (1 + dq / 100);
+  $("#a1").textContent = (pc > 0 ? "+" : "") + pc + "%"; $("#a2").textContent = (dq > 0 ? "+" : "") + Lib.fmtN(dq, 1) + "%";
+  const kind = e === 0 ? "perfectly inelastic" : e < 1 ? "inelastic" : e === 1 ? "unit elastic" : "elastic";
+  $("#av").textContent = pc === 0 ? "Choose a price change." : `PES = ${e.toFixed(1)}: supply is ${kind}. A ${Math.abs(pc)}% price ${pc > 0 ? "rise" : "fall"} changes quantity supplied by ${Lib.fmtN(Math.abs(dq), 1)}%.`;
+  let o = axes() + supply(e, "c3", "S", "t3") + SV.circle(QX(50), PY(50), 6, "dot1") + SV.circle(QX(Math.max(0, q1)), PY(p1), 7, "dot2");
+  o += SV.line(QX(0), PY(p1), QX(Math.max(0, q1)), PY(p1), "gr") + SV.line(QX(Math.max(0, q1)), PY(p1), QX(Math.max(0, q1)), PY(0), "gr") + ylab(p1, Lib.fmtN(p1, 1)) + xlab(Math.max(0, q1), Lib.fmtN(Math.max(0, q1), 1)) + ylab(50, "50") + xlab(50, "50");
+  $("#lab1").innerHTML = o;
+}
+Lib.slider($("#g1"), { id: "la", label: "Price change (%)", min: -30, max: 30, step: 1, value: 10, fmt: (v) => (v > 0 ? "+" : "") + v + "%", onInput: lab1 });
+Lib.slider($("#g2"), { id: "lb", label: "PES", min: 0, max: 4, step: 0.1, value: 1.5, fmt: (v) => v.toFixed(1), onInput: lab1 });
+
+/* ---------- Lab 2 ---------- */
+Lib.slider($("#g3"), { id: "lc", label: "Intercept: where the line cuts the axis (price axis +, quantity axis −)", min: -40, max: 40, step: 1, value: 20, fmt: (v) => (v > 0 ? "price axis at " + v : v < 0 ? "quantity axis at " + Math.abs(v) : "origin"), onInput: (a) => {
+  const m = (50 - a) / 50, e = 1 / m;
+  $("#b1").textContent = Lib.fmtN(e, 2); $("#b2").textContent = a > 0 ? "Elastic (PES > 1)" : a < 0 ? "Inelastic (PES < 1)" : "Unitary (PES = 1)";
+  $("#bv").textContent = a > 0 ? "The line cuts the price axis (a positive intercept), so supply is elastic at every point." : a < 0 ? "The line cuts the quantity axis, so supply is inelastic at every point." : "A line through the origin has PES = 1 at every point.";
+  const [q1, p1, q2, p2] = seg(m, a);
+  $("#lab2").innerHTML = axes() + SV.line(QX(q1), PY(p1), QX(q2), PY(p2), "c3") + SV.circle(QX(50), PY(50), 6, "dot2") + SV.circle(QX(0), PY(Math.max(0, a)), a > 0 ? 6 : 0, "dot1") + (a > 0 ? ylab(a, "a = " + a) : "") + (a < 0 ? SV.circle(QX(-a / m), PY(0), 6, "dot1") + xlab(-a / m, "cuts here") : "");
+} });
+
+/* ---------- Lab 3 ---------- */
+function lab3() {
+  if (!$("#ld") || !$("#le") || !$("#lf")) return;
+  const d = +$("#ld").value, es = +$("#le").value, ed = +$("#lf").value, dp = d / (es + ed), dq = (d * es) / (es + ed);
+  $("#u1").textContent = "+" + Lib.fmtN(dp, 1) + "%"; $("#u2").textContent = "+" + Lib.fmtN(dq, 1) + "%";
+  $("#uv").textContent = es < 0.3 ? "Supply is nearly fixed, so almost all of the rise in demand is taken up in a higher price." : es > 2.5 ? "Supply is very elastic, so most of the rise in demand is met by extra output and price changes little." : "A mixture: both price and quantity rise.";
+  const mx = Math.max(dp, dq, 1), W = (v) => (v / mx) * 280;
+  $("#lab3").innerHTML = SV.text(10, 60, "Price", "lbl bd") + SV.rect(100, 40, W(dp), 30, "f2", { opacity: 0.6 }) + SV.text(106 + W(dp), 61, Lib.fmtN(dp, 1) + "%", "lbl bd t2") +
+    SV.text(10, 130, "Quantity", "lbl bd") + SV.rect(100, 110, W(dq), 30, "f3", { opacity: 0.6 }) + SV.text(106 + W(dq), 131, Lib.fmtN(dq, 1) + "%", "lbl bd t3") +
+    SV.text(10, 200, "Demand shift: +" + d + "%", "sm");
+}
+Lib.slider($("#g4"), { id: "ld", label: "Rise in demand (%)", min: 5, max: 40, step: 1, value: 20, fmt: (v) => "+" + v + "%", onInput: lab3 });
+Lib.slider($("#g5"), { id: "le", label: "PES", min: 0.1, max: 4, step: 0.1, value: 0.5, fmt: (v) => v.toFixed(1), onInput: lab3 });
+Lib.slider($("#g6"), { id: "lf", label: "PED (ignoring sign)", min: 0.2, max: 3, step: 0.1, value: 1, fmt: (v) => v.toFixed(1), onInput: lab3 });
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), {
+  prompt: "Would supply be more likely to be elastic or inelastic?",
+  buckets: [{ label: "Elastic supply" }, { label: "Inelastic supply" }],
+  items: [
+    { text: "A factory with 30% spare capacity and large stocks", b: 0 }, { text: "Cut flowers on the morning of sale", b: 1 },
+    { text: "Wheat in the same growing season", b: 1 }, { text: "A manufacturer in the long run", b: 0 },
+    { text: "A hotel room tonight", b: 1 }, { text: "A firm that easily hires and trains workers", b: 0 },
+    { text: "A football stadium on match day", b: 1 }, { text: "A firm making goods that can be stored cheaply", b: 0 },
+    { text: "A firm short of key skilled workers", b: 1 }, { text: "An industry where new firms enter easily", b: 0 },
+  ], done: "Stocks, spare capacity, time and flexibility decide it.",
+});
+Lib.match($("#m1"), { prompt: "Match each value or curve to its meaning.", pairs: [
+  ["PES = 0", "Perfectly inelastic: vertical supply curve"],
+  ["PES = 0.5", "Inelastic: quantity changes by half the % change in price"],
+  ["PES = 1", "Unitary: e.g. a straight line through the origin"],
+  ["PES = 3", "Elastic: quantity changes by three times the % change in price"],
+  ["Horizontal supply curve", "PES = infinity: perfectly elastic"],
+  ["Line cutting the price axis", "Elastic at every point"],
+  ["Line cutting the quantity axis", "Inelastic at every point"],
+], done: "Use the intercept, not the slope." });
+Lib.order($("#o1"), { prompt: "Order the steps for working out PES.", items: [
+  "Write the formula: PES = %ΔQs ÷ %ΔP",
+  "Find the change in quantity supplied and the change in price (new minus original)",
+  "Express each as a percentage of its original value",
+  "Divide the % change in quantity supplied by the % change in price",
+  "Check the answer is positive",
+  "Compare with 1 and say elastic or inelastic",
+], done: "A full-marks method." });
+Lib.calc($("#c1"), { qs: [
+  { q: "Producer A: price rises from $10 to $12 and output rises from 100 to 110 garments a day. Calculate PES.", a: 0.5, sol: "%ΔQs = 10 ÷ 100 = +10%. %ΔP = 2 ÷ 10 = +20%. PES = 10 ÷ 20 = <b>0.5</b>. Inelastic." },
+  { q: "Producer B: price rises from $10 to $12 and output rises from 100 to 140. Calculate PES.", a: 2, sol: "%ΔQs = +40%. %ΔP = +20%. PES = 40 ÷ 20 = <b>2</b>. Elastic." },
+  { q: "The price of tea falls from $70 to $60 a sack and the quantity supplied falls from 16 to 9 sacks. Calculate PES (1 d.p.).", a: 3.1, tol: 0.1, sol: "%ΔQs = −7 ÷ 16 = −43.75%. %ΔP = −10 ÷ 70 = −14.29%. PES = 43.75 ÷ 14.29 = <b>3.1</b>. Elastic." },
+  { q: "Price falls from $5 to $4 and quantity supplied falls from 800 to 700 units. Calculate PES (2 d.p.).", a: 0.63, tol: 0.02, sol: "%ΔQs = −100 ÷ 800 = −12.5%. %ΔP = −1 ÷ 5 = −20%. PES = 12.5 ÷ 20 = <b>0.63</b>. Inelastic." },
+  { q: "A firm has PES of 0.8. Price rises by 15%. By what percentage does quantity supplied rise?", a: 12, sol: "%ΔQs = PES × %ΔP = 0.8 × 15 = <b>12%</b>." },
+  { q: "Quantity supplied rises by 30% and PES is 1.5. By what percentage did price rise?", a: 20, sol: "%ΔP = %ΔQs ÷ PES = 30 ÷ 1.5 = <b>20%</b>." },
+] });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Price elasticity of supply is:", opts: ["The change in supply given a change in price", "The percentage change in quantity supplied given a percentage change in price", "How price changes when quantity changes", "The slope of the supply curve"], a: 1, why: "It is a ratio of percentage changes." },
+  { q: "Which supply curve has PES = 1 at every point?", opts: ["Any steep line", "Any straight line through the origin", "A vertical line", "A horizontal line"], a: 1, why: "A straight line through the origin has unit elasticity at every point, whatever the slope." },
+  { q: "Which would make supply more elastic?", opts: ["No spare capacity", "Perishable goods", "Large stocks of finished goods", "A shortage of skilled labour"], a: 2, why: "Stocks let firms respond to price rises quickly." },
+  { q: "Supply of cut flowers on the day they are picked is best described as:", opts: ["Perfectly elastic", "Elastic", "Unitary", "Perfectly inelastic"], a: 3, why: "They have to be sold; quantity cannot vary with price." },
+  { q: "Why is agricultural supply usually more inelastic than manufacturing supply?", opts: ["Farmers produce nothing", "Crops take time to grow and weather affects yields", "Farm goods are not sold", "No stocks exist for manufacturing"], a: 1, why: "Output depends on growing seasons and weather and is hard to change quickly." },
+  { q: "When supply is inelastic, an increase in demand mainly causes:", opts: ["A large rise in quantity", "A large rise in price", "A fall in price", "No change in either"], a: 1, why: "Output cannot rise much, so the adjustment is through price." },
+  { q: "Over time, PES generally becomes:", opts: ["More inelastic", "Perfectly inelastic", "More elastic", "Negative"], a: 2, why: "More time allows capacity to grow and new firms to enter." },
+  { q: "PES is 2. Price rises by 5%. Quantity supplied rises by:", opts: ["2.5%", "5%", "7%", "10%"], a: 3, why: "2 × 5% = 10%." },
+] });
+Lib.cards($("#fc1"), { cards: [
+  ["Price elasticity of supply (PES)", "%ΔQuantity supplied ÷ %ΔPrice."],
+  ["Price elastic supply", "PES greater than 1: quantity supplied rises by a bigger percentage than price."],
+  ["Price inelastic supply", "PES less than 1: quantity supplied rises by a smaller percentage than price."],
+  ["Unitary elasticity of supply", "PES = 1; for example any straight line through the origin."],
+  ["Perfectly inelastic supply", "PES = 0: a vertical supply curve."],
+  ["Perfectly elastic supply", "PES = infinity: a horizontal supply curve."],
+  ["Stocks", "Finished goods held in store that let firms respond quickly to a rise in demand."],
+  ["Spare capacity", "Unused productive capacity that lets output rise without new investment."],
+  ["Productive capacity", "The maximum output a firm or industry can produce with its resources."],
+  ["Perishable product", "A good that cannot be stored, such as fresh flowers or an airline seat."],
+  ["Short run", "A period in which at least one factor of production cannot be changed."],
+  ["Long run", "A period in which all factors can be changed and new firms can enter."],
+  ["Supply flexibility", "How quickly and easily producers can change output when conditions change."],
+  ["Price volatility", "Large and frequent changes in price, common in agricultural markets."],
+  ["Ceteris paribus", "Other things being equal."],
+] });
+lab1(); lab3();
+
+Lib.initTabs();
+</script>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}</style><div class="site-pill"><a href="../../a-econ/as/ch-09/">← Chapter 9</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="as-elasticity-of-supply" hidden></button></div><script src="../../assets/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js"></script><script src="../../assets/gate.js" data-courses="a-econ"></script></body></html>

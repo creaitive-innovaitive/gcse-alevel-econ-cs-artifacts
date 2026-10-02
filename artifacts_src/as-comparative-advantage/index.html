@@ -164,7 +164,6 @@ ul.tips li b{color:var(--warn)}
 @media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 .stp{scroll-margin-top:70px}
-
 </style></head>
 <body>
 <div class="wrap">
@@ -279,7 +278,7 @@ ul.tips li b{color:var(--warn)}
   <h2>Lab 3 · Transport costs eat the gain</h2>
   <p>In the Red and Blue example, trade gains come from the gap between the two opportunity costs (4 − 2 = 2 shirts per coat). Add transport costs and see when trade stops being worthwhile.</p>
   <div class="card"><div class="grid2"><div><div id="g8"></div></div>
-    <div><div class="readout"><div><small>Gap in opportunity costs</small><strong>2.0</strong></div><div><small>Transport cost per coat</small><strong id="c1"></strong></div><div><small>Net gain from trade per coat</small><strong id="c2"></strong></div></div><div class="verdict" id="cv"></div></div></div></div>
+    <div><div class="readout"><div><small>Gap in opportunity costs</small><strong>2.0</strong></div><div><small>Transport cost per coat</small><strong id="e1"></strong></div><div><small>Net gain from trade per coat</small><strong id="e2"></strong></div></div><div class="verdict" id="ev"></div></div></div></div>
 </section>
 
 <!-- PRACTISE -->
@@ -678,8 +677,8 @@ $("#lb1").dispatchEvent(new Event("input"));
 
 /* ---------- Lab 3 ---------- */
 Lib.slider($("#g8"), { id: "lc1", label: "Transport cost per coat traded (in shirts)", min: 0, max: 3, step: 0.1, value: 0.5, fmt: (v) => v.toFixed(1), onInput: (v) => {
-  const net = 2 - v; $("#c1").textContent = v.toFixed(1); $("#c2").textContent = net.toFixed(1);
-  $("#cv").textContent = net > 0.05 ? `Trade still gains ${net.toFixed(1)} shirts per coat, shared between the countries.` : net > -0.05 ? "The gain is gone: it is no longer worth trading." : "Transport costs exceed the gain: trade makes the countries worse off, so it will not take place.";
+  const net = 2 - v; $("#e1").textContent = v.toFixed(1); $("#e2").textContent = net.toFixed(1);
+  $("#ev").textContent = net > 0.05 ? `Trade still gains ${net.toFixed(1)} shirts per coat, shared between the countries.` : net > -0.05 ? "The gain is gone: it is no longer worth trading." : "Transport costs exceed the gain: trade makes the countries worse off, so it will not take place.";
 } });
 
 /* ---------- Practise ---------- */
