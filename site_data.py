@@ -301,4 +301,18 @@ ARTIFACTS = [
     {"src": "liquidity-trap-lab", "title": "Liquidity Trap Lab", "kind": "Interactive",
      "desc": "Definitions, diagrams, real data and levels-of-response practice on the liquidity trap.",
      "places": [("a-econ", "a-level/ch-44")]},
+
+    # A-Level Economics, AS chapters requested by students
+    {"src": "as-elasticities-of-demand", "title": "Elasticities of Demand", "kind": "Interactive",
+     "desc": "Price, income and cross elasticity: animated diagrams, labs, drag-and-drop practice, calculations and exam questions with model answers.",
+     "places": [("a-econ", "as/ch-08")]},
+    {"src": "as-government-intervention", "title": "Methods and Effects of Government Intervention", "kind": "Interactive",
+     "desc": "Indirect taxes and incidence, subsidies, direct provision, price controls, buffer stocks and information, with diagrams, labs and exam practice.",
+     "places": [("a-econ", "as/ch-13")]},
+    {"src": "as-comparative-advantage", "title": "Comparative Advantage and the Gains from Trade", "kind": "Interactive",
+     "desc": "Opportunity cost, specialisation, terms of trade and the limits of the theory, with animated PPCs, labs and exam questions.",
+     "places": [("a-econ", "as/ch-25")]},
+    {"src": "as-balance-of-payments", "title": "The Current Account of the Balance of Payments", "kind": "Interactive",
+     "desc": "Credits and debits, the four components, calculations, causes and consequences of deficits and surpluses, with exam practice.",
+     "places": [("a-econ", "as/ch-27")]},
 ]

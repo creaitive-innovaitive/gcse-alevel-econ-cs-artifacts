@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Current Account of the Balance of Payments</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+
+</style></head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">AS Level Economics · 9708 · Chapter 27</div>
+  <h1>The Current Account of the Balance of Payments</h1>
+  <p class="lead">What is counted, how to calculate each balance, why a country runs a deficit or a surplus, and what that means for the economy.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A country's <span class="kw">balance of payments</span> is a record of all the economic transactions between its residents and the rest of the world. Money <b>coming in</b> is a <b>credit</b> (+). Money <b>going out</b> is a <b>debit</b> (−). The account has three parts: the <b>current account</b>, the capital account and the financial account. This chapter is about the current account.</p>
+  </div>
+
+  <h2>The four parts of the current account</h2>
+  <div class="grid2">
+    <div class="card"><h3>1 · Trade in goods</h3><p>Exports (credit) and imports (debit) of physical goods such as cars, phones and clothing. Also called the <b>visible</b> or merchandise balance.</p></div>
+    <div class="card"><h3>2 · Trade in services</h3><p>Exports and imports of services such as shipping, tourism, banking and insurance. Also called <b>invisibles</b>.</p></div>
+    <div class="card"><h3>3 · Primary income</h3><p>Income from <b>investment and work abroad</b>: profits, interest and dividends, plus <b>employees' compensation</b> (wages of residents working abroad). Receipts are credits; payments to foreigners are debits.</p></div>
+    <div class="card"><h3>4 · Secondary income</h3><p><b>Transfers</b> with nothing received in exchange: foreign aid, payments to international organisations, government and private transfers, and <b>workers' remittances</b> sent home.</p></div>
+  </div>
+
+  <h2>Calculating the balances</h2>
+  <div class="formula">Balance of trade in goods = exports of goods − imports of goods<br>Balance of trade in services = exports of services − imports of services<br>Balance of trade in goods and services = goods balance + services balance<br>Current account balance = trade in goods and services + primary income balance + secondary income balance</div>
+  <div class="tw"><table class="t">
+    <tr><th>Item</th><th>Working</th><th>Result</th></tr>
+    <tr><td>Goods</td><td>$900m − $1,200m</td><td><b>−$300m</b> (deficit)</td></tr>
+    <tr><td>Services</td><td>$160m − $100m</td><td><b>+$60m</b> (surplus)</td></tr>
+    <tr><td>Goods and services</td><td>−300 + 60</td><td><b>−$240m</b></td></tr>
+    <tr><td>Primary income</td><td></td><td>+$70m</td></tr>
+    <tr><td>Secondary income</td><td></td><td>+$45m</td></tr>
+    <tr><td><b>Current account</b></td><td>−240 + 70 + 45</td><td><b>−$125m</b> (deficit)</td></tr>
+  </table></div>
+  <div class="warn"><b class="h">Do not write this</b>A trade deficit does not mean the <i>quantity</i> of imports is greater than the quantity of exports. It means the <b>value</b> (price × quantity) of imports is greater than the value of exports.</div>
+  <p class="note">Across the whole world the current accounts add up to zero, since one country's deficit is another's surplus.</p>
+
+  <h2>Causes of a current account deficit</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Cause</th><th>Why imports rise or exports fall</th><th>Type</th></tr>
+    <tr><td>A growing domestic economy</td><td>Firms buy more imported materials and capital goods; some output is diverted from export to home sales.</td><td>Cyclical: short term, often self-correcting</td></tr>
+    <tr><td>Slowdown or recession in trading partners</td><td>Foreign demand for the country's exports falls.</td><td>Cyclical</td></tr>
+    <tr><td>Lack of international competitiveness</td><td>An <b>overvalued exchange rate</b>, <b>high inflation</b>, <b>low labour and capital productivity</b>, poor education and training, low investment and innovation.</td><td><b>Structural</b>: long term, not self-correcting</td></tr>
+  </table></div>
+  <h3>Causes of a surplus</h3>
+  <p>The reverse: a <b>declining domestic economy</b> (weak demand for imports), <b>increasing activity in trading partners</b> (higher demand for exports and higher remittances), and <b>structural advantages</b> such as good education, high investment, low inflation and a competitive exchange rate.</p>
+
+  <h2>Consequences of imbalances</h2>
+  <div class="grid2">
+    <div class="card"><h3>A persistent deficit</h3><ul><li>The country consumes more than it produces, so it is "living beyond its means".</li><li>It must <b>borrow or attract investment</b>, which leads to <b>future outflows</b> of interest, profits and dividends.</li><li>Falling net exports reduce <b>aggregate demand</b>, slowing growth and raising unemployment.</li><li>Cyclical deficits matter less than structural ones.</li></ul></div>
+    <div class="card"><h3>A persistent surplus</h3><ul><li>Residents are not enjoying as high a standard of living as possible.</li><li>High demand for exports with extra money supply may create <b>inflationary pressure</b>.</li><li>Trading partners may pressure the country to change policies.</li><li>A surplus caused by recession is <b>not</b> beneficial.</li></ul></div>
+  </div>
+  <div class="tip"><b class="h">Use percentages of GDP</b>The size of a deficit should be judged against the size of the economy. A deficit of $108bn in a huge economy can matter less than a smaller one in a small economy, because what counts is the percentage of GDP.</div>
+  <p class="note">Policies to correct a current account imbalance are covered in Chapter 29.</p>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <h2>1 · The flows in and out</h2>
+  <div id="stA"></div>
+  <h2>2 · Building the current account balance</h2>
+  <p>Follow the worked example, adding each part to the running total.</p>
+  <div id="stB"></div>
+  <h2>3 · Cyclical or structural deficit?</h2>
+  <div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Build a current account</h2>
+  <p>All figures in $ million. Change any item and see every balance update.</p>
+  <div class="card"><div class="grid2"><div><div id="g1"></div><div id="g2"></div><div id="g3"></div><div id="g4"></div><div id="g5"></div><div id="g6"></div><div id="g7"></div></div>
+    <div><div class="readout"><div><small>Goods balance</small><strong id="k1"></strong></div><div><small>Services balance</small><strong id="k2"></strong></div><div><small>Goods and services</small><strong id="k3"></strong></div><div><small>Current account</small><strong id="k4"></strong></div><div><small>As % of GDP</small><strong id="k5"></strong></div></div>
+    <div class="verdict" id="kv"></div></div></div>
+    <svg id="labK" viewBox="0 0 760 330" role="img" aria-label="Waterfall of the current account"></svg></div>
+
+  <h2>Lab 2 · What would change the balance?</h2>
+  <p>Start from the worked example (a deficit of $125m). Click an event and see the effect.</p>
+  <div class="card"><div class="row"><button class="b" data-sc="0">Trading partners go into recession</button><button class="b" data-sc="1">Domestic boom</button><button class="b" data-sc="2">Exchange rate becomes overvalued</button><button class="b" data-sc="3">Productivity improves</button><button class="b" data-sc="4">Remittances rise</button><button class="b" data-sc="5">Reset</button></div>
+    <div class="readout"><div><small>Current account before</small><strong>−125</strong></div><div><small>Current account after</small><strong id="m1"></strong></div><div><small>Change</small><strong id="m2"></strong></div></div>
+    <div class="verdict" id="mv">Choose an event.</div></div>
+
+  <h2>Lab 3 · Size matters: deficit as a share of GDP</h2>
+  <div class="card"><div class="grid2"><div><div id="g8"></div><div id="g9"></div><div id="g10"></div><div id="g11"></div></div>
+    <div><div class="readout"><div><small>Country A: deficit % GDP</small><strong id="n1"></strong></div><div><small>Country B: deficit % GDP</small><strong id="n2"></strong></div></div><div class="verdict" id="nv"></div></div></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which part of the current account?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Credit or debit?</h2>
+  <p>Credits bring money into the country. Debits send it out.</p>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Cyclical or structural?</h2>
+  <div id="cl3" class="card"></div>
+
+  <h2>4 · Put the calculation in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>5 · Calculations</h2>
+  <div id="c1"></div>
+
+  <h2>6 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>7 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions follow the coursebook case studies and are kept general. Check current figures before quoting numbers.</p>
+  <div class="rw"><h3>Argentina: spending more on imports than it earns</h3><p>For many years Argentina has spent more on imports than it has earned from exports. To reduce the gap, the government used policy tools to encourage domestic production of substitutes for imports and to boost exports.</p><div class="use"><b>Exam use:</b> a persistent deficit and the policy response. Link to structural causes, and to the cost of borrowing to finance the deficit.</div></div>
+  <div class="rw"><h3>South Africa: goods surplus, income outflow</h3><p>South Africa usually earns more from exporting goods such as gold, diamonds and other metals than it spends on importing goods. But it often spends more on importing services than it earns from exporting them, and a large flow of dividends and interest leaves the country each year, because a high share of firms are foreign-owned and the country has borrowed heavily from abroad.</p><div class="use"><b>Exam use:</b> shows why you must look at every component. A surplus in goods can be outweighed by <b>primary income</b> outflows.</div></div>
+  <div class="rw"><h3>Switzerland: surplus on goods and investment income</h3><p>Switzerland earns more from its exports than it spends on imports and also receives more investment income from abroad than it sends out. The extra money coming in can put upward pressure on the exchange rate.</p><div class="use"><b>Exam use:</b> an example of a structural surplus and how a surplus can affect the exchange rate. Mention the link to inflation risk.</div></div>
+  <div class="rw"><h3>The Philippines and workers' remittances</h3><p>Many Filipinos work abroad and send money home. These <b>workers' remittances</b> are a large credit item in secondary income.</p><div class="use"><b>Exam use:</b> a real example for secondary income. Pakistan is another case in the coursebook: remittances make a big difference to its current account position.</div></div>
+  <div class="rw"><h3>Comparing the UK and Albania</h3><p>In 2018 the UK had one of the largest current account deficits in the world in money terms, but as a share of GDP (4.2%) it was smaller than Albania's (7.4%) even though Albania's deficit was much smaller in dollars.</p><div class="use"><b>Exam use:</b> use this to explain why a deficit should be judged as a <b>percentage of GDP</b>.</div></div>
+  <div class="rw"><h3>Germany and Singapore: surpluses</h3><p>In the coursebook's 2019 table, Germany's surplus was 6.6% of GDP and Singapore's was 14.3% of GDP. Strong, competitive export industries are a common cause.</p><div class="use"><b>Exam use:</b> examples of structural surpluses. In evaluation, ask whether residents benefit and whether the surplus is a sign of low domestic demand.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Answers are colour-coded to the mark scheme.</p>
+  <div class="key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Define</span> <span class="mark">2 marks</span> What is meant by the current account of the balance of payments?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Name the transactions and say what is measured.</div>
+    <div class="ans"><span class="mk k" data-t="K">The current account records a country's trade in goods and services, primary income and secondary income</span> <span class="mk k" data-t="K">with the rest of the world, showing the balance of money flowing in (credits) and out (debits).</span></div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate</span> <span class="mark">4 marks</span> A country's exports of goods are $1,670bn and imports of goods $2,620bn. Exports of services are $828bn and imports $558bn. The balance of primary income is +$245bn and secondary income −$119bn. Calculate the balance of trade in goods and services and the current account balance.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Do it in stages and label each one. Exports minus imports, always. Keep the signs.</div>
+    <div class="ans"><span class="mk a" data-t="A">Goods: 1,670 − 2,620 = −$950bn. Services: 828 − 558 = +$270bn.</span> <span class="mk a" data-t="A">Balance of trade in goods and services = −950 + 270 = −$680bn.</span> <span class="mk a" data-t="A">Current account = −680 + 245 + (−119) = −$554bn.</span> <span class="mk n" data-t="N">This is a current account deficit of $554bn.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Forgetting to add primary and secondary income, or losing the minus sign on secondary income.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Explain what is meant by primary income and secondary income in the current account.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two parts, two marks each: define it and give an example.</div>
+    <div class="ans"><span class="mk k" data-t="K">Primary income is income from investment and from employment abroad, such as profits, interest and dividends and wages earned by residents working in other countries.</span> <span class="mk a" data-t="A">For example, dividends paid to foreign shareholders are debits.</span> <span class="mk k" data-t="K">Secondary income consists of transfers for which nothing is received in exchange.</span> <span class="mk a" data-t="A">Examples include foreign aid and workers' remittances sent home from abroad.</span></div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Analyse</span> <span class="mark">6 marks</span> Analyse two possible causes of a current account deficit.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>For each cause give the chain: cause → effect on exports or imports → deficit. Say whether it is cyclical or structural.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">One cause is a growing domestic economy.</span> <span class="mk n" data-t="N">Rising incomes increase spending on imported goods, and firms import more raw materials and capital goods, so import expenditure rises; some output may also be diverted from export to the home market, so export revenue falls.</span> <span class="mk e" data-t="E">This is a cyclical deficit, likely to be short term and self-correcting, because the imports raise future output and exports.</span></p>
+    <p><span class="mk k" data-t="K">A second cause is a lack of international competitiveness.</span> <span class="mk n" data-t="N">If a country has an overvalued exchange rate or high inflation, its exports are expensive abroad and imports look cheap at home, so export revenue falls and import expenditure rises.</span> <span class="mk a" data-t="A">Low labour productivity from poor education and low investment adds to this.</span> <span class="mk e" data-t="E">This is a structural deficit and will not correct itself.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Discuss</span> <span class="mark">8 marks</span> Discuss the consequences of a persistent current account deficit for a country.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Cover domestic and external consequences. Then weigh them: does the cause and the size relative to GDP matter?</div>
+    <div class="ans"><p><span class="mk k" data-t="K">A persistent deficit means the country is spending more on imports and other payments than it earns, so residents consume more than the economy produces.</span> <span class="mk n" data-t="N">It must finance the gap by borrowing or by attracting foreign investment. That leads to future outflows of interest, profits and dividends, which worsens the primary income balance and the deficit further.</span></p>
+    <p><span class="mk n" data-t="N">The falling net exports reduce aggregate demand, which can slow economic growth and raise unemployment, particularly in export and import-competing industries.</span> <span class="mk n" data-t="N">Overseas lenders may lose confidence, which could put downward pressure on the exchange rate.</span></p>
+    <p><span class="mk e" data-t="E">However, how serious this is depends on the cause and the size. A deficit caused by a boom in investment imports may be temporary and productive. It also matters as a percentage of GDP: a deficit of 2% of GDP is easily financed, whereas 8% may be unsustainable.</span> <span class="mk e" data-t="E">Overall, a persistent structural deficit is likely to harm the economy over time, while a small cyclical one is of little concern.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Assess</span> <span class="mark">12 marks</span> Assess whether a current account surplus is always beneficial for a country.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Open each paragraph with the question's wording. Consider causes of surplus. A surplus from recession is not a good one.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">A current account surplus occurs when the credit items in trade in goods and services, primary income and secondary income are greater than the debit items, so more money flows into the country than leaves it.</span></p>
+    <p><span class="mk n" data-t="N">A current account surplus can be beneficial for a country because it shows firms are competitive and earning more from abroad than residents spend on imports.</span> <span class="mk n" data-t="N">Higher export revenue increases aggregate demand, which can raise output and employment, and the country builds up claims on the rest of the world that bring in future investment income.</span> <span class="mk a" data-t="A">Switzerland, with a surplus on goods and investment income, benefits from the extra money coming in.</span> <span class="mk e" data-t="E">This holds when the surplus arises from structural advantages such as high productivity, low inflation and strong investment.</span></p>
+    <p><span class="mk n" data-t="N">A current account surplus is not always beneficial because it can come from a weak economy or create other problems.</span> <span class="mk n" data-t="N">If it arises because a recession has cut spending on imports, residents' living standards are falling, so it is not a good outcome.</span> <span class="mk n" data-t="N">A large surplus means residents are consuming less than they produce, giving up current living standards, and the high demand for exports with extra money supply may cause inflation.</span> <span class="mk e" data-t="E">Other countries may also put pressure on the country to change its policies, for example by letting its exchange rate appreciate.</span></p>
+    <p><span class="mk e" data-t="E">Overall, a surplus is beneficial when it reflects strong competitiveness, but it is not beneficial when it comes from a recession or is so large that it reduces residents' consumption and provokes trade disputes. A judgement therefore needs the cause of the surplus, its size as a percentage of GDP and the state of the economy.</span></p></div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Credits bring money in, debits take money out.</b> Say it as you work through a table.</li>
+    <li><b>Exports minus imports.</b> Always in that order, and keep the minus sign for a deficit.</li>
+    <li><b>Build the answer in stages.</b> Goods, services, trade in goods and services, then primary and secondary income.</li>
+    <li><b>Value, not quantity.</b> A trade deficit means import value exceeds export value.</li>
+    <li><b>The surplus causes are the reverse of the deficit causes.</b> Learn one set and you know both.</li>
+    <li><b>Separate cyclical from structural.</b> Structural deficits are the ones to worry about.</li>
+    <li><b>Judge size as a percentage of GDP.</b> It shows how significant the imbalance is.</li>
+    <li><b>Evaluate a surplus too.</b> It is not always good news, especially if caused by recession.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Define</td><td>A precise meaning.</td></tr>
+    <tr><td>Calculate</td><td>Show each stage with signs and units.</td></tr>
+    <tr><td>Explain</td><td>Reasons with examples.</td></tr>
+    <tr><td>Analyse</td><td>A chain of cause and effect.</td></tr>
+    <tr><td>Discuss / Assess</td><td>Both sides and a justified conclusion.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => show(i));
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="decimal" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+window.Lib = { initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+
+/* ---------- waterfall of the current account ---------- */
+function waterfall(v, n, H) {
+  const g = v.g, s = v.s, p = v.p, sec = v.sec, gs = g + s, ca = gs + p + sec;
+  const items = [
+    { l: "Goods", a: 0, b: g, k: "d" }, { l: "Services", a: g, b: gs, k: "d" }, { l: "Goods and services", a: 0, b: gs, k: "sub" },
+    { l: "Primary income", a: gs, b: gs + p, k: "d" }, { l: "Secondary income", a: gs + p, b: ca, k: "d" }, { l: "Current account", a: 0, b: ca, k: "tot" },
+  ];
+  const vals = items.flatMap((i) => [i.a, i.b]).concat([0]);
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * 0.12 || 10; lo -= pad; hi += pad;
+  const top = 40, bottom = H - 50, Y = (x) => bottom - ((x - lo) / (hi - lo)) * (bottom - top), X = (i) => 80 + i * 108;
+  let o = SV.line(60, Y(0), 740, Y(0), "ax") + SV.text(64, Y(0) - 6, "0", "sm") + SV.text(64, 22, "$ million (credits above zero, debits below)", "sm");
+  items.forEach((it, i) => {
+    const op = clamp01(n - i); if (op <= 0) return;
+    const y1 = Y(Math.max(it.a, it.b)), y2 = Y(Math.min(it.a, it.b)), cls = it.k === "sub" ? "f1" : it.k === "tot" ? "f4" : it.b >= it.a ? "f3" : "f2";
+    o += `<rect x="${X(i)}" y="${y1}" width="78" height="${Math.max(2, y2 - y1)}" class="${cls}" style="opacity:${op * (it.k === "d" ? 0.6 : 0.5)}"/>`;
+    o += `<rect x="${X(i)}" y="${y1}" width="78" height="${Math.max(2, y2 - y1)}" fill="none" stroke="currentColor" stroke-width="1.5" opacity="${op * 0.6}"/>`;
+    const val = it.b - it.a, txt = (val > 0 ? "+" : "") + Lib.fmtN(val, 0);
+    o += SV.text(X(i) + 39, val >= 0 ? y1 - 6 : y2 + 16, txt, "lbl bd" + (it.k === "tot" ? " t4" : ""), { "text-anchor": "middle", opacity: op });
+    o += SV.text(X(i) + 39, H - 28, it.l, "sm", { "text-anchor": "middle", opacity: op });
+    if (i < 5 && it.k === "d" && op > 0.9) o += SV.line(X(i) + 78, Y(it.b), X(i) + 108, Y(it.b), "gr");
+  });
+  if (n >= 6) o += SV.text(400, H - 6, ca < 0 ? "Current account DEFICIT of " + Lib.fmtN(-ca, 0) : ca > 0 ? "Current account SURPLUS of " + Lib.fmtN(ca, 0) : "Current account in balance", "lbl bd " + (ca < 0 ? "t2" : "t3"), { "text-anchor": "middle" });
+  return o;
+}
+
+/* ---------- stepper A: flows in and out ---------- */
+const ROWS = [
+  ["Trade in goods", "Exports of goods (credit +)", "Imports of goods (debit −)"],
+  ["Trade in services", "Tourists, banking, shipping sold abroad (credit +)", "Services bought from abroad (debit −)"],
+  ["Primary income", "Dividends, interest, profits and wages earned abroad (credit +)", "Dividends and interest paid to foreigners (debit −)"],
+  ["Secondary income", "Remittances and aid received (credit +)", "Aid given and transfers sent abroad (debit −)"],
+];
+function flows(s) {
+  let o = SV.rect(20, 14, 130, 410, "f1", { rx: 12, opacity: 0.35 }) + SV.rect(610, 14, 130, 410, "f4", { rx: 12, opacity: 0.35 });
+  o += SV.text(85, 210, "Rest of", "lbl bd", { "text-anchor": "middle" }) + SV.text(85, 228, "the world", "lbl bd", { "text-anchor": "middle" });
+  o += SV.text(675, 210, "Home", "lbl bd", { "text-anchor": "middle" }) + SV.text(675, 228, "economy", "lbl bd", { "text-anchor": "middle" });
+  ROWS.forEach((r, i) => {
+    const op = clamp01(s.n - i), y = 52 + i * 98;
+    o += SV.text(380, y - 14, r[0], "lbl bd", { "text-anchor": "middle", opacity: op });
+    o += SV.line(160, y + 6, 596, y + 6, "c3", { opacity: op }) + SV.arrowHead(604, y + 6, "r", "dot3").replace("<polygon", `<polygon opacity="${op}"`);
+    o += SV.text(380, y + 24, "Money IN: " + r[1], "sm t3", { "text-anchor": "middle", opacity: op });
+    o += SV.line(600, y + 42, 164, y + 42, "c2", { opacity: op }) + SV.arrowHead(156, y + 42, "l", "dot2").replace("<polygon", `<polygon opacity="${op}"`);
+    o += SV.text(380, y + 60, "Money OUT: " + r[2], "sm t2", { "text-anchor": "middle", opacity: op });
+  });
+  return o;
+}
+Lib.stepper($("#stA"), { w: 760, h: 440, label: "Money flows into and out of a country for each part of the current account", base: { n: 0 }, draw: flows, dwell: 4200, steps: [
+  { cap: "The current account records <b>money flowing in (credits, +)</b> and <b>money flowing out (debits, −)</b> between a country and the rest of the world. There are four parts.", s: { n: 0 } },
+  { cap: "<b>Trade in goods.</b> Selling goods abroad brings money in; buying goods from abroad sends money out. This is the <b>visible</b> balance.", s: { n: 1 } },
+  { cap: "<b>Trade in services</b> (invisibles): tourism, banking, insurance and shipping, in both directions.", s: { n: 2 } },
+  { cap: "<b>Primary income</b>: dividends, interest, profits and the wages of residents working abroad, coming in and going out.", s: { n: 3 } },
+  { cap: "<b>Secondary income</b>: transfers with nothing in exchange, such as workers' remittances and foreign aid. Add up all the credits and debits to get the current account balance.", s: { n: 4 } },
+] });
+
+/* ---------- stepper B: waterfall ---------- */
+Lib.stepper($("#stB"), { w: 760, h: 350, label: "Waterfall building the current account balance", base: { n: 0 }, tween: 1100, draw: (s) => waterfall({ g: -300, s: 60, p: 70, sec: 45 }, s.n, 350), dwell: 4300, steps: [
+  { cap: "A country exports $900m of goods and imports $1,200m. <b>Goods balance = 900 − 1,200 = −$300m</b>, a deficit.", s: { n: 1 } },
+  { cap: "Exports of services are $160m and imports $100m. <b>Services balance = +$60m.</b> Running total: −300 + 60 = −240.", s: { n: 2 } },
+  { cap: "<b>Trade in goods and services = −$240m.</b> This is the trade balance.", s: { n: 3 } },
+  { cap: "Add <b>primary income</b>: +$70m. Running total: −240 + 70 = −170.", s: { n: 4 } },
+  { cap: "Add <b>secondary income</b>: +$45m. Running total: −170 + 45 = −125.", s: { n: 5 } },
+  { cap: "<b>Current account balance = −$125m: a deficit.</b> Income flows help, but not enough to offset the trade deficit.", s: { n: 6 } },
+] });
+
+/* ---------- stepper C: cyclical vs structural ---------- */
+const CYC = [0, -1, -3, -4, -3, -1, 1, 2, 1, -1, -3, -2, 0], STR = [0, -1, -2, -3, -4, -5, -5.5, -6, -6.5, -7, -7, -7.5, -8];
+function trend(s) {
+  const X = (i) => 80 + i * 50, Y = (v) => 200 - v * 18;
+  const part = (arr, t) => { const k = Math.floor(t), pts = arr.slice(0, k + 1).map((v, i) => [X(i), Y(v)]); if (k < 12 && t > k) { const f = t - k; pts.push([X(k + f), Y(arr[k] + (arr[k + 1] - arr[k]) * f)]); } return pts; };
+  let o = SV.line(60, 40, 60, 360) + SV.line(60, Y(0), 700, Y(0)) + SV.text(64, 34, "Current account balance", "sm") + SV.text(700, Y(0) - 8, "Surplus above, deficit below", "sm", { "text-anchor": "end" }) + SV.text(700, 380, "Years", "sm", { "text-anchor": "end" });
+  if (s.tc > 0) { o += SV.path(ptsPath(part(CYC, s.tc)), "c3"); o += SV.text(X(12) + 4, Y(CYC[12]) - 8, "Cyclical", "lbl bd t3", { opacity: clamp01(s.tc - 11) }); }
+  if (s.ts > 0) { o += SV.path(ptsPath(part(STR, s.ts)), "c2"); o += SV.text(X(12) - 6, Y(STR[12]) + 18, "Structural", "lbl bd t2", { "text-anchor": "end", opacity: clamp01(s.ts - 11) }); }
+  return o;
+}
+Lib.stepper($("#stC"), { w: 760, h: 390, label: "Cyclical and structural current account deficits over time", base: { tc: 0, ts: 0 }, tween: 2200, dwell: 5500, draw: trend, steps: [
+  { cap: "The line at zero is a balanced current account. Below it is a deficit. Let's compare two kinds of deficit.", s: { tc: 0, ts: 0 } },
+  { cap: "<b>Cyclical deficit.</b> A boom raises imports (or partners slow down), so the balance dips into deficit. When the cycle turns, imports fall and exports recover, so it <b>corrects itself</b>.", s: { tc: 12, ts: 0 } },
+  { cap: "<b>Structural deficit.</b> Exports are uncompetitive (overvalued exchange rate, high inflation, low productivity). The deficit <b>persists and widens</b> and does not self-correct.", s: { tc: 12, ts: 12 } },
+  { cap: "<b>Conclusion:</b> cyclical deficits are usually a small concern. Structural deficits need supply-side and exchange rate solutions, and have to be financed by borrowing or foreign investment.", s: { tc: 12, ts: 12 } },
+] });
+
+/* ---------- Lab 1 ---------- */
+function lab1() {
+  const ids = ["k_a", "k_b", "k_c", "k_d", "k_e", "k_f", "k_g"]; if (ids.some((i) => !$("#" + i))) return;
+  const [xg, mg, xs, ms, p, sec, gdp] = ids.map((i) => +$("#" + i).value);
+  const g = xg - mg, s = xs - ms, gs = g + s, ca = gs + p + sec;
+  $("#k1").textContent = Lib.fmtN(g, 0); $("#k2").textContent = Lib.fmtN(s, 0); $("#k3").textContent = Lib.fmtN(gs, 0); $("#k4").textContent = Lib.fmtN(ca, 0);
+  $("#k5").textContent = Lib.fmtN((ca / gdp) * 100, 1) + "%";
+  $("#kv").textContent = ca < 0 ? `A current account deficit of ${Lib.fmtN(-ca, 0)}, which is ${Lib.fmtN((-ca / gdp) * 100, 1)}% of GDP. ${g < 0 && s > 0 ? "Goods are in deficit but services help." : ""}` : ca > 0 ? `A surplus of ${Lib.fmtN(ca, 0)}, which is ${Lib.fmtN((ca / gdp) * 100, 1)}% of GDP.` : "The current account is balanced.";
+  $("#labK").innerHTML = waterfall({ g, s, p, sec }, 6, 330);
+}
+const sl = (c, id, label, min, max, step, v) => Lib.slider($("#" + c), { id, label, min, max, step, value: v, fmt: (x) => x, onInput: lab1 });
+sl("g1", "k_a", "Exports of goods", 0, 3000, 10, 900); sl("g2", "k_b", "Imports of goods", 0, 3000, 10, 1200); sl("g3", "k_c", "Exports of services", 0, 1000, 5, 160);
+sl("g4", "k_d", "Imports of services", 0, 1000, 5, 100); sl("g5", "k_e", "Primary income balance", -400, 400, 5, 70); sl("g6", "k_f", "Secondary income balance", -400, 400, 5, 45); sl("g7", "k_g", "GDP", 500, 20000, 100, 5000);
+
+/* ---------- Lab 2 ---------- */
+const BASE = { xg: 900, mg: 1200, xs: 160, ms: 100, p: 70, sec: 45 };
+const SC = [
+  { x: -0.15, m: 0, sec: 0, t: "Cyclical. A recession in trading partners cuts their spending on this country's exports, so export revenue falls and the deficit widens. It should correct when partners recover." },
+  { x: 0, m: 0.15, sec: 0, t: "Cyclical. A domestic boom raises spending on imports of goods and services, so the deficit widens. This is usually short term, and the extra imports (such as capital goods) may raise future output." },
+  { x: -0.10, m: 0.10, sec: 0, t: "Structural. An overvalued exchange rate makes exports dearer abroad and imports cheaper at home, so the deficit widens and will not correct itself without a change in competitiveness." },
+  { x: 0.10, m: -0.05, sec: 0, t: "Structural improvement. Higher productivity lowers costs, so exports become more competitive and imports are replaced by home output. The balance improves, here into surplus." },
+  { x: 0, m: 0, sec: 30, t: "Secondary income. Workers abroad send more money home. A credit item, so the deficit narrows." },
+];
+$$("[data-sc]").forEach((b) => b.addEventListener("click", () => {
+  const i = +b.dataset.sc; if (i === 5) { $("#m1").textContent = "−125"; $("#m2").textContent = "0"; $("#mv").textContent = "Choose an event."; return; }
+  const e = SC[i], xg = BASE.xg * (1 + e.x), xs = BASE.xs * (1 + e.x), mg = BASE.mg * (1 + e.m), ms = BASE.ms * (1 + e.m);
+  const ca = xg - mg + xs - ms + BASE.p + BASE.sec + e.sec;
+  $("#m1").textContent = Lib.fmtN(ca, 0).replace("-", "−"); $("#m2").textContent = (ca + 125 > 0 ? "+" : "") + Lib.fmtN(ca + 125, 0).replace("-", "−"); $("#mv").textContent = e.t;
+}));
+$("[data-sc='5']").click();
+
+/* ---------- Lab 3 ---------- */
+function lab3() {
+  const ids = ["n_a", "n_b", "n_c", "n_d"]; if (ids.some((i) => !$("#" + i))) return;
+  const [da, ga, db, gb] = ids.map((i) => +$("#" + i).value), pa = (da / ga) * 100, pb = (db / gb) * 100;
+  $("#n1").textContent = Lib.fmtN(pa, 1) + "%"; $("#n2").textContent = Lib.fmtN(pb, 1) + "%";
+  $("#nv").textContent = pa > pb + 0.05 ? "Country A's deficit is bigger relative to its economy, so it is likely to be the bigger concern." : pb > pa + 0.05 ? `Country B has the smaller deficit in money terms (${db} against ${da}) but a bigger share of GDP, so it is likely to be the bigger concern.` : "Equal shares of GDP.";
+}
+const sl3 = (c, id, label, min, max, step, v) => Lib.slider($("#" + c), { id, label, min, max, step, value: v, fmt: (x) => x, onInput: lab3 });
+sl3("g8", "n_a", "Country A: deficit ($bn)", 1, 400, 1, 100); sl3("g9", "n_b", "Country A: GDP ($bn)", 500, 20000, 100, 2500); sl3("g10", "n_c", "Country B: deficit ($bn)", 0.1, 50, 0.1, 1); sl3("g11", "n_d", "Country B: GDP ($bn)", 5, 500, 0.5, 13.5);
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), {
+  prompt: "Which part of the current account does each item belong to?",
+  buckets: [{ label: "Trade in goods" }, { label: "Trade in services" }, { label: "Primary income" }, { label: "Secondary income" }],
+  items: [
+    { text: "Export of cars", b: 0 }, { text: "Import of oil", b: 0 }, { text: "Foreign tourists spending in the country", b: 1 },
+    { text: "Banking services sold to foreign firms", b: 1 }, { text: "Dividends paid to foreign shareholders", b: 2 }, { text: "Wages of residents working abroad", b: 2 },
+    { text: "Interest paid to a foreign bank", b: 2 }, { text: "Workers' remittances sent home", b: 3 }, { text: "Foreign aid received", b: 3 }, { text: "Payments to an international organisation", b: 3 },
+  ], done: "Goods and services are trade; primary income is income from investment and work; secondary income is transfers.",
+});
+Lib.classify($("#cl2"), {
+  prompt: "Does each item bring money in (credit) or send it out (debit)?",
+  buckets: [{ label: "Credit (+)" }, { label: "Debit (−)" }],
+  items: [
+    { text: "Export of cotton", b: 0 }, { text: "Import of phones", b: 1 }, { text: "Tourist spending by foreign visitors", b: 0 }, { text: "Interest paid to a foreign bank", b: 1 },
+    { text: "Remittances received from workers abroad", b: 0 }, { text: "Foreign aid given", b: 1 }, { text: "Dividends received from investments abroad", b: 0 }, { text: "Payment for foreign shipping services", b: 1 },
+  ], done: "Always ask: is money coming into the country or leaving it?",
+});
+Lib.classify($("#cl3"), {
+  prompt: "Is each cause of a deficit usually cyclical or structural?",
+  buckets: [{ label: "Cyclical (short term, self-correcting)" }, { label: "Structural (long term, will not correct itself)" }],
+  items: [
+    { text: "A domestic boom raises imports", b: 0 }, { text: "Recession in major trading partners", b: 0 }, { text: "An overvalued exchange rate", b: 1 },
+    { text: "Low labour productivity", b: 1 }, { text: "High inflation compared with rivals", b: 1 }, { text: "Poor education and low investment", b: 1 },
+  ], done: "Structural problems are the more worrying.",
+});
+Lib.order($("#o1"), { prompt: "Order the steps for working out a current account balance.", items: [
+  "Goods balance = exports of goods − imports of goods",
+  "Services balance = exports of services − imports of services",
+  "Trade in goods and services = goods balance + services balance",
+  "Add the primary income balance",
+  "Add the secondary income balance",
+  "State the result as a surplus or a deficit, with units",
+], done: "A reliable method." });
+Lib.calc($("#c1"), { qs: [
+  { q: "USA: exports of goods $1,670bn and imports of goods $2,620bn. Calculate the balance of trade in goods ($bn, keep the sign).", a: -950, ph: "e.g. -100", sol: "1,670 − 2,620 = <b>−$950bn</b>." },
+  { q: "USA: exports of services $828bn and imports of services $558bn. Calculate the balance of trade in services ($bn).", a: 270, sol: "828 − 558 = <b>+$270bn</b>." },
+  { q: "Using these answers, calculate the USA's balance of trade in goods and services ($bn).", a: -680, sol: "−950 + 270 = <b>−$680bn</b>." },
+  { q: "Primary income is +$245bn and secondary income is −$119bn. Calculate the USA's current account balance ($bn).", a: -554, sol: "−680 + 245 − 119 = <b>−$554bn</b>: a deficit." },
+  { q: "Pakistan: credits are goods 2,062, services 442, primary income 85 and secondary income 2,215. Debits are goods 4,741, services 733, primary income 594 and secondary income 14 ($m). Calculate the current account deficit ($m).", a: 1278, hint: "Total credits minus total debits.", sol: "Credits = 2,062 + 442 + 85 + 2,215 = 4,804. Debits = 4,741 + 733 + 594 + 14 = 6,082. Balance = 4,804 − 6,082 = −1,278: a deficit of <b>$1,278m</b>." },
+  { q: "In the Pakistan example, workers' remittances were $2,060m. What would the deficit have been without them ($m)?", a: 3338, sol: "1,278 + 2,060 = <b>$3,338m</b>." },
+  { q: "A country has a current account deficit of $40bn and a GDP of $500bn. Calculate the deficit as a percentage of GDP.", a: 8, sol: "40 ÷ 500 × 100 = <b>8%</b>." },
+] });
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Credit item", "A transaction that brings money into the country"],
+  ["Debit item", "A transaction that sends money out of the country"],
+  ["Visible trade", "Trade in goods"],
+  ["Invisibles", "Trade in services"],
+  ["Workers' remittances", "Money sent home by people working abroad (secondary income)"],
+  ["Cyclical deficit", "A deficit caused by the economic cycle, likely to correct itself"],
+  ["Structural deficit", "A long-term deficit caused by a lack of competitiveness"],
+], done: "Good vocabulary." });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Which would be a credit item in the primary income of the current account?", opts: ["Interest paid to a foreign bank", "Dividends received from investments abroad", "Imports of raw materials", "Foreign aid given"], a: 1, why: "Income earned abroad flows in and is a credit in primary income." },
+  { q: "A trade in goods surplus means:", opts: ["Quantity of exports is above quantity of imports", "Value of exports of goods exceeds value of imports of goods", "Prices are rising", "The currency is strong"], a: 1, why: "Always value: price × quantity." },
+  { q: "Which is most likely to cause a structural current account deficit?", opts: ["A short-term domestic boom", "Recession abroad", "Low productivity and an overvalued exchange rate", "Higher remittances"], a: 2, why: "Uncompetitiveness is a long-term problem." },
+  { q: "A country has a deficit in goods of $500m, a surplus in services of $200m, primary income of +$100m and secondary income of −$50m. Its current account balance is:", opts: ["−$250m", "−$150m", "+$350m", "−$450m"], a: 0, why: "−500 + 200 + 100 − 50 = −$250m." },
+  { q: "Foreign aid received appears in:", opts: ["Trade in goods", "Trade in services", "Primary income", "Secondary income"], a: 3, why: "It is a transfer with nothing exchanged." },
+  { q: "A persistent current account deficit must be financed by:", opts: ["Higher exports only", "Borrowing or attracting foreign investment", "Lower imports of goods", "Cutting secondary income"], a: 1, why: "The country is spending more than it earns, so it needs money from elsewhere." },
+  { q: "Which is a possible disadvantage of a large current account surplus?", opts: ["Residents' consumption is lower than possible", "Higher imports", "Lower exports", "A deficit in services"], a: 0, why: "A surplus means the country is earning more than it spends, so residents are not enjoying as much as possible." },
+  { q: "Why is a deficit better judged as a percentage of GDP?", opts: ["It removes the sign", "It shows its size relative to the economy", "It avoids using exports", "It is easier to measure"], a: 1, why: "A $100bn deficit is small in a large economy and large in a small one." },
+] });
+Lib.cards($("#fc1"), { cards: [
+  ["Balance of payments", "A record of all economic transactions between a country's residents and the rest of the world."],
+  ["Current account", "Trade in goods and services, primary income and secondary income."],
+  ["Credit item", "Money coming into the country; recorded with a positive sign."],
+  ["Debit item", "Money going out of the country; recorded with a negative sign."],
+  ["Trade in goods (visible)", "Exports minus imports of goods."],
+  ["Trade in services (invisibles)", "Exports minus imports of services such as tourism and banking."],
+  ["Primary income", "Profits, interest, dividends and employees' compensation earned from or paid abroad."],
+  ["Secondary income", "Transfers with nothing received in return, such as aid and remittances."],
+  ["Workers' remittances", "Money sent home by people working abroad for a year or more."],
+  ["Current account deficit", "Debits exceed credits across the four parts."],
+  ["Current account surplus", "Credits exceed debits across the four parts."],
+  ["Cyclical deficit", "A deficit from the economic cycle; short term and likely to self-correct."],
+  ["Structural deficit", "A long-term deficit because firms are not internationally competitive."],
+  ["International competitiveness", "How well a country's firms can sell in world markets on price and quality."],
+  ["Overvalued exchange rate", "A rate that is higher than its competitive level, making exports dear."],
+] });
+lab1(); lab3();
+
+Lib.initTabs();
+</script>
+</body></html>

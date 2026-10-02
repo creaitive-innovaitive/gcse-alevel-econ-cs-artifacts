@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elasticities of Demand</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+
+</style></head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">AS Level Economics · 9708 · Chapter 8</div>
+  <h1>Elasticities of Demand</h1>
+  <p class="lead">How far does demand move when price, income or the price of another good changes? Price, income and cross elasticity of demand, with the maths, the diagrams and the exam technique.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p><span class="kw">Elasticity</span> measures the <b>responsiveness</b> of one variable to a change in another, <i>ceteris paribus</i>. Demand tells you the direction (price up, quantity down). Elasticity tells you <b>by how much</b>, as a number called a coefficient. Because it uses <b>percentage changes</b>, it works for any product and any currency.</p>
+  </div>
+
+  <h2>Three elasticities of demand</h2>
+  <div class="grid2">
+    <div class="card"><h3>Price (PED)</h3><p>Responsiveness of quantity demanded to a change in the product's <b>own price</b>.</p><div class="formula">PED = %ΔQd ÷ %ΔP</div></div>
+    <div class="card"><h3>Income (YED)</h3><p>Responsiveness of demand to a change in <b>consumers' income</b>.</p><div class="formula">YED = %ΔQd ÷ %ΔY</div></div>
+    <div class="card"><h3>Cross (XED)</h3><p>Responsiveness of demand for good A to a change in the <b>price of good B</b>.</p><div class="formula">XED = %ΔQd of A ÷ %ΔP of B</div></div>
+  </div>
+  <p class="note">Percentage change = (new − original) ÷ original × 100. Always divide by the <b>original</b> value.</p>
+
+  <h2>Price elasticity of demand</h2>
+  <div class="tw"><table class="t">
+    <tr><th>PED value</th><th>Description</th><th>Meaning</th><th>Demand curve</th></tr>
+    <tr><td>0</td><td>Perfectly inelastic</td><td>Quantity does not change at all</td><td>Vertical</td></tr>
+    <tr><td>between 0 and 1</td><td>Inelastic</td><td>%ΔQ is smaller than %ΔP</td><td>Steep</td></tr>
+    <tr><td>1</td><td>Unitary</td><td>%ΔQ equals %ΔP</td><td>Rectangular hyperbola</td></tr>
+    <tr><td>above 1</td><td>Elastic</td><td>%ΔQ is bigger than %ΔP</td><td>Shallow</td></tr>
+    <tr><td>infinity</td><td>Perfectly elastic</td><td>Any price rise and demand falls to zero</td><td>Horizontal</td></tr>
+  </table></div>
+  <div class="tip"><b class="h">Sign convention</b>PED is negative because price and quantity move in opposite directions. Everyone ignores the minus sign, so write PED = 2.0, not −2.0, and say which way you are reading it.</div>
+
+  <h3>What determines PED?</h3>
+  <ul>
+    <li><b>Substitutes:</b> more, and closer, substitutes make demand more elastic. The narrower the market definition ("Brand X cola" versus "soft drinks"), the more elastic.</li>
+    <li><b>Relative expense:</b> the larger the share of income spent on it, the more elastic.</li>
+    <li><b>Time:</b> demand becomes more elastic in the long run as people find alternatives.</li>
+    <li><b>Necessity or luxury, addiction, brand loyalty:</b> necessities, addictive goods and strong brands tend to be inelastic.</li>
+  </ul>
+
+  <h3>PED changes along a straight-line demand curve</h3>
+  <p>The slope is constant but PED is not, because percentages are used. At a <b>high price and low quantity</b> a small absolute change is a big percentage change in quantity, so demand is <b>elastic</b>. At a <b>low price and high quantity</b> it is <b>inelastic</b>. At the midpoint PED = 1. Watch this happen in the next tab.</p>
+
+  <h3>PED and total revenue</h3>
+  <div class="formula">Total revenue (= total expenditure) = price × quantity</div>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Price rises</th><th>Price falls</th></tr>
+    <tr><td><b>Elastic</b> (PED &gt; 1)</td><td>Revenue <b>falls</b></td><td>Revenue <b>rises</b></td></tr>
+    <tr><td><b>Unitary</b> (PED = 1)</td><td>No change</td><td>No change</td></tr>
+    <tr><td><b>Inelastic</b> (PED &lt; 1)</td><td>Revenue <b>rises</b></td><td>Revenue <b>falls</b></td></tr>
+  </table></div>
+
+  <h2>Income elasticity of demand</h2>
+  <div class="tw"><table class="t">
+    <tr><th>YED</th><th>Type of good</th><th>Example</th></tr>
+    <tr><td>Positive and greater than 1</td><td>Normal, <b>luxury</b> (income elastic)</td><td>Overseas holidays, restaurant meals</td></tr>
+    <tr><td>Positive and between 0 and 1</td><td>Normal, <b>necessity</b> (income inelastic)</td><td>Bread, basic clothing</td></tr>
+    <tr><td>Negative</td><td><b>Inferior</b> good</td><td>Own-brand "value" ranges, bus travel in a rich economy</td></tr>
+  </table></div>
+  <p>The sign matters most for YED. Positive means demand rises with income; negative means it falls.</p>
+
+  <h2>Cross elasticity of demand</h2>
+  <div class="tw"><table class="t">
+    <tr><th>XED</th><th>Relationship</th><th>Example</th></tr>
+    <tr><td>Positive</td><td><b>Substitutes</b>. Price of B up, demand for A up. A larger number means closer substitutes.</td><td>Tea and coffee</td></tr>
+    <tr><td>Negative</td><td><b>Complements</b>. Price of B up, demand for A down. A larger number means a stronger link.</td><td>Printers and ink</td></tr>
+    <tr><td>Zero or very close</td><td>Unrelated</td><td>Bananas and bicycles</td></tr>
+  </table></div>
+
+  <h2>Why elasticity matters for decisions</h2>
+  <div class="grid2">
+    <div class="card"><h3>Firms</h3><ul><li><b>Pricing:</b> raise price on inelastic products to raise revenue; cut price on elastic ones.</li><li><b>Forecasting:</b> YED tells a firm how sales will respond to a boom or a recession.</li><li><b>Product mix:</b> XED shows how a rival's price change, or a complementary product, affects sales.</li></ul></div>
+    <div class="card"><h3>Governments</h3><ul><li><b>Indirect taxes:</b> inelastic goods raise more revenue and cut consumption less.</li><li><b>Planning:</b> YED helps predict demand for services as incomes grow.</li><li><b>Competition policy:</b> XED can help define a market.</li></ul></div>
+  </div>
+  <p class="note">Elasticity of <b>supply</b> is covered separately in Chapter 9.</p>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <h2>1 · Why PED changes along a straight demand curve</h2>
+  <p>Press Play, or use the numbered steps to jump around.</p>
+  <div id="stA"></div>
+
+  <h2>2 · PED and total revenue</h2>
+  <div id="stB"></div>
+
+  <h2>3 · Cross elasticity: substitutes and complements</h2>
+  <div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Change the price, change the revenue</h2>
+  <p>Start from a price of $10 and 1,000 units. Choose a price change and a PED, then watch quantity and total revenue.</p>
+  <div class="grid2">
+    <div class="card"><div id="sl1"></div><div id="sl2"></div>
+      <div class="readout"><div><small>% change in price</small><strong id="r1"></strong></div><div><small>% change in quantity</small><strong id="r2"></strong></div><div><small>Revenue before</small><strong id="r3"></strong></div><div><small>Revenue after</small><strong id="r4"></strong></div></div>
+      <div class="verdict" id="v1"></div></div>
+    <div class="card"><svg id="lab1" viewBox="0 0 420 330" role="img" aria-label="Total revenue before and after a price change"></svg><p class="note">Dashed box: revenue before. Filled box: revenue after. Revenue is the area, price × quantity.</p></div>
+  </div>
+
+  <h2>Lab 2 · Slide along the demand curve</h2>
+  <p>Demand is Q = 100 − 10P. Move the price and see PED and revenue change.</p>
+  <div>
+    <div class="card"><div id="sl3"></div>
+      <div class="readout"><div><small>Quantity</small><strong id="q1"></strong></div><div><small>PED (ignoring sign)</small><strong id="q2"></strong></div><div><small>Total revenue</small><strong id="q3"></strong></div></div>
+      <div class="verdict" id="v2"></div></div>
+    <div class="card"><svg id="lab2" viewBox="0 0 760 400" role="img" aria-label="Demand curve with total revenue box"></svg></div>
+  </div>
+
+  <h2>Lab 3 · Income and cross elasticity</h2>
+  <div class="grid2">
+    <div class="card"><h3>Income elasticity</h3><div id="sl4"></div><div id="sl5"></div>
+      <div class="readout"><div><small>% change in demand</small><strong id="y1"></strong></div></div><div class="verdict" id="v3"></div></div>
+    <div class="card"><h3>Cross elasticity</h3><div id="sl6"></div><div id="sl7"></div>
+      <div class="readout"><div><small>% change in demand for A</small><strong id="x1"></strong></div></div><div class="verdict" id="v4"></div></div>
+  </div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Elastic or inelastic?</h2>
+  <p>Drag each product into the box where its demand is most likely to sit. Tap an item, then tap a box if dragging is awkward.</p>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the value to its meaning</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Put the PED calculation in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Calculations</h2>
+  <p>Give percentages to one decimal place where needed. Enter PED and XED as numbers; for PED ignore the sign.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are explained in general terms so they stay true. Look up current figures before quoting numbers in an exam.</p>
+  <div class="rw"><h3>Airlines and Jet Airways (India)</h3><p>Fierce competition on domestic routes meant many close substitutes and low fares, so demand for any one airline is highly price elastic. When fares are cut to win passengers from rivals or from the railways, losses mount if costs are not covered. Business travellers, who must travel at set times, are less price sensitive than leisure travellers.</p><div class="use"><b>Exam use:</b> a strong application for "substitutes" and for why a firm cannot raise prices without losing customers. Mention the time period: a last-minute business trip is more inelastic.</div></div>
+  <div class="rw"><h3>Cigarettes and tobacco taxes</h3><p>Demand is inelastic because the product is addictive and has few substitutes. A tax on tobacco therefore raises a lot of revenue for the government but reduces consumption by less than the rise in price. Demand tends to become more elastic over time as people quit.</p><div class="use"><b>Exam use:</b> shows why governments favour taxing inelastic goods for revenue, and why a tax may fail as a way of cutting consumption. Links to Chapter 13.</div></div>
+  <div class="rw"><h3>Petrol</h3><p>In the short run demand is inelastic: most people still need to commute. In the long run people can buy smaller or electric vehicles, move closer to work, or use public transport, so demand becomes more elastic.</p><div class="use"><b>Exam use:</b> the standard illustration of "time period" as a determinant of PED.</div></div>
+  <div class="rw"><h3>Luxury goods and overseas holidays</h3><p>When incomes rise, spending on overseas holidays and designer goods tends to rise by a bigger percentage (YED above 1). In a recession these are cut first.</p><div class="use"><b>Exam use:</b> a firm in a luxury market can forecast sales to be volatile over the economic cycle. A firm selling necessities faces steadier demand.</div></div>
+  <div class="rw"><h3>"Value" and own-brand ranges</h3><p>Supermarket basic ranges often sell more when incomes fall. That is the behaviour of an inferior good (negative YED). As incomes recover, shoppers move to premium brands.</p><div class="use"><b>Exam use:</b> use it to explain why the sign of YED matters, and why a retailer might stock more value lines during a downturn.</div></div>
+  <div class="rw"><h3>Printers and ink cartridges</h3><p>Complements have negative XED. A fall in the price of printers raises demand for compatible ink. Some firms sell the printer cheaply and earn money on the ink.</p><div class="use"><b>Exam use:</b> a clear example for cross elasticity, and for why a firm cares about the price of a complementary product.</div></div>
+  <div class="rw"><h3>Streaming services</h3><p>Rival streaming services are close substitutes, so XED is positive and high. A price rise by one is likely to increase demand for the others.</p><div class="use"><b>Exam use:</b> shows how XED helps a firm decide how closely to follow a rival's price.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for the reminders, the model answer and the common mistakes. Model answers are colour-coded to the mark scheme.</p>
+  <div class="key" aria-label="Colour key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Define</span> <span class="mark">2 marks</span> Define price elasticity of demand.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>A definition earns marks for the measure and for what it responds to. Two marks means two ideas. Add the formula if you can.</div>
+    <div class="ans"><span class="mk k" data-t="K">Price elasticity of demand is a measure of the responsiveness of the quantity demanded of a product</span> <span class="mk k" data-t="K">to a change in its own price, calculated as the percentage change in quantity demanded divided by the percentage change in price.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "how much demand changes when price changes". That leaves out <i>quantity demanded</i>, <i>percentage</i> and <i>responsiveness</i>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate and explain</span> <span class="mark">4 marks</span> The price of a product rises from $100 to $110. Quantity demanded falls from 800 to 760 units. Calculate PED and explain what it shows.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two marks for the calculation, two for the interpretation. Show every step: a correct answer with no working may only score part of the marks. Divide by the <b>original</b> figures.</div>
+    <div class="ans"><span class="mk k" data-t="K">PED = %ΔQd ÷ %ΔP.</span> <span class="mk a" data-t="A">%ΔP = 10 ÷ 100 × 100 = +10%. %ΔQd = −40 ÷ 800 × 100 = −5%. PED = −5 ÷ 10 = −0.5, or 0.5 ignoring the sign.</span> <span class="mk n" data-t="N">Since 0.5 is less than 1, demand is price inelastic: a 10% price rise causes a smaller, 5%, fall in quantity demanded.</span> <span class="mk n" data-t="N">Total revenue rises, from $80,000 to $83,600, because the percentage fall in quantity is smaller than the percentage rise in price.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Using the new price as the base, or saying "inelastic" with no comparison to 1.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">6 marks</span> Explain two factors that influence the price elasticity of demand for a product.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>"Two factors" means two developed paragraphs. For each: name the factor (K), say which way it pushes PED (A/N), and give the chain of reasoning. Use a product as an example.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">One factor is the availability of substitutes.</span> <span class="mk n" data-t="N">If consumers can easily switch to close alternatives when the price rises, the quantity demanded will fall by a larger percentage than the price rose, so demand is elastic.</span> <span class="mk a" data-t="A">A specific brand of cola has many rivals, so a small price rise sends buyers elsewhere, whereas demand for all soft drinks taken together is less elastic.</span></p>
+    <p><span class="mk k" data-t="K">A second factor is the time period.</span> <span class="mk n" data-t="N">In the short run consumers may be unable to change their habits or find alternatives, so demand is inelastic. Over a longer period they can adapt, so demand becomes more elastic.</span> <span class="mk a" data-t="A">Petrol is inelastic for a commuter in the short run, but if prices stay high they may buy a more efficient car.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Listing five factors in one line each. Two well-developed factors beat five names.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Analyse</span> <span class="mark">6 marks</span> Analyse how knowledge of income elasticity of demand might help a clothing retailer.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>"Analyse" needs a chain: what YED shows, then what the retailer does with that, then the consequence. Application to clothing keeps you in the context.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">Income elasticity of demand measures how responsive demand is to a change in consumers' incomes.</span> <span class="mk a" data-t="A">If a retailer sells designer clothing, YED is likely to be positive and greater than 1, so demand rises by a larger percentage than income in a boom and falls sharply in a recession.</span> <span class="mk n" data-t="N">Knowing this, the retailer can forecast sales over the economic cycle and plan stock, staffing and finance, for example by holding less stock when a downturn is forecast to avoid unsold goods.</span></p>
+    <p><span class="mk n" data-t="N">If the retailer also sells a basic range with low or negative YED, it can expect steadier or even rising sales in a recession, so it may shift its product mix towards those lines when incomes fall.</span> <span class="mk n" data-t="N">This reduces risk and helps the firm remain profitable over the cycle.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Assess</span> <span class="mark">12 marks</span> Assess whether a firm should reduce the price of its product to increase its total revenue.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Open each paragraph with the question's wording. Finish each paragraph with a short evaluative point and a link back to the question. Give a final judgement that says "it depends" and then says <b>on what</b>.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">A firm's total revenue is price multiplied by quantity sold, and its response to a price cut depends on price elasticity of demand, which is the percentage change in quantity demanded divided by the percentage change in price.</span></p>
+    <p><span class="mk n" data-t="N">A firm should reduce the price of its product to increase total revenue if demand is price elastic.</span> <span class="mk n" data-t="N">When PED is greater than 1, a price cut produces a larger percentage rise in quantity demanded, so the extra units sold more than offset the lower price per unit.</span> <span class="mk a" data-t="A">For example, a 10% price cut with PED of 2 raises quantity by 20%, so revenue rises by around 8%.</span> <span class="mk e" data-t="E">However, this depends on the firm being able to meet the extra demand; if it has no spare capacity, the price cut may only create shortages.</span> This means a price cut is a sensible strategy only for a firm that faces elastic demand and can supply more.</p>
+    <p><span class="mk n" data-t="N">A firm should not reduce the price of its product to increase total revenue if demand is price inelastic.</span> <span class="mk n" data-t="N">When PED is less than 1, the percentage rise in quantity is smaller than the percentage fall in price, so revenue falls. In that case the firm would do better to raise price.</span> <span class="mk a" data-t="A">A firm selling a necessity or a strongly branded product, such as a market-leading brand, is likely to be in this position.</span> <span class="mk e" data-t="E">Even so, a firm may have objectives other than short-run revenue, such as winning market share, which could justify a cut.</span> So a price cut would be the wrong tool for a firm with inelastic demand.</p>
+    <p><span class="mk e" data-t="E">Whether revenue rises also depends on the size of the price change and the time period. PED varies along a demand curve, and demand is usually more elastic in the long run, so a cut that fails to raise revenue now may work later. Rivals may also match the cut, making demand less elastic than expected.</span></p>
+    <p><span class="mk e" data-t="E">Overall, a firm should cut price only if it has good evidence that demand is elastic over the range of prices involved and it can supply the extra output. If demand is inelastic it should do the opposite. The firm's main task is therefore to estimate PED for its own product before deciding.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "price cuts increase revenue because people buy more". That ignores that revenue depends on the <i>size</i> of the quantity response relative to the price fall.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Show the formula and the working.</b> Method marks are available even if your final answer is wrong.</li>
+    <li><b>Always divide by the original value</b> when working out percentage changes.</li>
+    <li><b>Ignore the minus sign for PED</b> but keep it for YED and XED, because their sign carries the meaning.</li>
+    <li><b>Compare the answer with 1.</b> "PED = 0.5" is incomplete until you say it is below 1, so inelastic.</li>
+    <li><b>Link PED to revenue</b> whenever a price change appears. It is the most common application.</li>
+    <li><b>Say which good, which market and which time period.</b> Elasticity depends on all three.</li>
+    <li><b>Do not confuse elasticity with slope.</b> A straight line has a constant slope but a changing PED.</li>
+    <li><b>Use real examples</b> and say what the example shows about the determinant you are discussing.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Define</td><td>A precise meaning, with the key terms.</td></tr>
+    <tr><td>Calculate</td><td>Formula, substitution, answer with units or sign.</td></tr>
+    <tr><td>Explain</td><td>A reason with a developed link, usually with an example.</td></tr>
+    <tr><td>Analyse</td><td>A chain of cause and effect, applied to the context.</td></tr>
+    <tr><td>Assess / Discuss</td><td>Arguments on more than one side and a justified judgement.</td></tr>
+  </table></div>
+
+  <h2>Keyword flashcards</h2>
+  <p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => show(i));
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="decimal" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+window.Lib = { initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+
+/* ---------- shared demand-curve chart: Q = 100 - 10P ---------- */
+function demandChart(p, o = {}) {
+  const X = (q) => 80 + 6 * q, Y = (pr) => 350 - 30 * pr, q = 100 - 10 * p;
+  let s = "";
+  if (o.zone) {
+    s += SV.rect(X(0), Y(10), X(100) - X(0), Y(5) - Y(10), "f2", { opacity: o.zone * 0.5 });
+    s += SV.rect(X(0), Y(5), X(100) - X(0), Y(0) - Y(5), "f3", { opacity: o.zone * 0.6 });
+    s += SV.text(X(62), Y(7.6), "Elastic: PED &gt; 1", "lbl bd t2", { opacity: o.zone });
+    s += SV.text(X(62), Y(2.2), "Inelastic: PED &lt; 1", "lbl bd t3", { opacity: o.zone });
+    s += SV.line(X(0), Y(5), X(100), Y(5), "gr", { opacity: o.zone });
+    s += SV.text(X(2), Y(5) - 6, "PED = 1 at the midpoint", "sm", { opacity: o.zone });
+  }
+  s += SV.rect(X(0), Y(p), X(q) - X(0), Y(0) - Y(p), "f1");
+  s += SV.line(X(0), Y(10), X(0), Y(0)) + SV.line(X(0), Y(0), X(100), Y(0));
+  s += SV.text(X(0) - 8, Y(10) - 8, "Price", "sm", { "text-anchor": "start" }) + SV.text(X(100) - 20, Y(0) + 26, "Quantity", "sm");
+  s += SV.line(X(0), Y(10), X(100), Y(0), "c1") + SV.text(X(88), Y(1.2), "D", "lbl bd t1");
+  s += SV.line(X(0), Y(p), X(q), Y(p), "gr") + SV.line(X(q), Y(p), X(q), Y(0), "gr");
+  s += SV.circle(X(q), Y(p), 7, "dot2");
+  s += SV.text(X(0) - 10, Y(p) + 4, "P=" + Lib.fmtN(p, 1), "lbl", { "text-anchor": "end" }) + SV.text(X(q), Y(0) + 18, "Q=" + Lib.fmtN(q, 0), "lbl", { "text-anchor": "middle" });
+  const ped = p / (10 - p);
+  s += SV.text(X(q / 2), (Y(p) + Y(0)) / 2 + 4, "Revenue = " + Lib.fmtN(p * q, 0), "lbl bd t1", { "text-anchor": "middle" });
+  s += SV.text(X(70), Y(9.2), "PED at this point = " + Lib.fmtN(ped, 2), "lbl bd", { "text-anchor": "middle" });
+  return s;
+}
+
+/* ---------- 1. stepper: PED along a straight line ---------- */
+Lib.stepper($("#stA"), {
+  w: 760, h: 400, label: "Demand curve showing elastic, unit elastic and inelastic zones", base: { p: 9, zone: 0 },
+  draw: (s) => demandChart(s.p, { zone: s.zone }),
+  steps: [
+    { cap: "This demand curve is a straight line, so its <b>slope is the same everywhere</b>. But PED uses <b>percentages</b>, and that changes the picture.", s: { p: 9, zone: 0 } },
+    { cap: "<b>High price, low quantity.</b> At P = 8 the quantity is 20. A rise of 12.5% (8 to 9) cuts Q from 20 to 10: a 50% fall. PED = 50 ÷ 12.5 = <b>4</b>. Elastic.", s: { p: 8, zone: 0 } },
+    { cap: "<b>The midpoint.</b> At P = 5 the quantity is 50. A 20% price rise (5 to 6) cuts Q from 50 to 40: a 20% fall. PED = <b>1</b>. This is where total revenue is highest.", s: { p: 5, zone: 0 } },
+    { cap: "<b>Low price, high quantity.</b> At P = 2 the quantity is 80. A 50% rise (2 to 3) cuts Q from 80 to 70: only a 12.5% fall. PED = <b>0.25</b>. Inelastic.", s: { p: 2, zone: 0 } },
+    { cap: "<b>Summary:</b> elastic in the top half, unit elastic at the midpoint, inelastic in the bottom half. One curve, many elasticities.", s: { p: 5, zone: 1 } },
+  ],
+});
+
+/* ---------- 2. stepper: PED and total revenue ---------- */
+function revPanel(x0, title, k, Qend, cls) {
+  const W = 300, H = 240, qx = (q) => x0 + (W * q) / 120, py = (p) => 300 - (H * p) / 12;
+  const P = 10 + k, Q = 100 + (Qend - 100) * k;
+  let s = SV.line(x0, py(12), x0, py(0)) + SV.line(x0, py(0), x0 + W, py(0));
+  s += SV.rect(qx(0), py(P), qx(Q) - qx(0), py(0) - py(P), cls);
+  s += `<rect x="${qx(0)}" y="${py(10)}" width="${qx(100) - qx(0)}" height="${py(0) - py(10)}" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="6 5" opacity=".8"/>`;
+  s += SV.text(x0 + W / 2, 28, title, "lbl bd", { "text-anchor": "middle" });
+  s += SV.text(x0 + 6, py(12) + 12, "Price", "sm");
+  s += SV.text(x0 + 6, py(0) + 16, "Quantity", "sm");
+  s += SV.text(x0 + 8, py(10) - 6, "P = " + Lib.fmtN(P, 1), "sm", { "text-anchor": "start" });
+  s += SV.text(qx(Q), py(0) + 16, "Q = " + Lib.fmtN(Q, 0), "sm", { "text-anchor": "middle" });
+  s += SV.text(x0 + W / 2, 336, "Revenue = " + Lib.fmtN(P * Q, 0), "lbl bd", { "text-anchor": "middle" });
+  return s;
+}
+Lib.stepper($("#stB"), {
+  w: 760, h: 350, label: "Total revenue before and after a 10% price rise for elastic and inelastic demand", base: { ka: 0, kb: 0, v: 0 },
+  draw: (s) => revPanel(50, "Elastic demand (PED = 2)", s.ka, 80, "f2") + revPanel(420, "Inelastic demand (PED = 0.4)", s.kb, 96, "f3"),
+  steps: [
+    { cap: "Two products start at the same position: price $10, quantity 100, revenue <b>$1,000</b>. The dashed box shows this. <b>Revenue is the area.</b>", s: { ka: 0, kb: 0 } },
+    { cap: "<b>Elastic demand.</b> Price rises 10%, so PED = 2 means quantity falls 20%. The new box is smaller: the price rise is outweighed by the lost sales, so revenue <b>falls</b> to $880.", s: { ka: 1, kb: 0 } },
+    { cap: "<b>Inelastic demand.</b> The same 10% rise with PED = 0.4 cuts quantity only 4%. The box gets taller by more than it loses in width: revenue <b>rises</b> to $1,056.", s: { ka: 1, kb: 1 } },
+    { cap: "<b>Rule:</b> if demand is elastic, a price <i>rise</i> lowers revenue. If it is inelastic, a price <i>rise</i> raises revenue. A price <i>cut</i> does the opposite.", s: { ka: 1, kb: 1, v: 1 } },
+  ],
+});
+
+/* ---------- 3. stepper: XED shifts ---------- */
+function xedPanel(x0, title, k, dir, labelA, labelB, ok) {
+  const X = (q) => x0 + 2.6 * q, Y = (p) => 280 - 2.2 * p, sh = dir * 28 * k;
+  let s = SV.line(x0, Y(100), x0, Y(0)) + SV.line(x0, Y(0), x0 + 270, Y(0));
+  s += SV.text(x0 + 4, Y(100) + 4, "Price of " + labelA, "sm") + SV.text(x0 + 266, Y(0) + 22, "Quantity of " + labelA, "sm", { "text-anchor": "end" });
+  s += SV.line(X(8), Y(90), X(88), Y(10), "c1") + SV.text(X(90), Y(8), "D₀", "lbl bd t1");
+  s += SV.line(X(8) + sh * 2.6 / 2.6, Y(90), X(88) + sh * 2.6 / 2.6, Y(10), "c2", { opacity: k }) + SV.text(X(8) + sh + 8, Y(90) - 8, "D₁", "lbl bd t2", { opacity: k });
+  s += SV.text(x0 + 135, 24, title, "lbl bd", { "text-anchor": "middle" });
+  s += SV.text(x0 + 135, 322, ok, "lbl bd", { "text-anchor": "middle", opacity: k });
+  return s;
+}
+Lib.stepper($("#stC"), {
+  w: 760, h: 340, label: "Demand curves shifting after the price of a substitute and a complement rise", base: { ks: 0, kc: 0, note: 0 },
+  draw: (s) => xedPanel(40, "Substitutes: tea and coffee", s.ks, +1, "coffee", "tea", "Demand shifts right, XED positive") + xedPanel(410, "Complements: printers and ink", s.kc, -1, "ink", "printers", "Demand shifts left, XED negative"),
+  steps: [
+    { cap: "Two pairs of related goods. In each graph the line is today's demand for the good named on the axis.", s: { ks: 0, kc: 0 } },
+    { cap: "<b>Substitutes.</b> The price of <b>tea</b> rises 10%. Some tea drinkers switch, so demand for <b>coffee</b> shifts <b>right</b>, say by 6%. XED = +6 ÷ +10 = <b>+0.6</b>.", s: { ks: 1, kc: 0 } },
+    { cap: "<b>Complements.</b> The price of <b>printers</b> rises 10%. Fewer printers are bought, so demand for <b>ink</b> shifts <b>left</b>, say by 8%. XED = −8 ÷ +10 = <b>−0.8</b>.", s: { ks: 1, kc: 1 } },
+    { cap: "<b>The sign tells you the relationship</b>: positive for substitutes, negative for complements. <b>The size tells you how strong</b> the link is.", s: { ks: 1, kc: 1 } },
+  ],
+});
+
+/* ---------- Lab 1: price change and revenue ---------- */
+const s1 = Lib.slider($("#sl1"), { id: "a1", label: "Price change (%)", min: -30, max: 30, step: 1, value: 10, fmt: (v) => (v > 0 ? "+" : "") + v + "%", onInput: lab1 });
+const s2 = Lib.slider($("#sl2"), { id: "a2", label: "PED (ignoring sign)", min: 0, max: 4, step: 0.1, value: 0.5, fmt: (v) => v.toFixed(1), onInput: lab1 });
+function lab1() {
+  if (!$("#a1") || !$("#a2")) return;
+  const pc = +$("#a1").value, ped = +$("#a2").value;
+  const P1 = 10 * (1 + pc / 100), dq = -ped * pc, Q1 = Math.max(0, 1000 * (1 + dq / 100));
+  const R0 = 10000, R1 = P1 * Q1;
+  $("#r1").textContent = (pc > 0 ? "+" : "") + pc + "%"; $("#r2").textContent = (dq > 0 ? "+" : "") + Lib.fmtN(dq, 1) + "%";
+  $("#r3").textContent = "$" + Lib.fmtN(R0, 0); $("#r4").textContent = "$" + Lib.fmtN(R1, 0);
+  const kind = ped === 0 ? "perfectly inelastic" : ped < 1 ? "inelastic" : ped === 1 ? "unit elastic" : "elastic";
+  const dir = Math.abs(R1 - R0) < 1 ? "stays the same" : R1 > R0 ? "rises" : "falls";
+  $("#v1").textContent = pc === 0 ? "Choose a price change." : `Demand is ${kind} (PED = ${ped.toFixed(1)}). A ${Math.abs(pc)}% price ${pc > 0 ? "rise" : "cut"} means total revenue ${dir}.`;
+  const X = (q) => 50 + (330 * q) / 1400, Y = (p) => 290 - (250 * p) / 14;
+  let s = SV.line(50, Y(14), 50, Y(0)) + SV.line(50, Y(0), 390, Y(0)) + SV.text(54, 22, "Price", "sm") + SV.text(388, 316, "Quantity", "sm", { "text-anchor": "end" });
+  s += SV.rect(X(0), Y(P1), X(Q1) - X(0), Y(0) - Y(P1), pc > 0 === R1 > R0 ? "f3" : "f2");
+  s += `<rect x="${X(0)}" y="${Y(10)}" width="${X(1000) - X(0)}" height="${Y(0) - Y(10)}" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="6 5"/>`;
+  s += SV.text(210, 46, `Revenue: $${Lib.fmtN(R0, 0)} to $${Lib.fmtN(R1, 0)}`, "lbl bd", { "text-anchor": "middle" });
+  $("#lab1").innerHTML = s;
+}
+lab1();
+
+/* ---------- Lab 2: slide along the curve ---------- */
+Lib.slider($("#sl3"), { id: "a3", label: "Price (P)", min: 0.5, max: 9.5, step: 0.1, value: 8, fmt: (v) => "$" + v.toFixed(1), onInput: (p) => {
+  const q = 100 - 10 * p, ped = p / (10 - p), tr = p * q;
+  $("#q1").textContent = Lib.fmtN(q, 0); $("#q2").textContent = Lib.fmtN(ped, 2); $("#q3").textContent = Lib.fmtN(tr, 0);
+  $("#v2").textContent = Math.abs(ped - 1) < 0.05 ? "Unit elastic: revenue is at its maximum. Cutting or raising the price lowers it." : ped > 1 ? "Elastic: cutting the price would raise revenue." : "Inelastic: raising the price would raise revenue.";
+  $("#lab2").innerHTML = demandChart(p, { zone: 1 });
+} });
+
+/* ---------- Lab 3: YED and XED ---------- */
+function yedRun() {
+  const dy = +$("#a4").value, y = +$("#a5").value, d = y * dy;
+  $("#y1").textContent = (d > 0 ? "+" : "") + Lib.fmtN(d, 1) + "%";
+  const t = y < 0 ? "an inferior good: demand falls as income rises" : y > 1 ? "a normal good and a luxury: income elastic" : y > 0 ? "a normal good and a necessity: income inelastic" : "no response to income";
+  $("#v3").textContent = `With YED = ${y.toFixed(1)} this is ${t}.`;
+}
+function xedRun() {
+  const dp = +$("#a6").value, x = +$("#a7").value, d = x * dp;
+  $("#x1").textContent = (d > 0 ? "+" : "") + Lib.fmtN(d, 1) + "%";
+  const t = x > 0.05 ? "substitutes: a rise in B's price raises demand for A" : x < -0.05 ? "complements: a rise in B's price reduces demand for A" : "unrelated goods";
+  $("#v4").textContent = `With XED = ${x.toFixed(1)} the goods are ${t}.`;
+}
+Lib.slider($("#sl4"), { id: "a4", label: "Change in income (%)", min: -20, max: 20, step: 1, value: 10, fmt: (v) => (v > 0 ? "+" : "") + v + "%", onInput: () => $("#a5") && yedRun() });
+Lib.slider($("#sl5"), { id: "a5", label: "YED", min: -2, max: 3, step: 0.1, value: 1.5, fmt: (v) => v.toFixed(1), onInput: yedRun });
+Lib.slider($("#sl6"), { id: "a6", label: "Change in price of good B (%)", min: -20, max: 20, step: 1, value: 10, fmt: (v) => (v > 0 ? "+" : "") + v + "%", onInput: () => $("#a7") && xedRun() });
+Lib.slider($("#sl7"), { id: "a7", label: "XED", min: -3, max: 3, step: 0.1, value: 0.6, fmt: (v) => v.toFixed(1), onInput: xedRun });
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), {
+  prompt: "Where would demand for each of these most likely sit?",
+  buckets: [{ label: "Price elastic (PED &gt; 1)" }, { label: "Price inelastic (PED &lt; 1)" }],
+  items: [
+    { text: "One brand of cola with many rivals", b: 0 }, { text: "Cigarettes (addictive, few substitutes)", b: 1 },
+    { text: "An overseas holiday (large share of income)", b: 0 }, { text: "Salt (tiny share of income)", b: 1 },
+    { text: "Petrol for a commuter, in the short run", b: 1 }, { text: "A budget airline seat on a busy route", b: 0 },
+    { text: "Life-saving medicine with no alternative", b: 1 }, { text: "Fashion trainers, long-run decision", b: 0 },
+    { text: "Cooking oil bought weekly", b: 1 }, { text: "Restaurant meals, long run", b: 0 },
+  ],
+  done: "You can justify each one with substitutes, share of income, time or necessity.",
+});
+Lib.match($("#m1"), {
+  prompt: "Drag each meaning onto the value it fits.",
+  pairs: [
+    ["PED = 0", "Perfectly inelastic: quantity does not respond to price"],
+    ["PED = 0.4", "Inelastic: %ΔQ is smaller than %ΔP"],
+    ["PED = 2.5", "Elastic: %ΔQ is bigger than %ΔP"],
+    ["YED = +2.0", "Normal good and a luxury"],
+    ["YED = −0.5", "Inferior good"],
+    ["XED = +1.8", "Close substitutes"],
+    ["XED = −1.2", "Complements"],
+  ],
+  done: "Sign and size together tell the story.",
+});
+Lib.order($("#o1"), {
+  prompt: "Drag, or use the arrows, to put these steps in the order you would write them.",
+  items: [
+    "Write the formula: PED = %ΔQd ÷ %ΔP",
+    "Work out the change in quantity and the change in price (new minus original)",
+    "Convert each change to a percentage of its original value",
+    "Divide the % change in quantity by the % change in price",
+    "Ignore the minus sign and state the value",
+    "Compare with 1 and say whether demand is elastic or inelastic",
+    "State what this means for total revenue",
+  ],
+  done: "A full-marks method.",
+});
+Lib.calc($("#c1"), { qs: [
+  { q: "Price rises from $100 to $105 and quantity demanded falls from 2,000 to 1,950 units per week. Calculate PED (ignore the sign).", a: 0.5, tol: 0.01, hint: "%ΔQ = −50 ÷ 2000 × 100. %ΔP = 5 ÷ 100 × 100.", sol: "%ΔQ = −50 ÷ 2,000 × 100 = −2.5%. %ΔP = 5 ÷ 100 × 100 = +5%. PED = −2.5 ÷ 5 = −0.5, so <b>0.5</b>. Inelastic." },
+  { q: "Price falls from $55.50 to $54.95 and quantity demanded rises from 5,000 to 6,000. Calculate PED (ignore the sign, 1 d.p.).", a: 20.2, tol: 0.15, hint: "%ΔP is a small number: −0.55 ÷ 55.50.", sol: "%ΔQ = +1,000 ÷ 5,000 = +20%. %ΔP = −0.55 ÷ 55.50 = −0.99%. PED = 20 ÷ 0.99 ≈ <b>20.2</b>. Very elastic." },
+  { q: "Income rises by 8% and demand for restaurant meals rises by 12%. Calculate YED.", a: 1.5, tol: 0.01, sol: "YED = +12 ÷ +8 = <b>+1.5</b>. Positive and above 1: a normal good and a luxury." },
+  { q: "The price of tea rises by 10% and demand for coffee rises by 4%. Calculate XED.", a: 0.4, tol: 0.01, sol: "XED = +4 ÷ +10 = <b>+0.4</b>. Positive: the goods are substitutes, though the link is weak." },
+  { q: "The price of PCs rises 5% and the quantity demanded of a compatible software package falls 10%. Calculate XED (keep the sign).", a: -2, tol: 0.01, ph: "e.g. -1.5", sol: "XED = −10 ÷ +5 = <b>−2</b>. Negative: complements, and a strong link." },
+  { q: "A product sells 500 units a week at $20. PED is 0.3. The firm raises the price to $22. Calculate the new total revenue ($).", a: 10670, tol: 1, hint: "Price rise 10%. Quantity falls by 0.3 × 10% = 3%.", sol: "%ΔP = +10%. %ΔQ = −0.3 × 10 = −3%, so Q = 485. Revenue = 22 × 485 = <b>$10,670</b>, up from $10,000." },
+  { q: "A firm sells 200 units at $50. PED is 2.0. It cuts the price by 10%. Calculate the new total revenue ($).", a: 10800, tol: 1, sol: "%ΔQ = +20%, so Q = 240. New price = $45. Revenue = 45 × 240 = <b>$10,800</b>, up from $10,000." },
+] });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Which PED value shows the most price-elastic demand?", opts: ["0.2", "0.9", "1.0", "3.4"], a: 3, why: "The larger the number (ignoring sign), the more responsive demand is to price." },
+  { q: "A firm raises its price and total revenue rises. This suggests demand is:", opts: ["Price elastic", "Price inelastic", "Perfectly elastic", "Income elastic"], a: 1, why: "Revenue rises with a price rise only when the percentage fall in quantity is smaller than the price rise, so PED is below 1." },
+  { q: "Which is a likely cause of more elastic demand in the long run?", opts: ["Fewer substitutes appear", "Consumers have time to adjust", "The good becomes addictive", "Price falls to zero"], a: 1, why: "Over time consumers find alternatives and change habits." },
+  { q: "A good has YED = −0.7. It is:", opts: ["A luxury", "A normal necessity", "An inferior good", "A complement"], a: 2, why: "A negative YED means demand falls as income rises: an inferior good." },
+  { q: "XED between two goods is −1.5. They are:", opts: ["Close substitutes", "Complements", "Unrelated", "Both inferior"], a: 1, why: "Negative XED means a rise in the price of one reduces demand for the other." },
+  { q: "On a straight-line downward-sloping demand curve, PED is:", opts: ["Constant along the curve", "Highest at low prices", "Greater than 1 at high prices", "Zero at the midpoint"], a: 2, why: "At high prices and low quantities, percentage changes in quantity are large: demand is elastic." },
+  { q: "Price falls 10% and quantity rises 25%. Demand is:", opts: ["Elastic, and revenue rises", "Inelastic, and revenue rises", "Elastic, and revenue falls", "Unit elastic"], a: 0, why: "PED = 2.5, which is above 1, and a price cut with elastic demand raises revenue." },
+  { q: "Why do governments often tax goods with inelastic demand?", opts: ["Consumers buy much more", "Revenue is high and quantity falls little", "Supply is perfectly elastic", "Producers pay all of the tax"], a: 1, why: "With inelastic demand the quantity falls by little, so the tax base is largely maintained." },
+] });
+Lib.cards($("#fc1"), { cards: [
+  ["Elasticity", "A measure of the responsiveness of one variable to a change in another, ceteris paribus."],
+  ["Price elasticity of demand (PED)", "%ΔQuantity demanded ÷ %ΔPrice of the product."],
+  ["Price elastic", "PED greater than 1: quantity changes by a larger percentage than price."],
+  ["Price inelastic", "PED less than 1: quantity changes by a smaller percentage than price."],
+  ["Unitary elasticity", "PED equal to 1: %ΔQ equals %ΔP; revenue does not change."],
+  ["Perfectly inelastic", "PED = 0. Quantity demanded does not change when price changes."],
+  ["Perfectly elastic", "PED = infinity. Demand falls to zero if price rises at all."],
+  ["Total revenue", "Price × quantity sold; equal to consumers' total expenditure."],
+  ["Income elasticity of demand (YED)", "%ΔQuantity demanded ÷ %ΔIncome."],
+  ["Normal good", "A good with positive YED: demand rises as income rises."],
+  ["Luxury good", "A normal good with YED above 1 (income elastic)."],
+  ["Inferior good", "A good with negative YED: demand falls as income rises."],
+  ["Cross elasticity of demand (XED)", "%ΔQuantity demanded of A ÷ %ΔPrice of B."],
+  ["Substitutes", "Goods with positive XED: a rise in the price of one raises demand for the other."],
+  ["Complements", "Goods with negative XED: a rise in the price of one lowers demand for the other."],
+  ["Ceteris paribus", "Other things being equal: all other influences held constant."],
+] });
+
+Lib.initTabs();
+</script>
+</body></html>

@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en"><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparative Advantage and the Gains from Trade</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+
+</style></head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">AS Level Economics · 9708 · Chapter 25</div>
+  <h1>Comparative Advantage and the Gains from Trade</h1>
+  <p class="lead">Why countries trade, why even the most efficient country gains from trade, how the terms of trade move, and what the theory leaves out.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>Countries have different <b>factor endowments</b> (land, labour, capital, enterprise, climate), so they are good at producing different things. If each country <b>specialises</b> in what it gives up least to make, then <b>trades</b>, total output rises and each country can <b>consume more than it could produce alone</b>.</p>
+  </div>
+
+  <h2>Absolute and comparative advantage</h2>
+  <div class="grid2">
+    <div class="card"><h3>Absolute advantage</h3><p>A country has an absolute advantage if it can produce <b>more of a product</b> with the same resources (or the same output with fewer resources) than another country.</p><p class="note">Example: Indonesia in rice and Brazil in coffee. It explains some trade, but not most.</p></div>
+    <div class="card"><h3>Comparative advantage</h3><p>A country has a comparative advantage if it can produce a product at a <b>lower opportunity cost</b> than another country, that is, it gives up <b>fewer other goods</b> to make it.</p><p class="note">A country can have an absolute advantage in everything and still gain from trade.</p></div>
+  </div>
+  <div class="formula">Opportunity cost of good X = quantity of Y given up ÷ quantity of X gained</div>
+
+  <h3>Worked example</h3>
+  <p>With all their resources, <b>Red</b> can make 120 coats or 240 shirts, and <b>Blue</b> can make 40 coats or 160 shirts.</p>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Max coats</th><th>Max shirts</th><th>Opp. cost of 1 coat</th><th>Opp. cost of 1 shirt</th></tr>
+    <tr><td><b>Red</b></td><td>120</td><td>240</td><td>2 shirts</td><td>0.5 coat</td></tr>
+    <tr><td><b>Blue</b></td><td>40</td><td>160</td><td>4 shirts</td><td>0.25 coat</td></tr>
+  </table></div>
+  <p>Red is better at both (<b>absolute advantage in both</b>). But a coat costs Red only 2 shirts and Blue 4. So <b>Red has the comparative advantage in coats</b>. A shirt costs Blue 0.25 coat and Red 0.5. So <b>Blue has the comparative advantage in shirts</b>.</p>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Before trade (coats, shirts)</th><th>Specialise</th><th>After trade at 1 coat = 3 shirts</th></tr>
+    <tr><td><b>Red</b></td><td>80, 80</td><td>120 coats</td><td>sells 40 coats for 120 shirts: <b>80 coats, 120 shirts</b></td></tr>
+    <tr><td><b>Blue</b></td><td>30, 40</td><td>160 shirts</td><td>sells 120 shirts for 40 coats: <b>40 coats, 40 shirts</b></td></tr>
+    <tr><td><b>World total</b></td><td>110 coats, 120 shirts</td><td>120 coats, 160 shirts</td><td>both countries end up with more</td></tr>
+  </table></div>
+  <div class="tip"><b class="h">Why it works</b>For trade to benefit both countries, the <b>exchange rate between the goods</b> must lie between the two opportunity costs: here between 2 and 4 shirts per coat. At 3, Red receives 3 shirts for each coat it sells, when making a coat at home only gives up 2 shirts. Blue pays 3 shirts for a coat that would cost it 4 shirts to make at home.</div>
+
+  <h2>Benefits of specialisation and free trade</h2>
+  <ul>
+    <li>More output in the world from <b>efficient use of resources</b>; higher living standards.</li>
+    <li><b>Lower prices and more choice</b> for consumers; cheaper raw materials and capital goods for firms.</li>
+    <li><b>Competition</b> pushes firms to cut costs and improve quality.</li>
+    <li>Larger markets allow <b>economies of scale</b>.</li>
+    <li>Free trade means no taxes, quotas, subsidies or excess red tape on imports and exports.</li>
+  </ul>
+  <h3>The trading possibility curve</h3>
+  <p>A country cannot <b>produce</b> outside its production possibility curve, but with trade it can <b>consume</b> outside it. In the Watch tab you will see the consumption point move beyond the PPC.</p>
+
+  <h2>Terms of trade</h2>
+  <div class="formula">Terms of trade index = (index of export prices ÷ index of import prices) × 100</div>
+  <ul>
+    <li><b>Rise in the index</b> = <b>favourable</b> movement: export prices have risen relative to import prices, so fewer exports buy the same imports.</li>
+    <li><b>Fall in the index</b> = <b>unfavourable</b> (a deterioration): more exports are needed to buy the same imports.</li>
+    <li><b>Causes:</b> changes in demand for and supply of exports and imports, relative inflation, and the exchange rate.</li>
+    <li>A favourable movement is not always good: if export prices rose because <b>costs</b> rose, demand for exports may fall and revenue decline.</li>
+    <li>The <b>Prebisch–Singer hypothesis</b>: terms of trade tend to move against countries that export primary products, because demand for manufactures and services rises faster than demand for primary products as incomes rise.</li>
+  </ul>
+  <div class="warn"><b class="h">Do not confuse</b>The terms of trade are about <b>prices</b>. The balance of trade is about <b>values</b> (price × quantity).</div>
+
+  <h2>Limitations of the theory</h2>
+  <ul>
+    <li><b>Transport costs</b> can wipe out the gain.</li>
+    <li><b>Resources are not perfectly mobile</b>: moving workers from shirts to coats may cause structural unemployment.</li>
+    <li><b>Constant returns are assumed</b>: doubling resources may not double output.</li>
+    <li>Governments may <b>avoid overspecialisation</b> (risky if world prices fall).</li>
+    <li>The <b>exchange rate</b> may not lie between the opportunity cost ratios.</li>
+    <li>Other governments may impose <b>trade restrictions</b>; countries often fail to adapt when comparative advantage changes.</li>
+    <li>In a world with many countries and goods, it is <b>hard to identify</b> comparative advantage.</li>
+  </ul>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <h2>1 · Specialise and trade: the Red and Blue example</h2>
+  <p>Press Play, or click the numbered steps. The curves are production possibility curves. Dots show where each country produces or consumes.</p>
+  <div id="stA"></div>
+  <h2>2 · Terms of trade</h2>
+  <div id="stB"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Who should specialise in what?</h2>
+  <p>Change what each country can make with its resources and set the exchange rate between the goods.</p>
+  <div class="card"><div class="grid2"><div><div id="g1"></div><div id="g2"></div><div id="g3"></div><div id="g4"></div><div id="g5"></div></div>
+    <div><div class="tw"><table class="t"><tr><th></th><th>Red</th><th>Blue</th></tr>
+      <tr><td>Opportunity cost of 1 coat</td><td id="a1"></td><td id="a2"></td></tr>
+      <tr><td>Opportunity cost of 1 shirt</td><td id="a3"></td><td id="a4"></td></tr>
+      <tr><td>Absolute advantage in</td><td id="a5"></td><td id="a6"></td></tr>
+      <tr><td>Comparative advantage in</td><td id="a7"></td><td id="a8"></td></tr>
+      <tr><td>Gain per coat traded (in shirts)</td><td id="a9"></td><td id="a10"></td></tr></table></div>
+      <div class="verdict" id="av"></div></div></div></div>
+
+  <h2>Lab 2 · Terms of trade</h2>
+  <div class="card"><div class="grid2"><div><div id="g6"></div><div id="g7"></div>
+      <div class="row"><button class="b" id="pr1">Demand for exports rises</button><button class="b" id="pr2">Import prices rise</button><button class="b" id="pr3">Export prices fall</button><button class="b" id="pr4">Reset</button></div></div>
+    <div><div class="readout"><div><small>Terms of trade index</small><strong id="b1"></strong></div><div><small>Exports needed for 1 unit of imports</small><strong id="b2"></strong></div></div><div class="verdict" id="bv"></div></div></div>
+    <svg id="labB" viewBox="0 0 420 200" role="img" aria-label="Export and import price indices"></svg></div>
+
+  <h2>Lab 3 · Transport costs eat the gain</h2>
+  <p>In the Red and Blue example, trade gains come from the gap between the two opportunity costs (4 − 2 = 2 shirts per coat). Add transport costs and see when trade stops being worthwhile.</p>
+  <div class="card"><div class="grid2"><div><div id="g8"></div></div>
+    <div><div class="readout"><div><small>Gap in opportunity costs</small><strong>2.0</strong></div><div><small>Transport cost per coat</small><strong id="c1"></strong></div><div><small>Net gain from trade per coat</small><strong id="c2"></strong></div></div><div class="verdict" id="cv"></div></div></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Sort the ideas</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Which country specialises in what?</h2>
+  <p>Two countries, shoes and smartphones. Resource hours needed to make 20 units: Russia needs 6 hours for 20 pairs of shoes and 3 hours for 20 smartphones. Vietnam needs 3 hours for the shoes and 1 hour for the smartphones. Which country should specialise in which product?</p>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Put the method in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Calculations</h2>
+  <div id="c1"></div>
+
+  <h2>5 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are explained in general terms so they stay accurate. Check current details before quoting figures.</p>
+  <div class="rw"><h3>Zambia and copper</h3><p>Copper makes up more than 70% of Zambia's export earnings. Large deposits, modern mining equipment and experienced miners give it an advantage that has been built up over time. Switzerland, by contrast, is known for complex financial services and sells machinery and banking services to Zambia.</p><div class="use"><b>Exam use:</b> shows factor endowments and specialisation. For evaluation, point to the risk of dependence on one commodity: a fall in copper prices hits export revenue and the terms of trade.</div></div>
+  <div class="rw"><h3>Peru and fishmeal</h3><p>Peru has fertile fishing grounds, a long tradition and skilled workers, which give it a comparative advantage in fishmeal used in animal feed. Climate changes and labour costs relative to other fishmeal producers can change that advantage.</p><div class="use"><b>Exam use:</b> comparative advantage can change over time. Distinguish it from <b>competitive advantage</b>, which is about cost, quality and price today.</div></div>
+  <div class="rw"><h3>Bangladesh and garments</h3><p>Bangladesh has large supplies of labour and has specialised in labour-intensive clothing. Even if a richer country could make garments more efficiently in absolute terms, it can gain more by using its resources in sectors where its opportunity cost is lower.</p><div class="use"><b>Exam use:</b> a classic case where a country with lower absolute productivity still has a comparative advantage.</div></div>
+  <div class="rw"><h3>Vietnam and coffee</h3><p>Vietnam's climate and land suit coffee growing and the country is among the world's largest exporters. Specialising there lets Vietnam import goods that would cost it more to make at home.</p><div class="use"><b>Exam use:</b> an example of climate and land as sources of comparative advantage.</div></div>
+  <div class="rw"><h3>Primary producers and falling terms of trade</h3><p>Many countries that depend on exporting raw materials or agricultural products have seen their export prices fall relative to the prices of manufactured imports, as the Prebisch–Singer hypothesis suggests. In recent years commodity prices have also been very volatile.</p><div class="use"><b>Exam use:</b> an application of terms of trade and a reason why governments may try to diversify instead of specialising fully.</div></div>
+  <div class="rw"><h3>Protecting steel</h3><p>Where another country has gained a comparative advantage in steel, producers in the country that lost it often lobby for trade restrictions to protect jobs, rather than letting resources move to other industries.</p><div class="use"><b>Exam use:</b> a limitation: governments do not always allow trade to follow comparative advantage. Link to unemployment and to the retaliation risk.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Answers are colour-coded to the mark scheme.</p>
+  <div class="key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Define</span> <span class="mark">2 marks</span> What is meant by comparative advantage?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The key idea is <i>opportunity cost</i>. "Better at" or "cheaper" alone will not earn the marks.</div>
+    <div class="ans"><span class="mk k" data-t="K">Comparative advantage is the ability of a country to produce a good at a lower opportunity cost</span> <span class="mk k" data-t="K">than another country, that is, giving up fewer other goods to produce it.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Confusing it with absolute advantage (producing more with the same resources).</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate</span> <span class="mark">4 marks</span> Country A can produce 100 tonnes of wheat or 50 tonnes of cloth. Country B can produce 60 tonnes of wheat or 20 tonnes of cloth. Calculate the opportunity cost of a tonne of cloth in each country and state which has the comparative advantage in cloth.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Opportunity cost of cloth = wheat given up ÷ cloth gained. Show each division.</div>
+    <div class="ans"><span class="mk a" data-t="A">Country A: 100 ÷ 50 = 2 tonnes of wheat per tonne of cloth.</span> <span class="mk a" data-t="A">Country B: 60 ÷ 20 = 3 tonnes of wheat per tonne of cloth.</span> <span class="mk n" data-t="N">Country A gives up less wheat to make cloth,</span> <span class="mk k" data-t="K">so Country A has the comparative advantage in cloth (and B in wheat).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the country that makes more has the comparative advantage. Check: A also makes more wheat in absolute terms but its advantage is greater in cloth.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">6 marks</span> Explain two benefits to a country of specialising and trading.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two developed benefits, each with a chain of reasoning and a short example.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">One benefit is higher output and living standards.</span> <span class="mk n" data-t="N">When a country specialises in the product with the lower opportunity cost, resources are used more efficiently, so total world output rises and each country can consume more than it could produce alone.</span> <span class="mk a" data-t="A">For example, Zambia concentrates on copper and imports goods it would find costly to make.</span></p>
+    <p><span class="mk k" data-t="K">A second benefit is lower prices and greater choice for consumers.</span> <span class="mk n" data-t="N">Competition from imports pressures domestic firms to cut costs and raise quality, and efficient producers abroad supply goods more cheaply.</span> <span class="mk a" data-t="A">Shoppers can buy clothing from Bangladesh at lower prices than if every country produced its own.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Analyse</span> <span class="mark">6 marks</span> Analyse how a rise in a country's export prices could affect its terms of trade and its trade with other countries.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>State the effect on the index first, then follow through to what it means for exports bought and for revenue. Mention that the cause matters.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">The terms of trade are the ratio of export prices to import prices, multiplied by 100.</span> <span class="mk n" data-t="N">If export prices rise while import prices are unchanged, the index rises: a favourable movement.</span> <span class="mk n" data-t="N">Fewer exports need to be sold to buy the same quantity of imports, so the country can import more for each unit it exports.</span></p>
+    <p><span class="mk e" data-t="E">However, higher export prices also make the goods less price-competitive abroad. If foreign demand is elastic, the quantity sold falls by more than the price rises and export revenue declines.</span> <span class="mk a" data-t="A">If prices rose because of higher costs, such as wages, rather than higher demand, this is more likely.</span> <span class="mk e" data-t="E">So the effect on the country depends on the cause of the rise and the elasticity of demand for its exports.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying a favourable movement is always good. It is only good if it comes from higher demand.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Discuss</span> <span class="mark">8 marks</span> Discuss two limitations of the theory of comparative advantage.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>For "discuss", explain each limitation, then add a point of evaluation on how serious it is, and conclude.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">One limitation is that resources are not perfectly mobile.</span> <span class="mk n" data-t="N">The theory assumes workers and capital can move freely to the industry where the country has the advantage. In practice, a coal miner cannot switch easily to making software, so specialisation can cause structural unemployment.</span> <span class="mk e" data-t="E">This is more serious in the short run; over time retraining and investment can reduce it.</span></p>
+    <p><span class="mk k" data-t="K">A second limitation is that transport costs and trade restrictions reduce the gains.</span> <span class="mk n" data-t="N">If transport costs exceed the difference in opportunity costs, trade is no longer worthwhile, and tariffs or quotas imposed by other governments can block it altogether.</span> <span class="mk e" data-t="E">For goods that are cheap to transport and are not heavily protected the limitation is minor.</span></p>
+    <p><span class="mk e" data-t="E">Overall, the theory is a useful guide to why trade benefits countries, but its assumptions mean the real pattern of trade will differ from the predictions.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Assess</span> <span class="mark">12 marks</span> Assess whether a country should always specialise in the products in which it has a comparative advantage.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Open paragraphs with the question's wording. Argue both for and against and give a judgement that says what the answer depends on.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">A country has a comparative advantage in a product if it can produce it at a lower opportunity cost than other countries, and specialising means concentrating its resources on those products and trading for the rest.</span></p>
+    <p><span class="mk n" data-t="N">A country should always specialise in the products in which it has a comparative advantage because this raises total output and consumption.</span> <span class="mk n" data-t="N">By using resources where it gives up least, the country produces more in total, and by trading at a rate between the opportunity cost ratios it can consume beyond its production possibility curve.</span> <span class="mk a" data-t="A">For example, Red giving up 2 shirts per coat and trading at 3 shirts per coat ends up with more of both goods.</span> <span class="mk e" data-t="E">These gains depend on the terms of trade falling between the two countries' opportunity costs, and on trade being free of large barriers.</span></p>
+    <p><span class="mk n" data-t="N">A country should not always specialise in the products in which it has a comparative advantage because over-specialisation leaves it exposed to risk.</span> <span class="mk a" data-t="A">Zambia gets more than 70% of its export revenue from copper, so a fall in the world copper price would hit incomes and the terms of trade.</span> <span class="mk n" data-t="N">Workers in declining industries may not be able to switch jobs, creating structural unemployment, and some countries may prefer to protect strategic industries such as food or defence.</span> <span class="mk e" data-t="E">Primary producers may also face worsening terms of trade over time, as suggested by the Prebisch–Singer hypothesis.</span></p>
+    <p><span class="mk e" data-t="E">Overall, specialising according to comparative advantage generally increases output, but a prudent government will diversify to reduce risk, invest in education to make resources more mobile, and adapt as comparative advantage changes. The best strategy therefore depends on how diversified the economy is, how easily resources can move and how stable the world prices are.</span></p></div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Use opportunity cost, always.</b> Comparative advantage is defined by it, not by who produces more.</li>
+    <li><b>Absolute can exist without comparative.</b> A country can be better at everything and still gain from trade, because opportunity costs differ.</li>
+    <li><b>Keep numerical examples brief and simple.</b> Use round numbers and add a written explanation. Check the figures show comparative advantage.</li>
+    <li><b>The exchange rate must lie between the opportunity costs.</b> Otherwise one country does not gain.</li>
+    <li><b>Terms of trade are about prices, not values.</b> Do not confuse them with the balance of trade.</li>
+    <li><b>A rise in the terms of trade is not always good.</b> Ask why it rose.</li>
+    <li><b>Show both production and consumption.</b> Trade lets a country consume outside its PPC; it cannot produce outside it.</li>
+    <li><b>Evaluate with limitations.</b> Transport, mobility, restrictions, overspecialisation, changing advantage.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Define</td><td>A precise meaning, with the key term (opportunity cost).</td></tr>
+    <tr><td>Calculate</td><td>Show each division and state the conclusion.</td></tr>
+    <tr><td>Explain</td><td>Reasons with a developed link, ideally with an example.</td></tr>
+    <tr><td>Analyse</td><td>A chain of cause and effect.</td></tr>
+    <tr><td>Discuss / Assess</td><td>Arguments both ways and a justified judgement.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => show(i));
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="decimal" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+window.Lib = { initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+/* ---------- PPC panels: shirts (y) against coats (x) ---------- */
+function panel(x0, title, maxC, maxS, pre, spec, cons, s, color) {
+  const W = 330, H = 270, y0 = 300, cx = (c) => x0 + (W * c) / 130, sy = (v) => y0 - (H * v) / 250;
+  const lerp = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+  let pos = lerp(pre, spec, s.sp); if (s.tr > 0) pos = lerp(spec, cons, s.tr);
+  let o = SV.line(x0, sy(250), x0, sy(0)) + SV.line(x0, sy(0), x0 + W, sy(0));
+  o += SV.text(x0 + 4, sy(250) + 4, "Shirts", "sm") + SV.text(x0 + W, sy(0) + 22, "Coats", "sm", { "text-anchor": "end" });
+  o += SV.text(x0 + W / 2, 24, title, "lbl bd", { "text-anchor": "middle" });
+  o += SV.poly([[cx(0), sy(0)], [cx(maxC), sy(0)], [cx(0), sy(maxS)]], color === 2 ? "f2" : "f1", { opacity: 0.5 });
+  o += SV.line(cx(maxC), sy(0), cx(0), sy(maxS), color === 2 ? "c2" : "c1");
+  o += SV.text(cx(maxC) + 2, sy(0) - 8, maxC, "sm", { "text-anchor": "middle" }) + SV.text(x0 - 6, sy(maxS) + 4, maxS, "sm", { "text-anchor": "end" });
+  if (s.tl > 0) { // trading line: shirts = 3 x (coats equivalent)
+    const k = 3, sc = spec;
+    const x1 = sc[0], y1 = sc[1];
+    const xe = 130, ye = Math.max(0, Math.min(250, y1 - k * (xe - x1)));
+    const xs = x1 + (y1 - Math.min(250, y1 + 0)) / k;
+    let a = [x1, y1], b = [x1 + y1 / k, 0];
+    if (x1 > 100) { a = [x1, y1]; b = [x1 - 250 / k, 250]; }
+    o += SV.line(cx(a[0]), sy(a[1]), cx(b[0]), sy(b[1]), "c4 dash", { opacity: s.tl });
+    o += SV.text(x0 + W / 2, 74, "Dashed: trading line, 1 coat = 3 shirts", "sm t4", { "text-anchor": "middle", opacity: s.tl });
+  }
+  if (s.m > 0) o += SV.circle(cx(pre[0]), sy(pre[1]), 7, "dot4", { opacity: s.m * (s.sp > 0.5 || s.tr > 0 ? 0.35 : 1) }) + SV.text(cx(pre[0]) + 10, sy(pre[1]) + 24, "before: " + pre[0] + ", " + pre[1], "sm", { opacity: s.m * (s.sp > 0.5 || s.tr > 0 ? 0.5 : 1) });
+  if (s.m > 0) o += SV.circle(cx(pos[0]), sy(pos[1]), 8, s.tr > 0.5 ? "dot3" : "dot2");
+  if (s.sp > 0.99 && s.tr === 0) o += SV.text(cx(pos[0]) + 12, sy(pos[1]) - 10, "specialise: " + spec[0] + ", " + spec[1], "sm bd");
+  if (s.tr > 0.99) o += SV.text(cx(pos[0]) + 12, sy(pos[1]) - 14, "consume: " + cons[0] + ", " + cons[1], "sm bd t3");
+  if (s.oc > 0) o += SV.text(x0 + W / 2, 52, color === 2 ? "1 coat costs 4 shirts; 1 shirt costs 0.25 coat" : "1 coat costs 2 shirts; 1 shirt costs 0.5 coat", "sm", { "text-anchor": "middle", opacity: s.oc });
+  return o;
+}
+function caChart(s) {
+  let o = panel(40, "Red", 120, 240, [80, 80], [120, 0], [80, 120], s, 1);
+  o += panel(410, "Blue", 40, 160, [30, 40], [0, 160], [40, 40], s, 2);
+  if (s.oc > 0 && s.sp < 0.1) o += SV.text(380, 340, "Red: comparative advantage in coats.  Blue: comparative advantage in shirts.", "lbl bd", { "text-anchor": "middle", opacity: s.oc });
+  return o;
+}
+Lib.stepper($("#stA"), { w: 760, h: 350, label: "Production possibility curves for two countries before and after specialisation and trade", base: { m: 0, oc: 0, sp: 0, tr: 0, tl: 0 }, draw: caChart, tween: 1200, dwell: 5000, steps: [
+  { cap: "Two countries, Red and Blue, can each make coats and shirts. The lines show <b>everything they could produce</b> with all their resources: Red 120 coats or 240 shirts; Blue 40 coats or 160 shirts. <b>Red is better at both.</b>", s: { m: 0 } },
+  { cap: "Before trade each uses its resources on both goods. <b>Red</b> makes 80 coats and 80 shirts. <b>Blue</b> makes 30 coats and 40 shirts. The world makes 110 coats and 120 shirts.", s: { m: 1 } },
+  { cap: "<b>Opportunity cost.</b> A coat costs Red 2 shirts but costs Blue 4. So <b>Red has the comparative advantage in coats</b> and <b>Blue in shirts</b>, even though Red is better at both.", s: { m: 1, oc: 1 } },
+  { cap: "<b>Specialise.</b> Red moves all resources into coats (120). Blue moves all into shirts (160). The world now makes <b>120 coats and 160 shirts</b>: more of both.", s: { m: 1, oc: 1, sp: 1 } },
+  { cap: "<b>Trade at 1 coat = 3 shirts</b>, a rate between 2 and 4. Red sells 40 coats and buys 120 shirts. Blue sells 120 shirts and buys 40 coats.", s: { m: 1, oc: 1, sp: 1, tl: 1 } },
+  { cap: "<b>The gain:</b> Red consumes 80 coats and 120 shirts. Blue consumes 40 coats and 40 shirts. Both points lie <b>outside</b> their before-trade positions, and for Red, outside its PPC.", s: { m: 1, oc: 1, sp: 1, tl: 1, tr: 1 } },
+] });
+
+/* ---------- terms of trade stepper ---------- */
+function totChart(s) {
+  const X0 = 90, bw = 90, Y = (v) => 330 - v * 1.7, ex = s.ex, im = s.im, tot = (ex / im) * 100;
+  let o = SV.line(60, 330, 700, 330) + SV.line(60, 330, 60, 60) + SV.text(66, 56, "Price index (base year = 100)", "sm");
+  o += SV.line(60, Y(100), 700, Y(100), "gr") + SV.text(64, Y(100) - 6, "100", "sm");
+  o += SV.rect(X0, Y(ex), bw, 330 - Y(ex), "f3") + SV.rect(X0 + 140, Y(im), bw, 330 - Y(im), "f2");
+  o += SV.text(X0 + bw / 2, Y(ex) - 8, Lib.fmtN(ex, 0), "lbl bd t3", { "text-anchor": "middle" }) + SV.text(X0 + 140 + bw / 2, Y(im) - 8, Lib.fmtN(im, 0), "lbl bd t2", { "text-anchor": "middle" });
+  o += SV.text(X0 + bw / 2, 350, "Export prices", "sm", { "text-anchor": "middle" }) + SV.text(X0 + 140 + bw / 2, 350, "Import prices", "sm", { "text-anchor": "middle" });
+  o += SV.text(480, 150, "Terms of trade index", "lbl", { "text-anchor": "middle" }) + SV.text(480, 200, Lib.fmtN(tot, 0), "bd", { "text-anchor": "middle", style: "font-size:46px" });
+  o += SV.text(480, 232, tot > 100.5 ? "Favourable: index above 100" : tot < 99.5 ? "Unfavourable: index below 100" : "No change", "lbl bd " + (tot > 100.5 ? "t3" : tot < 99.5 ? "t2" : ""), { "text-anchor": "middle" });
+  o += SV.text(480, 262, "Exports needed to buy 1 unit of imports: " + Lib.fmtN(100 / tot, 2), "sm", { "text-anchor": "middle" });
+  return o;
+}
+Lib.stepper($("#stB"), { w: 760, h: 370, label: "Export and import price indices and the terms of trade index", base: { ex: 100, im: 100 }, draw: totChart, steps: [
+  { cap: "In the base year both price indices are <b>100</b>, so the terms of trade index is <b>100</b>.", s: { ex: 100, im: 100 } },
+  { cap: "<b>Export prices rise to 125</b> (say, higher world demand). The index = 125 ÷ 100 × 100 = <b>125</b>. A <b>favourable</b> movement: the country can buy more imports for each unit it exports.", s: { ex: 125, im: 100 } },
+  { cap: "Now <b>import prices also rise to 125</b> (for example, higher oil prices). The index returns to <b>100</b>: the gain is cancelled.", s: { ex: 125, im: 125 } },
+  { cap: "Import prices rise again to <b>150</b> while export prices stay at 125. The index falls to <b>83</b>: an <b>unfavourable</b> movement. More exports must be sold for each unit of imports.", s: { ex: 125, im: 150 } },
+] });
+
+/* ---------- Lab 1 ---------- */
+function lab1() {
+  if (!$("#la1") || !$("#la2") || !$("#la3") || !$("#la4") || !$("#la5")) return;
+  const rc = +$("#la1").value, rs = +$("#la2").value, bc = +$("#la3").value, bs = +$("#la4").value, t = +$("#la5").value;
+  const rOcC = rs / rc, bOcC = bs / bc, rOcS = rc / rs, bOcS = bc / bs;
+  $("#a1").textContent = Lib.fmtN(rOcC, 2) + " shirts"; $("#a2").textContent = Lib.fmtN(bOcC, 2) + " shirts";
+  $("#a3").textContent = Lib.fmtN(rOcS, 2) + " coats"; $("#a4").textContent = Lib.fmtN(bOcS, 2) + " coats";
+  const abs = (a, b, ca, cb) => (ca > cb && a > b ? "both" : ca > cb ? "coats" : a > b ? "shirts" : "neither");
+  $("#a5").textContent = rc > bc && rs > bs ? "both goods" : rc > bc ? "coats" : rs > bs ? "shirts" : "neither";
+  $("#a6").textContent = bc > rc && bs > rs ? "both goods" : bc > rc ? "coats" : bs > rs ? "shirts" : "neither";
+  const same = Math.abs(rOcC - bOcC) < 0.005;
+  const redCoats = rOcC < bOcC;
+  $("#a7").textContent = same ? "none" : redCoats ? "coats" : "shirts"; $("#a8").textContent = same ? "none" : redCoats ? "shirts" : "coats";
+  if (same) { $("#a9").textContent = "-"; $("#a10").textContent = "-"; $("#av").textContent = "Identical opportunity costs: no gains from trade."; return; }
+  const lo = Math.min(rOcC, bOcC), hi = Math.max(rOcC, bOcC);
+  const gC = redCoats ? t - rOcC : bOcC - t; // coat exporter gain
+  const gB = redCoats ? bOcC - t : t - rOcC; // coat importer gain
+  $("#a9").textContent = Lib.fmtN(redCoats ? gC : gB, 2); $("#a10").textContent = Lib.fmtN(redCoats ? gB : gC, 2);
+  const within = t > lo && t < hi;
+  $("#av").textContent = within ? `The exchange rate (${t} shirts per coat) lies between ${Lib.fmtN(lo, 2)} and ${Lib.fmtN(hi, 2)}, so both countries gain. ${redCoats ? "Red" : "Blue"} specialises in coats and ${redCoats ? "Blue" : "Red"} in shirts.` : `At ${t} shirts per coat, outside the range ${Lib.fmtN(lo, 2)} to ${Lib.fmtN(hi, 2)}, one country does not gain, so trade will not happen at this rate.`;
+}
+Lib.slider($("#g1"), { id: "la1", label: "Red: max coats", min: 20, max: 200, step: 5, value: 120, fmt: (v) => v, onInput: lab1 });
+Lib.slider($("#g2"), { id: "la2", label: "Red: max shirts", min: 20, max: 400, step: 5, value: 240, fmt: (v) => v, onInput: lab1 });
+Lib.slider($("#g3"), { id: "la3", label: "Blue: max coats", min: 10, max: 200, step: 5, value: 40, fmt: (v) => v, onInput: lab1 });
+Lib.slider($("#g4"), { id: "la4", label: "Blue: max shirts", min: 20, max: 400, step: 5, value: 160, fmt: (v) => v, onInput: lab1 });
+Lib.slider($("#g5"), { id: "la5", label: "Exchange rate: shirts per coat", min: 0.5, max: 8, step: 0.25, value: 3, fmt: (v) => v.toFixed(2), onInput: lab1 });
+
+/* ---------- Lab 2 ---------- */
+function lab2() {
+  if (!$("#lb1") || !$("#lb2")) return;
+  const ex = +$("#lb1").value, im = +$("#lb2").value, tot = (ex / im) * 100;
+  $("#b1").textContent = Lib.fmtN(tot, 1); $("#b2").textContent = Lib.fmtN(100 / tot, 2);
+  $("#bv").textContent = tot > 100.5 ? "Favourable movement: fewer exports are needed to buy the same imports." : tot < 99.5 ? "Unfavourable movement (a deterioration): more exports are needed for the same imports." : "No change in the terms of trade.";
+  const Y = (v) => 170 - v * 0.55;
+  $("#labB").innerHTML = SV.line(40, 170, 400, 170) + SV.line(40, 170, 40, 10) + SV.rect(90, Y(ex), 80, 170 - Y(ex), "f3") + SV.rect(230, Y(im), 80, 170 - Y(im), "f2") +
+    SV.text(130, Y(ex) - 6, ex, "lbl bd t3", { "text-anchor": "middle" }) + SV.text(270, Y(im) - 6, im, "lbl bd t2", { "text-anchor": "middle" }) +
+    SV.text(130, 188, "Export prices", "sm", { "text-anchor": "middle" }) + SV.text(270, 188, "Import prices", "sm", { "text-anchor": "middle" });
+}
+Lib.slider($("#g6"), { id: "lb1", label: "Index of export prices", min: 60, max: 180, step: 1, value: 100, fmt: (v) => v, onInput: lab2 });
+Lib.slider($("#g7"), { id: "lb2", label: "Index of import prices", min: 60, max: 180, step: 1, value: 100, fmt: (v) => v, onInput: lab2 });
+const setP = (e, i) => { $("#lb1").value = e; $("#lb2").value = i; $("#lb2").dispatchEvent(new Event("input")); $("#lb1").dispatchEvent(new Event("input")); };
+$("#pr1").onclick = () => setP(120, 100); $("#pr2").onclick = () => setP(100, 125); $("#pr3").onclick = () => setP(80, 100); $("#pr4").onclick = () => setP(100, 100);
+$("#lb1").dispatchEvent(new Event("input"));
+
+/* ---------- Lab 3 ---------- */
+Lib.slider($("#g8"), { id: "lc1", label: "Transport cost per coat traded (in shirts)", min: 0, max: 3, step: 0.1, value: 0.5, fmt: (v) => v.toFixed(1), onInput: (v) => {
+  const net = 2 - v; $("#c1").textContent = v.toFixed(1); $("#c2").textContent = net.toFixed(1);
+  $("#cv").textContent = net > 0.05 ? `Trade still gains ${net.toFixed(1)} shirts per coat, shared between the countries.` : net > -0.05 ? "The gain is gone: it is no longer worth trading." : "Transport costs exceed the gain: trade makes the countries worse off, so it will not take place.";
+} });
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), {
+  prompt: "Which idea does each statement belong to?",
+  buckets: [{ label: "Absolute advantage" }, { label: "Comparative advantage" }, { label: "Terms of trade" }, { label: "Limitation of the theory" }],
+  items: [
+    { text: "Produces more with the same resources", b: 0 }, { text: "Indonesia grows more rice per hectare than Brazil", b: 0 },
+    { text: "Lower opportunity cost of production", b: 1 }, { text: "A country better at everything can still have this in one good", b: 1 },
+    { text: "Index of export prices ÷ index of import prices × 100", b: 2 }, { text: "A rise in the index is favourable", b: 2 },
+    { text: "High transport costs offset the gain", b: 3 }, { text: "Resources cannot switch industries easily", b: 3 },
+    { text: "Governments may impose trade restrictions", b: 3 }, { text: "Fewer exports needed to buy the same imports", b: 2 },
+  ], done: "Keep these four ideas separate.",
+});
+Lib.classify($("#cl2"), {
+  prompt: "Place each statement under the country it describes.",
+  buckets: [{ label: "Russia" }, { label: "Vietnam" }, { label: "Both / Neither" }],
+  items: [
+    { text: "Has the comparative advantage in smartphones", b: 1 }, { text: "Has the comparative advantage in shoes", b: 0 },
+    { text: "Opportunity cost of 20 smartphones is half of 20 pairs of shoes", b: 0 }, { text: "Opportunity cost of 20 smartphones is one third of 20 pairs of shoes", b: 1 },
+    { text: "Has an absolute advantage in both goods", b: 1 }, { text: "Should specialise in shoes", b: 0 },
+    { text: "Can gain from trading with the other", b: 2 },
+  ], done: "Vietnam is better at both, yet Russia still gains by specialising in shoes.",
+});
+Lib.order($("#o1"), { prompt: "Order the steps for finding comparative advantage.", items: [
+  "Write down how much of each good each country can produce with the same resources",
+  "Work out the opportunity cost of one good in each country (the other good given up ÷ the good gained)",
+  "Compare the opportunity costs across the two countries",
+  "The country with the lower opportunity cost has the comparative advantage in that good",
+  "Each country specialises in the good where it has the comparative advantage",
+  "Trade at an exchange rate between the two opportunity cost ratios so both gain",
+], done: "A reliable exam routine." });
+Lib.calc($("#c1"), { qs: [
+  { q: "Red can make 120 coats or 240 shirts. What is the opportunity cost of one coat, in shirts?", a: 2, sol: "240 ÷ 120 = <b>2 shirts</b> per coat." },
+  { q: "Blue can make 40 coats or 160 shirts. What is the opportunity cost of one shirt, in coats?", a: 0.25, tol: 0.001, sol: "40 ÷ 160 = <b>0.25 coat</b> per shirt." },
+  { q: "Vietnam needs 3 hours to make 20 pairs of shoes and 1 hour to make 20 smartphones. How many pairs of shoes does 20 smartphones cost Vietnam (1 d.p.)?", a: 6.7, tol: 0.1, hint: "In 1 hour Vietnam could make a third of 20 pairs of shoes.", sol: "1 hour of resources makes 20 smartphones, or 20 ÷ 3 = <b>6.7</b> pairs of shoes." },
+  { q: "Russia needs 6 hours for 20 pairs of shoes and 3 hours for 20 smartphones. How many pairs of shoes does 20 smartphones cost Russia?", a: 10, sol: "3 hours would make half of 20 pairs: <b>10 pairs</b>. More than Vietnam's 6.7, so Vietnam has the comparative advantage in smartphones." },
+  { q: "The index of export prices is 130 and the index of import prices is 104. Calculate the terms of trade index.", a: 125, sol: "130 ÷ 104 × 100 = <b>125</b>. Favourable." },
+  { q: "A country's terms of trade index falls from 110 to 99. Calculate the percentage change (1 d.p., enter the sign).", a: -10, tol: 0.05, ph: "e.g. -5.0", sol: "(99 − 110) ÷ 110 × 100 = <b>−10.0%</b>. An unfavourable movement." },
+  { q: "Red exports 40 coats at 3 shirts each. Making a coat at home costs 2 shirts. How many extra shirts does Red gain compared with using its own resources?", a: 40, sol: "Gain per coat = 3 − 2 = 1 shirt. 40 × 1 = <b>40 shirts</b>." },
+] });
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Factor endowment", "The quantity and quality of a country's resources"],
+  ["Absolute advantage", "Producing more of a good with the same resources"],
+  ["Comparative advantage", "Producing a good at a lower opportunity cost"],
+  ["Specialisation", "Concentrating production on a narrow range of goods"],
+  ["Terms of trade", "The ratio of export prices to import prices"],
+  ["Free trade", "Trade without taxes, quotas or other restrictions"],
+  ["Trading possibility curve", "Shows consumption possibilities with trade, beyond the PPC"],
+], done: "Strong vocabulary." });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Country X can make 10 units of A or 20 of B. Country Y can make 6 units of A or 18 of B. Which has the comparative advantage in A?", opts: ["X", "Y", "Both", "Neither"], a: 0, why: "X: 1 A costs 2 B. Y: 1 A costs 3 B. X has the lower opportunity cost, so X has the advantage in A." },
+  { q: "A country with an absolute advantage in all goods:", opts: ["Cannot gain from trade", "Can still gain from trade", "Should not specialise", "Has no opportunity cost"], a: 1, why: "Opportunity costs still differ, so there are gains from specialising." },
+  { q: "For both countries to gain, the exchange rate between goods must lie:", opts: ["Below both opportunity costs", "Above both opportunity costs", "Between the two opportunity costs", "At zero"], a: 2, why: "Each country must get a better rate than at home." },
+  { q: "The terms of trade index rises from 100 to 110. This means:", opts: ["Export prices fell relative to import prices", "Export prices rose relative to import prices", "The trade deficit fell", "Export volumes rose"], a: 1, why: "The index is export prices relative to import prices. A rise is favourable." },
+  { q: "Which is a limitation of comparative advantage theory?", opts: ["Resources move freely", "Zero transport costs", "Resources may not move easily between industries", "Free trade"], a: 2, why: "The theory assumes full mobility; in practice, this causes structural unemployment." },
+  { q: "The Prebisch–Singer hypothesis suggests that:", opts: ["Terms of trade improve for primary producers", "Terms of trade tend to move against primary producers", "Trade is always balanced", "Absolute advantage is the cause of trade"], a: 1, why: "Demand for manufactures grows faster than for primary products as incomes rise." },
+  { q: "A trading possibility curve shows that trade lets a country:", opts: ["Produce outside its PPC", "Consume outside its PPC", "Shift its PPC inwards", "Avoid opportunity cost"], a: 1, why: "A country cannot produce beyond its PPC, but trade lets it consume beyond it." },
+  { q: "Higher export prices caused by higher wage costs are most likely to:", opts: ["Raise export volumes", "Be good for competitiveness", "Reduce demand for exports", "Lower import prices"], a: 2, why: "Costs-driven price rises make exports less competitive." },
+] });
+Lib.cards($("#fc1"), { cards: [
+  ["Factor endowment", "The quantity and quality of land, labour, capital and enterprise a country has."],
+  ["Specialisation", "Concentrating on producing a narrow range of goods and services."],
+  ["Absolute advantage", "The ability to produce more of a good with the same resources than another country."],
+  ["Comparative advantage", "The ability to produce a good at a lower opportunity cost than another country."],
+  ["Opportunity cost", "The next best alternative given up when a choice is made."],
+  ["Free trade", "Exchange of goods and services across borders without government restrictions."],
+  ["Trade liberalisation", "Removing barriers to trade such as tariffs and quotas."],
+  ["Trading possibility curve", "Shows what a country can consume with trade, which can lie outside its PPC."],
+  ["Terms of trade", "Index of export prices ÷ index of import prices × 100."],
+  ["Favourable terms of trade", "A rise in the index: fewer exports are needed to buy a given quantity of imports."],
+  ["Unfavourable terms of trade", "A fall in the index: more exports are needed to buy the same imports."],
+  ["Prebisch–Singer hypothesis", "Terms of trade tend to move against primary-product exporters."],
+  ["Structural unemployment", "Unemployment caused by a mismatch of workers' skills with available jobs."],
+  ["Overspecialisation", "Depending on too few products, exposing a country to price falls."],
+  ["Trade restrictions", "Tariffs, quotas and other barriers that limit imports."],
+] });
+lab1(); lab2();
+
+Lib.initTabs();
+</script>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}</style><div class="site-pill"><a href="../../a-econ/as/ch-25/">← Chapter 25</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="as-comparative-advantage" hidden></button></div><script src="../../assets/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js"></script><script src="../../assets/gate.js" data-courses="a-econ"></script></body></html>
