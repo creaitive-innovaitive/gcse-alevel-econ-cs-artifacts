@@ -5,6 +5,7 @@
   const root = document.getElementById("assess-root");
   const slug = new URLSearchParams(location.search).get("a") || "";
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const $ = (sel, el = root) => el.querySelector(sel);
   const draftKey = "site.draft." + slug;
   let catalog, quiz, me;
 
@@ -81,7 +82,9 @@
         <div class="row"><h3>${esc(quiz.title)}</h3><span class="big">${att.pct}%</span></div>
         <p><b>${att.score} / ${att.max} marks.</b> Pass mark ${quiz.pass}%. ${pass ? "Passed." : "Not yet passed."}${fresh ? "" : ` <span class="hint">Submitted ${att.at ? new Date(att.at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : ""}.</span>`}</p>
         ${advice(items, att.pct)}
-        <p><a class="btn ghost" href="${lessonUrl()}">Back to the lesson</a> <a class="btn ghost" href="${S.profileUrl}">My profile</a></p></section>
+        <p><a class="btn ghost" href="${lessonUrl()}">Back to the lesson</a> <a class="btn ghost" href="${S.profileUrl}">My profile</a>
+          ${pass && !(me.is_admin || me.is_teacher) ? ' <button class="btn" id="retake">Retake for practice</button>' : ""}</p>
+        ${pass ? '<p class="hint">Retaking is optional. Your pass stays on record and the lesson stays complete, whatever you score next time.</p>' : ""}</section>
       ${items.map((it, i) => {
         const full = it.got >= it.max, part = it.got > 0 && !full;
         return `<section class="card block q ${full ? "good" : part ? "part" : "bad"}"><div class="row"><b>Question ${i + 1}</b><span class="score">${icon(full ? "ok" : part ? "part" : "no")}<small>${it.got} / ${it.max}</small></span></div>
@@ -90,9 +93,15 @@
           ${full ? "" : `<p><span class="hint">Model answer</span><br>${esc(it.model)}</p>`}
           <p class="fb">${esc(it.feedback)}</p></section>`;
       }).join("")}`;
+    $("#retake")?.addEventListener("click", async () => {
+      if (!confirm("Start a fresh attempt? Your current result is kept in your history.")) return;
+      const { error } = await S.sb.rpc("retake_assessment", { _slug: slug });
+      if (error) return alert(error.message);
+      try { localStorage.removeItem(draftKey); } catch (e) {}
+      viewForm(false);
+      window.scrollTo(0, 0);
+    });
   }
-
-  const $ = (sel, el = root) => el.querySelector(sel);
 
   async function boot() {
     if (!slug) { root.innerHTML = `<p class="msg err">No lesson chosen.</p>`; return; }

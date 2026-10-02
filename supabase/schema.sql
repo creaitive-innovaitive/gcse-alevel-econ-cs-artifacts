@@ -460,6 +460,17 @@ language sql stable security definer set search_path = public as $$
   from assessment_attempts where email = my_key() and reset_at is null
 $$;
 
+-- Student: after passing, start a fresh attempt for practice. The pass stays recorded (lesson stays complete); the old attempt is kept as history.
+create or replace function public.retake_assessment(_slug text) returns void
+language plpgsql security definer set search_path = public as $$
+declare e text := my_key(); pass int;
+begin
+  select pass_pct into pass from assessments where slug = _slug;
+  update assessment_attempts set reset_at = now()
+   where email = e and slug = _slug and reset_at is null and pct >= coalesce(pass, 80);
+  if not found then raise exception 'You can retake an assessment once you have passed it. Otherwise ask your teacher.'; end if;
+end $$;
+
 -- Admin: every attempt (history included) with its feedback.
 create or replace function public.admin_attempts() returns json
 language plpgsql security definer set search_path = public as $$
