@@ -1,0 +1,168 @@
+{
+ "slug": "as-elasticity-of-supply",
+ "title": "Price Elasticity of Supply: assessment",
+ "pass_pct": 80,
+ "questions": [
+  {
+   "id": "q1",
+   "type": "num",
+   "q": "Price rises from $10 to $12 and quantity supplied rises from 100 to 110. Calculate PES.",
+   "ans": 0.5,
+   "tol": 0.05,
+   "marks": 1,
+   "topic": "PES calculation",
+   "hint": "Enter a number.",
+   "ok": "Correct: %ΔQs = 10%, %ΔP = 20%, PES = 0.5.",
+   "fb": "PES = %ΔQs ÷ %ΔP. %ΔQs = 10 ÷ 100 = 10%, %ΔP = 2 ÷ 10 = 20%, so PES = 10 ÷ 20 = 0.5. Check the worked example in the Learn tab.",
+   "model": "0.5"
+  },
+  {
+   "id": "q2",
+   "type": "num",
+   "q": "Price rises by 20% and quantity supplied rises by 40%. Calculate PES.",
+   "ans": 2,
+   "tol": 0.05,
+   "marks": 1,
+   "topic": "PES calculation",
+   "hint": "Enter a number.",
+   "ok": "Correct: 40 ÷ 20 = 2.",
+   "fb": "PES = %ΔQs ÷ %ΔP = 40 ÷ 20 = 2, so supply is elastic. See the Learn tab.",
+   "model": "2"
+  },
+  {
+   "id": "q3",
+   "type": "num",
+   "q": "PES is 1.5 and price rises by 8%. By what percentage does quantity supplied rise?",
+   "ans": 12,
+   "tol": 0.1,
+   "marks": 1,
+   "topic": "PES calculation",
+   "hint": "Enter a percentage.",
+   "ok": "Correct: 1.5 × 8 = 12%.",
+   "fb": "Rearrange PES = %ΔQs ÷ %ΔP, so %ΔQs = PES × %ΔP = 1.5 × 8 = 12. See the Learn tab.",
+   "model": "12"
+  },
+  {
+   "id": "q4",
+   "type": "mcq",
+   "q": "A straight-line supply curve passes through the origin. What is PES along it?",
+   "opts": [
+    "Always 1",
+    "Always 0",
+    "Always greater than 1",
+    "It changes along the line"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Supply curves",
+   "ok": "Correct: any straight line through the origin has PES = 1 at every point.",
+   "fb": "Slope alone does not decide PES. A straight line through the origin has PES of exactly 1 at every point. See the 'Exam favourite' box in the Learn tab.",
+   "model": "Always 1"
+  },
+  {
+   "id": "q5",
+   "type": "mcq",
+   "q": "A straight-line supply curve cuts the price (vertical) axis. Supply is:",
+   "opts": [
+    "Elastic (PES above 1)",
+    "Inelastic (PES below 1)",
+    "Unitary",
+    "Perfectly inelastic"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Supply curves",
+   "ok": "Correct.",
+   "fb": "Cutting the price axis means PES is above 1 (elastic); cutting the quantity axis means PES is below 1 (inelastic). Revisit the Exam favourite box and Lab 2 in the Explore tab.",
+   "model": "Elastic (PES above 1)"
+  },
+  {
+   "id": "q6",
+   "type": "text",
+   "q": "Complete: in the short run, supply of hotel rooms is ________ because services cannot be stored.",
+   "groups": [
+    [
+     "inelastic",
+     "perfectly inelastic",
+     "fixed"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Determinants",
+   "ok": "Correct: inelastic.",
+   "fb": "Services are perishable and cannot be stored, so supply is fixed or very inelastic in the short run. See 'What determines PES?' in the Learn tab.",
+   "model": "Inelastic.",
+   "hint": "One key term."
+  },
+  {
+   "id": "q7",
+   "type": "text",
+   "q": "Complete: firms that can build up and run down ________ can meet extra demand quickly, which makes supply more elastic.",
+   "groups": [
+    [
+     "stocks",
+     "stock",
+     "inventory",
+     "inventories"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Determinants",
+   "ok": "Correct: stocks.",
+   "fb": "Held stocks let firms respond to extra demand quickly, so supply is more elastic. See 'What determines PES?' in the Learn tab.",
+   "model": "Stocks.",
+   "hint": "One word."
+  },
+  {
+   "id": "q8",
+   "type": "mcq",
+   "q": "Which is likely to make supply MORE elastic?",
+   "opts": [
+    "Spare productive capacity",
+    "A shortage of skilled workers",
+    "A shorter time period",
+    "Perishable output"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Determinants",
+   "ok": "Correct.",
+   "fb": "Spare capacity lets firms raise output easily. Shortages of inputs, short time periods and perishability all make supply less elastic. See the Learn tab.",
+   "model": "Spare productive capacity"
+  },
+  {
+   "id": "q9",
+   "type": "mcq",
+   "q": "Compared with manufacturing, the supply of agricultural products is usually:",
+   "opts": [
+    "More inelastic",
+    "More elastic",
+    "Perfectly elastic",
+    "The same"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Agriculture",
+   "ok": "Correct: crops take a growing season and depend on weather.",
+   "fb": "Crops take time to grow, yields depend on weather and switching crops is slow, so agricultural supply tends to be more inelastic. This is why farm prices swing so much. See the Watch tab, step 3.",
+   "model": "More inelastic"
+  },
+  {
+   "id": "q10",
+   "type": "mcq",
+   "q": "Following an indirect tax, which side of the market tends to bear more of the burden?",
+   "opts": [
+    "The less elastic side",
+    "The more elastic side",
+    "The side with more firms",
+    "Neither"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Tax incidence",
+   "ok": "Correct.",
+   "fb": "The side that cannot easily change its behaviour (the less elastic side) bears more of the tax. This links to Chapter 13. See the Learn tab.",
+   "model": "The less elastic side"
+  }
+ ]
+}

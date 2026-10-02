@@ -1,0 +1,161 @@
+{
+ "slug": "as-balance-of-payments",
+ "title": "The Current Account: assessment",
+ "pass_pct": 80,
+ "questions": [
+  {
+   "id": "q1",
+   "type": "num",
+   "q": "Exports of goods are $900m and imports of goods are $1,200m. What is the balance in goods ($m)? Include the sign.",
+   "ans": -300,
+   "tol": 0,
+   "marks": 1,
+   "topic": "Calculations",
+   "hint": "Include the minus sign if negative.",
+   "ok": "Correct: 900 − 1,200 = −300.",
+   "fb": "Balance = exports − imports = 900 − 1,200 = −300, a deficit. See 'Calculating the balances'.",
+   "model": "-300"
+  },
+  {
+   "id": "q2",
+   "type": "num",
+   "q": "Exports of services are $160m and imports of services are $100m. What is the services balance ($m)?",
+   "ans": 60,
+   "tol": 0,
+   "marks": 1,
+   "topic": "Calculations",
+   "hint": "Enter a number.",
+   "ok": "Correct: 160 − 100 = +60.",
+   "fb": "Services balance = exports − imports = 160 − 100 = 60, a surplus. See 'Calculating the balances'.",
+   "model": "60"
+  },
+  {
+   "id": "q3",
+   "type": "num",
+   "q": "Goods and services balance −$240m, primary income +$70m, secondary income +$45m. What is the current account balance ($m)?",
+   "ans": -125,
+   "tol": 0,
+   "marks": 1,
+   "topic": "Calculations",
+   "hint": "Include the minus sign if negative.",
+   "ok": "Correct: −240 + 70 + 45 = −125.",
+   "fb": "Current account = goods and services + primary income + secondary income = −240 + 70 + 45 = −125, a deficit. Keep the sign.",
+   "model": "-125"
+  },
+  {
+   "id": "q4",
+   "type": "num",
+   "q": "A current account deficit is $50m and GDP is $1,000m. The deficit is what percentage of GDP?",
+   "ans": 5,
+   "tol": 0.05,
+   "marks": 1,
+   "topic": "Calculations",
+   "hint": "Enter a percentage.",
+   "ok": "Correct: 50 ÷ 1,000 = 5%.",
+   "fb": "Percentage of GDP = deficit ÷ GDP × 100 = 5. Always judge the size of a deficit relative to the economy.",
+   "model": "5"
+  },
+  {
+   "id": "q5",
+   "type": "mcq",
+   "q": "Workers' remittances sent home are recorded in:",
+   "opts": [
+    "Secondary income",
+    "Primary income",
+    "Trade in goods",
+    "Trade in services"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Components",
+   "ok": "Correct.",
+   "fb": "Transfers with nothing received in exchange, such as aid and remittances, are secondary income. See 'The four parts of the current account'.",
+   "model": "Secondary income"
+  },
+  {
+   "id": "q6",
+   "type": "mcq",
+   "q": "Profits, interest and dividends from abroad are recorded in:",
+   "opts": [
+    "Primary income",
+    "Secondary income",
+    "Trade in goods",
+    "Trade in services"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Components",
+   "ok": "Correct.",
+   "fb": "Income from investment and work abroad is primary income. See 'The four parts of the current account'.",
+   "model": "Primary income"
+  },
+  {
+   "id": "q7",
+   "type": "text",
+   "q": "Complete: exports are recorded in the balance of payments as a ________.",
+   "groups": [
+    [
+     "credit",
+     "credits"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Components",
+   "ok": "Correct: a credit.",
+   "fb": "Money coming in is a credit (+) and money going out is a debit (−). See 'The big idea'.",
+   "model": "Credit.",
+   "hint": "One word."
+  },
+  {
+   "id": "q8",
+   "type": "mcq",
+   "q": "Which of these is likely to be a CYCLICAL cause of a current account deficit?",
+   "opts": [
+    "A boom at home that raises imports",
+    "An overvalued exchange rate",
+    "Low labour productivity",
+    "Poor education and training"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Causes",
+   "ok": "Correct.",
+   "fb": "A growing domestic economy raises imports and is short term and often self-correcting. The others are structural. See 'Causes of a current account deficit'.",
+   "model": "A boom at home that raises imports"
+  },
+  {
+   "id": "q9",
+   "type": "mcq",
+   "q": "Which is likely to be a STRUCTURAL cause of a deficit?",
+   "opts": [
+    "Lack of international competitiveness",
+    "A short-term slowdown among trading partners",
+    "A temporary rise in home spending",
+    "A one-off fall in oil prices"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Causes",
+   "ok": "Correct.",
+   "fb": "Structural causes are long term and not self-correcting, such as poor competitiveness, an overvalued exchange rate or low productivity. See 'Causes of a current account deficit'.",
+   "model": "Lack of international competitiveness"
+  },
+  {
+   "id": "q10",
+   "type": "mcq",
+   "q": "A trade deficit means that:",
+   "opts": [
+    "The value of imports is greater than the value of exports",
+    "The quantity of imports is greater than the quantity of exports",
+    "Exports are zero",
+    "The country is in recession"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Interpreting",
+   "ok": "Correct: value (price × quantity), not quantity.",
+   "fb": "A deficit compares values, not quantities. This is a common exam error. See the 'Do not write this' box.",
+   "model": "The value of imports is greater than the value of exports"
+  }
+ ]
+}

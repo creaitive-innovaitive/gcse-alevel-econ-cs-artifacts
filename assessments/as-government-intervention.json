@@ -1,0 +1,169 @@
+{
+ "slug": "as-government-intervention",
+ "title": "Methods of Government Intervention: assessment",
+ "pass_pct": 80,
+ "questions": [
+  {
+   "id": "q1",
+   "type": "mcq",
+   "q": "A specific indirect tax shifts the supply curve:",
+   "opts": [
+    "Upwards (to the left) by the amount of the tax",
+    "Downwards (to the right) by the amount of the tax",
+    "Along the demand curve",
+    "Not at all"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Indirect taxes",
+   "ok": "Correct.",
+   "fb": "A tax raises firms' costs by a fixed amount per unit, so the supply curve shifts up (left) by the amount of the tax. See section 1 in the Learn tab.",
+   "model": "Upwards (to the left) by the amount of the tax"
+  },
+  {
+   "id": "q2",
+   "type": "num",
+   "q": "A $5 per unit tax is placed on a good and 200 units are sold. How much revenue does the government raise ($)?",
+   "ans": 1000,
+   "tol": 0,
+   "marks": 1,
+   "topic": "Indirect taxes",
+   "hint": "Enter a number.",
+   "ok": "Correct: 5 × 200 = $1,000.",
+   "fb": "Revenue = tax per unit × quantity sold = 5 × 200 = 1,000. See section 1.",
+   "model": "1000"
+  },
+  {
+   "id": "q3",
+   "type": "mcq",
+   "q": "If demand for a taxed good is inelastic, consumers are likely to:",
+   "opts": [
+    "Bear most of the tax burden",
+    "Bear very little of the burden",
+    "Stop buying the good",
+    "Receive the tax revenue"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Tax incidence",
+   "ok": "Correct.",
+   "fb": "The less elastic side pays more. Inelastic demand means consumers cannot easily cut back, so they bear most of the burden and the tax barely reduces consumption. See 'Incidence' in section 1.",
+   "model": "Bear most of the tax burden"
+  },
+  {
+   "id": "q4",
+   "type": "mcq",
+   "q": "What does a per-unit subsidy to producers do to the market?",
+   "opts": [
+    "Lowers the price and raises quantity",
+    "Raises the price and lowers quantity",
+    "Raises both price and quantity",
+    "Lowers both price and quantity"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Subsidies",
+   "ok": "Correct: supply shifts down (right).",
+   "fb": "A subsidy lowers costs, so supply shifts right: price falls and quantity rises. See section 2.",
+   "model": "Lowers the price and raises quantity"
+  },
+  {
+   "id": "q5",
+   "type": "num",
+   "q": "The government pays a $3 per unit subsidy and 400 units are sold. What is the cost to the government ($)?",
+   "ans": 1200,
+   "tol": 0,
+   "marks": 1,
+   "topic": "Subsidies",
+   "hint": "Enter a number.",
+   "ok": "Correct: 3 × 400 = $1,200.",
+   "fb": "Cost = subsidy per unit × quantity = 3 × 400 = 1,200. See section 2.",
+   "model": "1200"
+  },
+  {
+   "id": "q6",
+   "type": "mcq",
+   "q": "For a maximum price to have any effect it must be set:",
+   "opts": [
+    "Below the equilibrium price",
+    "Above the equilibrium price",
+    "At the equilibrium price",
+    "At zero"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Price controls",
+   "ok": "Correct.",
+   "fb": "A price ceiling only bites if it is below the equilibrium price; above it, it has no effect. See section 4.",
+   "model": "Below the equilibrium price"
+  },
+  {
+   "id": "q7",
+   "type": "text",
+   "q": "Complete: a maximum price set below equilibrium creates a ________.",
+   "groups": [
+    [
+     "shortage",
+     "excess demand"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Price controls",
+   "ok": "Correct: a shortage.",
+   "fb": "At the lower price quantity demanded rises and quantity supplied falls, creating a shortage. See section 4.",
+   "model": "Shortage.",
+   "hint": "One key term."
+  },
+  {
+   "id": "q8",
+   "type": "text",
+   "q": "Complete: a minimum price set above equilibrium creates a ________.",
+   "groups": [
+    [
+     "surplus",
+     "excess supply"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Price controls",
+   "ok": "Correct: a surplus.",
+   "fb": "At the higher price quantity supplied rises and quantity demanded falls, creating a surplus. See section 5.",
+   "model": "Surplus.",
+   "hint": "One key term."
+  },
+  {
+   "id": "q9",
+   "type": "mcq",
+   "q": "In a buffer stock scheme, what does the agency do when the price would fall below the minimum?",
+   "opts": [
+    "Buys and stores the surplus",
+    "Sells from its stock",
+    "Raises the maximum price",
+    "Does nothing"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Buffer stocks",
+   "ok": "Correct.",
+   "fb": "To defend the minimum price it buys up the surplus and stores it. When the price would rise above the maximum, it sells from stock. See section 6.",
+   "model": "Buys and stores the surplus"
+  },
+  {
+   "id": "q10",
+   "type": "mcq",
+   "q": "Which is a typical limitation of using indirect taxes on goods with inelastic demand?",
+   "opts": [
+    "Consumption barely falls",
+    "Revenue is always zero",
+    "Supply becomes perfectly elastic",
+    "Prices fall"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Evaluating taxes",
+   "ok": "Correct.",
+   "fb": "With inelastic demand the tax raises revenue but does little to reduce consumption, so it may not achieve the aim of reducing demerit goods. See 'Limits' in section 1.",
+   "model": "Consumption barely falls"
+  }
+ ]
+}

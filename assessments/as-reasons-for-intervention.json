@@ -1,0 +1,175 @@
+{
+ "slug": "as-reasons-for-intervention",
+ "title": "Reasons for Government Intervention: assessment",
+ "pass_pct": 80,
+ "questions": [
+  {
+   "id": "q1",
+   "type": "text",
+   "q": "Complete: public goods are non-excludable and non-________.",
+   "groups": [
+    [
+     "rival",
+     "rivalrous"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Public goods",
+   "ok": "Correct: non-rival.",
+   "fb": "Public goods are non-excludable (nobody can be stopped using them) and non-rival (one person's use does not reduce what is left for others). See section 1.",
+   "model": "Rival.",
+   "hint": "One key term."
+  },
+  {
+   "id": "q2",
+   "type": "text",
+   "q": "Complete: people who enjoy a public good without paying are called ________ riders.",
+   "groups": [
+    [
+     "free"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Public goods",
+   "ok": "Correct: free riders.",
+   "fb": "The free rider problem means a private firm cannot charge, so it cannot profit and will not supply the good. See section 1.",
+   "model": "Free.",
+   "hint": "One word."
+  },
+  {
+   "id": "q3",
+   "type": "mcq",
+   "q": "Why is a street light a public good?",
+   "opts": [
+    "Nobody can be excluded and one person's use does not reduce others' use",
+    "It is always provided free by private firms",
+    "Only people who pay can see it",
+    "It is bad for health"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Public goods",
+   "ok": "Correct.",
+   "fb": "It is non-excludable and non-rival. Both characteristics are needed. See section 1.",
+   "model": "Nobody can be excluded and one person's use does not reduce others' use"
+  },
+  {
+   "id": "q4",
+   "type": "mcq",
+   "q": "In a free market, merit goods are likely to be:",
+   "opts": [
+    "Under-consumed",
+    "Over-consumed",
+    "Provided in the right amount",
+    "Banned"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Merit goods",
+   "ok": "Correct.",
+   "fb": "Consumers do not fully realise the benefits, so too little is consumed. Healthcare and education are the standard examples. See section 3.",
+   "model": "Under-consumed"
+  },
+  {
+   "id": "q5",
+   "type": "mcq",
+   "q": "In a free market, demerit goods are likely to be:",
+   "opts": [
+    "Over-consumed",
+    "Under-consumed",
+    "Non-excludable",
+    "Provided free"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Demerit goods",
+   "ok": "Correct.",
+   "fb": "Consumers lack full information about the harm, so too much is consumed. Cigarettes are the standard example. See section 2.",
+   "model": "Over-consumed"
+  },
+  {
+   "id": "q6",
+   "type": "mcq",
+   "q": "Which of these is a merit good?",
+   "opts": [
+    "Education",
+    "Cigarettes",
+    "Street lighting",
+    "A luxury watch"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Merit goods",
+   "ok": "Correct.",
+   "fb": "Education is more beneficial than consumers realise. Cigarettes are demerit, and street lighting is a public good. See sections 1 to 3.",
+   "model": "Education"
+  },
+  {
+   "id": "q7",
+   "type": "mcq",
+   "q": "Why might a government set a minimum price for wheat?",
+   "opts": [
+    "To support farmers' incomes and food supply",
+    "To help consumers buy it more cheaply",
+    "To remove the need for farmers",
+    "To cut the cost of imports to zero"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Price controls",
+   "ok": "Correct.",
+   "fb": "Farm incomes are unpredictable because supply is uncertain, and governments want to rely less on imports of staples. See section 4.",
+   "model": "To support farmers' incomes and food supply"
+  },
+  {
+   "id": "q8",
+   "type": "text",
+   "q": "Complete: market failure is an inefficient allocation of ________.",
+   "groups": [
+    [
+     "resources"
+    ]
+   ],
+   "marks": 1,
+   "topic": "Market failure",
+   "ok": "Correct: resources.",
+   "fb": "Market failure means the price mechanism fails to take account of all costs and benefits, so resources are allocated inefficiently. See 'The big idea'.",
+   "model": "Resources.",
+   "hint": "One word."
+  },
+  {
+   "id": "q9",
+   "type": "mcq",
+   "q": "Information failure means:",
+   "opts": [
+    "Consumers lack the information they need to decide well",
+    "Firms lack information about costs",
+    "The government has too much information",
+    "Prices are published too late"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Information failure",
+   "ok": "Correct.",
+   "fb": "It describes consumers lacking information, which helps explain under-consumption of merit goods and over-consumption of demerit goods. See the Learn tab.",
+   "model": "Consumers lack the information they need to decide well"
+  },
+  {
+   "id": "q10",
+   "type": "mcq",
+   "q": "If a question asks WHY a government intervenes, which is the best type of point to make?",
+   "opts": [
+    "Explain the market failure",
+    "Describe how a tax shifts supply",
+    "Describe a subsidy diagram",
+    "List the costs of a buffer stock"
+   ],
+   "ans": "0",
+   "marks": 1,
+   "topic": "Exam technique",
+   "ok": "Correct: reasons, not methods.",
+   "fb": "Reasons relate to market failure. Taxes, subsidies and provision are methods and belong in answers about how. See the 'Reasons, not methods' box.",
+   "model": "Explain the market failure"
+  }
+ ]
+}
