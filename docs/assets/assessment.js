@@ -25,14 +25,14 @@
       return `<div class="opts">${q.opts.map((o, i) => `<label class="opt"><input type="radio" name="${q.id}" value="${i}" ${String(val) === String(i) ? "checked" : ""}> <span>${esc(o)}</span></label>`).join("")}</div>`;
     }
     if (q.type === "num") return `<input class="ans" name="${q.id}" inputmode="decimal" autocomplete="off" value="${esc(val || "")}" placeholder="${esc(q.hint || "Enter a number.")}">`;
-    return `<textarea class="ans" name="${q.id}" rows="3" placeholder="${esc(q.hint || "Type your answer.")}">${esc(val || "")}</textarea>`;
+    return `<input class="ans" name="${q.id}" autocomplete="off" value="${esc(val || "")}" placeholder="${esc(q.hint || "A key term or short phrase.")}">`;
   }
 
   function viewForm(preview) {
     const draft = loadDraft();
     const total = quiz.questions.reduce((t, q) => t + q.marks, 0);
     root.innerHTML = `<section class="card block"><h3>${esc(quiz.title)}</h3>
-      <p class="hint">${quiz.questions.length} questions, ${total} marks. Pass mark ${quiz.pass}%. Type your answers from memory. You have <b>one attempt</b>: after you submit, answers are locked and you see your score, the model answers and feedback. Spelling does not need to be perfect, but use the key terms.</p>
+      <p class="hint">${quiz.questions.length} questions, ${total} marks. Pass mark ${quiz.pass}%. Type key terms and numbers, or pick the best option. You have <b>one attempt</b>: after you submit, answers are locked and you see your score, the model answers and feedback. Spelling does not need to be perfect, but use the key terms.</p>
       ${preview ? '<p class="msg err">You are signed in as a teacher, so you can read the questions but not submit.</p>' : ""}
       <p><a class="lnk" href="${lessonUrl()}">Open the lesson</a> if you want to revise first.</p></section>
       <form id="qf">${quiz.questions.map((q, i) => `<section class="card block q"><div class="row"><b>Question ${i + 1}</b><span class="hint">${q.marks} mark${q.marks === 1 ? "" : "s"}</span></div>
@@ -84,7 +84,7 @@
         <p><a class="btn ghost" href="${lessonUrl()}">Back to the lesson</a> <a class="btn ghost" href="${S.profileUrl}">My profile</a></p></section>
       ${items.map((it, i) => {
         const full = it.got >= it.max, part = it.got > 0 && !full;
-        return `<section class="card block q ${full ? "good" : part ? "part" : "bad"}"><div class="row"><b>Question ${i + 1}</b><span class="mark">${icon(full ? "ok" : part ? "part" : "no")} ${it.got} / ${it.max}</span></div>
+        return `<section class="card block q ${full ? "good" : part ? "part" : "bad"}"><div class="row"><b>Question ${i + 1}</b><span class="score">${icon(full ? "ok" : part ? "part" : "no")} ${it.got} / ${it.max}</span></div>
           <p class="qtext">${esc(it.q)}</p>${code(it)}
           <p><span class="hint">Your answer</span><br>${it.typed ? esc(it.typed) : "<i>No answer</i>"}</p>
           ${full ? "" : `<p><span class="hint">Model answer</span><br>${esc(it.model)}</p>`}

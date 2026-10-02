@@ -49,50 +49,36 @@
   {
    "id": "q4",
    "type": "text",
-   "q": "Define comparative advantage.",
+   "q": "Complete the definition: a country has a comparative advantage in a good when it can produce it at a lower ________ than another country.",
    "groups": [
     [
-     "opportunity cost"
-    ],
-    [
-     "lower",
-     "less",
-     "fewer",
-     "smaller",
-     "lowest"
+     "opportunity cost",
+     "opportunity costs"
     ]
    ],
-   "marks": 2,
+   "marks": 1,
    "topic": "Definitions",
-   "ok": "Full marks: you linked it to opportunity cost and to being lower.",
-   "fb": "Two ideas are needed: it is about opportunity cost, and the country with the lower opportunity cost holds the advantage. Learn the wording in the Tips & keywords tab.",
-   "model": "A country has a comparative advantage in a good if it can produce it at a lower opportunity cost than another country, meaning it gives up fewer other goods to make it.",
-   "hint": "One sentence.",
-   "fb_part": "Part marks: some of your answer earned credit, but not all. Two ideas are needed: it is about opportunity cost, and the country with the lower opportunity cost holds the advantage. Learn the wording in the Tips & keywords tab."
+   "ok": "Correct: lower opportunity cost.",
+   "fb": "The definition is about opportunity cost, not about producing more. A country has a comparative advantage when it gives up fewer other goods to make the good. See the Tips & keywords tab.",
+   "model": "opportunity cost",
+   "hint": "Two words."
   },
   {
    "id": "q5",
-   "type": "text",
-   "q": "A country can make every good using fewer resources than its trading partner. Could it still gain from trade? Answer yes or no and explain briefly.",
-   "groups": [
-    [
-     "yes",
-     "could",
-     "may"
-    ],
-    [
-     "comparative",
-     "opportunity cost",
-     "specialis*",
-     "lower cost"
-    ]
+   "type": "mcq",
+   "q": "A country can make every good using fewer resources than its trading partner. Could it still gain from trade?",
+   "opts": [
+    "Yes, because it is likely to have a lower opportunity cost in some goods",
+    "No, because it has nothing to gain from a weaker country",
+    "Only if the other country has an absolute advantage in something",
+    "Only if it imports every good"
    ],
-   "marks": 2,
+   "ans": "0",
+   "marks": 1,
    "topic": "Absolute vs comparative",
-   "ok": "Full marks: the gain comes from comparative, not absolute, advantage.",
-   "fb": "Absolute advantage in everything does not stop trade being worthwhile. The gain comes from specialising where the opportunity cost is lower. Re-read 'A country can have an absolute advantage in everything and still gain from trade' in the Learn tab.",
-   "model": "Yes. Even with an absolute advantage in everything, the country is likely to have a lower opportunity cost in some goods. If it specialises in those and trades, both countries could consume more than they could alone.",
-   "fb_part": "Part marks: some of your answer earned credit, but not all. Absolute advantage in everything does not stop trade being worthwhile. The gain comes from specialising where the opportunity cost is lower. Re-read 'A country can have an absolute advantage in everything and still gain from trade' in the Learn tab."
+   "ok": "Correct: the gain comes from comparative, not absolute, advantage.",
+   "fb": "Absolute advantage in everything does not stop trade being worthwhile. Gains come from specialising where the opportunity cost is lower. See 'A country can have an absolute advantage in everything and still gain from trade' in the Learn tab.",
+   "model": "Yes, because it is likely to have a lower opportunity cost in some goods"
   },
   {
    "id": "q6",
@@ -139,62 +125,20 @@
   },
   {
    "id": "q9",
-   "type": "text",
-   "q": "Name two limitations or risks of a country specialising heavily according to comparative advantage.",
-   "groups": [
-    [
-     "overspecialis*",
-     "over-specialis*",
-     "over reliance",
-     "overreliance",
-     "over-reliance",
-     "too reliant",
-     "dependen*",
-     "depend on",
-     "relies on",
-     "rely on"
-    ],
-    [
-     "unemploy*",
-     "structural"
-    ],
-    [
-     "transport",
-     "freight",
-     "shipping"
-    ],
-    [
-     "tariff*",
-     "protection*",
-     "quota*",
-     "trade barrier*"
-    ],
-    [
-     "decline",
-     "falling demand",
-     "price fall*",
-     "volatil*",
-     "fluctuat*",
-     "shock*",
-     "commodity prices"
-    ],
-    [
-     "non-renewable",
-     "run out",
-     "exhaust*",
-     "depleted"
-    ],
-    [
-     "diseconom*"
-    ]
+   "type": "mcq",
+   "q": "Which of these is a limitation of a country specialising heavily according to comparative advantage?",
+   "opts": [
+    "It could become over-dependent on a few exports",
+    "World output tends to fall",
+    "Opportunity costs rise to zero",
+    "Consumers have less choice and higher prices"
    ],
-   "marks": 2,
+   "ans": "0",
+   "marks": 1,
    "topic": "Limitations",
-   "ok": "Full marks: two different limitations.",
-   "fb": "Pick two distinct points, such as over-dependence on a few exports, structural unemployment when an industry declines, or transport costs. A weak answer repeats one point twice. See the Exam questions tab.",
-   "model": "Two examples: the country could become over-dependent on a few exports, so a fall in world prices may hurt it badly; and workers in industries that decline after specialising may become structurally unemployed.",
-   "hint": "Give two different points.",
-   "fb_part": "Part marks: some of your answer earned credit, but not all. Pick two distinct points, such as over-dependence on a few exports, structural unemployment when an industry declines, or transport costs. A weak answer repeats one point twice. See the Exam questions tab."
+   "ok": "Correct: over-dependence leaves the country exposed to price falls and shocks.",
+   "fb": "Heavy specialisation can leave a country over-dependent on a few exports, so a fall in world prices or demand may hurt it badly. The other options describe the opposite of the theory's benefits. See the Exam questions tab.",
+   "model": "It could become over-dependent on a few exports"
   },
   {
    "id": "q10",

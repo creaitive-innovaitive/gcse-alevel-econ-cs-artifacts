@@ -97,81 +97,38 @@
   {
    "id": "q7",
    "type": "text",
-   "q": "Define price elasticity of demand.",
+   "q": "Complete the definition: PED measures the ________ of quantity demanded to a change in a product's own price.",
    "groups": [
     [
-     "responsive*",
-     "sensitiv*",
-     "extent",
-     "how much",
-     "degree"
-    ],
-    [
-     "own price",
-     "change in price",
-     "price change",
-     "change in the price",
-     "price of the product",
-     "price of a product",
-     "price of the good",
-     "a change in price",
-     "to price",
-     "to the price",
-     "to its price",
-     "changes in price",
-     "price changes",
-     "change in its price"
+     "responsiveness",
+     "responsive",
+     "sensitivity",
+     "sensitive"
     ]
    ],
-   "marks": 2,
+   "marks": 1,
    "topic": "Definitions",
-   "ok": "Full marks: responsiveness of quantity demanded to a change in price.",
-   "fb": "Two parts: it measures the responsiveness (how much) of quantity demanded, to a change in the good's own price. Revisit 'Three elasticities of demand' in the Learn tab.",
-   "model": "PED measures the responsiveness of quantity demanded of a product to a change in its own price, ceteris paribus.",
-   "hint": "One sentence.",
-   "fb_part": "Part marks: some of your answer earned credit, but not all. Two parts: it measures the responsiveness (how much) of quantity demanded, to a change in the good's own price. Revisit 'Three elasticities of demand' in the Learn tab."
+   "ok": "Correct: responsiveness.",
+   "fb": "PED measures how responsive quantity demanded is to a change in the good's own price. See 'Three elasticities of demand' in the Learn tab.",
+   "model": "Responsiveness.",
+   "hint": "One key term."
   },
   {
    "id": "q8",
-   "type": "text",
-   "q": "State three factors that could affect the price elasticity of demand for a product.",
-   "groups": [
-    [
-     "substitut*"
-    ],
-    [
-     "proportion of income",
-     "share of income",
-     "relative expense",
-     "expensive",
-     "percentage of income"
-    ],
-    [
-     "time",
-     "long run",
-     "short run"
-    ],
-    [
-     "necessit*",
-     "luxur*"
-    ],
-    [
-     "addict*",
-     "habit*"
-    ],
-    [
-     "brand loyal*",
-     "loyal*",
-     "brand"
-    ]
+   "type": "mcq",
+   "q": "Which of these is NOT a usual determinant of the price elasticity of demand?",
+   "opts": [
+    "The availability of substitutes",
+    "The proportion of income spent on the good",
+    "The time period considered",
+    "The firm's cost of production"
    ],
-   "marks": 3,
+   "ans": "3",
+   "marks": 1,
    "topic": "Determinants",
-   "ok": "Full marks: three different determinants.",
-   "fb": "Three different determinants are needed, such as availability of substitutes, relative expense, time period, necessity or luxury, addiction and brand loyalty. See 'What determines PED?' in the Learn tab.",
-   "model": "Availability and closeness of substitutes (more substitutes tends to make demand more elastic); the proportion of income spent on it (larger share, more elastic); and the time period (longer run, more elastic).",
-   "hint": "Three short points.",
-   "fb_part": "Part marks: some of your answer earned credit, but not all. Three different determinants are needed, such as availability of substitutes, relative expense, time period, necessity or luxury, addiction and brand loyalty. See 'What determines PED?' in the Learn tab."
+   "ok": "Correct: costs of production affect supply, not PED.",
+   "fb": "PED depends on demand-side factors such as substitutes, the share of income spent and the time period. A firm's costs affect supply. See 'What determines PED?' in the Learn tab.",
+   "model": "The firm's cost of production"
   },
   {
    "id": "q9",

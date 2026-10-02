@@ -202,7 +202,7 @@ details.cls .tablewrap { margin-top: 4px; }
 .opt:hover { background: var(--accent-soft); }
 .q .ans { width: 100%; font: inherit; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); }
 .q.good { border-left: 5px solid #1f7a4d; } .q.part { border-left: 5px solid #b7791f; } .q.bad { border-left: 5px solid #c0392b; }
-.q .mark { font-weight: 700; } .q.good .mark { color: #1f7a4d; } .q.part .mark { color: #b7791f; } .q.bad .mark { color: #c0392b; }
+.q .score { font-weight: 700; } .q.good .score { color: #1f7a4d; } .q.part .score { color: #b7791f; } .q.bad .score { color: #c0392b; }
 .q .fb { margin: 8px 0 0; padding: 8px 10px; border-radius: 8px; background: var(--accent-soft); }
 .result.pass { border-color: #1f7a4d; } .result.fail { border-color: #b7791f; }
 .pill.soft { background: var(--accent-soft); color: var(--ink); border: 1px solid var(--line); }
@@ -212,6 +212,6 @@ dialog.wide { max-width: 860px; width: 94%; max-height: 90vh; overflow: auto; }
 .lessonrow .row { gap: 10px; flex-wrap: wrap; }
 .ok-txt { color: #1f7a4d; font-weight: 700; } .no-txt { color: var(--muted); }
 a.btn { text-decoration: none; display: inline-block; }
-.q .mark { display: inline-flex; align-items: center; gap: 6px; }
+.q .score { display: inline-flex; align-items: center; gap: 6px; }
 .ico.ok circle { fill: #1f7a4d; } .ico.no circle { fill: #c0392b; } .ico.part circle { fill: #b7791f; }
 pre.code { background: var(--accent-soft); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; font: .82rem/1.45 ui-monospace, Menlo, monospace; margin: 0 0 10px; white-space: pre; }
