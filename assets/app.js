@@ -8,7 +8,7 @@
   const Site = { configured, sb, base, profileUrl: base + "profile/", done: new Map(), me: null };
   window.Site = Site;
 
-  Site.catalog = () => fetch(base + "assets/catalog.json").then((r) => r.json());
+  Site.catalog = () => fetch(base + "assets/catalog.json", { cache: "no-cache" }).then((r) => r.json());
 
   Site.session = async () => (sb ? (await sb.auth.getSession()).data.session : null);
 
@@ -100,8 +100,9 @@
         if (!Site.me) { location.href = Site.profileUrl; return; }
         if (Site.assessed[b.dataset.doneSlug]) { location.href = assessUrl(b.dataset.doneSlug); return; }
         b.disabled = true;
-        await Site.toggle(b.dataset.doneSlug);
+        const ok = await Site.toggle(b.dataset.doneSlug);
         b.disabled = false;
+        if (!ok) { alert("That could not be saved. If this lesson has an assessment, pass it to complete the lesson."); location.reload(); return; }
         document.querySelectorAll(`[data-done-slug="${b.dataset.doneSlug}"]`).forEach(paint);
       });
     });
