@@ -215,3 +215,6 @@ a.btn { text-decoration: none; display: inline-block; }
 .q .score { display: inline-flex; align-items: center; gap: 6px; }
 .ico.ok circle { fill: #1f7a4d; } .ico.no circle { fill: #c0392b; } .ico.part circle { fill: #b7791f; }
 pre.code { background: var(--accent-soft); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; font: .82rem/1.45 ui-monospace, Menlo, monospace; margin: 0 0 10px; white-space: pre; }
+.q .score { flex-direction: column; gap: 2px; }
+.q .score small { font: 700 .75rem var(--sans); white-space: nowrap; }
+.q .ico { width: 30px; height: 30px; }

@@ -84,7 +84,7 @@
         <p><a class="btn ghost" href="${lessonUrl()}">Back to the lesson</a> <a class="btn ghost" href="${S.profileUrl}">My profile</a></p></section>
       ${items.map((it, i) => {
         const full = it.got >= it.max, part = it.got > 0 && !full;
-        return `<section class="card block q ${full ? "good" : part ? "part" : "bad"}"><div class="row"><b>Question ${i + 1}</b><span class="score">${icon(full ? "ok" : part ? "part" : "no")} ${it.got} / ${it.max}</span></div>
+        return `<section class="card block q ${full ? "good" : part ? "part" : "bad"}"><div class="row"><b>Question ${i + 1}</b><span class="score">${icon(full ? "ok" : part ? "part" : "no")}<small>${it.got} / ${it.max}</small></span></div>
           <p class="qtext">${esc(it.q)}</p>${code(it)}
           <p><span class="hint">Your answer</span><br>${it.typed ? esc(it.typed) : "<i>No answer</i>"}</p>
           ${full ? "" : `<p><span class="hint">Model answer</span><br>${esc(it.model)}</p>`}
