@@ -89,7 +89,7 @@
     const pend = (me.requested || []).filter((k) => catalog.courses[k]);
     const avail = COURSE_KEYS.filter((k) => !me.subjects.includes(k) && !pend.includes(k));
     const pendHtml = pend.map((k) => `<span class="pill pending" data-accent="${catalog.courses[k].accent}">${esc(catalog.courses[k].title)} · waiting for approval <button class="x" data-cancel="${k}" title="Cancel request">×</button></span>`).join("");
-    const req = !me.is_admin && avail.length
+    const req = !me.is_admin && !me.is_teacher && avail.length
       ? `<p class="hint">Join a subject: ${avail.map((k) => `<button class="mini" data-req="${k}">+ ${esc(catalog.courses[k].title)}</button>`).join(" ")}</p>` : "";
     return `<div class="pills">${pills(me.subjects.filter((k) => catalog.courses[k]))}${pendHtml}</div>${req}`;
   }
@@ -128,12 +128,12 @@
         <p><button class="btn ghost" id="signout">Sign out</button></p></section>`;
 
     // Teachers get the chapter map only: no percentages, up next, history or scores.
-    if (me.is_admin) {
+    if (me.is_admin || me.is_teacher) {
       const maps = mine.map((k) => {
         const c = catalog.courses[k];
         return `<section class="card block" data-accent="${c.accent}"><h3><a href="${S.base}${c.url}">${esc(c.title)}</a></h3>${chapterMap(c, done)}</section>`;
       }).join("");
-      return `<section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}${me.email2 ? ` · ${esc(me.email2)}` : ""}</p>${subjectPanel(me)}</section><!--split-->
+      return `<section class="idcard"><h1>${esc(me.name)}</h1><p class="email">${esc(me.email)}${me.email2 ? ` · ${esc(me.email2)}` : ""}</p>${me.is_teacher ? '<p class="hint">Co-teacher: every subject is open to you.</p>' : ""}${subjectPanel(me)}</section><!--split-->
         <p class="hint">Course map. Each square is a coursebook chapter: filled means every activity is done, half means started, grey means nothing there yet.</p>${maps}${account}`;
     }
 
@@ -177,14 +177,15 @@
 
   // ---------- admin console ----------
   async function loadAdmin() {
-    const [{ data: people, error }, { data: prog }] = await Promise.all([
+    const [{ data: people, error }, { data: prog }, { data: teachers }] = await Promise.all([
       sb.from("profiles").select("*").order("name"),
       sb.rpc("admin_progress"),
+      sb.from("teachers").select("*").order("name"),
     ]);
     if (error) throw error;
     const byEmail = new Map();
     (prog || []).forEach((r) => { if (!byEmail.has(r.email)) byEmail.set(r.email, new Map()); byEmail.get(r.email).set(r.slug, r.done_at); });
-    return { people: people || [], byEmail };
+    return { people: people || [], teachers: teachers || [], byEmail };
   }
 
   const subjectBoxes = (chosen = []) => COURSE_KEYS.map((k) =>
@@ -260,7 +261,13 @@
         <div class="row"><span></span><button class="mini" id="copypw">Copy as table</button></div>
         <div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Email</th><th>Password</th></tr></thead><tbody>
         ${state.people.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.email)}${p.email2 ? `<br>${esc(p.email2)}` : ""}</td><td><code>${esc(p.password)}</code></td></tr>`).join("") || `<tr><td colspan="3" class="hint">No students yet.</td></tr>`}
-        </tbody></table></div></section></div>
+        </tbody></table></div></section>
+      <section class="card block"><h3>Co-teachers</h3>
+        <p class="hint">Can open every subject and class content. No admin panel and no student data.</p>
+        ${state.teachers.length ? `<div class="tablewrap"><table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Password</th><th></th></tr></thead><tbody id="tch">
+          ${state.teachers.map((t) => `<tr data-email="${esc(t.email)}"><td>${esc(t.name)}</td><td>${esc(t.email)}</td><td><code>${esc(t.password)}</code></td><td><button class="mini danger" data-rm="1">Remove</button></td></tr>`).join("")}</tbody></table></div>` : '<p class="hint">None yet.</p>'}
+        <form id="f-teacher" class="inline"><label>Name<input name="tname" required></label><label>Email<input type="email" name="temail" required></label>
+          <button class="btn" type="submit">Add co-teacher</button><p class="msg" hidden></p></form></section></div>
       <div class="tabpanel" data-panel="students"><div class="row"><h3>Classes</h3><button class="mini" id="csv">Export CSV</button></div>
         <p class="hint">Open a class to manage its students.</p>${classAccordion(state)}</div>
       <div class="tabpanel" data-panel="me">${adminMe}</div>
@@ -343,6 +350,24 @@
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([[head.join(","), ...lines].join("\n")], { type: "text/csv" }));
       a.download = "progress.csv"; a.click();
+    });
+
+    $("#f-teacher").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const f = e.target, m = $(".msg", f), email = f.temail.value.trim().toLowerCase();
+      if (!EMAIL_RE.test(email)) return msg(m, "Enter a valid email.", false);
+      const taken = new Set([...state.people, ...state.teachers].map((x) => x.password));
+      const { error } = await sb.rpc("admin_add_teacher", { t_name: f.tname.value.trim(), t_email: email, t_password: genPassword(taken) });
+      if (error) return msg(m, error.message, false);
+      renderAdmin(host);
+    });
+    $("#tch")?.addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-rm]");
+      if (!btn) return;
+      const email = btn.closest("tr").dataset.email;
+      if (!confirm(`Remove co-teacher ${email}? Their login is deleted.`)) return;
+      const { error } = await sb.rpc("admin_remove_teacher", { t_email: email });
+      if (error) alert(error.message); else renderAdmin(host);
     });
 
     host.querySelectorAll("details.cls").forEach(toggleClass);

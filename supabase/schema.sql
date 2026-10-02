@@ -18,6 +18,14 @@ insert into public.admins (email, name) values
   ('gbyatt@gmail.com', 'Gary Byatt')
 on conflict (email) do nothing;
 
+-- Co-teachers: can open every subject, but have no admin access and see no student data.
+create table if not exists public.teachers (
+  email    text primary key check (email = lower(email)),
+  name     text not null,
+  password text not null
+);
+alter table public.teachers enable row level security;
+
 create table if not exists public.profiles (
   email        text primary key check (email = lower(email)),
   name         text not null,
@@ -66,11 +74,16 @@ $$;
 create or replace function public.is_member() returns boolean
 language sql stable security definer set search_path = public as $$
   select exists (select 1 from admins   where email = lower(auth.jwt() ->> 'email'))
+      or exists (select 1 from teachers where email = lower(auth.jwt() ->> 'email'))
       or exists (select 1 from profiles where email = lower(auth.jwt() ->> 'email') or email2 = lower(auth.jwt() ->> 'email'))
 $$;
 
 drop policy if exists profiles_admin_all on public.profiles;
 create policy profiles_admin_all on public.profiles
+  for all using (is_admin()) with check (is_admin());
+
+drop policy if exists teachers_admin_all on public.teachers;
+create policy teachers_admin_all on public.teachers
   for all using (is_admin()) with check (is_admin());
 
 drop policy if exists progress_select on public.progress;
@@ -88,13 +101,15 @@ create or replace function public.check_profile_emails() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
   if exists (select 1 from profiles where email <> new.email and (email = new.email or email2 = new.email))
-     or exists (select 1 from admins where email = new.email) then
+     or exists (select 1 from admins where email = new.email)
+     or exists (select 1 from teachers where email = new.email) then
     raise exception 'Email % is already in use', new.email;
   end if;
   if new.email2 is not null and (
        exists (select 1 from profiles where email <> new.email and (email = new.email2 or email2 = new.email2))
        or exists (select 1 from profiles where email = new.email2)
-       or exists (select 1 from admins where email = new.email2)) then
+       or exists (select 1 from admins where email = new.email2)
+       or exists (select 1 from teachers where email = new.email2)) then
     raise exception 'Email % is already in use', new.email2;
   end if;
   return new;
@@ -111,6 +126,10 @@ begin
   select * into a from admins where email = lower(new.email);
   if found and a.initial_password is not null and a.initial_password <> ''
      and new.encrypted_password = crypt(a.initial_password, new.encrypted_password) then
+    return new;
+  end if;
+  if exists (select 1 from teachers t where t.email = lower(new.email) and t.password <> ''
+             and new.encrypted_password = crypt(t.password, new.encrypted_password)) then
     return new;
   end if;
   select * into p from profiles where email = lower(new.email) or email2 = lower(new.email);
@@ -146,6 +165,10 @@ begin
   select * into a from admins where email = e;
   if found then
     return json_build_object('email', e, 'name', a.name, 'is_admin', true,
+                             'subjects', array['ig-econ','ig-cs','a-econ','a-cs'], 'requested', array[]::text[]);
+  end if;
+  if exists (select 1 from teachers where email = e) then
+    return json_build_object('email', e, 'name', (select name from teachers where email = e), 'is_admin', false, 'is_teacher', true,
                              'subjects', array['ig-econ','ig-cs','a-econ','a-cs'], 'requested', array[]::text[]);
   end if;
   update profiles set last_seen = now() where email = e or email2 = e returning * into p;
@@ -248,6 +271,31 @@ begin
   select email2 into e2 from profiles where email = k;
   update auth.users set encrypted_password = crypt(new_password, gen_salt('bf')), updated_at = now()
    where email = e or email = k or (e2 is not null and email = e2);
+end $$;
+
+-- Admin: add a co-teacher with their own login (generated password is passed in from the admin panel).
+create or replace function public.admin_add_teacher(t_name text, t_email text, t_password text) returns void
+language plpgsql security definer set search_path = public as $$
+declare e text := lower(trim(t_email));
+begin
+  if not is_admin() then raise exception 'Admins only'; end if;
+  if length(t_password) < 8 then raise exception 'Password too short'; end if;
+  if exists (select 1 from admins where email = e) or exists (select 1 from teachers where email = e)
+     or exists (select 1 from profiles where email = e or email2 = e) then
+    raise exception 'Email % is already in use', e;
+  end if;
+  insert into teachers (email, name, password) values (e, trim(t_name), t_password);
+  perform _create_login(e, t_password);
+end $$;
+
+create or replace function public.admin_remove_teacher(t_email text) returns void
+language plpgsql security definer set search_path = public, auth as $$
+declare e text := lower(t_email);
+begin
+  if not is_admin() then raise exception 'Admins only'; end if;
+  delete from progress where email = e;
+  delete from auth.users where email = e;
+  delete from teachers where email = e;
 end $$;
 
 -- Student asks to join a subject; an admin approves or declines from the admin panel.
