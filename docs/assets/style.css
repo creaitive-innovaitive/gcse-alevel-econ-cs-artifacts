@@ -212,3 +212,6 @@ dialog.wide { max-width: 860px; width: 94%; max-height: 90vh; overflow: auto; }
 .lessonrow .row { gap: 10px; flex-wrap: wrap; }
 .ok-txt { color: #1f7a4d; font-weight: 700; } .no-txt { color: var(--muted); }
 a.btn { text-decoration: none; display: inline-block; }
+.q .mark { display: inline-flex; align-items: center; gap: 6px; }
+.ico.ok circle { fill: #1f7a4d; } .ico.no circle { fill: #c0392b; } .ico.part circle { fill: #b7791f; }
+pre.code { background: var(--accent-soft); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; font: .82rem/1.45 ui-monospace, Menlo, monospace; margin: 0 0 10px; white-space: pre; }

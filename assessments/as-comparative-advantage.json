@@ -67,7 +67,8 @@
    "ok": "Full marks: you linked it to opportunity cost and to being lower.",
    "fb": "Two ideas are needed: it is about opportunity cost, and the country with the lower opportunity cost holds the advantage. Learn the wording in the Tips & keywords tab.",
    "model": "A country has a comparative advantage in a good if it can produce it at a lower opportunity cost than another country, meaning it gives up fewer other goods to make it.",
-   "hint": "One sentence."
+   "hint": "One sentence.",
+   "fb_part": "Part marks: some of your answer earned credit, but not all. Two ideas are needed: it is about opportunity cost, and the country with the lower opportunity cost holds the advantage. Learn the wording in the Tips & keywords tab."
   },
   {
    "id": "q5",
@@ -90,7 +91,8 @@
    "topic": "Absolute vs comparative",
    "ok": "Full marks: the gain comes from comparative, not absolute, advantage.",
    "fb": "Absolute advantage in everything does not stop trade being worthwhile. The gain comes from specialising where the opportunity cost is lower. Re-read 'A country can have an absolute advantage in everything and still gain from trade' in the Learn tab.",
-   "model": "Yes. Even with an absolute advantage in everything, the country is likely to have a lower opportunity cost in some goods. If it specialises in those and trades, both countries could consume more than they could alone."
+   "model": "Yes. Even with an absolute advantage in everything, the country is likely to have a lower opportunity cost in some goods. If it specialises in those and trades, both countries could consume more than they could alone.",
+   "fb_part": "Part marks: some of your answer earned credit, but not all. Absolute advantage in everything does not stop trade being worthwhile. The gain comes from specialising where the opportunity cost is lower. Re-read 'A country can have an absolute advantage in everything and still gain from trade' in the Learn tab."
   },
   {
    "id": "q6",
@@ -191,7 +193,8 @@
    "ok": "Full marks: two different limitations.",
    "fb": "Pick two distinct points, such as over-dependence on a few exports, structural unemployment when an industry declines, or transport costs. A weak answer repeats one point twice. See the Exam questions tab.",
    "model": "Two examples: the country could become over-dependent on a few exports, so a fall in world prices may hurt it badly; and workers in industries that decline after specialising may become structurally unemployed.",
-   "hint": "Give two different points."
+   "hint": "Give two different points.",
+   "fb_part": "Part marks: some of your answer earned credit, but not all. Pick two distinct points, such as over-dependence on a few exports, structural unemployment when an industry declines, or transport costs. A weak answer repeats one point twice. See the Exam questions tab."
   },
   {
    "id": "q10",

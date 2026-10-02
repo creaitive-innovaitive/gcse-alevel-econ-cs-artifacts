@@ -61,7 +61,7 @@
   {
    "id": "q4",
    "type": "num",
-   "q": "Data array: [27, 19, 36, 42, 16] at indexes 0 to 4. Pointer array: [2, 0, 3, -1, 1]. startPointer = 4. What is the third item in the list order? (follow the pointers from startPointer)",
+   "q": "Using the arrays shown, what is the third item in the list order? (follow the pointers from startPointer)",
    "ans": 27,
    "tol": 0,
    "marks": 1,
@@ -69,7 +69,8 @@
    "hint": "Enter a number.",
    "ok": "Correct: 16, then 19, then 27.",
    "fb": "Start at index 4 (16), its pointer is 1 so go to index 1 (19), whose pointer is 0, so index 0 (27). The third item is 27. Practise the trace tables in section 03.",
-   "model": "27"
+   "model": "27",
+   "code": "index                  0    1    2    3    4\nmyLinkedList          27   19   36   42   16\nmyLinkedListPointers   2    0    3   -1    1\n\nstartPointer = 4"
   },
   {
    "id": "q5",
@@ -82,7 +83,8 @@
    "hint": "Enter a number.",
    "ok": "Correct: index 2.",
    "fb": "The data array is [27, 19, 36, 42, 16], so 36 is at index 2. The index where an item is stored is not its position in the list order.",
-   "model": "2"
+   "model": "2",
+   "code": "index                  0    1    2    3    4\nmyLinkedList          27   19   36   42   16\nmyLinkedListPointers   2    0    3   -1    1\n\nstartPointer = 4"
   },
   {
    "id": "q6",
@@ -99,12 +101,13 @@
    "topic": "Finding",
    "ok": "Correct.",
    "fb": "You do not scan from index 0. Start at startPointer and follow the chain of pointers. See section 03.",
-   "model": "The index in startPointer"
+   "model": "The index in startPointer",
+   "code": "FUNCTION find(itemSearch) RETURNS INTEGER\n  itemPointer <- startPointer\n  found <- FALSE\n  WHILE (itemPointer <> -1) AND NOT found DO\n    IF myLinkedList[itemPointer] = itemSearch THEN\n      found <- TRUE\n    ELSE\n      itemPointer <- myLinkedListPointers[itemPointer]\n    ENDIF\n  ENDWHILE\n  RETURN itemPointer\nENDFUNCTION"
   },
   {
    "id": "q7",
    "type": "text",
-   "q": "What does the find function return if the item is not in the list?",
+   "q": "Look at the code. What value does the function return (the value left in itemPointer) when the item is not in the list?",
    "groups": [
     [
      "-1",
@@ -117,9 +120,10 @@
    "marks": 1,
    "topic": "Finding",
    "ok": "Correct.",
-   "fb": "The loop stops when itemPointer reaches the null pointer, so the function returns -1. See section 03.",
-   "model": "-1 (the null pointer).",
-   "hint": "A value."
+   "fb": "The search failing is the outcome, but the function returns a value: when the loop ends without finding the item, itemPointer has followed the chain to the null pointer, -1. The code that called find treats -1 as 'not found'. Trace the loop in section 03.",
+   "model": "-1, the null pointer. The calling code reads -1 as 'not found'.",
+   "hint": "A value, not a sentence.",
+   "code": "FUNCTION find(itemSearch) RETURNS INTEGER\n  itemPointer <- startPointer\n  found <- FALSE\n  WHILE (itemPointer <> -1) AND NOT found DO\n    IF myLinkedList[itemPointer] = itemSearch THEN\n      found <- TRUE\n    ELSE\n      itemPointer <- myLinkedListPointers[itemPointer]\n    ENDIF\n  ENDWHILE\n  RETURN itemPointer\nENDFUNCTION"
   },
   {
    "id": "q8",
@@ -141,8 +145,43 @@
   {
    "id": "q9",
    "type": "text",
-   "q": "Explain one advantage of a linked list over a sorted array when inserting an item.",
+   "q": "Explain one advantage of a linked list over a sorted array when inserting an item. (2 marks: state the advantage, then say why)",
    "groups": [
+    [
+     "faster",
+     "quicker",
+     "efficient*",
+     "easier",
+     "simpler",
+     "less work",
+     "saves time",
+     "less time",
+     "quick",
+     "fast",
+     "no need to shift",
+     "not shift*",
+     "without shifting",
+     "no data moves",
+     "not move*",
+     "avoid* mov*",
+     "avoid* shift*",
+     "don t need to move",
+     "don t need to shift",
+     "no need to move",
+     "not need to move",
+     "not need to shift",
+     "does not need to move",
+     "doesn t need to move",
+     "doesn t have to",
+     "only pointers",
+     "pointers change",
+     "change pointers",
+     "only two pointers",
+     "not have to move",
+     "not have to shift",
+     "no shifting",
+     "no moving"
+    ],
     [
      "no need to shift",
      "not shift*",
@@ -151,14 +190,6 @@
      "not move*",
      "avoid* mov*",
      "avoid* shift*",
-     "don't need to move",
-     "do not need to move",
-     "only pointers",
-     "pointers change",
-     "change pointers",
-     "only two pointers",
-     "not have to move",
-     "not have to shift",
      "don t need to move",
      "don t need to shift",
      "no need to move",
@@ -166,15 +197,24 @@
      "not need to shift",
      "does not need to move",
      "doesn t need to move",
-     "doesn t have to"
+     "doesn t have to",
+     "only pointers",
+     "pointers change",
+     "change pointers",
+     "only two pointers",
+     "not have to move",
+     "not have to shift",
+     "no shifting",
+     "no moving"
     ]
    ],
-   "marks": 1,
+   "marks": 2,
    "topic": "Linked list vs array",
-   "ok": "Correct.",
-   "fb": "The key idea is that existing items do not need to be shifted along; only pointers are changed. See section 06 (vs. arrays).",
-   "model": "Items do not have to be shifted along to make room, because only a couple of pointers need to change, which may make insertion quicker for large lists.",
-   "hint": "One sentence."
+   "ok": "Full marks: you stated the advantage and explained why.",
+   "fb": "Two things are needed: the advantage (insertion is quicker or more efficient) and the reason (existing items do not have to be shifted along; only pointers are changed). See section 06.",
+   "model": "Insertion may be quicker, because items do not have to be shifted along to make room: only a couple of pointers need to change, so the amount of work is likely to stay small even for a long list.",
+   "hint": "State the advantage, then explain why it happens.",
+   "fb_part": "You have named a benefit (such as faster or quicker), which is the right idea, but the second mark needs the reason. In a sorted array every later item has to be shifted along to make room; in a linked list no data moves and only a couple of pointers are changed. Say why, not just that it is quicker. See section 06."
   },
   {
    "id": "q10",

@@ -356,7 +356,7 @@ create policy progress_delete on public.progress
 -- Lowercase, strip punctuation, collapse spaces.
 create or replace function public._norm(t text) returns text
 language sql immutable as $$
-  select trim(regexp_replace(regexp_replace(regexp_replace(lower(replace(coalesce(t, ''), '−', '-')), '[^a-z0-9.% -]+', ' ', 'g'), '\.( |$)', ' ', 'g'), '\s+', ' ', 'g'))
+  select trim(regexp_replace(regexp_replace(regexp_replace(lower(replace(coalesce(t, ''), chr(8722), '-')), '[^a-z0-9.% -]+', ' ', 'g'), '\.( |$)', ' ', 'g'), '\s+', ' ', 'g'))
 $$;
 
 -- Does the typed answer contain the phrase? A trailing * allows any word ending (opportunit* matches opportunity/opportunities).
@@ -371,7 +371,7 @@ end $$;
 
 create or replace function public._first_number(t text) returns numeric
 language sql immutable as $$
-  select (regexp_match(replace(replace(coalesce(t, ''), ',', ''), '−', '-'), '-?\d+(\.\d+)?'))[1]::numeric
+  select (regexp_match(replace(replace(coalesce(t, ''), ',', ''), chr(8722), '-'), '-?\d+(?:\.\d+)?'))[1]::numeric
 $$;
 
 -- Mark one question. Returns marks gained.
@@ -411,7 +411,7 @@ begin
   return json_build_object(
     'slug', a.slug, 'title', a.title, 'pass', a.pass_pct,
     'questions', (select json_agg(jsonb_build_object('id', q ->> 'id', 'type', q ->> 'type', 'q', q ->> 'q',
-                    'opts', q -> 'opts', 'marks', coalesce((q ->> 'marks')::int, 1), 'topic', q ->> 'topic', 'hint', q ->> 'hint'))
+                    'opts', q -> 'opts', 'code', q ->> 'code', 'marks', coalesce((q ->> 'marks')::int, 1), 'topic', q ->> 'topic', 'hint', q ->> 'hint'))
                   from jsonb_array_elements(a.questions) q),
     'attempt', case when att.id is null then null else json_build_object('answers', att.answers, 'score', att.score, 'max', att.max_score,
                     'pct', att.pct, 'result', att.result, 'at', att.submitted_at) end);
@@ -440,7 +440,8 @@ begin
     sc := sc + got;
     items := items || jsonb_build_array(jsonb_build_object('id', q ->> 'id', 'got', got,
         'max', coalesce((q ->> 'marks')::int, case when q ->> 'type' = 'text' then jsonb_array_length(q -> 'groups') else 1 end),
-        'q', q ->> 'q', 'typed', case when q ->> 'type' = 'mcq' and typed ~ '^[0-9]+$' then q -> 'opts' ->> typed::int else typed end, 'model', q ->> 'model', 'feedback', case when got >= coalesce((q ->> 'marks')::int, 1) then q ->> 'ok' else q ->> 'fb' end,
+        'q', q ->> 'q', 'code', q ->> 'code', 'typed', case when q ->> 'type' = 'mcq' and typed ~ '^[0-9]+$' then q -> 'opts' ->> typed::int else typed end, 'model', q ->> 'model', 'feedback', case when got >= coalesce((q ->> 'marks')::int, 1) then q ->> 'ok'
+                         when got > 0 and q ? 'fb_part' then q ->> 'fb_part' else q ->> 'fb' end,
         'topic', q ->> 'topic'));
   end loop;
   p := case when tot = 0 then 0 else round(100.0 * sc / tot) end;

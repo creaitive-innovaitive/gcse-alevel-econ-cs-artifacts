@@ -128,7 +128,8 @@
    "ok": "Full marks: responsiveness of quantity demanded to a change in price.",
    "fb": "Two parts: it measures the responsiveness (how much) of quantity demanded, to a change in the good's own price. Revisit 'Three elasticities of demand' in the Learn tab.",
    "model": "PED measures the responsiveness of quantity demanded of a product to a change in its own price, ceteris paribus.",
-   "hint": "One sentence."
+   "hint": "One sentence.",
+   "fb_part": "Part marks: some of your answer earned credit, but not all. Two parts: it measures the responsiveness (how much) of quantity demanded, to a change in the good's own price. Revisit 'Three elasticities of demand' in the Learn tab."
   },
   {
    "id": "q8",
@@ -169,7 +170,8 @@
    "ok": "Full marks: three different determinants.",
    "fb": "Three different determinants are needed, such as availability of substitutes, relative expense, time period, necessity or luxury, addiction and brand loyalty. See 'What determines PED?' in the Learn tab.",
    "model": "Availability and closeness of substitutes (more substitutes tends to make demand more elastic); the proportion of income spent on it (larger share, more elastic); and the time period (longer run, more elastic).",
-   "hint": "Three short points."
+   "hint": "Three short points.",
+   "fb_part": "Part marks: some of your answer earned credit, but not all. Three different determinants are needed, such as availability of substitutes, relative expense, time period, necessity or luxury, addiction and brand loyalty. See 'What determines PED?' in the Learn tab."
   },
   {
    "id": "q9",

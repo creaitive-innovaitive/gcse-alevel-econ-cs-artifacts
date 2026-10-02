@@ -12,6 +12,14 @@
   const loadDraft = () => { try { return JSON.parse(localStorage.getItem(draftKey) || "{}"); } catch (e) { return {}; } };
   const saveDraft = (d) => { try { localStorage.setItem(draftKey, JSON.stringify(d)); } catch (e) {} };
 
+  const code = (q) => (q.code ? `<pre class="code">${esc(q.code)}</pre>` : "");
+  const ICONS = {
+    ok: '<path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
+    no: '<path d="M7 7l10 10M17 7L7 17" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
+    part: '<path d="M6 12h12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
+  };
+  const icon = (k) => `<svg class="ico ${k}" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="12"/>${ICONS[k]}</svg>`;
+
   function field(q, val) {
     if (q.type === "mcq") {
       return `<div class="opts">${q.opts.map((o, i) => `<label class="opt"><input type="radio" name="${q.id}" value="${i}" ${String(val) === String(i) ? "checked" : ""}> <span>${esc(o)}</span></label>`).join("")}</div>`;
@@ -28,7 +36,7 @@
       ${preview ? '<p class="msg err">You are signed in as a teacher, so you can read the questions but not submit.</p>' : ""}
       <p><a class="lnk" href="${lessonUrl()}">Open the lesson</a> if you want to revise first.</p></section>
       <form id="qf">${quiz.questions.map((q, i) => `<section class="card block q"><div class="row"><b>Question ${i + 1}</b><span class="hint">${q.marks} mark${q.marks === 1 ? "" : "s"}</span></div>
-        <p class="qtext">${esc(q.q)}</p>${field(q, draft[q.id])}</section>`).join("")}
+        <p class="qtext">${esc(q.q)}</p>${code(q)}${field(q, draft[q.id])}</section>`).join("")}
         <section class="card block"><p class="hint" id="left"></p><p class="msg err" hidden></p><button class="btn" type="submit" ${preview ? "disabled" : ""}>Submit answers</button></section></form>`;
     const f = $("#qf"), left = $("#left");
     const read = () => Object.fromEntries(quiz.questions.map((q) => {
@@ -76,8 +84,8 @@
         <p><a class="btn ghost" href="${lessonUrl()}">Back to the lesson</a> <a class="btn ghost" href="${S.profileUrl}">My profile</a></p></section>
       ${items.map((it, i) => {
         const full = it.got >= it.max, part = it.got > 0 && !full;
-        return `<section class="card block q ${full ? "good" : part ? "part" : "bad"}"><div class="row"><b>Question ${i + 1}</b><span class="mark">${full ? "✓" : part ? "◐" : "✗"} ${it.got} / ${it.max}</span></div>
-          <p class="qtext">${esc(it.q)}</p>
+        return `<section class="card block q ${full ? "good" : part ? "part" : "bad"}"><div class="row"><b>Question ${i + 1}</b><span class="mark">${icon(full ? "ok" : part ? "part" : "no")} ${it.got} / ${it.max}</span></div>
+          <p class="qtext">${esc(it.q)}</p>${code(it)}
           <p><span class="hint">Your answer</span><br>${it.typed ? esc(it.typed) : "<i>No answer</i>"}</p>
           ${full ? "" : `<p><span class="hint">Model answer</span><br>${esc(it.model)}</p>`}
           <p class="fb">${esc(it.feedback)}</p></section>`;
