@@ -111,6 +111,24 @@ Lib.slider($("#g8"), { id: "lc1", label: "Transport cost per coat traded (in shi
   $("#ev").textContent = net > 0.05 ? `Trade still gains ${net.toFixed(1)} shirts per coat, shared between the countries.` : net > -0.05 ? "The gain is gone: it is no longer worth trading." : "Transport costs exceed the gain: trade makes the countries worse off, so it will not take place.";
 } });
 
+/* ---------- Lab 4: agree a deal ---------- */
+function lab4() {
+  if (!$("#lr") || !$("#lx")) return;
+  const r = +$("#lr").value, x = +$("#lx").value, rc = 120 - x, rs = r * x, bc = x, bs = 160 - r * x;
+  $("#d1").textContent = `${Lib.fmtN(rc, 0)} coats, ${Lib.fmtN(rs, 0)} shirts`;
+  if (bs < 0) { $("#d2").textContent = "cannot pay"; $("#dv").textContent = `Blue only has 160 shirts, but would owe ${Lib.fmtN(r * x, 0)}. This deal is not possible: sell fewer coats or lower the price.`; return; }
+  $("#d2").textContent = `${Lib.fmtN(bc, 0)} coats, ${Lib.fmtN(bs, 0)} shirts`;
+  const redOk = rc >= 80 && rs >= 80, blueOk = bc >= 30 && bs >= 40, redMore = rc > 80 || rs > 80, blueMore = bc > 30 || bs > 40;
+  let t;
+  if (redOk && blueOk) t = `Both countries end up with at least as much of each good as before trade${redMore && blueMore ? ", and more of something" : ""}. This deal could be agreed.`;
+  else if (!redOk && !blueOk) t = "Neither country would accept: each ends up with less of at least one good than before trade.";
+  else if (!redOk) t = `Red would refuse: it ends up with ${rc < 80 ? "fewer coats" : "fewer shirts"} than before trade (it needs at least 80 of each). Raise the price or change the quantity.`;
+  else t = `Blue would refuse: it ends up with ${bc < 30 ? "fewer coats" : "fewer shirts"} than before trade (it needs at least 30 coats and 40 shirts). Lower the price or change the quantity.`;
+  $("#dv").textContent = t;
+}
+Lib.slider($("#g9"), { id: "lr", label: "Exchange rate: shirts per coat", min: 1, max: 5, step: 0.25, value: 3, fmt: (v) => v.toFixed(2), onInput: lab4 });
+Lib.slider($("#g10"), { id: "lx", label: "Coats Red sells to Blue", min: 0, max: 60, step: 1, value: 40, fmt: (v) => v, onInput: lab4 });
+
 /* ---------- Practise ---------- */
 Lib.classify($("#cl1"), {
   prompt: "Which idea does each statement belong to?",
@@ -132,6 +150,16 @@ Lib.classify($("#cl2"), {
     { text: "Has an absolute advantage in both goods", b: 1 }, { text: "Should specialise in shoes", b: 0 },
     { text: "Can gain from trading with the other", b: 2 },
   ], done: "Vietnam is better at both, yet Russia still gains by specialising in shoes.",
+});
+Lib.classify($("#cl3"), {
+  prompt: "Who mainly makes each decision in a market economy?",
+  buckets: [{ label: "Firms and consumers" }, { label: "Governments" }, { label: "International agreements and bodies" }],
+  items: [
+    { text: "Which supplier a clothing importer buys from", b: 0 }, { text: "Whether a firm builds a factory to export", b: 0 },
+    { text: "Which brand of shirt a shopper chooses", b: 0 }, { text: "Setting the tariff on imported cars", b: 1 },
+    { text: "Spending on education and ports", b: 1 }, { text: "Signing a free trade agreement", b: 1 },
+    { text: "Hearing a complaint that a country broke tariff promises", b: 2 }, { text: "Agreeing a limit above which tariffs cannot be raised", b: 2 },
+  ], done: "Trade is a joint outcome: firms respond to prices within rules that governments agree.",
 });
 Lib.order($("#o1"), { prompt: "Order the steps for finding comparative advantage.", items: [
   "Write down how much of each good each country can produce with the same resources",
@@ -167,6 +195,8 @@ Lib.quiz($("#qz1"), { qs: [
   { q: "Which is a limitation of comparative advantage theory?", opts: ["Resources move freely", "Zero transport costs", "Resources may not move easily between industries", "Free trade"], a: 2, why: "The theory assumes full mobility; in practice, this causes structural unemployment." },
   { q: "The Prebisch–Singer hypothesis suggests that:", opts: ["Terms of trade improve for primary producers", "Terms of trade tend to move against primary producers", "Trade is always balanced", "Absolute advantage is the cause of trade"], a: 1, why: "Demand for manufactures grows faster than for primary products as incomes rise." },
   { q: "A trading possibility curve shows that trade lets a country:", opts: ["Produce outside its PPC", "Consume outside its PPC", "Shift its PPC inwards", "Avoid opportunity cost"], a: 1, why: "A country cannot produce beyond its PPC, but trade lets it consume beyond it." },
+  { q: "In a market economy, who mainly decides which goods a country actually exports and imports?", opts: ["A single world government", "Firms and consumers responding to prices, within rules set by governments", "The WTO alone", "Only the largest country"], a: 1, why: "Thousands of businesses and households decide, guided by prices and by the rules and policies governments set." },
+  { q: "If a country breaks a trade agreement by raising tariffs above its promised limit, the usual route is:", opts: ["Nothing can be done", "A dispute case through WTO procedures, and possible retaliation", "The goods are confiscated", "The exchange rate is fixed"], a: 1, why: "Disputes go through agreed procedures and, if the rules are not followed, the other country can be authorised to retaliate." },
   { q: "Higher export prices caused by higher wage costs are most likely to:", opts: ["Raise export volumes", "Be good for competitiveness", "Reduce demand for exports", "Lower import prices"], a: 2, why: "Costs-driven price rises make exports less competitive." },
 ] });
 Lib.cards($("#fc1"), { cards: [
@@ -186,4 +216,4 @@ Lib.cards($("#fc1"), { cards: [
   ["Overspecialisation", "Depending on too few products, exposing a country to price falls."],
   ["Trade restrictions", "Tariffs, quotas and other barriers that limit imports."],
 ] });
-lab1(); lab2();
+lab1(); lab2(); lab4();
