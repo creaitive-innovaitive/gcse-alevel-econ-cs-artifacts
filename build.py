@@ -323,10 +323,18 @@ THEME_CLICK = ("var r=document.documentElement,d=(r.getAttribute('data-theme')||
                "r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}")
 
 
+# Sticky tab bars keep the old scroll position after a click, so the new panel opens part-way down.
+# This returns the page to the top whenever a tab inside a sticky or fixed bar is clicked.
+TAB_SCROLL = ("<script>document.addEventListener('click',function(e){var t=e.target.closest("
+              "'[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;"
+              "var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}"
+              "if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script>")
+
+
 def inject_pill(text, back_href, back_label, home_href, slug, courses):
     pill = (f'{PILL_CSS}<div class="site-pill"><a href="{back_href}">← {esc(back_label)}</a>'
             f'<a href="{home_href}">Home</a><button type="button" title="Light / dark" onclick="{THEME_CLICK}">◐</button><button data-done-slug="{slug}" hidden></button></div>'
-            f'{auth_scripts(home_href, courses)}')
+            f'{auth_scripts(home_href, courses)}{TAB_SCROLL}')
     text = text.replace("<head>", "<head>" + THEME_HEAD + GATE_HEAD, 1) if "<head>" in text else THEME_HEAD + GATE_HEAD + text
     if "</body>" in text:
         i = text.rfind("</body>")

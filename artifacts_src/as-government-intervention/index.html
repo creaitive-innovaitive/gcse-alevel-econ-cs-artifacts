@@ -401,7 +401,7 @@ function initTabs() {
     window.dispatchEvent(new Event("resize"));
   };
   tabs.forEach((t, i) => {
-    t.addEventListener("click", () => show(i));
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
     t.addEventListener("keydown", (e) => {
       if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
       if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
