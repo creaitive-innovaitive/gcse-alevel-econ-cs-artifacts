@@ -60,11 +60,12 @@ def layout(title, body, path, active, crumbs=None, accent=None, auth=False, extr
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(full_title)}</title>
 <link rel="stylesheet" href="{root}assets/style.css">
-{GATE_HEAD if gate else ""}</head>
+{THEME_HEAD}{GATE_HEAD if gate else ""}</head>
 <body{acc}>
 <header class="site">
 <div class="bar">
 <a class="brand" href="{root}"><span class="mark">E·C</span><span>{esc(SITE_TITLE)}</span></a>
+<button class="theme" type="button" aria-label="Toggle dark mode"></button>
 <button class="menu" aria-label="Menu" aria-expanded="false">Menu</button>
 <nav class="main" aria-label="Main">{nav}</nav>
 </div>
@@ -80,6 +81,7 @@ def layout(title, body, path, active, crumbs=None, accent=None, auth=False, extr
 """
 
 
+THEME_HEAD = ('<script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>')
 GATE_HEAD = ('<script>document.documentElement.classList.add("gated")</script>'
              '<style>html.gated{visibility:hidden!important}</style>')
 
@@ -317,11 +319,15 @@ PILL_CSS = ("<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12p
             "@media print{.site-pill{display:none}}</style>")
 
 
+THEME_CLICK = ("var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';"
+               "r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}")
+
+
 def inject_pill(text, back_href, back_label, home_href, slug, courses):
     pill = (f'{PILL_CSS}<div class="site-pill"><a href="{back_href}">← {esc(back_label)}</a>'
-            f'<a href="{home_href}">Home</a><button data-done-slug="{slug}" hidden></button></div>'
+            f'<a href="{home_href}">Home</a><button type="button" title="Light / dark" onclick="{THEME_CLICK}">◐</button><button data-done-slug="{slug}" hidden></button></div>'
             f'{auth_scripts(home_href, courses)}')
-    text = text.replace("<head>", "<head>" + GATE_HEAD, 1) if "<head>" in text else GATE_HEAD + text
+    text = text.replace("<head>", "<head>" + THEME_HEAD + GATE_HEAD, 1) if "<head>" in text else THEME_HEAD + GATE_HEAD + text
     if "</body>" in text:
         i = text.rfind("</body>")
         return text[:i] + pill + text[i:]
