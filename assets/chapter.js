@@ -4,6 +4,7 @@
   const tabs = [...document.querySelectorAll(".chtabs button")];
   const panels = [...document.querySelectorAll("[data-p]")];
   const cards = [...document.querySelectorAll(".card.art")];
+  if (!tabs.length) return;  // the access gate replaced the page
   const el = (t) => document.querySelector(`[data-p="${t}"]`);
 
   function show(t) {
