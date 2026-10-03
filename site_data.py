@@ -230,6 +230,10 @@ COURSES = {
 
 # Artifacts. 'src' is the folder under artifacts_src/. 'places' is a list of
 # (course, chapter id) pairs; the first is the primary home (used for the back link).
+# 'role': "review" is the main chapter review (tracked on the Profile page); anything else is a
+# supplementary "resource" shown on the chapter's Resources tab. Leave it out for resources.
+# 'at': coursebook position of a resource, e.g. "31.2" or "19.1.4". Resources sort by it, in
+# coursebook order; ones without it come last, in the order listed here.
 ARTIFACTS = [
     # IGCSE Computer Science
     {"src": "compression-lab", "title": "Compression Lab", "kind": "Interactive",
@@ -241,7 +245,7 @@ ARTIFACTS = [
     {"src": "ig-cs-software-keyword-workout", "title": "Software: Keyword Workout", "kind": "Worksheet",
      "desc": "Match, gap-fill, sort and quick-fire activities on operating systems, utilities and translators.",
      "places": [("ig-cs", "ch-04")]},
-    {"src": "internet-and-www", "title": "The Internet and the World Wide Web", "kind": "Interactive",
+    {"src": "internet-and-www", "at": "5.1", "title": "The Internet and the World Wide Web", "kind": "Interactive",
      "desc": "5.1 The internet versus the WWW, a cookie flowchart ordering task, exam-style questions and top tips.",
      "places": [("ig-cs", "ch-05")]},
     {"src": "how-a-website-loads", "title": "How a Website Loads", "kind": "Animation",
@@ -250,10 +254,10 @@ ARTIFACTS = [
     {"src": "dns-clue-station", "title": "DNS Clue Station", "kind": "Classroom activity",
      "desc": "Team check-in game. Sequence the DNS cards, enter the code word, get a question.",
      "places": [("ig-cs", "ch-05")]},
-    {"src": "blockchain-explained", "title": "Blockchain Explained", "kind": "Interactive",
+    {"src": "blockchain-explained", "at": "5.2", "title": "Blockchain Explained", "kind": "Interactive",
      "desc": "5.2 Blockchaining, proof of work, cryptography, Bitcoin, Ethereum and Cardano, with an animated payment.",
      "places": [("ig-cs", "ch-05")]},
-    {"src": "cyber-security", "title": "Cyber Security", "kind": "Interactive",
+    {"src": "cyber-security", "at": "5.3", "title": "Cyber Security", "kind": "Interactive",
      "desc": "5.3 Threats and defences, slider labs for DDoS and brute-force attacks, top tips and practice questions.",
      "places": [("ig-cs", "ch-05")]},
 
@@ -263,10 +267,10 @@ ARTIFACTS = [
      "places": [("ig-econ", "ch-25")]},
 
     # A-Level Computer Science
-    {"src": "linked-lists", "title": "Linked Lists", "kind": "Walkthrough",
+    {"src": "linked-lists", "role": "review", "title": "Linked Lists", "kind": "Walkthrough",
      "desc": "Abstract data types: how a linked list stores, inserts and deletes nodes using pointers.",
      "places": [("a-cs", "a-level/ch-19")]},
-    {"src": "implementing-adts", "title": "Implementing One ADT from Another", "kind": "Interactive",
+    {"src": "implementing-adts", "at": "19.1.4", "title": "Implementing One ADT from Another", "kind": "Interactive",
      "desc": "19.1.4 Linked lists from arrays, dictionaries from linked lists, simulators and exam questions.",
      "places": [("a-cs", "a-level/ch-19")]},
     {"src": "insertion-sort", "title": "Insertion Sort, Step by Step", "kind": "Walkthrough",
@@ -275,7 +279,7 @@ ARTIFACTS = [
     {"src": "binary-search-tree", "title": "Binary Search Tree Walkthrough", "kind": "Walkthrough",
      "desc": "Insert, search and traverse a binary tree one step at a time.",
      "places": [("a-cs", "a-level/ch-19")]},
-    {"src": "big-o-notation", "title": "Comparing Algorithms: Big O Notation", "kind": "Interactive",
+    {"src": "big-o-notation", "at": "19.1.5", "title": "Comparing Algorithms: Big O Notation", "kind": "Interactive",
      "desc": "19.1.5 Order of growth, comparing algorithms and a practice set.",
      "places": [("a-cs", "a-level/ch-19")]},
 
@@ -303,22 +307,22 @@ ARTIFACTS = [
      "places": [("a-econ", "a-level/ch-44")]},
 
     # A-Level Economics, AS chapters requested by students
-    {"src": "as-elasticities-of-demand", "title": "Elasticities of Demand", "kind": "Interactive",
+    {"src": "as-elasticities-of-demand", "role": "review", "title": "Elasticities of Demand", "kind": "Interactive",
      "desc": "Price, income and cross elasticity: animated diagrams, labs, drag-and-drop practice, calculations and exam questions with model answers.",
      "places": [("a-econ", "as/ch-08")]},
-    {"src": "as-government-intervention", "title": "Methods and Effects of Government Intervention", "kind": "Interactive",
+    {"src": "as-government-intervention", "role": "review", "title": "Methods and Effects of Government Intervention", "kind": "Interactive",
      "desc": "Indirect taxes and incidence, subsidies, direct provision, price controls, buffer stocks and information, with diagrams, labs and exam practice.",
      "places": [("a-econ", "as/ch-13")]},
-    {"src": "as-comparative-advantage", "title": "Comparative Advantage and the Gains from Trade", "kind": "Interactive",
+    {"src": "as-comparative-advantage", "role": "review", "title": "Comparative Advantage and the Gains from Trade", "kind": "Interactive",
      "desc": "Opportunity cost, specialisation, terms of trade and the limits of the theory, with animated PPCs, labs and exam questions.",
      "places": [("a-econ", "as/ch-25")]},
-    {"src": "as-balance-of-payments", "title": "The Current Account of the Balance of Payments", "kind": "Interactive",
+    {"src": "as-balance-of-payments", "role": "review", "title": "The Current Account of the Balance of Payments", "kind": "Interactive",
      "desc": "Credits and debits, the four components, calculations, causes and consequences of deficits and surpluses, with exam practice.",
      "places": [("a-econ", "as/ch-27")]},
-    {"src": "as-reasons-for-intervention", "title": "Reasons for Government Intervention in Markets", "kind": "Interactive",
+    {"src": "as-reasons-for-intervention", "role": "review", "title": "Reasons for Government Intervention in Markets", "kind": "Interactive",
      "desc": "Public goods and the free rider problem, merit and demerit goods, and why governments set price controls, with diagrams, labs and exam practice.",
      "places": [("a-econ", "as/ch-12")]},
-    {"src": "as-elasticity-of-supply", "title": "Price Elasticity of Supply", "kind": "Interactive",
+    {"src": "as-elasticity-of-supply", "role": "review", "title": "Price Elasticity of Supply", "kind": "Interactive",
      "desc": "PES values, what determines supply flexibility, and why farm prices swing, with animated diagrams, labs, calculations and exam questions.",
      "places": [("a-econ", "as/ch-09")]},
 ]

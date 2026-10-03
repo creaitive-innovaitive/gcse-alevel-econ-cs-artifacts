@@ -139,17 +139,34 @@ for a in ARTIFACTS:
     assert (SRC / a["src"] / "index.html").exists(), a["src"]
 
 
-def count(keys):
-    seen = {a["slug"] for k in keys for a in by_chapter.get(k, [])}
+def is_review(a):
+    return a.get("role") == "review"
+
+
+def at_key(a):
+    return [int(x) for x in a["at"].split(".")] if a.get("at") else [10**6]
+
+
+for _l in by_chapter.values():
+    _l.sort(key=at_key)  # stable, so unplaced resources keep their listed order
+
+
+def count(keys, review=None):
+    seen = {a["slug"] for k in keys for a in by_chapter.get(k, []) if review is None or is_review(a) == review}
     return len(seen)
 
 
-def card(href, label, title, sub="", n=None, group=None):
+def card(href, label, title, sub="", n=None, group=None, res=None):
     badge = ""
     if n is not None:
         badge = f'<span class="count{" zero" if n == 0 else ""}">{plural(n, "activity")}</span>'
         if n == 0:
             badge = '<span class="count zero">Coming soon</span>'
+    if res is not None:
+        rev, extra = res
+        parts = ([f"{rev} review"] if rev else []) + ([plural(extra, "resource")] if extra else [])
+        badge = f'<span class="count">{" · ".join(parts)}</span>' if parts else '<span class="count zero">Coming soon</span>'
+        n = rev + extra
     subh = f'<span class="sub">{esc(sub)}</span>' if sub else ""
     return (f'<a class="card{" empty" if n == 0 else ""}" href="{href}">'
             f'<span class="num">{esc(label)}</span><span class="t">{esc(title)}</span>{subh}{badge}</a>')
@@ -158,8 +175,8 @@ def card(href, label, title, sub="", n=None, group=None):
 def chapter_grid(ckey, prefix, chapters, root_key=lambda ch: ch["id"], grouped=False):
     """Grid of chapter cards; hrefs are relative to the page (chapter id folder)."""
     def one(ch):
-        n = count([(ckey, root_key(ch))])
-        return card(f"{ch['id']}/", ch["label"], ch["title"], n=n)
+        k = [(ckey, root_key(ch))]
+        return card(f"{ch['id']}/", ch["label"], ch["title"], res=(count(k, True), count(k, False)))
 
     if not grouped:
         return f'<div class="grid">{"".join(one(ch) for ch in chapters)}</div>'
@@ -181,22 +198,41 @@ def head(title, lead, kicker=None):
     return f'<section class="hero small">{k}<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p></section>'
 
 
+CH_TABS = ("<script>(function(){var bs=document.querySelectorAll('.chtabs button'),ps=document.querySelectorAll('[data-p]');"
+           "function show(t){bs.forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});ps.forEach(function(p){p.hidden=p.dataset.p!==t});"
+           "try{history.replaceState(null,'','#'+t)}catch(e){}}"
+           "bs.forEach(function(b){b.onclick=function(){show(b.dataset.t)}});"
+           "if(location.hash==='#res')show('res');else if(location.hash==='#rev')show('rev')})();</script>")
+
+
 def chapter_page(ckey, key):
     info = chapter_info[(ckey, key)]
     c, ch = COURSES[ckey], info["ch"]
     arts = by_chapter.get((ckey, key), [])
     label = f"Chapter {ch['label']}" if ch["n"] else "Exam preparation"
-    if arts:
+    def panel(lst, review):
+        if not lst:
+            msg = "No chapter review yet. It is on its way." if review else "No extra resources for this chapter yet."
+            return f'<div class="placeholder"><p>{msg}</p></div>'
         items = "".join(
             f'<div class="card art"><span class="tag">{esc(a["kind"])}</span>'
             f'<a class="t" href="{rel_root(info["path"])}artifacts/{a["slug"]}/">{esc(a["title"])}</a><span class="sub">{esc(a["desc"])}</span>'
             f'<span class="foot"><a class="go" href="{rel_root(info["path"])}artifacts/{a["slug"]}/">Open →</a>'
-            f'<button class="done" data-done-slug="{a["slug"]}" hidden></button></span></div>'
-            for a in arts
-        )
-        body = f'<div class="grid arts">{items}</div>'
-    else:
-        body = '<div class="placeholder"><p>Nothing here yet. Activities for this chapter are on their way.</p></div>'
+            + (f'<button class="done" data-done-slug="{a["slug"]}" hidden></button>' if review else "")
+            + '</span></div>'
+            for a in lst)
+        return f'<div class="grid arts">{items}</div>'
+
+    revs = [a for a in arts if is_review(a)]
+    ress = [a for a in arts if not is_review(a)]
+    first = "res" if ress and not revs else "rev"
+    body = ('<div class="tabs chtabs" role="tablist">'
+            f'<button role="tab" data-t="rev" class="{"on" if first == "rev" else ""}">Chapter review ({len(revs)})</button>'
+            f'<button role="tab" data-t="res" class="{"on" if first == "res" else ""}">Resources ({len(ress)})</button></div>'
+            f'<div class="tabpanel" data-p="rev"{" hidden" if first != "rev" else ""}>{panel(revs, True)}</div>'
+            f'<div class="tabpanel" data-p="res"{" hidden" if first != "res" else ""}>'
+            f'<p class="hint">Extra activities that deepen understanding or give more support. Shown in coursebook order.</p>{panel(ress, False)}</div>'
+            + CH_TABS)
     crumbs = [("Home", ""), (c["title"], f"{ckey}/")] + [(l, h) for l, h in info["parents"]] + [(f"{label}", None)]
     write(info["path"] + "index.html",
           layout(f"{ch['title']}", head(ch["title"], "", f"{c['title']} · {label}") + body,
@@ -245,8 +281,8 @@ def build_courses():
 
 def chapter_grid_levels(ckey, lv, grouped):
     def one(ch):
-        n = count([(ckey, f"{lv['id']}/{ch['id']}")])
-        return card(f"{ch['id']}/", ch["label"], ch["title"], n=n)
+        k = [(ckey, f"{lv['id']}/{ch['id']}")]
+        return card(f"{ch['id']}/", ch["label"], ch["title"], res=(count(k, True), count(k, False)))
     if not grouped:
         return f'<div class="grid">{"".join(one(ch) for ch in lv["chapters"])}</div>'
     out, current, cards = [], object(), []
@@ -309,16 +345,18 @@ def build_catalog():
         for title, chs in raw:
             items = []
             for ch, key in chs:
-                sl = [a["slug"] for a in by_chapter.get((ckey, key), [])]
+                allsl = [a["slug"] for a in by_chapter.get((ckey, key), [])]
+                sl = [a["slug"] for a in by_chapter.get((ckey, key), []) if is_review(a)]
+                for x in allsl:
+                    artifacts.setdefault(x, {"title": arts[x]["title"], "url": f"artifacts/{x}/",
+                                             "chapterTitle": f"{c['title']}: {ch['title']}"})
                 for x in sl:
                     if x not in slugs:
                         slugs.append(x)
-                    artifacts.setdefault(x, {"title": arts[x]["title"], "url": f"artifacts/{x}/",
-                                             "chapterTitle": f"{c['title']}: {ch['title']}"})
                 items.append({"label": ch["label"], "title": ch["title"], "url": chapter_info[(ckey, key)]["path"], "slugs": sl})
             groups.append({"title": title, "chapters": items})
         courses[ckey] = {"title": c["title"], "accent": c["accent"], "url": f"{ckey}/", "groups": groups, "slugs": slugs}
-    order = [a["slug"] for a in ARTIFACTS]
+    order = [a["slug"] for a in ARTIFACTS if is_review(a)]
     assessed = {k: {"pass": v["pass_pct"], "n": len(v["questions"])} for k, v in ASSESSED.items()}
     write("assets/catalog.json", json.dumps({"courses": courses, "artifacts": artifacts, "order": order, "assessed": assessed}, separators=(",", ":")))
 
@@ -374,9 +412,10 @@ TAB_SCROLL = ("<script>document.addEventListener('click',function(e){var t=e.tar
               "if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script>")
 
 
-def inject_pill(text, back_href, back_label, home_href, slug, courses):
+def inject_pill(text, back_href, back_label, home_href, slug, courses, review=True):
+    done_btn = f'<button data-done-slug="{slug}" hidden></button>' if review else ""
     pill = (f'{PILL_CSS}<div class="site-pill"><a href="{back_href}">← {esc(back_label)}</a>'
-            f'<a href="{home_href}">Home</a><button type="button" title="Light / dark" onclick="{THEME_CLICK}">◐</button><button data-done-slug="{slug}" hidden></button></div>'
+            f'<a href="{home_href}">Home</a><button type="button" title="Light / dark" onclick="{THEME_CLICK}">◐</button>{done_btn}</div>'
             f'{auth_scripts(home_href, courses)}{TAB_SCROLL}')
     text = text.replace("<head>", "<head>" + THEME_HEAD + GATE_HEAD, 1) if "<head>" in text else THEME_HEAD + GATE_HEAD + text
     if "</body>" in text:
@@ -392,7 +431,7 @@ def build_artifacts():
         ch = info["ch"]
         src, dest = SRC / a["src"], OUT / "artifacts" / a["slug"]
         depth_root = "../../"
-        back = depth_root + info["path"]
+        back = depth_root + info["path"] + ("" if is_review(a) else "#res")
         label = f"Chapter {ch['label']}" if ch["n"] else ch["title"]
         for f in src.rglob("*"):
             if f.is_dir():
@@ -400,7 +439,7 @@ def build_artifacts():
             target = dest / f.relative_to(src)
             target.parent.mkdir(parents=True, exist_ok=True)
             if f.suffix == ".html":
-                target.write_text(bust(inject_pill(f.read_text(encoding="utf-8"), back, label, depth_root, a["slug"], sorted({c for c, _ in a["places"]}))), encoding="utf-8")
+                target.write_text(bust(inject_pill(f.read_text(encoding="utf-8"), back, label, depth_root, a["slug"], sorted({c for c, _ in a["places"]}), is_review(a))), encoding="utf-8")
             else:
                 shutil.copy2(f, target)
 
