@@ -16,7 +16,7 @@
   if (want) show(want);
 
   function place(c, role) {
-    const t = role === "review" ? "rev" : "res", grid = el(t).querySelector(".grid");
+    const t = role === "review" ? "rev" : role === "hidden" ? "del" : "res", grid = el(t).querySelector(".grid");
     c.dataset.role = role;
     const after = [...grid.children].find((x) => +x.dataset.ord > +c.dataset.ord);
     grid.insertBefore(c, after || null);
@@ -26,10 +26,12 @@
   }
 
   function refresh() {
-    ["rev", "res"].forEach((t, i) => {
+    ["rev", "res", "del"].forEach((t, i) => {
       const n = el(t).querySelectorAll(".card.art").length;
       tabs[i].querySelector("span").textContent = n;
-      el(t).querySelector(".emptymsg").hidden = n > 0;
+      const m = el(t).querySelector(".emptymsg");
+      if (m) m.hidden = n > 0;
+      if (t === "del") tabs[i].hidden = !(n > 0 && window.Site && Site.me && Site.me.is_admin);
     });
     // If the open tab emptied out, switch to the other one.
     const open = panels.find((p) => !p.hidden);
@@ -48,8 +50,9 @@
   (async function () {
     if (!window.Site || !Site.configured) return;
     const cat = await Site.catalog();
+    await Site.whoami();
     cards.forEach((c) => {
-      const r = cat.artifacts[c.dataset.slug]?.role;
+      const r = cat.roles[c.dataset.slug];
       if (r && r !== c.dataset.role) place(c, r);
     });
     refresh();

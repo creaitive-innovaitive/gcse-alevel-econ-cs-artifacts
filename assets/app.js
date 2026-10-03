@@ -19,7 +19,10 @@
         (data || []).forEach((r) => { if (cat.artifacts[r.slug]) cat.artifacts[r.slug].role = r.role; });
       } catch (e) {}
     }
-    const rev = (s) => cat.artifacts[s]?.role === "review";
+    // cat.roles keeps every artifact's role; "hidden" ones (admin-deleted) are dropped from the rest of the catalog.
+    cat.roles = {};
+    Object.entries(cat.artifacts).forEach(([s, x]) => { cat.roles[s] = x.role; if (x.role === "hidden") delete cat.artifacts[s]; });
+    const rev = (s) => cat.roles[s] === "review";
     Object.values(cat.courses).forEach((c) => {
       const seen = new Set();
       c.groups.forEach((g) => g.chapters.forEach((ch) => { ch.slugs = (ch.all || ch.slugs).filter(rev); ch.slugs.forEach((s) => seen.add(s)); }));
@@ -29,12 +32,12 @@
     return cat;
   })());
 
-  // Admin only: set an artifact to "review" or "resource".
+  // Admin only: set an artifact to "review", "resource" or "hidden" (deleted: gone for students, restorable).
   Site.setRole = async (slug, role) => {
     const { error } = await sb.from("artifact_roles").upsert({ slug, role, updated_at: new Date().toISOString() });
     if (error) return false;
     const cat = await Site.catalog();
-    cat.artifacts[slug].role = role;
+    cat.roles[slug] = role;
     document.dispatchEvent(new CustomEvent("site:rolechange", { detail: { slug, role } }));
     return true;
   };
@@ -123,7 +126,7 @@
       const { data } = await sb.rpc("my_attempts");
       (data || []).forEach((r) => Site.attempts.set(r.slug, r));
     }
-    const isRev = (s) => !cat || cat.artifacts[s]?.role === "review";
+    const isRev = (s) => !cat || cat.roles[s] === "review";
     btns.forEach((b) => {
       if (b.dataset.bound) return;
       b.dataset.bound = "1";
@@ -143,31 +146,61 @@
   }
 
 
-  // Admin-only role toggles: any [data-role-toggle="slug"] button.
+  // Admin-only controls: [data-role-toggle], [data-role-delete], [data-role-restore] buttons, each holding a slug.
   async function bindRoleToggles() {
-    const tgs = document.querySelectorAll("[data-role-toggle]");
-    if (!tgs.length || !configured) return;
+    const sel = "[data-role-toggle],[data-role-delete],[data-role-restore]";
+    const btns = document.querySelectorAll(sel);
+    if (!btns.length || !configured) return;
     await Site.whoami();
     if (!Site.me || !Site.me.is_admin) return;
     const cat = await Site.catalog();
-    const paintT = (t) => {
-      const r = cat.artifacts[t.dataset.roleToggle]?.role;
-      t.textContent = r === "review" ? "Admin: move to Resources" : "Admin: make Chapter review";
-      t.title = "Only admins see this. It changes where the artifact appears for everyone.";
+    const slugOf = (b) => b.dataset.roleToggle || b.dataset.roleDelete || b.dataset.roleRestore;
+    const paintT = (b) => {
+      const r = cat.roles[slugOf(b)];
+      if ("roleToggle" in b.dataset) b.textContent = r === "review" ? "Admin: move to Resources" : "Admin: make Chapter review";
+      else if ("roleDelete" in b.dataset) b.textContent = "Admin: delete";
+      else b.textContent = "Admin: restore";
+      b.title = "Only admins see this. It changes the artifact for everyone.";
+      const inPill = !!b.closest(".site-pill");
+      // On cards, CSS decides which buttons show per tab; in the pill, show by role.
+      b.hidden = inPill && ("roleRestore" in b.dataset ? r !== "hidden" : r === "hidden");
     };
-    tgs.forEach((t) => {
-      t.hidden = false;
-      paintT(t);
-      t.addEventListener("click", async (e) => {
+    btns.forEach((b) => {
+      paintT(b);
+      b.addEventListener("click", async (e) => {
         e.preventDefault();
-        const slug = t.dataset.roleToggle;
-        t.disabled = true;
-        const ok = await Site.setRole(slug, cat.artifacts[slug].role === "review" ? "resource" : "review");
-        t.disabled = false;
+        const slug = slugOf(b), r = cat.roles[slug];
+        let next;
+        if ("roleDelete" in b.dataset) {
+          if (!confirm("Delete this artifact? It disappears for students and from progress. You can restore it from the Deleted tab on its chapter page.")) return;
+          next = "hidden";
+        } else if ("roleRestore" in b.dataset) next = "resource";
+        else next = r === "review" ? "resource" : "review";
+        b.disabled = true;
+        const ok = await Site.setRole(slug, next);
+        b.disabled = false;
         if (!ok) alert("Could not save. Has the artifact_roles SQL been run in Supabase?");
       });
     });
-    document.addEventListener("site:rolechange", () => tgs.forEach(paintT));
+    document.addEventListener("site:rolechange", () => btns.forEach(paintT));
+  }
+
+  // Artifact pages: a deleted artifact shows a notice instead of its content (admins get a banner).
+  async function guardHidden() {
+    const pill = document.querySelector(".site-pill [data-role-toggle]");
+    if (!pill || !configured) return;
+    const slug = pill.dataset.roleToggle;
+    await Site.whoami();
+    const cat = await Site.catalog();
+    if (cat.roles[slug] !== "hidden") return;
+    if (Site.me && Site.me.is_admin) {
+      const bar = document.createElement("div");
+      bar.style.cssText = "position:sticky;top:0;z-index:2147483000;background:#b3372f;color:#fff;padding:8px 14px;font:600 14px -apple-system,sans-serif";
+      bar.textContent = "Deleted: students cannot see this. Use the pill at bottom right to restore.";
+      document.body.prepend(bar);
+    } else {
+      document.body.innerHTML = '<div style="max-width:460px;margin:12vh auto;padding:24px;font:16px/1.5 -apple-system,Segoe UI,sans-serif"><h2>This activity has been removed</h2><p><a href="' + base + '">Back to the site</a></p></div>';
+    }
   }
 
   // Teacher notification bell, to the right of Profile in the navbar.
@@ -191,7 +224,7 @@
   async function startBell() { if (configured) { await Site.whoami(); Site.refreshBell(); } }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", startBell); else startBell();
 
-  const start = () => { bindButtons(); bindRoleToggles(); };
+  const start = () => { bindButtons(); bindRoleToggles(); guardHidden(); };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
 })();

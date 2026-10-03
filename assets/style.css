@@ -222,3 +222,9 @@ nav.main .bell { display: inline-flex; align-items: center; gap: 4px; position: 
 nav.main .bell b { font: 700 .7rem var(--sans); min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: #c0392b; color: #fff; display: grid; place-items: center; }
 nav.main .bell b:empty { display: none; }
 nav.main .bell.has { color: var(--ink); }
+
+/* admin role controls */
+.card .adm { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.card .adm .restore { display: none; }
+[data-p="del"] .adm .restore { display: inline-block; }
+[data-p="del"] .adm .roletog, [data-p="del"] .adm .roledel { display: none; }

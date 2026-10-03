@@ -211,7 +211,9 @@ def chapter_page(ckey, key):
         return (f'<div class="card art" data-slug="{a["slug"]}" data-role="{"review" if is_review(a) else "resource"}" data-ord="{arts.index(a)}">'
                 f'<span class="tag">{esc(a["kind"])}</span><a class="t" href="{u}">{esc(a["title"])}</a><span class="sub">{esc(a["desc"])}</span>'
                 f'<span class="foot"><a class="go" href="{u}">Open →</a><button class="done" data-done-slug="{a["slug"]}" hidden></button></span>'
-                f'<button class="mini roletog" data-role-toggle="{a["slug"]}" hidden></button></div>')
+                f'<span class="adm"><button class="mini roletog" data-role-toggle="{a["slug"]}" hidden></button>'
+                f'<button class="mini danger roledel" data-role-delete="{a["slug"]}" hidden></button>'
+                f'<button class="mini restore" data-role-restore="{a["slug"]}" hidden></button></span></div>')
 
     def panel(lst, review):
         msg = "No chapter review yet. It is on its way." if review else "No extra resources for this chapter yet."
@@ -221,10 +223,11 @@ def chapter_page(ckey, key):
     first = "res" if ress and not revs else "rev"
     body = ('<div class="tabs chtabs" role="tablist">'
             f'<button role="tab" data-t="rev" class="{"on" if first == "rev" else ""}">Chapter review (<span>{len(revs)}</span>)</button>'
-            f'<button role="tab" data-t="res" class="{"on" if first == "res" else ""}">Resources (<span>{len(ress)}</span>)</button></div>'
+            f'<button role="tab" data-t="res" class="{"on" if first == "res" else ""}">Resources (<span>{len(ress)}</span>)</button><button role="tab" data-t="del" hidden>Deleted (<span>0</span>)</button></div>'
             f'<div class="tabpanel" data-p="rev"{" hidden" if first != "rev" else ""}>{panel(revs, True)}</div>'
             f'<div class="tabpanel" data-p="res"{" hidden" if first != "res" else ""}>'
-            f'<p class="hint">Extra activities that deepen understanding or give more support. Shown in coursebook order.</p>{panel(ress, False)}</div>')
+            f'<p class="hint">Extra activities that deepen understanding or give more support. Shown in coursebook order.</p>{panel(ress, False)}</div>'
+            '<div class="tabpanel" data-p="del" hidden><p class="hint">Deleted: hidden from students and progress. Only you can see this tab.</p><div class="grid arts"></div></div>')
     crumbs = [("Home", ""), (c["title"], f"{ckey}/")] + [(l, h) for l, h in info["parents"]] + [(f"{label}", None)]
     write(info["path"] + "index.html",
           layout(f"{ch['title']}", head(ch["title"], "", f"{c['title']} · {label}") + body,
@@ -405,7 +408,7 @@ TAB_SCROLL = ("<script>document.addEventListener('click',function(e){var t=e.tar
 
 
 def inject_pill(text, back_href, back_label, home_href, slug, courses, review=True):
-    done_btn = f'<button data-done-slug="{slug}" hidden></button><button data-role-toggle="{slug}" hidden></button>'
+    done_btn = f'<button data-done-slug="{slug}" hidden></button><button data-role-toggle="{slug}" hidden></button><button data-role-delete="{slug}" hidden></button><button data-role-restore="{slug}" hidden></button>'
     pill = (f'{PILL_CSS}<div class="site-pill"><a href="{back_href}">← {esc(back_label)}</a>'
             f'<a href="{home_href}">Home</a><button type="button" title="Light / dark" onclick="{THEME_CLICK}">◐</button>{done_btn}</div>'
             f'{auth_scripts(home_href, courses)}{TAB_SCROLL}')

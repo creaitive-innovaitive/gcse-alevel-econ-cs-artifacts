@@ -537,12 +537,14 @@ begin
   delete from profiles where email = target;
 end $$;
 
--- Chapter review vs additional resource, set by an admin from the site. Overrides the default in site_data.py.
+-- Chapter review vs additional resource (or hidden = deleted), set by an admin from the site. Overrides the default in site_data.py.
 create table if not exists public.artifact_roles (
   slug       text primary key,
   role       text not null check (role in ('review', 'resource')),
   updated_at timestamptz not null default now()
 );
+alter table public.artifact_roles drop constraint if exists artifact_roles_role_check;
+alter table public.artifact_roles add constraint artifact_roles_role_check check (role in ('review', 'resource', 'hidden'));
 alter table public.artifact_roles enable row level security;
 drop policy if exists artifact_roles_read on public.artifact_roles;
 create policy artifact_roles_read on public.artifact_roles for select using (true);
