@@ -228,6 +228,13 @@ COURSES = {
     },
 }
 
+# Investing is a public topic page rather than a course: no chapters, no login gate, no progress tracking.
+# Place its artifacts with places=[("investing", "all")].
+INVESTING = {
+    "nav": "Investing", "title": "Investing", "accent": "green",
+    "blurb": "Plain-English lessons on how investing works, with historical examples. Educational only, not advice.",
+}
+
 # Artifacts. 'src' is the folder under artifacts_src/. 'places' is a list of
 # (course, chapter id) pairs; the first is the primary home (used for the back link).
 # 'role': "review" is the main chapter review (tracked on the Profile page); anything else is a

@@ -9,7 +9,7 @@ import re
 import shutil
 from pathlib import Path
 
-from site_data import ARTIFACTS, COURSES, SITE_TAGLINE, SITE_TITLE
+from site_data import ARTIFACTS, COURSES, INVESTING, SITE_TAGLINE, SITE_TITLE
 
 ROOT = Path(__file__).parent
 OUT = ROOT / "docs"
@@ -21,6 +21,7 @@ NAV = [
     ("ig-cs", "IG CS", "ig-cs/"),
     ("a-econ", "A Econ", "a-econ/"),
     ("a-cs", "A CS", "a-cs/"),
+    ("investing", "Investing", "investing/"),
     ("other", "Other", "other/"),
     ("profile", "Profile", "profile/"),
 ]
@@ -129,6 +130,9 @@ for ckey, c in COURSES.items():
                     "path": f"{ckey}/{lv['id']}/{ch['id']}/", "ch": ch,
                     "parents": [(lv["title"], f"{ckey}/{lv['id']}/")],
                 }
+
+# Investing: a single flat page, so one pseudo-chapter that points at the topic page itself.
+chapter_info[("investing", "all")] = {"path": "investing/", "ch": {"n": None, "label": "★", "title": "Investing", "group": None}, "parents": []}
 
 by_chapter = {}
 for a in ARTIFACTS:
@@ -306,10 +310,25 @@ def build_home():
             f'<p class="lead">{esc(SITE_TAGLINE)}</p><p class="stat">{total} activities and counting</p></section>'
             f'<div class="grid two">{"".join(cards)}</div>'
             '<div class="grid two more">'
+            f'<a class="card slim" href="investing/" data-accent="{INVESTING["accent"]}"><span class="t">Investing</span><span class="sub">{esc(INVESTING["blurb"])}</span></a>'
             '<a class="card slim" href="other/"><span class="t">Other</span><span class="sub">Study tips, extra-curricular activities and side projects.</span></a>'
             '<a class="card slim" href="profile/"><span class="t">Profile</span><span class="sub">Student accounts, progress and scores. Coming soon.</span></a>'
             '</div>')
     write("index.html", layout(SITE_TITLE, body, "", "home"))
+
+
+def build_investing():
+    arts = by_chapter.get(("investing", "all"), [])
+    if arts:
+        items = "".join(
+            f'<div class="card art"><span class="tag">{esc(a["kind"])}</span>'
+            f'<a class="t" href="../artifacts/{a["slug"]}/">{esc(a["title"])}</a><span class="sub">{esc(a["desc"])}</span>'
+            f'<span class="foot"><a class="go" href="../artifacts/{a["slug"]}/">Open →</a></span></div>' for a in arts)
+        grid = f'<div class="grid arts">{items}</div>'
+    else:
+        grid = '<div class="placeholder"><p>The first lessons are on their way.</p></div>'
+    write("investing/index.html", layout("Investing", head(INVESTING["title"], INVESTING["blurb"], "Topic") + grid,
+                                         "investing/", "investing", [("Home", ""), ("Investing", None)], INVESTING["accent"]))
 
 
 def build_other_profile():
@@ -351,6 +370,8 @@ def build_catalog():
                 items.append({"label": ch["label"], "title": ch["title"], "url": chapter_info[(ckey, key)]["path"], "slugs": sl, "all": allsl})
             groups.append({"title": title, "chapters": items})
         courses[ckey] = {"title": c["title"], "accent": c["accent"], "url": f"{ckey}/", "groups": groups, "slugs": slugs}
+    for x, a in arts.items():
+        artifacts.setdefault(x, {"title": a["title"], "url": f"artifacts/{x}/", "role": "review" if is_review(a) else "resource", "chapterTitle": a["title"]})
     order = [a["slug"] for a in ARTIFACTS]
     assessed = {k: {"pass": v["pass_pct"], "n": len(v["questions"])} for k, v in ASSESSED.items()}
     write("assets/catalog.json", json.dumps({"courses": courses, "artifacts": artifacts, "order": order, "assessed": assessed}, separators=(",", ":")))
@@ -442,7 +463,7 @@ def build_artifacts():
             target = dest / f.relative_to(src)
             target.parent.mkdir(parents=True, exist_ok=True)
             if f.suffix == ".html":
-                target.write_text(bust(inject_pill(f.read_text(encoding="utf-8"), back, label, depth_root, a["slug"], sorted({c for c, _ in a["places"]}), is_review(a))), encoding="utf-8")
+                target.write_text(bust(inject_pill(f.read_text(encoding="utf-8"), back, label, depth_root, a["slug"], sorted({c for c, _ in a["places"] if c in COURSES}), is_review(a))), encoding="utf-8")
             else:
                 shutil.copy2(f, target)
 
@@ -455,6 +476,7 @@ def main():
     (OUT / ".nojekyll").write_text("")
     build_home()
     build_courses()
+    build_investing()
     build_other_profile()
     build_catalog()
     build_assessments()

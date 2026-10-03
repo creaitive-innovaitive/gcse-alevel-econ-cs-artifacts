@@ -28,7 +28,7 @@
     const me = await S.whoami();
     clearTimeout(timer);
     filterNav(me);
-    if (!courses.length) return;
+    if (!courses.length) return reveal();
     if (!me) {
       try { sessionStorage.setItem("site.next", location.href); } catch (e) {}
       return deny("Sign in to open this lesson", "Lessons are for registered students. Sign in with your school email.", "Sign in");
