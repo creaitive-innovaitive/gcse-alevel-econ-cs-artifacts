@@ -537,6 +537,19 @@ begin
   delete from profiles where email = target;
 end $$;
 
+-- Chapter review vs additional resource, set by an admin from the site. Overrides the default in site_data.py.
+create table if not exists public.artifact_roles (
+  slug       text primary key,
+  role       text not null check (role in ('review', 'resource')),
+  updated_at timestamptz not null default now()
+);
+alter table public.artifact_roles enable row level security;
+drop policy if exists artifact_roles_read on public.artifact_roles;
+create policy artifact_roles_read on public.artifact_roles for select using (true);
+drop policy if exists artifact_roles_admin on public.artifact_roles;
+create policy artifact_roles_admin on public.artifact_roles
+  for all using (is_admin()) with check (is_admin());
+
 -- Bootstrap: create the admin logins from admins.initial_password.
 select public._create_login(email, initial_password) from public.admins where initial_password is not null and initial_password <> '';
 

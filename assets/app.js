@@ -8,7 +8,36 @@
   const Site = { configured, sb, base, profileUrl: base + "profile/", done: new Map(), me: null };
   window.Site = Site;
 
-  Site.catalog = () => fetch(base + "assets/catalog.json", { cache: "no-cache" }).then((r) => r.json());
+  // The catalog holds each artifact's default role (review or resource). Admin overrides live in the
+  // artifact_roles table and are layered on here, so progress totals follow whatever the admin chose.
+  let catPromise = null;
+  Site.catalog = () => (catPromise = catPromise || (async () => {
+    const cat = await fetch(base + "assets/catalog.json", { cache: "no-cache" }).then((r) => r.json());
+    if (sb) {
+      try {
+        const { data } = await sb.from("artifact_roles").select("slug,role");
+        (data || []).forEach((r) => { if (cat.artifacts[r.slug]) cat.artifacts[r.slug].role = r.role; });
+      } catch (e) {}
+    }
+    const rev = (s) => cat.artifacts[s]?.role === "review";
+    Object.values(cat.courses).forEach((c) => {
+      const seen = new Set();
+      c.groups.forEach((g) => g.chapters.forEach((ch) => { ch.slugs = (ch.all || ch.slugs).filter(rev); ch.slugs.forEach((s) => seen.add(s)); }));
+      c.slugs = [...seen];
+    });
+    cat.order = cat.order.filter(rev);
+    return cat;
+  })());
+
+  // Admin only: set an artifact to "review" or "resource".
+  Site.setRole = async (slug, role) => {
+    const { error } = await sb.from("artifact_roles").upsert({ slug, role, updated_at: new Date().toISOString() });
+    if (error) return false;
+    const cat = await Site.catalog();
+    cat.artifacts[slug].role = role;
+    document.dispatchEvent(new CustomEvent("site:rolechange", { detail: { slug, role } }));
+    return true;
+  };
 
   Site.session = async () => (sb ? (await sb.auth.getSession()).data.session : null);
 
@@ -81,19 +110,24 @@
     }
   }
 
+  Site.bindButtons = () => bindButtons();
   async function bindButtons() {
     const btns = document.querySelectorAll("[data-done-slug]");
     if (!btns.length) return;
     if (!configured) { btns.forEach((b) => (b.hidden = true)); return; }
     await Site.whoami();
     await Site.loadProgress();
-    try { Site.assessed = (await Site.catalog()).assessed || {}; } catch (e) {}
+    let cat = null;
+    try { cat = await Site.catalog(); Site.assessed = cat.assessed || {}; } catch (e) {}
     if (Site.me && !Site.me.is_admin && !Site.me.is_teacher && Object.keys(Site.assessed).length) {
       const { data } = await sb.rpc("my_attempts");
       (data || []).forEach((r) => Site.attempts.set(r.slug, r));
     }
+    const isRev = (s) => !cat || cat.artifacts[s]?.role === "review";
     btns.forEach((b) => {
-      b.hidden = false;
+      if (b.dataset.bound) return;
+      b.dataset.bound = "1";
+      b.hidden = !isRev(b.dataset.doneSlug);
       paint(b);
       b.addEventListener("click", async (e) => {
         e.preventDefault();
@@ -108,6 +142,33 @@
     });
   }
 
+
+  // Admin-only role toggles: any [data-role-toggle="slug"] button.
+  async function bindRoleToggles() {
+    const tgs = document.querySelectorAll("[data-role-toggle]");
+    if (!tgs.length || !configured) return;
+    await Site.whoami();
+    if (!Site.me || !Site.me.is_admin) return;
+    const cat = await Site.catalog();
+    const paintT = (t) => {
+      const r = cat.artifacts[t.dataset.roleToggle]?.role;
+      t.textContent = r === "review" ? "Admin: move to Resources" : "Admin: make Chapter review";
+      t.title = "Only admins see this. It changes where the artifact appears for everyone.";
+    };
+    tgs.forEach((t) => {
+      t.hidden = false;
+      paintT(t);
+      t.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const slug = t.dataset.roleToggle;
+        t.disabled = true;
+        const ok = await Site.setRole(slug, cat.artifacts[slug].role === "review" ? "resource" : "review");
+        t.disabled = false;
+        if (!ok) alert("Could not save. Has the artifact_roles SQL been run in Supabase?");
+      });
+    });
+    document.addEventListener("site:rolechange", () => tgs.forEach(paintT));
+  }
 
   // Teacher notification bell, to the right of Profile in the navbar.
   Site.refreshBell = async () => {
@@ -130,6 +191,7 @@
   async function startBell() { if (configured) { await Site.whoami(); Site.refreshBell(); } }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", startBell); else startBell();
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindButtons);
-  else bindButtons();
+  const start = () => { bindButtons(); bindRoleToggles(); };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
 })();

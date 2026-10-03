@@ -262,7 +262,7 @@ ARTIFACTS = [
      "places": [("ig-cs", "ch-05")]},
 
     # IGCSE Economics
-    {"src": "macro-aims-explorer", "title": "The Four + Two Aims", "kind": "Interactive",
+    {"src": "macro-aims-explorer", "role": "review", "title": "The Four + Two Aims", "kind": "Interactive",
      "desc": "The macroeconomic aims of government and why hitting one often means missing another.",
      "places": [("ig-econ", "ch-25")]},
 

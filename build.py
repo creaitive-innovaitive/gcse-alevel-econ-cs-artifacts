@@ -198,45 +198,37 @@ def head(title, lead, kicker=None):
     return f'<section class="hero small">{k}<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p></section>'
 
 
-CH_TABS = ("<script>(function(){var bs=document.querySelectorAll('.chtabs button'),ps=document.querySelectorAll('[data-p]');"
-           "function show(t){bs.forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});ps.forEach(function(p){p.hidden=p.dataset.p!==t});"
-           "try{history.replaceState(null,'','#'+t)}catch(e){}}"
-           "bs.forEach(function(b){b.onclick=function(){show(b.dataset.t)}});"
-           "if(location.hash==='#res')show('res');else if(location.hash==='#rev')show('rev')})();</script>")
-
-
 def chapter_page(ckey, key):
     info = chapter_info[(ckey, key)]
     c, ch = COURSES[ckey], info["ch"]
     arts = by_chapter.get((ckey, key), [])
     label = f"Chapter {ch['label']}" if ch["n"] else "Exam preparation"
-    def panel(lst, review):
-        if not lst:
-            msg = "No chapter review yet. It is on its way." if review else "No extra resources for this chapter yet."
-            return f'<div class="placeholder"><p>{msg}</p></div>'
-        items = "".join(
-            f'<div class="card art"><span class="tag">{esc(a["kind"])}</span>'
-            f'<a class="t" href="{rel_root(info["path"])}artifacts/{a["slug"]}/">{esc(a["title"])}</a><span class="sub">{esc(a["desc"])}</span>'
-            f'<span class="foot"><a class="go" href="{rel_root(info["path"])}artifacts/{a["slug"]}/">Open →</a>'
-            + (f'<button class="done" data-done-slug="{a["slug"]}" hidden></button>' if review else "")
-            + '</span></div>'
-            for a in lst)
-        return f'<div class="grid arts">{items}</div>'
-
     revs = [a for a in arts if is_review(a)]
     ress = [a for a in arts if not is_review(a)]
+
+    def cardh(a):
+        u = f'{rel_root(info["path"])}artifacts/{a["slug"]}/'
+        return (f'<div class="card art" data-slug="{a["slug"]}" data-role="{"review" if is_review(a) else "resource"}" data-ord="{arts.index(a)}">'
+                f'<span class="tag">{esc(a["kind"])}</span><a class="t" href="{u}">{esc(a["title"])}</a><span class="sub">{esc(a["desc"])}</span>'
+                f'<span class="foot"><a class="go" href="{u}">Open →</a><button class="done" data-done-slug="{a["slug"]}" hidden></button></span>'
+                f'<button class="mini roletog" data-role-toggle="{a["slug"]}" hidden></button></div>')
+
+    def panel(lst, review):
+        msg = "No chapter review yet. It is on its way." if review else "No extra resources for this chapter yet."
+        return (f'<div class="placeholder emptymsg"{" hidden" if lst else ""}><p>{msg}</p></div>'
+                f'<div class="grid arts">{"".join(cardh(a) for a in lst)}</div>')
+
     first = "res" if ress and not revs else "rev"
     body = ('<div class="tabs chtabs" role="tablist">'
-            f'<button role="tab" data-t="rev" class="{"on" if first == "rev" else ""}">Chapter review ({len(revs)})</button>'
-            f'<button role="tab" data-t="res" class="{"on" if first == "res" else ""}">Resources ({len(ress)})</button></div>'
+            f'<button role="tab" data-t="rev" class="{"on" if first == "rev" else ""}">Chapter review (<span>{len(revs)}</span>)</button>'
+            f'<button role="tab" data-t="res" class="{"on" if first == "res" else ""}">Resources (<span>{len(ress)}</span>)</button></div>'
             f'<div class="tabpanel" data-p="rev"{" hidden" if first != "rev" else ""}>{panel(revs, True)}</div>'
             f'<div class="tabpanel" data-p="res"{" hidden" if first != "res" else ""}>'
-            f'<p class="hint">Extra activities that deepen understanding or give more support. Shown in coursebook order.</p>{panel(ress, False)}</div>'
-            + CH_TABS)
+            f'<p class="hint">Extra activities that deepen understanding or give more support. Shown in coursebook order.</p>{panel(ress, False)}</div>')
     crumbs = [("Home", ""), (c["title"], f"{ckey}/")] + [(l, h) for l, h in info["parents"]] + [(f"{label}", None)]
     write(info["path"] + "index.html",
           layout(f"{ch['title']}", head(ch["title"], "", f"{c['title']} · {label}") + body,
-                 info["path"], ckey, crumbs, c["accent"], auth=True))
+                 info["path"], ckey, crumbs, c["accent"], auth=True, extra=f'<script src="{rel_root(info["path"])}assets/chapter.js"></script>'))
     return info
 
 
@@ -348,15 +340,15 @@ def build_catalog():
                 allsl = [a["slug"] for a in by_chapter.get((ckey, key), [])]
                 sl = [a["slug"] for a in by_chapter.get((ckey, key), []) if is_review(a)]
                 for x in allsl:
-                    artifacts.setdefault(x, {"title": arts[x]["title"], "url": f"artifacts/{x}/",
+                    artifacts.setdefault(x, {"title": arts[x]["title"], "url": f"artifacts/{x}/", "role": "review" if is_review(arts[x]) else "resource",
                                              "chapterTitle": f"{c['title']}: {ch['title']}"})
                 for x in sl:
                     if x not in slugs:
                         slugs.append(x)
-                items.append({"label": ch["label"], "title": ch["title"], "url": chapter_info[(ckey, key)]["path"], "slugs": sl})
+                items.append({"label": ch["label"], "title": ch["title"], "url": chapter_info[(ckey, key)]["path"], "slugs": sl, "all": allsl})
             groups.append({"title": title, "chapters": items})
         courses[ckey] = {"title": c["title"], "accent": c["accent"], "url": f"{ckey}/", "groups": groups, "slugs": slugs}
-    order = [a["slug"] for a in ARTIFACTS if is_review(a)]
+    order = [a["slug"] for a in ARTIFACTS]
     assessed = {k: {"pass": v["pass_pct"], "n": len(v["questions"])} for k, v in ASSESSED.items()}
     write("assets/catalog.json", json.dumps({"courses": courses, "artifacts": artifacts, "order": order, "assessed": assessed}, separators=(",", ":")))
 
@@ -413,7 +405,7 @@ TAB_SCROLL = ("<script>document.addEventListener('click',function(e){var t=e.tar
 
 
 def inject_pill(text, back_href, back_label, home_href, slug, courses, review=True):
-    done_btn = f'<button data-done-slug="{slug}" hidden></button>' if review else ""
+    done_btn = f'<button data-done-slug="{slug}" hidden></button><button data-role-toggle="{slug}" hidden></button>'
     pill = (f'{PILL_CSS}<div class="site-pill"><a href="{back_href}">← {esc(back_label)}</a>'
             f'<a href="{home_href}">Home</a><button type="button" title="Light / dark" onclick="{THEME_CLICK}">◐</button>{done_btn}</div>'
             f'{auth_scripts(home_href, courses)}{TAB_SCROLL}')
