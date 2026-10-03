@@ -360,7 +360,12 @@ PILL_CSS = ("<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12p
             "font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);"
             "border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;"
             "padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}"
-            "@media print{.site-pill{display:none}}</style>")
+            "@media print{.site-pill{display:none}}"
+            # Phones: collapse to a small round button so the pill never sits over lesson content.
+            ".site-pill .pill-more{display:none}"
+            "@media(max-width:700px){body{padding-bottom:64px}.site-pill{right:8px;bottom:8px;opacity:.6;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 16px)}"
+            ".site-pill>*:not(.pill-more){display:none}.site-pill.open{opacity:.95}.site-pill.open>*:not(.pill-more):not([hidden]){display:inline-block}"
+            ".site-pill .pill-more{display:block;border:0;border-radius:999px;width:36px;height:36px;padding:0;text-align:center;font-size:18px}.site-pill.open .pill-more{border-left:0}}</style>")
 
 
 THEME_CLICK = ("var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';"
@@ -401,6 +406,9 @@ def build_assessments():
 
 # Sticky tab bars keep the old scroll position after a click, so the new panel opens part-way down.
 # This returns the page to the top whenever a tab inside a sticky or fixed bar is clicked.
+PILL_JS = ("<script>document.addEventListener('click',function(e){var p=document.querySelector('.site-pill.open');if(p&&!p.contains(e.target))p.classList.remove('open')});"
+           "addEventListener('scroll',function(){var p=document.querySelector('.site-pill.open');if(p)p.classList.remove('open')},{passive:true});</script>")
+
 TAB_SCROLL = ("<script>document.addEventListener('click',function(e){var t=e.target.closest("
               "'[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;"
               "var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}"
@@ -409,9 +417,9 @@ TAB_SCROLL = ("<script>document.addEventListener('click',function(e){var t=e.tar
 
 def inject_pill(text, back_href, back_label, home_href, slug, courses, review=True):
     done_btn = f'<button data-done-slug="{slug}" hidden></button><button data-role-toggle="{slug}" hidden></button><button data-role-delete="{slug}" hidden></button><button data-role-restore="{slug}" hidden></button>'
-    pill = (f'{PILL_CSS}<div class="site-pill"><a href="{back_href}">← {esc(back_label)}</a>'
+    pill = (f'{PILL_CSS}<div class="site-pill"><button type="button" class="pill-more" aria-label="Menu" onclick="this.parentNode.classList.toggle(&#39;open&#39;)">☰</button><a href="{back_href}">← {esc(back_label)}</a>'
             f'<a href="{home_href}">Home</a><button type="button" title="Light / dark" onclick="{THEME_CLICK}">◐</button>{done_btn}</div>'
-            f'{auth_scripts(home_href, courses)}{TAB_SCROLL}')
+            f'{auth_scripts(home_href, courses)}{TAB_SCROLL}{PILL_JS}')
     text = text.replace("<head>", "<head>" + THEME_HEAD + GATE_HEAD, 1) if "<head>" in text else THEME_HEAD + GATE_HEAD + text
     if "</body>" in text:
         i = text.rfind("</body>")
