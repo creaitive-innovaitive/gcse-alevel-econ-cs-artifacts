@@ -236,9 +236,6 @@ COURSES = {
 # coursebook order; ones without it come last, in the order listed here.
 ARTIFACTS = [
     # IGCSE Computer Science
-    {"src": "compression-lab", "title": "Compression Lab", "kind": "Interactive",
-     "desc": "Why we compress data, lossy versus lossless, run-length encoding and Huffman coding, with exam practice.",
-     "places": [("ig-cs", "ch-01")]},
     {"src": "igcse-compression-lab", "title": "IGCSE Compression Lab", "kind": "Interactive",
      "desc": "Run-length encoding step by step, RLE on a bitmap, encode and decode tasks, lossy sliders and real-world examples.",
      "places": [("ig-cs", "ch-01")]},
