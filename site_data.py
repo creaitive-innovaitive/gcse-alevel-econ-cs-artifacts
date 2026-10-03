@@ -242,6 +242,11 @@ INVESTING = {
 # 'at': coursebook position of a resource, e.g. "31.2" or "19.1.4". Resources sort by it, in
 # coursebook order; ones without it come last, in the order listed here.
 ARTIFACTS = [
+    # Investing
+    {"src": "panic-at-the-bottom", "title": "Buying Panic at the Bottom", "kind": "Interactive",
+     "desc": "A five-signal mean-reversion setup (RSI, Bollinger Bands, 30% dip, volume spike, support) and its take-profit exit, explained with replayable charts.",
+     "places": [("investing", "all")]},
+
     # IGCSE Computer Science
     {"src": "igcse-compression-lab", "title": "IGCSE Compression Lab", "kind": "Interactive",
      "desc": "Run-length encoding step by step, RLE on a bitmap, encode and decode tasks, lossy sliders and real-world examples.",
