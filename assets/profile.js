@@ -480,8 +480,12 @@
 
   // ---------- boot ----------
   async function boot() {
-    catalog = catalog || (await S.catalog());
     const me = await S.whoami(true);
+    if (!me && !(await S.session())) return viewSignedOut();  // sign-in needs nothing else, so show it straight away
+    try { catalog = catalog || (await S.catalog()); } catch (e) {
+      root.innerHTML = `<div class="placeholder"><h2>Could not load</h2><p>Check your connection and refresh the page.</p></div>`;
+      return;
+    }
     if (me) {
       const next = sessionStorage.getItem("site.next");
       if (next) { sessionStorage.removeItem("site.next"); if (next.startsWith(S.base)) { location.href = next; return; } }

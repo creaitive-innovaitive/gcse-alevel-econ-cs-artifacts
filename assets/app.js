@@ -15,7 +15,7 @@
     const cat = await fetch(base + "assets/catalog.json", { cache: "no-cache" }).then((r) => r.json());
     if (sb) {
       try {
-        const { data } = await sb.from("artifact_roles").select("slug,role");
+        const { data } = await Promise.race([sb.from("artifact_roles").select("slug,role"), new Promise((_, rej) => setTimeout(rej, 4000))]);
         (data || []).forEach((r) => { if (cat.artifacts[r.slug]) cat.artifacts[r.slug].role = r.role; });
       } catch (e) {}
     }
