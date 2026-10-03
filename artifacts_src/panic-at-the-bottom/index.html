@@ -83,7 +83,7 @@ ol.steps li.on{opacity:1;border-color:var(--accent);background:var(--accent-soft
 .match .sel{border-color:var(--accent);outline:2px solid var(--accent)}.match .done{background:var(--accent-soft);border-color:var(--accent);cursor:default}
 .match .bad{background:var(--bad-soft);border-color:var(--bad)}
 table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
-.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.82rem;color:var(--muted);margin-top:6px}
+.card a,.tip a,.read a{color:var(--accent)}.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.82rem;color:var(--muted);margin-top:6px}
 .legend i{display:inline-block;width:18px;height:0;border-top:3px solid;vertical-align:middle;margin-right:5px}
 </style></head><body><div class="wrap">
 <header>
@@ -120,7 +120,7 @@ table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{text-align:left
 <div class="card"><b>3. Enter</b><p>When the fifth condition lands, the setup is complete. It will feel uncomfortable because price has just fallen hard.</p></div>
 <div class="card"><b>4. Exit by plan</b><p>Place a sell limit order 30% above the entry price straight after entering, so no decision is made under pressure.</p></div>
 </div>
-<div class="tip"><b class="l">Where the Signals tool fits</b>The Growth Capital Group Signals tool lets you build a strategy from conditions and choose whether it fires when <b>ALL</b> or <b>ANY</b> of them are met, with a target gain and a stop-loss. This strategy is the ALL setting with five conditions. The Signal lab tab copies that panel so you can see why ALL matters.</div>
+<div class="tip"><b class="l">Where the Signals tool fits</b>The Growth Capital Group <a href="https://www.growthcapitalgroup.co/tools/signals" target="_blank" rel="noopener">Signals tool</a> lets you build a strategy from conditions and choose whether it fires when <b>ALL</b> or <b>ANY</b> of them are met, with a target gain and a stop-loss. This strategy is the ALL setting with five conditions. The Signal lab tab copies that panel so you can see why ALL matters.</div>
 </section>
 
 <!-- SIGNALS -->
@@ -139,7 +139,7 @@ table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{text-align:left
 <div id="labChart"></div>
 <div class="row" style="margin-top:8px"><button class="pri" id="labPlay">Play</button>
 <label class="read" style="flex:1;min-width:200px">Day <span id="labDay"></span><input type="range" id="labSlider" min="40" max="110" value="60" aria-label="Day"></label></div>
-<div class="legend"><span><i style="border-color:var(--price)"></i>Close</span><span><i style="border-color:var(--s2)"></i>Bollinger Bands (21, 2)</span><span><i style="border-color:var(--s5)"></i>Support</span><span><i style="border-color:var(--s4)"></i>Volume spike (2x or more)</span></div>
+<p class="read" style="margin-top:8px">Build the same conditions yourself in the <a href="https://www.growthcapitalgroup.co/tools/signals" target="_blank" rel="noopener">Signals tool</a>, then test them in the <a href="https://www.growthcapitalgroup.co/backtester" target="_blank" rel="noopener">Backtester</a>.</p><div class="legend"><span><i style="border-color:var(--price)"></i>Close</span><span><i style="border-color:var(--s2)"></i>Bollinger Bands (21, 2)</span><span><i style="border-color:var(--s5)"></i>Support</span><span><i style="border-color:var(--s4)"></i>Volume spike (2x or more)</span></div>
 </div>
 <div class="grid">
 <div class="card"><h3 style="margin-top:0">Strategy output</h3><div id="labConds"></div><div id="labVerdict" class="verdict v-wait"></div><div id="labPos" class="read"></div></div>
@@ -160,13 +160,13 @@ table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{text-align:left
 <div class="stats" style="margin-top:10px" id="exitStats"></div>
 </div>
 <div class="tip"><b class="l">Top tip</b>A limit order either fills or it does not. Setting the target in advance removes the temptation to hold on for more, or to sell early out of fear.</div>
-<div class="tip warn"><b class="l">What the rules do not include</b>The post describes an entry and a take-profit but no stop-loss. A setup that looks complete can still keep falling, so in any historical study it is worth asking what a failed trade would have cost. The Signals tool has stop-loss settings for exactly that kind of test.</div>
+<div class="tip warn"><b class="l">What the rules do not include</b>The post describes an entry and a take-profit but no stop-loss. A setup that looks complete can still keep falling, so in any historical study it is worth asking what a failed trade would have cost. The <a href="https://www.growthcapitalgroup.co/tools/signals" target="_blank" rel="noopener">Signals tool</a> has stop-loss settings for exactly that kind of test.</div>
 </section>
 
 <!-- BACKTEST -->
 <section role="tabpanel" id="p-back" aria-labelledby="t-back" hidden>
 <h2>Does it actually work? Reading a backtest</h2>
-<p>A backtest runs the rules against historical prices to see what would have happened, without hindsight. The post reports this result for the setup on SOL-USD over a six-month window.</p>
+<p>A backtest runs the rules against historical prices to see what would have happened, without hindsight. You can run your own on the Growth Capital Group <a href="https://www.growthcapitalgroup.co/backtester" target="_blank" rel="noopener">Backtester</a>. The post reports this result for the setup on SOL-USD over a six-month window.</p>
 <div class="stats">
 <div class="stat"><b>+30%</b><span>Total return (£10,000 to £13,000)</span></div>
 <div class="stat"><b>100%</b><span>Win rate (1 win, 0 losses)</span></div>
