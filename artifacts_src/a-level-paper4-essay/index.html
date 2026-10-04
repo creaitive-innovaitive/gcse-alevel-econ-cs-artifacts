@@ -1,0 +1,1304 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A-Level Paper 4: The 20-Mark Essay</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<style>
+.up select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);max-width:100%}
+.up-lv{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 8px}
+.up-lv span{font:700 .72rem var(--sans);padding:3px 10px;border-radius:99px;border:1.5px solid var(--line);color:var(--muted)}
+.up-lv span.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.up-txt{padding:12px 14px;border:1.5px solid var(--accent);border-radius:10px;background:var(--surface);font-size:1.02rem;min-height:3.4em;margin-bottom:8px}
+.up-why{font-size:.9rem;color:var(--muted);min-height:2.6em;margin-bottom:8px}
+.xr textarea{width:100%;min-height:170px;padding:10px 12px;font:1rem/1.55 var(--sans);border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical}
+.xr input[type=text]{width:100%;padding:8px 10px;font:1rem var(--sans);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.xr label{font-weight:700;font-size:.9rem;display:block;margin:10px 0 4px}
+.xr-out{margin-top:12px}
+.xr-out .snt{padding:6px 10px;margin-bottom:5px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:.95rem}
+.bdg{display:inline-block;font:700 .62rem var(--sans);padding:1px 6px;border-radius:5px;margin-left:5px;vertical-align:middle;color:#fff}
+.bdg.k{background:var(--k)} .bdg.a{background:var(--a)} .bdg.n{background:var(--n)} .bdg.e{background:var(--e)} .bdg.x{background:var(--bad)}
+.xr-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:10px 0}
+.xr-sum div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface)}
+.xr-sum b{display:block;font:700 1.3rem var(--mono)}
+.xr-sum small{font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tg-tools{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.tg-tools button{font:700 .82rem var(--sans);padding:6px 11px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.tg-tools button.on{color:#fff;border-color:transparent}
+.r-cmd{--rc:#1f5fa8}.r-lim{--rc:#b3372f}.r-parts{--rc:#1d7a4c}.r-ctx{--rc:#7a3fa0}.r-dia{--rc:#b25a00}
+.tg-tools button.on{background:var(--rc)}
+.tg-q{padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);line-height:2.1;font-size:1.02rem}
+.tg-q .ch{cursor:pointer;border-radius:6px;padding:2px 3px;border-bottom:2px dotted var(--line)}
+.tg-q .ch:hover{background:var(--soft)}
+.tg-q .ch[data-r]{color:#fff;border-bottom-color:transparent;background:var(--rc)}
+.tg-q .ch.ok{outline:3px solid var(--good)} .tg-q .ch.no{outline:3px solid var(--bad)} .tg-q .ch.miss{outline:3px dashed var(--bad);color:var(--ink);background:var(--bad-soft)}
+.tg-note{margin-top:8px}
+.bars div{display:grid;grid-template-columns:minmax(150px,230px) 1fr 34px;gap:8px;align-items:center;margin:5px 0;font-size:.92rem}
+.bars i{display:block;height:14px;border-radius:5px;background:var(--accent)}
+.bars b{font:700 .85rem var(--mono);text-align:right}
+.qb-f{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0 12px}
+.qb-f select,.qb-f input[type=text]{font:600 .92rem var(--sans);padding:7px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.qb-f label{font-size:.9rem;display:inline-flex;gap:5px;align-items:center}
+.qi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:10px}
+.qi .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px;font-size:.8rem}
+.qi .id{font:700 .78rem var(--mono);color:var(--muted)}
+.qi p{margin:0 0 6px}
+.qi details summary{cursor:pointer;font-weight:700;color:var(--accent);font-size:.9rem}
+.qi details p{margin:6px 0 0;font-size:.93rem}
+.tag{font:700 .68rem var(--sans);padding:2px 8px;border-radius:99px;background:var(--soft);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tag.dia{background:var(--warn-soft);color:var(--warn)} .tag.lim{background:var(--bad-soft);color:var(--bad)}
+.pl-q{padding:14px 16px;border:2px solid var(--accent);border-radius:12px;background:var(--surface);font-size:1.05rem;margin:10px 0}
+.pl-t{font:700 2rem var(--mono);color:var(--accent)}
+.pl-ck label{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-size:.95rem}
+.lv3{border-left:5px solid var(--good)} .lv2{border-left:5px solid var(--warn)} .lv1{border-left:5px solid var(--bad)}
+.gl{border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:var(--surface);margin-bottom:12px}
+.gl h4{margin:0 0 6px;font:700 .8rem var(--sans);letter-spacing:.06em;text-transform:uppercase}
+.gl.lv1 h4{color:var(--bad)} .gl.lv2 h4{color:var(--warn)} .gl.lv3 h4{color:var(--good)}
+.dgm{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px}
+.dgm svg{display:block;width:100%;height:auto}
+.dgm figcaption,.dgm .cap{font-size:.84rem;color:var(--muted);padding:2px 10px 8px}
+.model p{margin:0 0 .85em}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Economics · 9708 · Paper 4</div>
+  <h1>The 20-Mark Essay</h1>
+  <p class="lead">How Paper 4 essays are marked and how to earn the marks for application, analysis and evaluation. Built from the 2023 to 2026 question papers, mark schemes and examiner reports.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="start">The 20 marks</button>
+  <button role="tab" data-p="apply">Application</button>
+  <button role="tab" data-p="analyse">Analysis</button>
+  <button role="tab" data-p="evaluate">Evaluation</button>
+  <button role="tab" data-p="question">Read the question</button>
+  <button role="tab" data-p="models">Model essays</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="bank">Past questions</button>
+  <button role="tab" data-p="tips">Tips &amp; timing</button>
+</nav>
+
+<!-- THE 20 MARKS -->
+<section id="start" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A 20-mark essay is marked on two scales at once: <b>14 marks</b> for knowledge, application and analysis (Levels 1 to 3) and <b>6 marks</b> for evaluation (Levels 1 to 2). Application has no box of its own. It is rewarded inside the 14, and it is what separates an essay that could sit under any question on the topic from one that could only answer this question.</p>
+    <p>Examiners return to the same three faults year after year: the answer is not applied to the context in the question, the analysis stops after one step, and the evaluation is a list of undeveloped comments.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>The paper</h3><p><b>2 hours, 60 marks.</b> Section A is a data response question (20). Section B is one micro essay from two (20). Section C is one macro, international or development essay from two (20). That is about 40 minutes per question.</p><p class="note">Essays have been marked out of 20 since 2023 (they were 25 before). Questions are no longer split into (a) and (b), so read the whole stem. Use 2023 onwards for practice.</p></div>
+    <div class="card"><h3>The three skills</h3><p><b>Application:</b> using the question's own context, a real example, a figure from the data or a diagram labelled for the situation.</p><p><b>Analysis:</b> a developed chain of cause and effect, not a single step.</p><p><b>Evaluation:</b> a developed, explained judgement on how far, when and for whom the argument holds.</p></div>
+  </div>
+
+  <h2>Where the marks come from</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Skill</th><th>What earns it</th><th>Mark scale</th></tr>
+    <tr><td><b>Knowledge and understanding</b> (AO1)</td><td>Accurate definitions and concepts. The syllabus also puts <em>applying</em> knowledge to economic information, in words, numbers and diagrams, under AO1.</td><td rowspan="3">14 marks<br>Table A<br>L1 1–5 · L2 6–10 · L3 11–14</td></tr>
+    <tr><td><b>Application</b> (inside AO1 and AO2)</td><td>Level 3 wants explanations "supported by examples, where appropriate". Level 2 examples are "limited, over-generalised or contain inaccuracies".</td></tr>
+    <tr><td><b>Analysis</b> (AO2)</td><td>Developed, detailed analysis using accurate concepts and diagrams that are fully explained, in a logical, well-organised answer.</td></tr>
+    <tr><td><b>Evaluation</b> (AO3)</td><td>A justified conclusion that answers the question, plus developed, reasoned, well-supported evaluative comments.</td><td>6 marks<br>Table B<br>E1 1–3 · E2 4–6</td></tr>
+  </table></div>
+
+  <div class="warn"><b class="h">Hard caps</b>Questions that say "with the help of a diagram" cap the 14-mark scale at Level 2 if there is no correct, labelled diagram of the required type. Mark schemes also cap answers that skip a required part: an essay on productivity in perfect and imperfect labour markets that covers only one market (S25/42 Q3), a "both income groups" question answered for one group (S25/42 Q5), or a "monetary policy" question answered with fiscal policy (S25/42 Q4). A perfect essay on the wrong model or wrong policy still loses marks.</div>
+
+  <h2>Watch the marks build</h2>
+  <p>One illustrative essay, step by step. Markers award a best-fit level, not a mark per paragraph, but the pattern is real: Level 2 tops out at 10, and the move to Level 3 needs a third developed, applied chain.</p>
+  <div id="stMarks"></div>
+
+  <h2>What examiners keep saying</h2>
+  <p class="note">Paraphrased from the principal examiner reports, 2023 to 2025.</p>
+  <div class="tw"><table class="t">
+    <tr><th>What goes wrong</th><th>Seen in</th><th>The fix</th></tr>
+    <tr><td><b>Answering the topic, not the question.</b> Efficiency never developed; policies described with no link to allocative efficiency; GDP discussed when the question said productivity.</td><td>S24/41 Q2, W24/41 Q2, S23/41 Q5</td><td>Underline the key phrases. End every paragraph by using them to answer the question.</td></tr>
+    <tr><td><b>No diagram, or the wrong one.</b> Marks capped. AD/AS curves labelled D and S. Negative output gap drawn as positive. Production externality drawn for air travel (a consumption externality). Competitive diagram used for a monopsony. AD/AS used when an injections and withdrawals graph was demanded.</td><td>Almost every report; M23 Q2, M25 Q3, S25/42 Q4</td><td>Match the diagram to the exact wording. Label with the context. Refer to it in the text.</td></tr>
+    <tr><td><b>Context ignored.</b> The inflation was cost-push but the answer treated it as demand-pull. The low-income country element or the standard of living was left out.</td><td>S24/42 Q4, M23 Q5, S25/42 Q5</td><td>Put the context nouns in every paragraph. Run the swap test (Application tab).</td></tr>
+    <tr><td><b>Evaluation as a list.</b> "Liquidity trap" or "time lags" named and left. Analysis mistaken for evaluation. No attempt to question the statement.</td><td>M23 Q3 and Q4, S25/42 Q4, M25 Q2</td><td>Lever, then because, then so what (Evaluation tab).</td></tr>
+    <tr><td><b>Missing parts of a long stem.</b> Few answers covered productivity, perfect and imperfect markets, wages and employment together.</td><td>S25/42 Q3, S23/42 Q3</td><td>Tick off each element in your five-minute plan.</td></tr>
+    <tr><td><b>Confused terms.</b> Free trade area and customs union. Takeover and merger. Production and productivity. Equity and equality. A rise and a fall in interest rates.</td><td>S25/41 Q3 and Q5, S23/41 Q5, S25/42 Q4</td><td>Define the key terms in your opening paragraph, precisely.</td></tr>
+    <tr><td><b>Wrong model.</b> A marginal utility essay when indifference curves were asked (capped at Level 1 for that answer). A micro question answered with macro effects.</td><td>W23/42 Q2, M25 Q3</td><td>Name the model in the question and stay inside it.</td></tr>
+    <tr><td><b>Pre-learned essays and very long answers.</b> A relevant, concise, well-directed answer is rewarded in full.</td><td>Every Paper 42 report</td><td>Plan for five minutes, then write to the plan.</td></tr>
+    <tr><td><b>Conclusions that only summarise.</b> The best judgements weigh the arguments and answer the scope word.</td><td>M24 Q4, M25 Q5</td><td>Verdict, strongest reason, what it depends on.</td></tr>
+  </table></div>
+
+  <h2>Five rules</h2>
+  <ul class="tips">
+    <li><b>Answer the question's own words</b> in the opening line of every paragraph.</li>
+    <li><b>Draw the diagram the question names</b>, label it for the context and use it in your writing.</li>
+    <li><b>Build three developed chains</b> and apply each one to the context.</li>
+    <li><b>Evaluate inside each paragraph</b> and again at the end. Explain, do not just name.</li>
+    <li><b>Finish with a justified judgement</b> that deals with the scope word: always, only, alone, to what extent.</li>
+  </ul>
+</section>
+
+<!-- APPLICATION -->
+<section id="apply" role="tabpanel" hidden>
+  <div class="card big">
+    <h3>Application is the difference between Level 2 and Level 3</h3>
+    <p>Application means showing you can use economics on <b>this</b> situation, not just on the topic. Level 2 explanations are "limited, over-generalised"; Level 3 are "supported by examples". The examiner reports say the same thing from the other side: the best candidates explain the theory within the context of the question, others fail to apply it.</p>
+  </div>
+
+  <h2>Four ways to apply</h2>
+  <div class="grid2">
+    <div class="card"><h3>1 · The question's context</h3><p>Reuse its nouns: the good, the type of country, the event, the policy. A "low-income country" question needs low-income features: reliance on primary exports, low savings, weak institutions, dependence on foreign capital.</p><p class="note">S24/42 Q4 was about 2022 supply-shock inflation. Answers that saw cost-push inflation scored well; those that wrote a generic demand-pull essay lost marks.</p></div>
+    <div class="card"><h3>2 · A real example</h3><p>A named country, firm, policy or year, with one fact that does work in the argument. The example should change what the analysis says, not decorate it.</p><p class="note">Good: the UK's Air Passenger Duty applies per departing passenger, so airlines can pass it on. Weak: "countries like the UK use taxes".</p></div>
+    <div class="card"><h3>3 · Numbers and data</h3><p>If the question gives data, use it. If it does not, a simple figure shows control: "a 10% tax and a PED of -0.4 means quantity falls by about 4%".</p><p class="note">W24/42 Q4 gave Mexico's data. Nominal wages up 2.8% against inflation of 3.4% means real wages fell. Candidates who wrote about the statistics in the abstract lost the application.</p></div>
+    <div class="card"><h3>4 · The diagram, in context</h3><p>Label axes and curves for the situation ("Price of flights ($)", "Number of flights"), put in real-looking values, shade the area that matters, and refer to it by label in the writing.</p><p class="note">A perfect diagram that the essay never mentions is a recurring examiner complaint.</p></div>
+  </div>
+
+  <div class="tip"><b class="h">The swap test</b>Cover the question. Could this paragraph be pasted unchanged under a different question on the same topic? If yes, it is not applied. Add a context noun, an example or a number until it only fits this question.</div>
+
+  <h2>Upgrade a sentence</h2>
+  <p>Pick a topic, then press Upgrade to climb the application ladder. Watch what each step adds.</p>
+  <div class="card"><div id="upA"></div></div>
+
+  <h2>Generic or applied?</h2>
+  <p>The question is "Assess the effectiveness of a tax on air travel". Sort each sentence.</p>
+  <div class="card"><div id="clApp"></div></div>
+
+  <h2>Use the data</h2>
+  <p>W24/42 Q4 gave this table for Mexico in 2020: GNI 18.5 billion pesos, nominal wages +2.8%, disposable income +1.2%, unemployment 4.2%, population growth 1.1%, inflation 3.4%. Use it the way a Level 3 answer would.</p>
+  <div class="card"><div id="cData"></div>
+    <div class="tip"><b class="h">What the answer should then say</b>Real wages and real disposable income fell, so the <em>material</em> standard of living for many workers probably fell even though nominal figures rose. GNI is a single level with no base year or population, so it says little about change. Unemployment tells you about jobs, not quality of life. For the non-material side you would want HDI, MPI or health and education data. That is application and evaluation from the same numbers.</div></div>
+
+  <h2>Match the example to the concept</h2>
+  <p>Real cases are only useful if you know what they illustrate.</p>
+  <div class="card"><div id="mEx"></div></div>
+
+  <h2>Application stems</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Use</th><th>Starter</th></tr>
+    <tr><td>Context noun</td><td>"In a low-income country that relies on exports of coffee, a depreciation could ..."</td></tr>
+    <tr><td>Example</td><td>"The UK's Soft Drinks Industry Levy shows that ..."</td></tr>
+    <tr><td>Number</td><td>"If PED is -0.4, a 10% price rise would reduce quantity demanded by about 4%, so ..."</td></tr>
+    <tr><td>Diagram</td><td>"On Figure 1, the shift from MPB to MSB shows that flights above Q* ..."</td></tr>
+    <tr><td>Stakeholder</td><td>"For low-income households, who spend a larger share of income on energy, this could ..."</td></tr>
+    <tr><td>Data</td><td>"Using the figures, nominal wages rose 2.8% but inflation was 3.4%, so real wages ..."</td></tr>
+  </table></div>
+
+  <h2>Real-world bank, with how to use each in an essay</h2>
+  <p class="note">Check any figure before quoting it in an exam. Use a fact only if it supports the mechanism you are explaining.</p>
+  <div id="bank1"></div>
+
+  <div class="warn"><b class="h">Application traps</b>Name-dropping a country with no link to the argument. Using one example for everything. Inventing statistics. Telling a story about a company instead of explaining the economic mechanism it shows. Applying to the wrong context (a high-income example in a low-income question).</div>
+</section>
+
+<!-- ANALYSIS -->
+<section id="analyse" role="tabpanel" hidden>
+  <div class="card big">
+    <h3>Analysis is a chain, not a step</h3>
+    <p>The 2023 reports say many answers stopped at "a simple chain of reasoning", which held them at Level 2, and that "brief statements" without developed chains were the main reason few reached Level 3. The June 2026 mark scheme for the average cost question spells out the target: indicative analytical chains and a <b>minimum of three developed points for Level 3</b>.</p>
+  </div>
+
+  <h2>What a developed chain looks like</h2>
+  <div class="formula">Trigger → mechanism → mechanism → effect on the thing the question names → so what for the question</div>
+  <p>For "a tax on air travel": the tax raises the price of a flight → quantity demanded falls along the demand curve, by more if demand is elastic → fewer flights → less carbon and noise → output moves towards the level where marginal social benefit equals marginal cost → allocative efficiency improves. That is six links. "A tax reduces demand and so pollution" is two.</p>
+  <div class="tip"><b class="h">The chain test</b>Join every link with "because", "so" or "which means". If you can delete a link and the sentence still reads naturally, you have not explained it. If a link needs the examiner to guess, add the missing step.</div>
+
+  <h2>Build a chain</h2>
+  <div class="card"><div id="oChain"></div></div>
+
+  <h2>The analysis paragraph recipe</h2>
+  <p>This is the structure behind the model essays. Put the six parts in order.</p>
+  <div class="card"><div id="oPara"></div></div>
+
+  <h2>Match the diagram to the question</h2>
+  <p>Examiners penalise the wrong diagram as heavily as a missing one. Most common errors, by diagram:</p>
+  <div class="tw"><table class="t">
+    <tr><th>Diagram</th><th>What it must show</th><th>Errors the reports flagged</th></tr>
+    <tr><td>Negative externality</td><td>Consumption: MPB, MSB below it, MC. Production: MPC, MSC above it, D. Welfare loss triangle. The policy shift.</td><td>Drawing a production externality for air travel, which is a consumption externality (M23 Q2). Both were accepted for climate change (M24 Q2).</td></tr>
+    <tr><td>Monopoly</td><td>MR = MC for output, price read from AR, supernormal profit = (AR − AC) × output.</td><td>Supernormal profit area drawn wrongly (S25/42). MC not cutting AC at its minimum (S23/41 Q1d).</td></tr>
+    <tr><td>Perfect competition</td><td>Firm and industry, short run and long run, normal profit at the long-run position.</td><td>Showing only the starting position and not the long-run adjustment (S24/42 Q3).</td></tr>
+    <tr><td>Labour market</td><td>Perfect: demand = MRP, supply. Monopsony: marginal cost of labour above supply, wage below MRP.</td><td>A perfectly competitive diagram used for monopsony, leading to wrong predictions (M25 Q3).</td></tr>
+    <tr><td>Indifference curves</td><td>Budget line pivot, new tangency, substitution and income effects separated, normal versus Giffen.</td><td>Marginal utility written instead of IC (capped at Level 1, W23/42 Q2). Not addressing the "extent" (S24/41 Q3).</td></tr>
+    <tr><td>AD/AS</td><td>Labelled AD, SRAS, LRAS, "Price level", "Real GDP". Cost-push is a leftward SRAS shift.</td><td>Labelling macro curves D and S. A negative output gap drawn as a positive one (W24/41, S25/41). Micro diagrams on macro questions (M24 Q4, M25 Q4).</td></tr>
+    <tr><td>Injections and withdrawals</td><td>Required when named. J curve, W curve, equilibrium, the effect of the change.</td><td>AD/AS used instead (S25/42 Q4), which caps the mark.</td></tr>
+    <tr><td>Tariff</td><td>World price, price with tariff, imports before and after, revenue, welfare loss triangles.</td><td>Welfare loss "almost universally missed" as an evaluation point (M25 Q5).</td></tr>
+  </table></div>
+
+  <h2>Watch it</h2>
+  <p>The diagrams below use one example each, with simple numbers. The sentence under each step is the kind of analysis a Level 3 paragraph needs.</p>
+  <h3>1 · Air travel: a consumption externality and a tax (M23 Q2)</h3><div id="stExt"></div>
+  <h3>2 · Cost-push inflation and two policies that pull the wrong way (S24/42 Q4)</h3><div id="stAD"></div>
+
+  <h2>Lab · How big should the tax be?</h2>
+  <p>The social damage is 20 per flight, but a government cannot see that number. Try different taxes and read what happens to flights, revenue and the leftover welfare loss. This is the mark scheme's own evaluation point: it is hard to measure the precise level of tax.</p>
+  <div class="card"><div class="grid2"><div><div id="gTax"></div>
+    <div class="readout"><div><small>Flights</small><strong id="rQ"></strong></div><div><small>Welfare loss</small><strong id="rW"></strong></div><div><small>Tax revenue</small><strong id="rR"></strong></div></div>
+    <div class="verdict" id="rV"></div></div>
+    <svg id="labTax" viewBox="0 0 760 400" role="img" aria-label="Consumption externality diagram with adjustable tax"></svg></div></div>
+
+  <h2>Spot the diagram error</h2>
+  <div id="qDia"></div>
+
+  <div class="warn"><b class="h">One question, one branch</b>A micro question wants micro analysis. In M25 Q3 (minimum wage in a monopsony) answers that discussed the effect on inflation earned nothing for that material. Check whether the question is micro, macro or international before you plan.</div>
+</section>
+
+<!-- EVALUATION -->
+<section id="evaluate" role="tabpanel" hidden>
+  <div class="card big">
+    <h3>Evaluation is 6 marks, and it questions the statement</h3>
+    <p>Evaluation is expected even when the question does not say "evaluate". It is not more analysis: in M23 Q4 the report says analysing the impact of expenditure-reducing policies "did not constitute" evaluation, which meant questioning how true it is that they cause significant unemployment. To reach <b>E2</b>, a comment must include explanation based on economic concepts. Naming a factor earns E1; explaining how it changes the outcome earns E2.</p>
+    <p class="note">S24/42 Q2: candidates who said the policy effect "depended on price elasticity" were placed in E1. Those who explained how elasticity changed the outcome were placed in E2.</p>
+  </div>
+
+  <h2>The formula</h2>
+  <div class="formula">Lever → because → so what for the answer</div>
+  <p><b>E1:</b> "However, this depends on the price elasticity of demand."<br><b>E2:</b> "However, if business travellers have few substitutes, demand for flights may be inelastic, so the tax could raise the price without cutting flights much. The externality would then remain largely uncorrected, and the policy would look better as a revenue raiser than as a way to reach the social optimum."</p>
+
+  <h2>Upgrade a comment</h2>
+  <div class="card"><div id="upE"></div></div>
+
+  <h2>The seven levers: CASTLES</h2>
+  <p>Almost every evaluative point in the 2023 to 2026 mark schemes is one of these.</p>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Lever</th><th>Ask</th><th>Example from the mark schemes</th></tr>
+    <tr><td><b>C</b></td><td>Context and cause</td><td>What type of country, market or problem? What caused it?</td><td>Effect on unemployment depends on whether it is cyclical or structural. Cost-push inflation does not respond like demand-pull.</td></tr>
+    <tr><td><b>A</b></td><td>Assumptions</td><td>What must be true for the model to work?</td><td>Rational consumers and a two-good world in indifference curve theory. Perfect competition has few real-world examples.</td></tr>
+    <tr><td><b>S</b></td><td>Size</td><td>How big is the change, and how big is the problem?</td><td>The size of the tax, the minimum wage or the multiplier decides the outcome. Is the tax at the right level?</td></tr>
+    <tr><td><b>T</b></td><td>Time</td><td>Short run or long run? Lags?</td><td>Investment in technology may raise unemployment first and productivity later. Policies take time to work.</td></tr>
+    <tr><td><b>L</b></td><td>Losers and winners</td><td>Who gains, who loses, and is it fair?</td><td>Indirect taxes are regressive. Higher wages for some may mean fewer jobs for others.</td></tr>
+    <tr><td><b>E</b></td><td>Elasticity</td><td>How responsive are demand, supply, exports or imports?</td><td>PED and PES decide who bears a tax and how much quantity moves. Marshall–Lerner decides if a depreciation helps.</td></tr>
+    <tr><td><b>S</b></td><td>Substitutes and side effects</td><td>Is there a better policy? What does it do to other aims?</td><td>Supply-side policy instead of fiscal; higher interest rates and the exchange rate; retaliation to tariffs.</td></tr>
+  </table></div>
+
+  <h2>Where evaluation goes</h2>
+  <div class="grid2">
+    <div class="card"><h3>1 · End of every analysis paragraph</h3><p>One or two sentences on that paragraph's point only: "This may not hold if ...". It stops the evaluation piling up at the end and shows judgement throughout.</p></div>
+    <div class="card"><h3>2 · A weighing paragraph</h3><p>One short paragraph that compares the strengths of your arguments, or two policies, or the short and long run. Evaluation on the "relative" part of a question lives here.</p></div>
+    <div class="card"><h3>3 · The judgement</h3><p>A conclusion that answers the question using its scope word. A summary of what you already wrote earns little. A verdict with a reason and a condition earns the top of E2.</p></div>
+  </div>
+
+  <h2>Beat the scope word</h2>
+  <p>Strong words in the question are there to be tested. Match each to the move that evaluates it. Examples from 2023 to 2026: "will always benefit the producer" (S23 Q3), "automatically improve living standards" (M24 Q5), "gains all the benefits ... avoiding all the costs" (S25 Q5), "equally beneficial" (S25/42 Q5), "alone" (S25/44 Q4).</p>
+  <div class="card"><div id="mScope"></div></div>
+
+  <h2>E0, E1 or E2?</h2>
+  <p>Sort these comments from an essay on a tax to correct a negative externality of air travel.</p>
+  <div class="card"><div id="clEval"></div></div>
+
+  <h2>Writing the judgement</h2>
+  <div class="formula">Verdict on the statement + because (your strongest reason) + it depends on (condition) + what you would change in the short or long run</div>
+  <p>Example for "Larger firms always have lower average costs" (S26 Q2): "Larger firms often achieve lower average costs, because economies of scale such as technical and purchasing economies are likely to dominate up to the minimum efficient scale. They do not always, since diseconomies of scale, low-MES industries and digital technology can let smaller firms match them. The statement is therefore too strong; the result depends on how the firm's size compares with the MES in its industry."</p>
+  <div id="qConc"></div>
+</section>
+
+<!-- READ THE QUESTION -->
+<section id="question" role="tabpanel" hidden>
+  <div class="card big">
+    <h3>Spend the first five minutes on the question</h3>
+    <p>Examiners keep reporting the same failure: not reading the question carefully before "putting pen to paper". Most of the wording is there for a reason. The command word tells you what to do, the limit word tells you what to test, the context tells you where to apply, and the diagram demand tells you what to draw.</p>
+  </div>
+
+  <h2>What the command words have been</h2>
+  <p class="note">Counted across the 76 different essay questions from 2023 to June 2026 (see Past questions).</p>
+  <div class="card"><div class="bars" id="barCmd"></div></div>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for in a 20-mark essay</th></tr>
+    <tr><td><b>Evaluate</b></td><td>Judge the quality, importance or value of the argument. Use analysis, question the statement, finish with a justified judgement.</td></tr>
+    <tr><td><b>Assess</b></td><td>Weigh up the extent or effectiveness, with reasons, to a verdict. "Assess the extent" needs a stated degree.</td></tr>
+    <tr><td><b>Consider</b></td><td>Think through and weigh the issue, including the "whether" or "to what extent" attached to it.</td></tr>
+    <tr><td><b>To what extent do you agree</b></td><td>Argue both sides, then give a reasoned verdict on how far you agree.</td></tr>
+    <tr><td><b>Explain ... and consider</b></td><td>Two jobs in one question (S24/41 Q2): explain why, then consider what prevents it.</td></tr>
+    <tr><td><b>Discuss</b></td><td>Cover the arguments in depth and in a structured way, then conclude (S26/44 Q5).</td></tr>
+  </table></div>
+
+  <h2>Tag the question</h2>
+  <p>Choose a tag, then click the parts of the question it applies to. Check when you are done.</p>
+  <div class="card"><div id="tgQ"></div></div>
+
+  <h2>The five-minute plan</h2>
+  <p>Put the plan in order. This is what a Level 3 answer is built from.</p>
+  <div class="card"><div id="oPlan"></div></div>
+
+  <h2>Decoding checklist</h2>
+  <ul class="tips">
+    <li><b>Command word.</b> Evaluate, assess, consider or discuss? Each ends in a judgement.</li>
+    <li><b>Limit word.</b> Always, only, alone, all, equally, automatically, fully, "to what extent". Plan how you will test it.</li>
+    <li><b>Parts.</b> Two policies means two. Both income groups means both. Productivity and wages and employment means all three.</li>
+    <li><b>Context.</b> Low-income country, 2022 inflation, a merger in one industry, a table of Mexican data. Write the nouns on your plan.</li>
+    <li><b>Diagram.</b> "With the help of a diagram" and "injections and withdrawals graph" are marked requirements. Draw it even when not named if it supports analysis, as with price discrimination or AD/AS.</li>
+    <li><b>Direction.</b> A fall in interest rates is not a rise. Expenditure-switching is not expenditure-reducing. A negative output gap is not a positive one.</li>
+    <li><b>Branch.</b> Micro, macro or international? Keep the whole answer in it.</li>
+  </ul>
+</section>
+
+<!-- MODEL ESSAYS -->
+<section id="models" role="tabpanel" hidden>
+  <p>Four complete answers to real questions, each in the format that matches the mark scheme: opening paragraph that defines and takes a line, analysis paragraphs that open with the question's wording, an application in every paragraph, evaluation at the end of each point and a closing judgement. Open each one for the reminders and the colour-coded answer.</p>
+  <div class="key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <h2>One paragraph, three levels</h2>
+  <p>The same point in an essay on M23 Q2: <em>assess the extent to which a government can intervene to correct the market failure caused by negative externalities from air travel.</em> The sums in brackets are rough, illustrative marks for this paragraph's contribution to the 14.</p>
+  <div class="gl lv1"><h4>Level 1 · about 3 of 14</h4><p>Air travel causes pollution. The government can put a tax on flights. This makes tickets more expensive so people fly less and there is less pollution, which is good for everyone.</p><p class="note">Descriptive. No economic terms, no mechanism, no diagram, nothing specific to flights.</p></div>
+  <div class="gl lv2"><h4>Level 2 · about 8 of 14</h4><p>Air travel creates a negative externality because marginal social benefit is below marginal private benefit. A government could use an indirect tax, which reduces demand. Quantity falls towards the social optimum so allocative efficiency improves. The tax may be hard to set at the right level, so the government might only partly correct the market failure.</p><p class="note">Correct and analytical, but it could be pasted under an essay on cigarettes or plastic bags. No context, no example, no diagram reference.</p></div>
+  <div class="gl lv3"><h4>Level 3 · about 13 of 14, with evaluation</h4><div class="ans"><span class="mk n" data-t="N">A government can intervene to correct this market failure by taxing air travel.</span> <span class="mk n" data-t="N">Passengers compare only their private benefit with the price of a ticket, so flights are bought up to Qm, where MPB equals marginal cost. The emissions and noise that fall on people who never bought a ticket mean MSB lies below MPB, so Qm exceeds the efficient quantity Q* and the shaded triangle shows the welfare loss.</span> <span class="mk a" data-t="A">A tax per departing passenger, like the UK's Air Passenger Duty, raises the price of a ticket, and if it equals the external cost it shifts MPB down to MSB, so quantity demanded may fall from Qm to Q*.</span> <span class="mk n" data-t="N">Fewer flights means less carbon and noise, which removes the welfare loss and moves the market to allocative efficiency.</span> <span class="mk e" data-t="E">However, no government can measure the external cost of a flight exactly. A tax set too low leaves part of the welfare loss, and one set too high pushes flights below Q*. Where business travellers have few substitutes, demand may be inelastic and the tax could cut flights only a little.</span> <span class="mk e" data-t="E">A tax can therefore move the market towards allocative efficiency, which supports the view that a government can correct much of the failure, but not exactly.</span></div>
+    <p class="note">What changed from Level 2: the diagram is used by label (Qm, Q*, shaded triangle), the chain has more links, there is a real policy and a real type of traveller, and the evaluation explains how elasticity and measurement change the result before linking back to the question.</p></div>
+
+  <h2>Model answers</h2>
+
+  <details class="eq"><summary>Essay 1 <span class="cmd">Assess</span> <span class="mark">20 marks</span> The use of air travel leads to market failure caused by negative externalities. With the help of a diagram, assess the extent to which a government can intervene to correct this market failure. (M23 Q2)</summary><div class="body">
+    <div class="tip"><b class="h">Reminders</b><b>Diagram demanded</b>: no correct diagram, no Level 3. <b>Air travel is a consumption externality</b>, so draw MPB, MSB and MC. Examiners marked production diagrams down. <b>"The extent"</b> means you finish with a degree: considerable but incomplete, not yes or no. Two or three policies, each analysed and evaluated.</div>
+    <div class="grid2"><figure class="dgm"><div id="dgE1"></div><div class="cap">Diagram 1. No intervention. Qm flights are bought where MPB = MC. The efficient number is Q*.</div></figure><figure class="dgm"><div id="dgE2"></div><div class="cap">Diagram 2. A tax of 20 per flight shifts MPB down to MSB and the market moves to Q*.</div></figure></div>
+    <div class="ans model">
+    <p><span class="mk k" data-t="K">Market failure occurs when the price mechanism allocates resources inefficiently. For air travel it is allocative inefficiency: a negative externality of consumption is a cost imposed on third parties, so marginal social benefit (MSB) is below marginal private benefit (MPB), and allocative efficiency requires output where MSB equals marginal cost (MC).</span> <span class="mk e" data-t="E">A government can correct this market failure to a considerable extent through taxation and regulation, but a full correction is unlikely because of measurement problems, time lags and cost.</span></p>
+    <p><span class="mk n" data-t="N">The market produces where MPB equals MC, at Qm flights, because passengers and airlines ignore the emissions and noise that fall on others.</span> <span class="mk a" data-t="A">Residents under the flight paths at airports such as Heathrow, and everyone exposed to the climate effects of aviation emissions, bear costs they did not choose.</span> <span class="mk n" data-t="N">MSB therefore lies below MPB, the efficient output is Q*, and the shaded triangle between Q* and Qm is the welfare loss from over-consumption.</span></p>
+    <p><span class="mk n" data-t="N">A government can intervene to correct this market failure by taxing air travel.</span> <span class="mk a" data-t="A">A tax per departing passenger, like the UK's Air Passenger Duty, raises the price of a ticket.</span> <span class="mk n" data-t="N">If the tax equals the external cost, MPB shifts down to MSB, quantity demanded falls from Qm to Q*, the cost is internalised and the welfare loss is removed.</span> <span class="mk a" data-t="A">Short-haul routes such as London to Paris have close substitutes in rail, so demand may be elastic and the tax could cut flights noticeably.</span> <span class="mk e" data-t="E">However, the external cost of a flight is very hard to measure. A tax set too low leaves part of the welfare loss, and one set too high takes flights below Q*. Where business travellers have few substitutes, demand may be inelastic and the tax could raise revenue with little effect on flights.</span> <span class="mk e" data-t="E">So a tax can move the market towards allocative efficiency, which supports the view that a government can correct much of the failure, though not exactly.</span></p>
+    <p><span class="mk n" data-t="N">A government can also intervene to correct this market failure by limiting emissions directly.</span> <span class="mk a" data-t="A">The EU Emissions Trading System, which covers flights within Europe, caps total emissions and lets airlines buy and trade permits.</span> <span class="mk n" data-t="N">The cap restricts the quantity of emissions, so flights are likely to fall, and because airlines that cut emissions cheaply can sell permits to those that cannot, the cap could be met at lower cost than a flat rule. The price of permits raises the cost of flying much like a tax.</span> <span class="mk e" data-t="E">However, the cap has to be set accurately and enforced across many airlines. Flights are international, so passengers could switch to airports outside the scheme, which weakens the correction.</span></p>
+    <p><span class="mk n" data-t="N">A government could also try negative advertising to shift demand to the left by changing how travellers value flying.</span> <span class="mk a" data-t="A">Campaigns linked to "flight shame" in Sweden suggest attitudes can change.</span> <span class="mk e" data-t="E">But campaigns are costly, work slowly and may not persuade enough travellers, so the effect is uncertain and probably smaller than a change in price. A complete ban would be precise, but it removes consumer choice and jobs.</span></p>
+    <p><span class="mk e" data-t="E">Overall, a government can correct the market failure from air travel to a considerable but incomplete extent. A well-calibrated tax and a permits scheme both change incentives, so they are likely to be more reliable than persuasion. But the external cost is hard to measure, flights cross borders so action by one country can leak, and policies take years to work through airline fleets and habits. The extent is therefore likely to be greatest in the long run and where policies are combined, and it depends on how elastic demand is on each route.</span></p>
+    </div>
+    <div class="tip"><b class="h">How this scores</b>Likely top of Level 3 for knowledge, application and analysis: a correct consumption-externality diagram used in the text, three policies each applied, chains of five or more links. Likely 5 to 6 for evaluation: explained points at the end of every paragraph and a judgement that answers "the extent". A weaker answer draws a production externality, lists tax, ban and subsidy in a line each, and evaluates with "it is expensive".</div>
+  </div></details>
+
+  <details class="eq"><summary>Essay 2 <span class="cmd">Assess</span> <span class="mark">20 marks</span> Some firms frequently use price discrimination. Assess the view that when this occurs, price discrimination will always benefit the producer at the expense of the consumer and society. (S23 Q3)</summary><div class="body">
+    <div class="tip"><b class="h">Reminders</b><b>"Always"</b> and <b>"at the expense of"</b> are the targets. The statement names three parties (producer, consumer, society), so each needs a verdict. No diagram is demanded, but the examiner report points to the third-degree price discrimination diagram as the way into Level 3.</div>
+    <div class="dgm"><div class="cap" style="padding:10px"><b>Diagram to draw.</b> Two side-by-side panels. Market A: steeper (less elastic) demand and its MR. Market B: flatter (more elastic) demand and MR. The same MC in both. In each panel read output where MR = MC and take the price up to demand, so P(A) is greater than P(B). Shade the consumer surplus lost in A and kept in B.</div></div>
+    <div class="ans model">
+    <p><span class="mk k" data-t="K">Price discrimination is charging different prices to different consumers for the same product where the differences are not explained by differences in cost. It requires market power, markets that can be separated with different price elasticities of demand, and no resale. In third-degree price discrimination the firm splits consumers into groups, such as peak and off-peak travellers, and charges the higher price to the group with the less elastic demand.</span> <span class="mk e" data-t="E">It is likely to benefit the producer, but "always" and "at the expense of the consumer and society" are too strong, because some consumers and society may gain.</span></p>
+    <p><span class="mk n" data-t="N">Price discrimination is likely to benefit the producer in most cases because it converts consumer surplus into revenue.</span> <span class="mk n" data-t="N">In each market the firm sets MR equal to MC, which gives a higher price where demand is less elastic and a lower price where it is more elastic. Revenue and profit exceed those from a single price because each group pays closer to its willingness to pay.</span> <span class="mk a" data-t="A">Airlines charge more for last-minute business bookings than for early leisure bookings on the same flight, and rail operators charge more at peak times, so the same seat yields more revenue.</span> <span class="mk e" data-t="E">However, the producer does not always gain. Separating customers costs money for ticketing systems and restrictions, and if consumers can resell or avoid the higher price, profit may rise little or even fall. A group that feels unfairly treated could switch to rivals.</span> <span class="mk e" data-t="E">The producer is therefore very likely to gain, but not in every case.</span></p>
+    <p><span class="mk n" data-t="N">The view that price discrimination is at the expense of the consumer is only partly true.</span> <span class="mk n" data-t="N">Consumers in the market with less elastic demand pay more than under a single price and lose consumer surplus. Consumers in the elastic market pay less, so more of them can buy, and some who would be priced out entirely gain access and some surplus.</span> <span class="mk a" data-t="A">Student and senior discounts at cinemas and museums may let people visit who otherwise would not.</span> <span class="mk e" data-t="E">The net effect on consumers depends on how large each group is and on how much extra output the lower price brings, so consumers as a whole could gain or lose.</span></p>
+    <p><span class="mk n" data-t="N">Price discrimination may benefit society as well as the producer where it increases output and funds investment.</span> <span class="mk n" data-t="N">If the firm would otherwise charge one high monopoly price, selling to the low-price group raises output towards the allocatively efficient level, and higher profits can be reinvested in research. That supports dynamic efficiency and could lower costs and prices in future.</span> <span class="mk a" data-t="A">Some pharmaceutical firms charge lower prices for medicines in low-income countries than in high-income ones and may use the high-income revenue to fund research.</span> <span class="mk e" data-t="E">However, society could lose if the practice reinforces market power, if the higher price falls on a group with no alternative, such as patients with a rare condition, or if the extra profit is not reinvested. Who ought to pay more is also a value judgement.</span></p>
+    <p><span class="mk e" data-t="E">Overall, price discrimination is likely to raise producer profit when the firm can separate markets, but the claim that it will always benefit the producer at the expense of consumers and society is overstated. The result depends on whether the firm can prevent resale, how different the elasticities are, whether output expands in the lower-priced market and whether profits are reinvested. Where it widens access, as with student fares, society could benefit; where it exploits a captive group, consumers and society are more likely to lose.</span></p>
+    </div>
+    <div class="tip"><b class="h">How this scores</b>Likely Level 3 for the 14: the conditions are stated, the MR = MC logic is explained for each market, and there is an application in every paragraph. Likely E2: each paragraph questions "always" with an explained reason, and the judgement says what the outcome depends on. A Level 2 answer would say price discrimination is "unfair" and "good for firms" without separating the three parties.</div>
+  </div></details>
+
+  <details class="eq"><summary>Essay 3 <span class="cmd">Evaluate</span> <span class="mark">20 marks</span> In 2022, many countries experienced a high rate of inflation caused by disruptions to the supply of goods and services arising from the Covid-19 pandemic and the conflict between Russia and Ukraine. In one country, the government cut taxes and the central bank raised interest rates. Evaluate the likely impact of these policies on that government's ability to control inflation. (S24/42 Q4)</summary><div class="body">
+    <div class="tip"><b class="h">Reminders</b><b>Context is the question.</b> The cause is a supply shock, so it is cost-push inflation, not demand-pull. The examiner report says candidates who failed to recognise this limited their marks. <b>Two policies</b>, so analyse both. Use an AD/AS diagram (macro labels, not D and S). <b>"Likely impact"</b> invites hedged, qualified analysis.</div>
+    <figure class="dgm"><div id="dgA1"></div><div class="cap">AD/AS. A cost-push shock shifts SRAS left (inflation and a negative output gap). The tax cut shifts AD right, the interest rate rise shifts it back left. SRAS is still left of where it started.</div></figure>
+    <div class="ans model">
+    <p><span class="mk k" data-t="K">Inflation is a sustained rise in the general price level. Here it is cost-push inflation: disruption to supply during the Covid-19 pandemic and after the conflict between Russia and Ukraine raised the cost of energy, food and shipping, which shifts short-run aggregate supply (SRAS) to the left. A tax cut is expansionary fiscal policy and a rise in the central bank's interest rate is contractionary monetary policy; both work on aggregate demand (AD).</span> <span class="mk e" data-t="E">These policies are likely to give the government limited control over inflation, because they target AD while the cause lies in supply, and they pull AD in opposite directions.</span></p>
+    <p><span class="mk n" data-t="N">The likely impact of these policies has to start from the cause of the inflation.</span> <span class="mk n" data-t="N">Higher energy and shipping costs raise firms' costs at every level of output, so SRAS shifts left, the price level rises and real GDP falls below potential. That is a negative output gap with inflation, so demand-side policies are unlikely to remove the cause.</span> <span class="mk a" data-t="A">In 2022 many European economies faced sharp rises in gas and electricity prices after gas supplies from Russia were reduced, which raised costs across manufacturing and food production.</span></p>
+    <p><span class="mk n" data-t="N">The tax cut is likely to reduce the government's ability to control inflation.</span> <span class="mk n" data-t="N">Lower income tax raises disposable income and consumption, and lower corporation tax could raise investment, so AD shifts right. With output below potential the extra demand raises real GDP a little, but the price level rises further, adding demand-pull pressure to cost-push inflation.</span> <span class="mk a" data-t="A">The UK's September 2022 mini-budget announced large tax cuts when inflation was close to 10%. The pound fell and government borrowing costs rose, which suggests markets doubted that the policy fitted with controlling inflation.</span> <span class="mk e" data-t="E">However, the effect depends on how much of the extra income households spend rather than save and how much leaks into imports. A cut targeted at low-income households, who are hit hardest by energy prices, could support spending without a large rise in demand, so size and design matter.</span></p>
+    <p><span class="mk n" data-t="N">The rise in interest rates is likely to help control inflation, but at a cost to output.</span> <span class="mk n" data-t="N">Higher rates raise the cost of borrowing and the reward for saving, so consumption and investment fall and AD shifts left. They may also attract hot money, raising the exchange rate and lowering the price of imported energy and food, which directly eases cost-push pressure. Weaker demand reduces pressure on wages and could help to anchor inflation expectations.</span> <span class="mk a" data-t="A">The Bank of England raised Bank Rate from 0.1% in late 2021 to 5.25% by August 2023, while UK inflation peaked above 11% in October 2022.</span> <span class="mk e" data-t="E">However, because the problem is on the supply side, lower AD is likely to cut output and raise unemployment further below potential. The effect is slow because of time lags of a year or more, particularly where households have fixed-rate mortgages, and interest rates are a blunt tool against imported inflation.</span></p>
+    <p><span class="mk n" data-t="N">The two policies are likely to work against each other.</span> <span class="mk n" data-t="N">The tax cut shifts AD right while the rate rise shifts AD left, so the net shift may be small, and neither shifts SRAS back to the right. The price level then falls mainly as the supply disruption fades.</span> <span class="mk e" data-t="E">A more effective approach may be supply-side policy, such as diversifying energy supply, or temporary support for the most affected households that does not add to general demand. These work more slowly and cost money, so there is a trade-off between speed and effectiveness.</span></p>
+    <p><span class="mk e" data-t="E">Overall, the policies are likely to limit rather than strengthen the government's ability to control inflation. The rate rise is likely to help by reducing AD and import costs, but it costs output, while the tax cut is likely to work against it. Because the source of inflation is a supply shock, the extent of control probably depends on how quickly supply recovers, on how large and well targeted the tax cut is, and on whether inflation expectations stay anchored. In the short run control is likely to be weak; in the long run recovery of supply is likely to matter more than either policy.</span></p>
+    </div>
+    <div class="tip"><b class="h">How this scores</b>Likely Level 3 for the 14 through accurate AD/AS analysis of both policies applied to a supply-shock context. Likely E2 because the evaluation explains time lags, leakages and design, compares the policies, and the judgement addresses "ability to control". A weaker answer treats the inflation as demand-pull, explains the two policies in the abstract, and concludes "it depends".</div>
+  </div></details>
+
+  <details class="eq"><summary>Essay 4 <span class="cmd">Evaluate</span> <span class="mark">20 marks</span> Evaluate the likely impact of globalisation on a low-income country's standard of living. (S24/42 Q5)</summary><div class="body">
+    <div class="tip"><b class="h">Reminders</b>The question has three parts that examiners expected to see joined up: <b>globalisation</b>, <b>a low-income country</b> and <b>the standard of living</b>. Weaker answers dropped the standard of living or the income level. Define the standard of living (material and non-material) and use it in the evaluation. A PPC or LRAS diagram of potential growth would support the analysis even though it is not demanded.</div>
+    <div class="ans model">
+    <p><span class="mk k" data-t="K">Globalisation is the growing integration of economies through trade, capital flows, the movement of people and the transfer of technology. A low-income country (LIC) typically has low GNI per head, relies on primary exports and has limited capital and skills. The standard of living has a material side, such as real GNI per head and access to goods, and a non-material side, such as health, education and working conditions.</span> <span class="mk e" data-t="E">Globalisation is likely to raise the average standard of living in an LIC through investment and trade, but the gains may be shared unevenly and come with costs, so the overall impact depends on how the benefits are used.</span></p>
+    <p><span class="mk n" data-t="N">Globalisation is likely to raise the standard of living of a low-income country through foreign investment and trade.</span> <span class="mk n" data-t="N">Foreign direct investment by multinational corporations is an injection into the circular flow, and with a multiplier it raises incomes and employment. The new capital, technology and training also raise productive capacity, shifting the PPC or LRAS outwards, so potential growth rises. Higher incomes raise tax revenue that the government could spend on health and education, which raise non-material living standards.</span> <span class="mk a" data-t="A">Vietnam's export-led growth since its Doi Moi reforms in 1986, including electronics production by foreign firms such as Samsung in northern Vietnam, helped raise average incomes substantially, although Vietnam is now classed as lower-middle income.</span> <span class="mk e" data-t="E">However, the gains depend on local linkages. If foreign firms import most inputs and send profits abroad, for example through transfer pricing, the local gain may be limited to low-skilled jobs.</span></p>
+    <p><span class="mk n" data-t="N">Globalisation could also reduce the standard of living in a low-income country where it brings exploitation and negative externalities.</span> <span class="mk n" data-t="N">Multinationals may locate where wages and regulations are weakest, so workers could face low pay and unsafe conditions. Production may impose pollution on local communities, a negative externality that GNI per head does not count. Local firms may be outcompeted by cheaper imports, raising unemployment, and reliance on one export leaves the country exposed to price falls.</span> <span class="mk a" data-t="A">In Bangladesh the garment industry employs millions of people, mostly women, and has raised household incomes, but the collapse of the Rana Plaza factory building in 2013, which killed more than 1,100 workers, showed the cost of weak safety enforcement.</span> <span class="mk e" data-t="E">The extent of these costs depends on how well governments enforce rules, so the same globalisation can have different effects in countries with different institutions.</span></p>
+    <p><span class="mk n" data-t="N">The likely impact on the standard of living also depends on who gains.</span> <span class="mk n" data-t="N">If the gains go to a small group, such as owners of export firms or workers near a few industrial zones, average income may rise while most households see little change, and a rising Gini coefficient could signal that inequality is widening. Real GNI per head also misses non-material factors, so a country can grow richer on paper while health and working conditions stagnate.</span> <span class="mk e" data-t="E">For that reason an indicator such as the multidimensional poverty index, which includes health, education and living standards, may give a fairer view of the impact than GNI per head alone.</span></p>
+    <p><span class="mk e" data-t="E">Overall, globalisation is likely to raise the standard of living in a low-income country over time, mainly through investment, jobs and technology transfer, but the size and distribution of the gain are uncertain. The impact is likely to be strongest where the government enforces labour and environmental standards, invests tax revenue in health and education, and builds links between foreign firms and local suppliers. Where these conditions are missing, the gains could be narrow and the costs, from exploitation to pollution, could outweigh them for many households. A judgement therefore needs to be tied to the country's institutions and to the measure of the standard of living used.</span></p>
+    </div>
+    <div class="tip"><b class="h">How this scores</b>Likely Level 3 for the 14 because the answer joins globalisation, low-income features and the standard of living, with two real examples and developed chains. Likely E2 because the evaluation explains why gains depend on linkages, enforcement and distribution, and the measure of the standard of living is itself evaluated. A weaker answer lists "jobs, pollution, exploitation" in bullets and never mentions the standard of living.</div>
+  </div></details>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>Paragraph X-ray</h2>
+  <p>Paste one of your own paragraphs. The tool looks for signs of knowledge, application, analysis and evaluation, and for risky wording. It is a rough detector, not a marker. Use it to see what is missing, then fix it.</p>
+  <div class="card xr" id="xr"></div>
+
+  <h2>Five-minute plan challenge</h2>
+  <p>Get a real question. Plan for five minutes against the checklist, then reveal the planning prompts and compare.</p>
+  <div class="card" id="plan"></div>
+
+  <h2>Would it earn the marks?</h2>
+  <div id="qMark"></div>
+
+  <h2>Fix the fault</h2>
+  <p>Match each common fault to the fix that works.</p>
+  <div class="card"><div id="mFix"></div></div>
+
+  <h2>Key terms and command words</h2>
+  <div id="fcP4"></div>
+</section>
+
+<!-- PAST QUESTIONS -->
+<section id="bank" role="tabpanel" hidden>
+  <p>Every different essay question from February/March 2023 to May/June 2026: 76 questions. Planning prompts are drawn from the mark schemes and examiner reports. For the June 2026 papers no examiner report was available, so those prompts follow the mark scheme and standard syllabus content.</p>
+  <h2>What comes up</h2>
+  <div class="card"><div class="bars" id="barTop"></div><p class="note" id="topNote"></p></div>
+  <h2>Filter the questions</h2>
+  <div class="qb-f">
+    <select id="fSec" aria-label="Section"><option value="">Sections B and C</option><option value="B">Section B (micro)</option><option value="C">Section C (macro, international, development)</option></select>
+    <select id="fTop" aria-label="Topic"></select>
+    <label><input type="checkbox" id="fDia"> Diagram demanded</label>
+    <label><input type="checkbox" id="fLim"> Strong limit word</label>
+    <input type="text" id="fTxt" placeholder="Search words" aria-label="Search">
+    <span class="note" id="fCnt"></span>
+  </div>
+  <div id="qList"></div>
+
+  <h2>What examiners and mark schemes reward, by topic</h2>
+  <div class="tw"><table class="t" id="tTopic"></table></div>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Choose by application, not by favourite topic.</b> In the first minute, jot two examples or context points you could use for each option. Pick the question you can apply best.</li>
+    <li><b>Open every analysis paragraph with the question's words</b> and close it by tying back to what was asked.</li>
+    <li><b>Draw the named diagram first, large, and label it for the context.</b> Refer to Qm, Q*, AD₂ or the shaded area in your writing.</li>
+    <li><b>Aim for three developed chains of four or more links</b>, each with a real example, number or context point.</li>
+    <li><b>Define precisely, once.</b> Put all the definitions in one opening paragraph, with your line on the question.</li>
+    <li><b>Evaluate at the end of every paragraph</b> with lever, because, so what. Then compare and judge at the end.</li>
+    <li><b>Use qualified language</b> for effects and predictions: could, may, is likely to, tends to. Keep definitions and calculations exact. Where the question uses a strong word, argue on its terms and test it.</li>
+    <li><b>Do what the number says.</b> Two policies means two. Both income groups means both. A "relative" question needs comparison, not two descriptions.</li>
+    <li><b>Stay in the branch and the model.</b> Micro question, micro answer. Indifference curves question, no marginal utility.</li>
+    <li><b>Finish the judgement.</b> It should answer the scope word, name the strongest reason and say what it depends on.</li>
+    <li><b>Keep it relevant and concise.</b> Examiners reward a short, directed answer in full. Writing everything you know does not earn more.</li>
+    <li><b>Keep a bank.</b> Two or three examples each for externalities, market structures, inflation policy, trade policy and globalisation in low-income countries.</li>
+  </ul>
+
+  <h2>Timing for 40 minutes</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Minutes</th><th>Job</th><th>Marks it feeds</th></tr>
+    <tr><td>0–5</td><td>Plan: command word, limit word, parts, context, three chains, applications, levers.</td><td>Protects all 20</td></tr>
+    <tr><td>5–10</td><td>Opening paragraph: definitions in one block, your line on the question, the diagram.</td><td>Knowledge, diagram</td></tr>
+    <tr><td>10–28</td><td>Three analysis paragraphs, about 6 minutes each, each with application and a micro-evaluation.</td><td>Most of the 14, and the first part of the 6</td></tr>
+    <tr><td>28–36</td><td>Weighing paragraph and judgement that answers the scope word.</td><td>Most of the 6</td></tr>
+    <tr><td>36–40</td><td>Check: diagram labelled and used, every part covered, wording qualified, conclusion answers the question.</td><td>Rescues lost marks</td></tr>
+  </table></div>
+
+  <h2>Last-minute checklist</h2>
+  <ul class="tips">
+    <li><b>Question words:</b> command word, limit word, parts, context all used.</li>
+    <li><b>Diagram:</b> correct type for the question, labelled, referred to in the text.</li>
+    <li><b>Application:</b> a context point, example or number in every analysis paragraph.</li>
+    <li><b>Analysis:</b> three chains, four or more links each.</li>
+    <li><b>Evaluation:</b> a lever and a reason in every paragraph, plus a verdict with a condition.</li>
+  </ul>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="decimal" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+window.Lib = { initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+/* ---------- shared bits ---------- */
+const lnPts = (m, c, ymax = 105) => { let lo = 0, hi = 100; if (m !== 0) { const a = (0 - c) / m, z = (ymax - c) / m; lo = Math.max(lo, Math.min(a, z)); hi = Math.min(hi, Math.max(a, z)); } return [lo, m * lo + c, hi, m * hi + c]; };
+function bars(el, rows) { const mx = Math.max(...rows.map((r) => r[1])); el.innerHTML = rows.map((r) => `<div><span>${esc(r[0])}</span><i style="width:${(100 * r[1]) / mx}%"></i><b>${r[1]}</b></div>`).join(""); }
+
+/* ---------- mark builder ---------- */
+function markChart(s) {
+  const X = (m) => 60 + m * 45, ka = s.ka, ev = s.ev;
+  let o = SV.text(60, 52, "Knowledge, application and analysis (14 marks)", "lbl bd") + SV.text(60, 162, "Evaluation (6 marks)", "lbl bd");
+  [[0, 5, "f2", "Level 1 (1–5)"], [5, 10, "f4", "Level 2 (6–10)"], [10, 14, "f3", "Level 3 (11–14)"]].forEach((b) => { o += SV.rect(X(b[0]), 62, X(b[1]) - X(b[0]), 52, b[2]) + SV.text((X(b[0]) + X(b[1])) / 2, 130, b[3], "sm", { "text-anchor": "middle" }); });
+  [[0, 3, "f4", "E1 (1–3)"], [3, 6, "f3", "E2 (4–6)"]].forEach((b) => { o += SV.rect(X(b[0]), 172, X(b[1]) - X(b[0]), 52, b[2]) + SV.text((X(b[0]) + X(b[1])) / 2, 240, b[3], "sm", { "text-anchor": "middle" }); });
+  o += SV.rect(60, 78, ka * 45, 20, "dot1", { opacity: 1 }) + SV.rect(60, 188, ev * 45, 20, "dot1", { opacity: 1 });
+  o += SV.text(X(14) + 8, 93, Lib.fmtN(ka, 0) + " / 14", "lbl bd") + SV.text(X(6) + 8, 203, Lib.fmtN(ev, 0) + " / 6", "lbl bd");
+  o += SV.text(X(6) + 90, 203, "Total ≈ " + Lib.fmtN(ka + ev, 0) + " / 20", "lbl bd t1", { "text-anchor": "start" });
+  return o;
+}
+Lib.stepper($("#stMarks"), { w: 760, h: 270, label: "How the marks build across an essay", base: { ka: 0, ev: 0 }, draw: markChart, dwell: 5200, steps: [
+  { cap: "<b>Opening paragraph.</b> Definitions in one block and a clear line on the question. Knowledge begins to score.", s: { ka: 2, ev: 0 } },
+  { cap: "<b>The diagram the question asks for</b>, accurate and labelled for the context. Without it, the 14-mark scale is capped at Level 2.", s: { ka: 4, ev: 0 } },
+  { cap: "<b>First analysis paragraph</b>: a developed chain, applied to the context with a real example or number.", s: { ka: 7, ev: 0 } },
+  { cap: "<b>Second paragraph.</b> Two good chains still sit at the top of Level 2, which stops at 10. This is where many answers end.", s: { ka: 10, ev: 0 } },
+  { cap: "<b>A third developed, applied chain</b> moves the answer into Level 3. Application and depth together make the difference.", s: { ka: 13, ev: 0 } },
+  { cap: "<b>Micro-evaluation</b> at the end of each paragraph. Named factors with no explanation reach E1.", s: { ka: 13, ev: 2 } },
+  { cap: "<b>Developed evaluation</b>: each lever is explained with economics, so the comment reaches E2.", s: { ka: 13, ev: 4 } },
+  { cap: "<b>A justified judgement</b> that answers the question's scope word, with a reason and a condition. Full marks are available when everything is secure.", s: { ka: 14, ev: 6 } },
+] });
+
+/* ---------- consumption externality (air travel) ---------- */
+const EX = { X: (q) => 80 + 6 * q, Y: (p) => 360 - 2.8 * p }, qT = (t) => (80 - t) / 1.6;
+function exLine(m, c, cls, label, tcls, o = {}) {
+  const [q1, p1, q2, p2] = lnPts(m, c); if (q2 <= q1) return "";
+  let s = SV.line(EX.X(q1), EX.Y(p1), EX.X(q2), EX.Y(p2), cls, o.at);
+  if (label) s += SV.text(EX.X(q2) + 5, EX.Y(p2) + (o.dy ?? 4), label, "lbl bd " + tcls, { "text-anchor": "start", ...(o.at && o.at.opacity !== undefined ? { opacity: o.at.opacity } : {}) });
+  return s;
+}
+function exChart(s) {
+  const t = s.t, Q = qT(t), Qs = 37.5, Ps = 42.5, sQ = 20 + 0.6 * Q;
+  let o = SV.line(EX.X(0), EX.Y(110), EX.X(0), EX.Y(0)) + SV.line(EX.X(0), EX.Y(0), EX.X(104), EX.Y(0)) + SV.text(EX.X(0) + 6, EX.Y(110) + 6, "Price of flights ($)", "sm") + SV.text(EX.X(104), EX.Y(0) + 24, "Number of flights", "sm", { "text-anchor": "end" });
+  if (s.wl > 0.01 && Math.abs(Q - Qs) > 0.05) o += SV.poly([[EX.X(Qs), EX.Y(Ps)], [EX.X(Q), EX.Y(sQ)], [EX.X(Q), EX.Y(80 - Q)]], "f2", { opacity: s.wl });
+  o += exLine(-1, 100, "c1", "MPB", "t1", { at: { opacity: t > 0.01 ? 0.4 : 1 } });
+  if (t > 0.01) o += exLine(-1, 100 - t, "c4", "MPB − tax", "t4", { dy: 14 });
+  if (s.ms > 0.01) o += exLine(-1, 80, "c3 dash", "MSB", "t3", { at: { opacity: s.ms }, dy: 16 });
+  o += exLine(0.6, 20, "c2", "MC", "t2");
+  o += SV.line(EX.X(Q), EX.Y(sQ), EX.X(Q), EX.Y(0), "gr") + SV.line(EX.X(0), EX.Y(sQ), EX.X(Q), EX.Y(sQ), "gr") + SV.circle(EX.X(Q), EX.Y(sQ), 6, "dot1");
+  o += SV.text(EX.X(Q), EX.Y(0) + 18, "Q = " + Lib.fmtN(Q, 1), "sm bd", { "text-anchor": "middle" }) + SV.text(EX.X(0) - 8, EX.Y(sQ) + 4, Lib.fmtN(sQ, 1), "sm", { "text-anchor": "end" });
+  if (s.ms > 0.5) o += SV.line(EX.X(Qs), EX.Y(Ps), EX.X(Qs), EX.Y(0), "gr dash") + SV.circle(EX.X(Qs), EX.Y(Ps), 5, "dot3") + SV.text(EX.X(Qs) - 6, EX.Y(0) - 8, "Q* = 37.5", "sm bd t3", { "text-anchor": "end" });
+  return o;
+}
+Lib.stepper($("#stExt"), { w: 760, h: 400, label: "Air travel consumption externality and a tax", base: { t: 0, ms: 0, wl: 0 }, draw: exChart, dwell: 5200, steps: [
+  { cap: "Left alone, passengers and airlines meet where <b>marginal private benefit (MPB, demand) equals marginal cost (MC)</b>: 50 flights.", s: { t: 0, ms: 0, wl: 0 } },
+  { cap: "But each flight also imposes <b>emissions and noise on third parties</b>. A consumption externality means <b>marginal social benefit (MSB) is below MPB</b>.", s: { t: 0, ms: 1, wl: 0 } },
+  { cap: "The efficient number of flights is <b>Q* = 37.5</b>, where MSB = MC. The market over-consumes by 12.5 flights. The shaded triangle is the <b>welfare loss</b>.", s: { t: 0, ms: 1, wl: 1 } },
+  { cap: "A tax of 20 per departing passenger, like <b>Air Passenger Duty</b>, shifts MPB down to MSB. Output falls to Q*, the external cost is internalised and the welfare loss disappears.", s: { t: 20, ms: 1, wl: 1 } },
+  { cap: "<b>Evaluate:</b> if the government underestimates the damage and taxes 8, 45 flights are still bought and some welfare loss remains.", s: { t: 8, ms: 1, wl: 1 } },
+  { cap: "<b>Evaluate:</b> if it overestimates and taxes 32, flights fall to 30, below Q*, creating a new welfare loss. Measuring the externality accurately matters.", s: { t: 32, ms: 1, wl: 1 } },
+] });
+const taxSl = Lib.slider($("#gTax"), { id: "tx", label: "Tax per flight", min: 0, max: 40, step: 1, value: 0, fmt: (v) => "$" + v, onInput: (t) => {
+  const Q = qT(t), wl = 0.5 * Math.abs(Q - 37.5) * Math.abs(1.6 * Q - 60);
+  $("#labTax").innerHTML = exChart({ t, ms: 1, wl: 1 });
+  $("#rQ").textContent = Lib.fmtN(Q, 1); $("#rW").textContent = Lib.fmtN(wl, 0); $("#rR").textContent = "$" + Lib.fmtN(t * Q, 0);
+  $("#rV").textContent = Math.abs(t - 20) < 0.5 ? "Spot on. The tax equals the external cost and the market reaches the social optimum." : t < 20 ? "Under-taxed. Flights are still above the social optimum, so a welfare loss remains." : "Over-taxed. Flights have fallen below the social optimum, so a welfare loss appears on the other side.";
+} });
+$("#labTax").innerHTML = exChart({ t: 0, ms: 1, wl: 1 }); taxSl.set(0);
+
+/* ---------- AD/AS cost-push ---------- */
+const AX = (y) => 80 + 10 * y, AY = (p) => 360 - 2.7 * p;
+function adLine(m, c, cls, label, tcls, o = {}) { const y2 = 60, y1 = 0; return SV.line(AX(y1), AY(m * y1 + c), AX(y2), AY(m * y2 + c), cls, o.at) + (label ? SV.text(AX(y2) + 6, AY(m * y2 + c) + 4, label, "lbl bd " + tcls, { "text-anchor": "start", ...(o.at && o.at.opacity !== undefined ? { opacity: o.at.opacity } : {}) }) : ""); }
+function adChart(s) {
+  const sh = s.sh, ad = s.ad, Y = (80 + ad - sh) / 2, P = (120 + ad + sh) / 2;
+  let o = SV.line(AX(0), AY(120), AX(0), AY(0)) + SV.line(AX(0), AY(0), AX(64), AY(0)) + SV.text(AX(0) + 6, AY(120) + 6, "Price level", "sm") + SV.text(AX(64), AY(0) + 24, "Real GDP", "sm", { "text-anchor": "end" });
+  o += SV.line(AX(40), AY(115), AX(40), AY(0), "ax dash") + SV.text(AX(40), AY(115) - 6, "LRAS", "lbl bd", { "text-anchor": "middle" });
+  if (sh > 0.5) o += adLine(1, 20, "c3", "SRAS₁", "t3", { at: { opacity: 0.35 } });
+  o += adLine(1, 20 + sh, "c3", sh > 0.5 ? "SRAS₂" : "SRAS₁", "t3");
+  if (Math.abs(ad) > 0.5) o += adLine(-1, 100, "c1", "AD₁", "t1", { at: { opacity: 0.35 } });
+  o += adLine(-1, 100 + ad, "c1", s.adl || "AD₁", "t1");
+  o += SV.line(AX(Y), AY(P), AX(Y), AY(0), "gr") + SV.line(AX(0), AY(P), AX(Y), AY(P), "gr") + SV.circle(AX(Y), AY(P), 6, "dot2");
+  o += SV.text(AX(Y), AY(0) + 18, "Y = " + Lib.fmtN(Y, 1), "sm bd", { "text-anchor": "middle" }) + SV.text(AX(0) - 8, AY(P) + 4, "P = " + Lib.fmtN(P, 1), "sm bd", { "text-anchor": "end" });
+  if (Y < 39.5) o += SV.line(AX(Y), AY(0) - 12, AX(40), AY(0) - 12, "c2") + SV.text((AX(Y) + AX(40)) / 2, AY(0) - 18, "Negative output gap", "sm bd t2", { "text-anchor": "middle" });
+  return o;
+}
+Lib.stepper($("#stAD"), { w: 760, h: 400, label: "Cost-push inflation with a tax cut and an interest rate rise", base: { sh: 0, ad: 0, adl: "AD₁" }, draw: adChart, dwell: 5200, steps: [
+  { cap: "Before the shock the economy is at <b>potential output</b> (LRAS). The price level is 60.", s: { sh: 0, ad: 0, adl: "AD₁" } },
+  { cap: "<b>Cost-push shock.</b> Dearer energy and shipping shift <b>SRAS left</b>. Prices rise and output falls: inflation <em>and</em> a negative output gap.", s: { sh: 20, ad: 0, adl: "AD₁" } },
+  { cap: "<b>Tax cut:</b> disposable income rises, so <b>AD shifts right</b>. Output recovers a little but the price level rises further.", s: { sh: 20, ad: 15, adl: "AD₂" } },
+  { cap: "<b>Interest rate rise:</b> borrowing falls and saving rises, so <b>AD shifts back left</b>. The price level eases but output falls again.", s: { sh: 20, ad: 5, adl: "AD₃" } },
+  { cap: "The two policies <b>pull AD in opposite directions</b> and neither touches SRAS. Prices fall mainly when <b>supply recovers</b> and SRAS returns.", s: { sh: 0, ad: 5, adl: "AD₃" } },
+] });
+const svgBox = (id, html) => { $(id).innerHTML = `<svg viewBox="0 0 760 400" role="img" aria-label="Diagram">${html}</svg>`; };
+svgBox("#dgE1", exChart({ t: 0, ms: 1, wl: 1 })); svgBox("#dgE2", exChart({ t: 20, ms: 1, wl: 1 }));
+svgBox("#dgA1", adChart({ sh: 20, ad: 5, adl: "AD₃" }));
+
+/* ---------- sentence upgrader ---------- */
+function upgrader(el, o) {
+  el.classList.add("up");
+  el.innerHTML = `<div class="row"><label for="${o.id}">Example</label><select id="${o.id}">${o.items.map((x, i) => `<option value="${i}">${esc(x.q)}</option>`).join("")}</select></div>
+    <div class="up-lv">${o.labels.map((l) => `<span>${l}</span>`).join("")}</div><div class="up-txt" aria-live="polite"></div><div class="up-why"></div>
+    <div class="row"><button class="b pri" data-a="u">Upgrade ▲</button><button class="b" data-a="r">Reset</button></div>`;
+  const sel = $("select", el), txt = $(".up-txt", el), why = $(".up-why", el), pills = $$(".up-lv span", el), up = $("[data-a=u]", el);
+  let lv = 0;
+  const paint = () => { const it = o.items[+sel.value]; txt.textContent = it.lv[lv]; why.textContent = it.why[lv]; pills.forEach((p, i) => p.classList.toggle("on", i <= lv)); up.disabled = lv >= o.labels.length - 1; };
+  up.onclick = () => { lv++; paint(); };
+  $("[data-a=r]", el).onclick = () => { lv = 0; paint(); };
+  sel.onchange = () => { lv = 0; paint(); };
+  paint();
+}
+upgrader($("#upA"), { id: "upAs", labels: ["Generic", "Context", "Mechanism in context", "Real example"], items: [
+  { q: "Tax on air travel (M23 Q2)", lv: ["A tax reduces demand, which reduces pollution.", "A tax on air travel reduces the number of flights, which reduces emissions.", "A tax on air travel raises ticket prices, so some passengers switch to rail or stay at home. Fewer flights mean less carbon and noise, so the market moves towards the efficient quantity.", "The UK's Air Passenger Duty adds to the price of each departing ticket. On short routes such as London to Paris, where trains are a close substitute, some passengers may switch to rail. Fewer flights mean less carbon and noise, so the market moves towards the efficient quantity."],
+    why: ["Starting point: true, but it could be about anything.", "Added the context nouns: air travel, flights, emissions.", "Added the mechanism in context: price rise, substitutes, less carbon and noise, the efficient quantity.", "Added a real policy and route, which also shows why demand could be elastic."] },
+  { q: "Depreciation in a low-income country (S23/42 Q4)", lv: ["A depreciation makes exports cheaper and imports dearer, so growth rises.", "A depreciation of a low-income country's currency makes its exports cheaper and its imports dearer, so growth could rise.", "For a low-income country that exports coffee or cotton, a depreciation lowers foreign prices, but if supply is slow to respond and demand for exports is inelastic, export revenue may rise little while imported fuel and machinery cost more.", "For a country such as Ethiopia, which relies on coffee exports, a depreciation lowers the price abroad. If supply cannot expand quickly and demand is inelastic, export revenue may rise little while imported fuel and machinery cost more."],
+    why: ["Starting point: textbook, but not about a low-income country.", "Added the context: a low-income country, and a hedge (could).", "Added features of a low-income country: primary exports, supply response, elasticity, imported inputs.", "Added a named country that fits the features."] },
+  { q: "Minimum wage in a monopsony (M25 Q3)", lv: ["A minimum wage raises wages and may reduce jobs.", "In a monopsony labour market, an effective minimum wage raises wages and may change employment.", "A monopsonist hires where the marginal cost of labour equals MRP and pays a wage below MRP. A minimum wage above that wage makes the marginal cost of labour equal to the wage, so employment may rise as well as pay, up to where MRP equals the minimum wage.", "If a hospital group is the main employer of nurses in a region, it hires where marginal cost of labour equals MRP and pays below MRP. A minimum wage above the current wage could raise both pay and the number of nurses hired, up to where it equals MRP. Beyond that point jobs would fall."],
+    why: ["Starting point: the competitive-market answer, which is the wrong model here.", "Named the market, but gave no prediction.", "Used the monopsony model correctly. This is where the marks are.", "Added a realistic employer and the limit of the effect."] },
+  { q: "Globalisation and a low-income country (S24/42 Q5)", lv: ["Globalisation creates jobs but can exploit workers.", "Globalisation creates jobs in low-income countries but can exploit workers, which affects the standard of living.", "Foreign investment creates jobs and raises incomes through the multiplier, but weak safety and pay rules could mean low wages and dangerous work. The material standard of living may rise while health and working conditions do not.", "In Bangladesh, garment exports have created millions of jobs and raised incomes, but the collapse of the Rana Plaza building in 2013, which killed more than 1,100 workers, shows how material living standards can rise while safety and working conditions lag."],
+    why: ["Starting point: a list of effects.", "Joined the effects to the standard of living, which the question names.", "Added mechanisms and split material from non-material living standards.", "Added a real case that proves the split."] },
+] });
+upgrader($("#upE"), { id: "upEs", labels: ["No evaluation", "E1: lever named", "E2: lever explained", "E2: linked to the judgement"], items: [
+  { q: "A tax on flights", lv: ["A tax raises the price of flights.", "However, it may not work if demand is inelastic.", "However, if business travellers have few substitutes, demand may be inelastic, so the price rise cuts flights by a smaller percentage and the externality stays largely uncorrected, although revenue rises.", "However, if business travellers have few substitutes, demand may be inelastic, so the price rise cuts flights by a smaller percentage and the externality stays largely uncorrected. The tax is therefore more likely to work on elastic leisure routes, so a government can only partly correct the market failure."],
+    why: ["Analysis, not evaluation. It describes what the tax does.", "A lever (elasticity) is named. A simple comment with no development: E1.", "Explains how elasticity changes the outcome using economics: E2.", "Ties the point back to what the question asked (the extent): top of E2."] },
+  { q: "Fiscal policy and a negative output gap", lv: ["Government spending raises aggregate demand.", "But it could cause crowding out.", "But if the extra borrowing raises interest rates, private investment may fall, so part of the rise in AD is offset and output rises by less than the multiplier suggests.", "But if the extra borrowing raises interest rates, private investment may fall, so output rises by less than the multiplier suggests. Fiscal policy may therefore close only part of the gap, which supports pairing it with supply-side policy."],
+    why: ["Analysis, not evaluation.", "A recognised limitation, named only: E1.", "Explains the process and what it does to the size of the effect: E2.", "Links to the judgement about effectiveness and to an alternative policy."] },
+  { q: "Membership of a free trade area (W24/41 Q5)", lv: ["An FTA lowers prices for consumers.", "However, it depends on elasticity.", "However, if demand for the imported goods is price inelastic, or consumers prefer domestic brands, removing tariffs changes quantities little, so the gain in consumer surplus is small.", "However, if demand is price inelastic, removing tariffs changes quantities little, so the gain in consumer surplus is small. Membership is therefore not always beneficial: the gain is largest for price-elastic goods where domestic firms can survive the competition."],
+    why: ["Analysis, not evaluation.", "Lever named: E1.", "Explains why the benefit shrinks: E2.", "Answers the scope word 'always' directly."] },
+] });
+
+/* ---------- classify, order, match, quiz, calc ---------- */
+Lib.classify($("#clApp"), { prompt: "Drag each sentence into a box, then check.", noShuffle: false, buckets: [{ label: "Generic: could be in any essay on taxes" }, { label: "Applied: only fits this question" }], items: [
+  { text: "Taxes can reduce demand for goods.", b: 0 },
+  { text: "A tax on air travel raises ticket prices, so fewer leisure passengers on budget routes are likely to fly.", b: 1 },
+  { text: "Governments use taxes to change behaviour.", b: 0 },
+  { text: "The UK's Air Passenger Duty adds a fixed amount to each departing passenger's ticket, which airlines may pass on to travellers.", b: 1 },
+  { text: "If demand is inelastic, a tax will not change quantity much.", b: 0 },
+  { text: "Business travellers often must attend meetings in person, so demand for business-class flights may be inelastic and a tax could raise revenue without cutting emissions much.", b: 1 },
+  { text: "The tax shifts the supply curve to the left.", b: 0 },
+  { text: "Short-haul flights such as London to Paris have close substitutes in rail, so demand may be more elastic.", b: 1 },
+  { text: "Externalities are costs to third parties.", b: 0 },
+  { text: "Carbon emissions from jet fuel impose costs on people who never bought a ticket.", b: 1 },
+], done: "Notice that the applied sentences keep the same economics but only fit flights." });
+Lib.calc($("#cData"), { qs: [
+  { q: "Nominal wages rose 2.8% and inflation was 3.4%. Approximate the change in real wages (use a minus sign for a fall).", a: -0.6, tol: 0.05, unit: "%", hint: "Real change is roughly the nominal change minus inflation.", sol: "2.8 − 3.4 = −0.6%. Real wages fell, even though nominal wages rose." },
+  { q: "Disposable income rose 1.2% against inflation of 3.4%. Approximate the change in real disposable income.", a: -2.2, tol: 0.05, unit: "%", hint: "Same method.", sol: "1.2 − 3.4 = −2.2%. Real disposable income fell, so the material standard of living for many households probably fell." },
+] });
+Lib.match($("#mEx"), { prompt: "Match each real example to what it best illustrates.", pairs: [
+  ["UK Soft Drinks Industry Levy (2018)", "An indirect tax on a demerit good that led firms to reformulate"],
+  ["EU Emissions Trading System", "Tradable pollution permits under a cap"],
+  ["Norway's tax exemptions for electric cars", "A subsidy-type incentive to encourage a good with fewer externalities"],
+  ["Water companies in England and Wales", "Natural monopolies under regulation"],
+  ["OPEC production quotas", "Collusion and the incentive to cheat"],
+  ["Kraft's takeover of Cadbury (2010)", "External growth by takeover"],
+  ["Zimbabwe in 2008", "Hyperinflation linked to money supply growth"],
+  ["Sri Lanka in 2022", "Default on foreign debt"],
+  ["Bangladesh garment industry", "Export-led growth alongside exploitation risk"],
+], done: "Each example now has a job in an essay." });
+
+const RW = [
+  ["UK Soft Drinks Industry Levy (2018)", "A tiered levy on soft drinks with added sugar. Many manufacturers cut the sugar in their recipes to avoid the higher rate.", "Indirect taxes and demerit goods. Shows a tax can change producer behaviour, not only demand. Evaluate: reformulation may cut revenue; poorer households spend a larger share of income on drinks."],
+  ["Air Passenger Duty (UK)", "A tax charged per departing passenger, with the rate depending on distance and class of travel.", "Pricing a consumption externality (M23 Q2). Use to discuss elasticity on short versus long routes and business versus leisure travellers."],
+  ["London Congestion Charge (2003) and Singapore's Electronic Road Pricing", "Charges for driving in busy areas. Singapore varies the price by road and time of day.", "Taxing a negative externality of consumption. Evaluate: setting the right charge, fairness to low-income drivers, traffic displaced to other roads."],
+  ["EU Emissions Trading System", "A cap on emissions with tradable permits. It covers power, heavy industry and flights within Europe.", "Pollution permits as a market-based alternative to taxes. Evaluate: setting the cap, price volatility, international leakage."],
+  ["Electric cars in Norway", "Tax exemptions and other incentives have helped make electric cars a large majority of new car sales.", "S23/42 Q2: encouraging electric vehicles. Evaluate: cost to the government, charging infrastructure, richer buyers gain most (equity)."],
+  ["NHS versus US health care", "The UK's NHS is mainly tax-funded and free at the point of use. US health care relies far more on private insurance.", "Merit goods and public versus private provision (W23/41 Q2). Evaluate: allocative efficiency and positive externalities against profit-driven efficiency and equity."],
+  ["Water companies in England and Wales", "Each serves a region as a monopoly and is regulated on prices and investment by Ofwat.", "Natural monopoly and privatisation (W24/42 Q3). Evaluate: a state monopoly can become a private monopoly that needs a regulator."],
+  ["OPEC", "A group of oil producers that sets output targets to influence the price. Members have sometimes produced above their quotas.", "Collusion and the incentive to cheat (M23 Q3, S26/44 Q3). Evaluate: unstable, and demand and non-OPEC supply limit the power."],
+  ["UK supermarkets", "A few large chains compete through loyalty cards, price matching and own brands. Discounters such as Aldi and Lidl have increased price competition.", "Oligopoly and non-price competition (M25 Q2). Evaluate: contestability, and the cost of advertising and promotion."],
+  ["Kraft's takeover of Cadbury (2010)", "One firm bought another, rather than two firms forming a new company.", "Takeover versus merger (S25/41 Q3). Evaluate: cost savings may not reach consumers; cultural clashes and job cuts can follow."],
+  ["The NHS as an employer of nurses", "It is the main employer of nurses in the UK, giving it strong buying power in that labour market.", "Monopsony (M25 Q3, W24/43 Q3). Evaluate: a minimum wage could raise pay and employment, but the effect depends on elasticities and its size."],
+  ["UK mini-budget (September 2022) and Bank Rate rises", "Large tax cuts were announced when inflation was close to 10%. The pound fell and borrowing costs rose. Bank Rate went from 0.1% in late 2021 to 5.25% by August 2023.", "Cost-push inflation with conflicting policies (S24/42 Q4). Evaluate: time lags, supply-side causes, trade-offs with output."],
+  ["Japan's negative interest rates", "The Bank of Japan kept a policy rate below zero from 2016 until March 2024 while inflation stayed low for years.", "Limits of monetary policy and the liquidity trap (S25/42 Q4, S26/41 Q1). Evaluate: low rates may not lift spending."],
+  ["Zimbabwe in 2008", "Rapid money printing was followed by hyperinflation.", "Quantity theory and money supply (W24/43 Q4, S26/42 Q4). Evaluate: velocity and output also matter; most inflation is not this extreme."],
+  ["Fiscal stimulus after 2008", "The UK cut VAT from December 2008 to the end of 2009. The US passed a large recovery act in 2009. China launched a major spending programme.", "Fiscal policy, the multiplier and output gaps (W23/43 Q4, S25/41 Q4). Evaluate: crowding out, debt, size of multiplier, time lags."],
+  ["EU customs union and USMCA", "EU members share a common external tariff. The USMCA is a free trade area in which each member sets its own external tariffs.", "FTA versus customs union (S25/41 Q5). Use to explain the common external tariff and rules of origin."],
+  ["US tariffs on Chinese goods (2018 onwards)", "Tariffs were followed by retaliation from China.", "Tariffs, retaliation and trade wars (W24/43 Q5, M25 Q5). Evaluate: higher prices, protected inefficient firms, welfare loss."],
+  ["Vietnam and foreign investment", "After the Doi Moi reforms in 1986 Vietnam opened to trade. Foreign firms such as Samsung built large electronics plants in the north.", "Globalisation, FDI and growth in a developing economy (S24/42 Q5). Evaluate: linkages to local firms, low-skilled jobs, profit repatriation."],
+  ["Bangladesh garments and Rana Plaza", "Garments are a leading export and employ millions. The Rana Plaza collapse in 2013 killed more than 1,100 workers.", "Globalisation and standard of living (M23 Q5, S24/42 Q5). Evaluate: material gains against safety and working conditions."],
+  ["Sri Lanka's debt default (2022)", "Sri Lanka stopped repaying most foreign debt after its foreign exchange reserves ran short.", "External debt in developing countries (S26/41 Q5, W24/42 Q5). Evaluate: foreign-currency debt, falling currency, quality of the projects borrowed for."],
+  ["Turkey's lira", "The lira lost a large share of its value in 2018 and again in 2021.", "Depreciation, imported inflation and foreign-currency debt (S23/42 Q4). Evaluate: Marshall–Lerner, supply response."],
+  ["Bhutan and Gross National Happiness", "Bhutan has promoted this as an alternative to relying on GDP. The global Multidimensional Poverty Index covers health, education and living standards.", "Measuring the standard of living (W23/42 Q5, S26/42 Q5). Evaluate: broader measures are harder to collect and compare."],
+];
+$("#bank1").innerHTML = RW.map((r) => `<div class="rw"><h3>${esc(r[0])}</h3><p>${esc(r[1])}</p><div class="use"><b>Exam use:</b> ${esc(r[2])}</div></div>`).join("");
+
+Lib.order($("#oChain"), { prompt: "A tax on air travel and allocative efficiency. Put the chain in order.", items: [
+  "The government adds a tax per passenger on flights",
+  "Airlines pass the cost on, so the price of a ticket rises",
+  "Quantity demanded of flights falls along the demand curve",
+  "Fewer flights means less carbon and noise for third parties",
+  "The external cost is internalised and output moves towards where MSB equals MC",
+  "Allocative efficiency improves and the welfare loss shrinks",
+], done: "Six links, each one explained." });
+Lib.order($("#oPara"), { prompt: "Put the parts of an analysis paragraph in order.", items: [
+  "Open with the question's own words to answer it straight away",
+  "Explain the mechanism in a chain: because, so, which leads to",
+  "Apply it: context words, a real example or a number",
+  "Refer to your diagram and say what the shift or area shows",
+  "Add one or two sentences of evaluation specific to this point",
+  "Close by linking back to what the question asked",
+], done: "That is the paragraph used in the model essays." });
+Lib.order($("#oPlan"), { prompt: "Order the five-minute plan.", items: [
+  "Underline the command word, the limit word and the context",
+  "Write your answer to the question in one sentence",
+  "Pick three analytical chains and the diagram that supports them",
+  "Add one application to each chain: an example, a number or the context",
+  "Choose three evaluation levers (CASTLES) and one for the conclusion",
+  "Draft the first line of the judgement",
+], done: "Five minutes, and the essay is half written." });
+
+Lib.quiz($("#qDia"), { qs: [
+  { q: "A student answers an inflation question with curves labelled D and S and axes labelled Price and Quantity. What is the problem?", opts: ["Nothing. They mean the same thing.", "A macro diagram needs AD, SRAS (or AS), 'Price level' and 'Real GDP'.", "It should be MC and MR.", "Axes are not required."], a: 1, why: "Examiners flagged D and S labels on macro diagrams in several series." },
+  { q: "In a monopoly diagram, which area shows supernormal profit?", opts: ["Between MR and MC at the profit-maximising output", "Between AR and AC at the profit-maximising output, multiplied by that output", "Under the AR curve", "Between MC and AC"], a: 1, why: "Profit per unit is AR minus AC at the output where MR = MC. Misdrawn profit areas cost marks in S25/42." },
+  { q: "Where must the MC curve cut the AC curve?", opts: ["At the lowest point of AC", "At the highest point of AC", "Anywhere on AC", "At the MR curve"], a: 0, why: "MC cuts AC at its minimum. Many diagrams missed this." },
+  { q: "The question names an injections and withdrawals graph. The student draws an accurate AD/AS diagram instead. What is likely?", opts: ["Full credit, because it is equivalent", "The 14-mark scale is capped at Level 2", "A bonus for a different method", "No effect"], a: 1, why: "The mark scheme says no J/W graph means maximum Level 2 (S25/42 Q4)." },
+  { q: "A student draws a good diagram but never mentions it in the essay. What is likely?", opts: ["Full credit for the diagram alone", "Limited credit, because analysis marks come from explaining and using it", "Extra marks for neatness", "No difference"], a: 1, why: "Reports flag well-presented diagrams with no reference in the text as a repeated fault." },
+  { q: "A question is about a negative output gap. The student's diagram has actual output above potential. What follows?", opts: ["The diagram is fine", "The diagram is wrong and the analysis built on it is weakened", "It earns an evaluation mark", "Only the labels are wrong"], a: 1, why: "S25/41 reported candidates confusing negative and positive output gaps." },
+] });
+Lib.match($("#mScope"), { prompt: "Match each word or phrase in a question to the move that evaluates it.", pairs: [
+  ["always / never", "Find a realistic case where it does not hold and say when."],
+  ["all the benefits ... all the costs", "Test each half separately. The claim fails if either half fails."],
+  ["equally", "Compare the size of the effect on each group and find a reason it differs."],
+  ["automatically", "Show what else has to happen before the outcome follows."],
+  ["alone / only", "Say what other policies or conditions are needed alongside."],
+  ["fully explain / adequate / satisfactory", "Judge the assumptions and what the model leaves out."],
+  ["to what extent do you agree", "Argue both sides, then give a weighted verdict with a reason."],
+  ["likely impact", "Show the outcome is probable, not certain, and what could change it."],
+], done: "Use the move in your conclusion as well as in the body." });
+Lib.classify($("#clEval"), { prompt: "Drag each sentence to a level, then check.", buckets: [{ label: "Not evaluation yet" }, { label: "E1: simple comment" }, { label: "E2: developed and explained" }], items: [
+  { text: "A tax raises the price of a flight.", b: 0 },
+  { text: "Emissions from aircraft are a negative externality.", b: 0 },
+  { text: "Airlines may pass part of the tax on to passengers.", b: 0 },
+  { text: "However, it may not work if demand is inelastic.", b: 1 },
+  { text: "The tax could be costly to collect.", b: 1 },
+  { text: "Another policy might be better.", b: 1 },
+  { text: "It depends on the time period.", b: 1 },
+  { text: "If business travellers have few substitutes, demand may be inelastic, so the price rise cuts flights by a smaller percentage and the externality stays largely uncorrected, although revenue rises.", b: 2 },
+  { text: "Setting the tax equal to the external cost needs an accurate measure of the damage from emissions. If it is too low a welfare loss remains, and if too high output falls below the social optimum, so the tax may improve but not fully correct the failure.", b: 2 },
+  { text: "In the long run the tax could encourage airlines to invest in fuel-efficient planes, cutting emissions per flight, which might make the policy more effective over time than it first appears.", b: 2 },
+], done: "The first group is analysis. E1 names a lever. E2 explains how the lever changes the result." });
+Lib.quiz($("#qConc"), { qs: [
+  { q: "Question: evaluate the statement that MNCs always promote economic growth in a low-income country. Which conclusion is strongest?", opts: ["MNCs have advantages and disadvantages for low-income countries.", "MNCs often raise growth through investment and jobs, but not always: transfer pricing, low-skilled jobs and damage to local firms can limit or reverse it, so the effect depends on linkages and regulation in the host country.", "MNCs are good for growth.", "MNCs always promote growth, as shown above."], a: 1, why: "It gives a verdict, tests 'always', names reasons and states what the outcome depends on." },
+  { q: "Question: to what extent is more government spending a sensible way to raise growth? Which conclusion is strongest?", opts: ["Government spending is sensible if there is spare capacity, because the multiplier raises output without much inflation. Near full employment it may crowd out private spending or raise prices, so it is sensible only in some conditions.", "Government spending can help growth but also has costs.", "Yes, it is sensible.", "In summary I have discussed growth and government spending."], a: 0, why: "It weighs the arguments, answers 'sensible' and gives a condition. The others summarise or assert." },
+] });
+
+Lib.quiz($("#qMark"), { qs: [
+  { q: "Which best describes Level 3 on the 14-mark scale?", opts: ["Detailed knowledge, accurate concepts and diagrams that are fully explained, developed analysis, well organised", "Some relevant knowledge with limited development", "A small number of relevant points", "Mainly descriptive"], a: 0, why: "Level 3 is 11 to 14 marks for developed, detailed, accurate analysis." },
+  { q: "A student writes four one-line evaluation points: time lags, cost, elasticity, alternatives. Likely evaluation level?", opts: ["E2, because there are four points", "E1, because the factors are named but not explained", "No marks", "E2 for the number of ideas"], a: 1, why: "E2 needs developed, reasoned comments with economic explanation. Quantity of points does not replace development." },
+  { q: "Which sentence is application?", opts: ["Taxes change behaviour.", "The UK's Soft Drinks Industry Levy gave manufacturers a reason to cut sugar.", "Externalities are costs to third parties.", "It depends on elasticity."], a: 1, why: "It uses a real policy to show the mechanism. The others are generic knowledge or a named lever." },
+  { q: "The essay is accurate on the model but ignores the context named in the question. Where does it lose marks most?", opts: ["Application and the top of the 14-mark scale", "Only the conclusion", "Nowhere", "Spelling"], a: 0, why: "Level 2 explanations are limited or over-generalised. Context is what lifts them." },
+  { q: "A student concludes by summarising what was said earlier. What is the likely effect?", opts: ["Full evaluation credit", "Limited credit, because a judgement must weigh the arguments and answer the question", "Extra marks for clarity", "It is ignored and loses nothing"], a: 1, why: "Reports on M24 Q4 and M25 Q5 call out summary conclusions." },
+  { q: "The question says 'Evaluate whether X always ...'. What must the evaluation do with 'always'?", opts: ["Ignore it", "Test it, showing when X does not hold, and answer it in the judgement", "Agree with it", "Repeat it"], a: 1, why: "Mark schemes repeatedly say the key word should be considered in the light of the argument." },
+] });
+Lib.match($("#mFix"), { prompt: "Match the fault to its fix.", pairs: [
+  ["Wrote about GDP when the question said productivity", "Underline the key phrases and use them in every paragraph."],
+  ["Perfect diagram never mentioned in the text", "Refer to it by label: Qm, Q*, the shaded area."],
+  ["Cost-push inflation treated as demand-pull", "Identify the cause from the context before choosing the analysis."],
+  ["A list of one-line evaluation points", "Develop one or two with lever, because, so what."],
+  ["Conclusion that repeats the essay", "State a verdict, your strongest reason and what it depends on."],
+  ["Covered only one of two income groups", "Tick off every part of the stem in the plan."],
+  ["Macro effects on a micro question", "Name the branch and stay inside it."],
+], done: "Most of these are fixed in the first five minutes." });
+Lib.cards($("#fcP4"), { cards: [
+  ["Allocative efficiency", "Resources are allocated so that price (marginal benefit) equals marginal cost, matching what consumers want."],
+  ["Productive efficiency", "Output is produced at the lowest possible average cost, at the minimum of AC."],
+  ["Dynamic efficiency", "Efficiency over time through investment and innovation that lower costs or improve products."],
+  ["X-inefficiency", "Firms operate above minimum cost because competitive pressure is weak."],
+  ["Minimum efficient scale", "The lowest output at which long-run average cost is at its minimum."],
+  ["Natural monopoly", "One firm can supply the market at lower average cost than two or more because of very large economies of scale."],
+  ["Monopsony", "A single or dominant buyer. In a labour market, the firm faces an upward-sloping supply of labour, so MCL lies above it."],
+  ["Substitution and income effects", "A price change makes a good relatively cheaper or dearer (substitution) and changes real income (income). For a Giffen good a negative income effect outweighs substitution."],
+  ["Negative output gap", "Actual output below potential output, with spare capacity and cyclical unemployment."],
+  ["Stagflation", "High inflation together with weak output growth and high unemployment."],
+  ["Multiplier", "The final change in national income is larger than the initial injection. k = 1 ÷ (1 − MPC) = 1 ÷ MPW."],
+  ["Crowding out", "Government borrowing raises interest rates and reduces private investment."],
+  ["Marshall–Lerner condition", "A depreciation improves the current account if the sum of the price elasticities of demand for exports and imports exceeds 1."],
+  ["Free trade area versus customs union", "An FTA removes tariffs between members, each setting its own external tariffs. A customs union also has a common external tariff."],
+  ["Expenditure-reducing versus expenditure-switching", "Reducing cuts total spending, including on imports. Switching moves spending from imports to domestic goods, for example through tariffs or depreciation."],
+  ["Evaluate", "Judge the quality, importance or value of the argument, with analysis and a justified conclusion."],
+] });
+
+/* ---------- question tagger ---------- */
+function tagger(el, o) {
+  const R = { cmd: "Command word", lim: "Limit word", parts: "Parts to cover", ctx: "Topic and context", dia: "Diagram demand" };
+  let qi = 0, tool = "cmd", tags = {}, checked = false;
+  const draw = () => {
+    const q = o.qs[qi];
+    el.innerHTML = `<div class="row">${o.qs.map((x, i) => `<button class="b${i === qi ? " pri" : ""}" data-q="${i}">Question ${i + 1}</button>`).join("")}</div>
+      <p class="note" style="margin:8px 0 0">${esc(q.src)}</p>
+      <div class="tg-tools">${Object.keys(R).map((k) => `<button class="r-${k}${k === tool ? " on" : ""}" data-t="${k}">${R[k]}</button>`).join("")}</div>
+      <div class="tg-q">${q.c.map((c, i) => `<span class="ch${tags[i] ? " r-" + tags[i] : ""}" ${tags[i] ? `data-r="${tags[i]}"` : ""} data-i="${i}" tabindex="0" role="button">${esc(c[0])}</span>`).join("")}</div>
+      <div class="row" style="margin-top:10px"><button class="b pri" data-a="ck">Check</button><button class="b" data-a="rs">Reset</button></div><div class="tg-note msg" aria-live="polite"></div>`;
+    $$("[data-q]", el).forEach((b) => (b.onclick = () => { qi = +b.dataset.q; tags = {}; checked = false; draw(); }));
+    $$("[data-t]", el).forEach((b) => (b.onclick = () => { tool = b.dataset.t; draw(); }));
+    $$(".ch", el).forEach((s) => { const f = () => { tags[+s.dataset.i] === tool ? delete tags[+s.dataset.i] : (tags[+s.dataset.i] = tool); checked = false; draw(); }; s.onclick = f; s.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), f()); });
+    $("[data-a=rs]", el).onclick = () => { tags = {}; draw(); };
+    $("[data-a=ck]", el).onclick = () => {
+      let ok = 0, no = 0, miss = 0;
+      $$(".ch", el).forEach((s) => { const i = +s.dataset.i, e = q.c[i][1], g = tags[i]; s.classList.remove("ok", "no", "miss"); if (g && g === e) { s.classList.add("ok"); ok++; } else if (g) { s.classList.add("no"); no++; } else if (e) { s.classList.add("miss"); miss++; } });
+      $(".tg-note", el).innerHTML = `${ok} correct, ${no} wrong, ${miss} missed (dashed). <span class="note" style="font-weight:400"><b>The trap:</b> ${q.trap}</span>`;
+    };
+  };
+  draw();
+}
+tagger($("#tgQ"), { qs: [
+  { src: "S23/41 Q3", trap: "'Always' needs a case where it fails, and the statement names three parties, so give a verdict on the producer, the consumer and society. No diagram is demanded, but a price discrimination diagram helps.", c: [["Some firms frequently use ", null], ["price discrimination.", "ctx"], [" ", null], ["Assess the view that", "cmd"], [" when this occurs, price discrimination will ", null], ["always", "lim"], [" benefit ", null], ["the producer", "parts"], [" at the expense of ", null], ["the consumer and society.", "parts"]] },
+  { src: "S24/42 Q4", trap: "The context says supply-side disruption, so this is cost-push inflation. Both policies need analysis, and they work on AD while the cause is on the supply side. 'Likely' invites qualified analysis.", c: [["In 2022, many countries experienced a high rate of inflation caused by disruptions to the supply of goods and services arising from the Covid-19 pandemic and the conflict between Russia and Ukraine.", "ctx"], [" In one country, ", null], ["the government cut taxes and the central bank raised interest rates.", "ctx"], [" ", null], ["Evaluate", "cmd"], [" the ", null], ["likely", "lim"], [" impact of ", null], ["these policies", "parts"], [" on that government's ability to control inflation.", "ctx"]] },
+  { src: "W23/42 Q4", trap: "'Always' again. Examiners expected definitions of MNC, low-income country and economic growth, and analysis of growth itself, not only the standard of living.", c: [["The presence of multinational corporations (MNCs) in a low-income country", "ctx"], [" ", null], ["always", "lim"], [" promotes ", null], ["economic growth", "ctx"], [" in that country. ", null], ["Evaluate", "cmd"], [" this statement.", null]] },
+  { src: "S25/42 Q4", trap: "The graph is a marked requirement: an AD/AS diagram does not satisfy it. It is a fall in interest rates, and other policies earn no credit.", c: [["With the help of an injections and withdrawals graph,", "dia"], [" ", null], ["assess", "cmd"], [" the impact of a decrease in interest rates", "ctx"], [" on ", null], ["the level of employment", "parts"], [" in an economy.", null]] },
+  { src: "W24/41 Q2", trap: "Exactly two policies, and each must be linked to allocative efficiency. Many answers described policies without ever reaching efficiency.", c: [["Governments in many countries are promoting policies that reduce the impact of the negative externalities.", "ctx"], [" ", null], ["Evaluate", "cmd"], [", ", null], ["using appropriate diagram(s),", "dia"], [" ", null], ["the extent to which", "lim"], [" ", null], ["two policies", "parts"], [" used to reduce negative externalities can also improve ", null], ["allocative efficiency.", "parts"]] },
+] });
+
+/* ---------- paragraph x-ray ---------- */
+function xray(el) {
+  el.innerHTML = `<label for="xrT">Your paragraph</label><textarea id="xrT" placeholder="Paste one paragraph from your essay"></textarea>
+    <label for="xrC">Words from the question (comma separated, optional)</label><input type="text" id="xrC" placeholder="for example: air travel, government, market failure">
+    <div class="row" style="margin-top:10px"><button class="b pri" data-a="go">X-ray it</button><button class="b" data-a="cl">Clear</button></div><div class="xr-out" aria-live="polite"></div>`;
+  const out = $(".xr-out", el);
+  const T = {
+    k: /\b(defined as|is when|refers to|occurs when|is called|is known as|means)\b/i,
+    n: /\b(because|therefore|leading to|leads to|which leads|as a result|so that|so the|so |this means|causing|causes|resulting in|results in|due to|since|which could|which may)\b/i,
+    e: /\b(however|but |although|depends|on the other hand|overall|unless|only if|may not|could be offset|in the long run|in the short run|whereas|nevertheless|limited by|less effective|not always)\b/i,
+    d: /\b(diagram|figure|fig\.|shaded|shifts? (?:to|from)|Q[a-z*0-9]|AD[0-9₁₂₃]|SRAS|LRAS|MSB|MPB|MSC|MPC)\b/,
+    ex: /\b(for example|for instance|e\.g\.|such as|in the case of|in 20\d\d|in 19\d\d)\b/i,
+  };
+  $("[data-a=cl]", el).onclick = () => { $("#xrT", el).value = ""; out.innerHTML = ""; };
+  $("[data-a=go]", el).onclick = () => {
+    const text = $("#xrT", el).value.replace(/\s+/g, " ").trim(); if (!text) { out.textContent = "Paste a paragraph first."; return; }
+    const ctx = $("#xrC", el).value.split(",").map((s) => s.trim().toLowerCase()).filter((s) => s.length > 2);
+    const ss = text.match(/[^.!?]+[.!?]*/g).map((s) => s.trim()).filter(Boolean);
+    const cnt = { k: 0, a: 0, n: 0, e: 0 }; let diag = 0, ctxHit = 0;
+    const rows = ss.map((s) => {
+      const body = s.slice(s.indexOf(" ") + 1), low = s.toLowerCase(), b = [];
+      const hasCtx = ctx.some((c) => low.includes(c)), hasNum = /\d/.test(s), hasNoun = /\b[A-Z][a-z]{3,}\b/.test(body) && !/^(?:However|Overall|Therefore)/.test(s), hasEx = T.ex.test(s), hasD = T.d.test(s);
+      if (T.k.test(s)) { b.push("k"); cnt.k++; }
+      if (hasCtx || hasNum || hasNoun || hasEx || hasD) { b.push("a"); cnt.a++; if (hasD) diag++; if (hasCtx) ctxHit++; }
+      if (T.n.test(s)) { b.push("n"); cnt.n++; }
+      if (T.e.test(s)) { b.push("e"); cnt.e++; }
+      return `<div class="snt">${esc(s)} ${b.map((x) => `<span class="bdg ${x}">${x === "k" ? "K" : x === "a" ? "A" : x === "n" ? "N" : "E"}</span>`).join("")}</div>`;
+    });
+    const abs = [...new Set((text.match(/\b(will|always|never|must|definitely|certainly|cannot)\b/gi) || []).map((w) => w.toLowerCase()))];
+    const hedge = (text.match(/\b(could|may|might|likely|tends to|possibly|probably|often)\b/gi) || []).length;
+    const adv = [];
+    if (!cnt.a) adv.push("No application signals. Add the question's context words, a real example or a number.");
+    else if (cnt.a < Math.ceil(ss.length / 4)) adv.push("Light on application. Tie more of the sentences to the context, an example or the diagram.");
+    if (ctx.length && !ctxHit) adv.push("None of your question words appear. Start by echoing the question's wording.");
+    if (!cnt.n) adv.push("No cause-and-effect links found. Join your steps with because, so or which leads to.");
+    if (!cnt.e) adv.push("No evaluation signals. End the paragraph with a lever, because, so what.");
+    else if (cnt.e === 1) adv.push("Only one evaluation sentence. Check it explains how the factor changes the result, not just names it.");
+    if (abs.length) adv.push("Absolute wording found (" + abs.join(", ") + "). Qualify with could, may or is likely to unless the question's own wording demands a strong claim.");
+    if (!hedge) adv.push("No qualified language such as could, may or likely.");
+    if (ss.length < 4) adv.push("Short paragraph. Level 3 chains usually need four or more linked sentences.");
+    if (!adv.length) adv.push("Balanced on these signals. Now read it as a marker: does every sentence work for this question only?");
+    out.innerHTML = `<div class="xr-sum"><div><small>Sentences</small><b>${ss.length}</b></div><div><small>Knowledge</small><b>${cnt.k}</b></div><div><small>Application</small><b>${cnt.a}</b></div><div><small>Analysis</small><b>${cnt.n}</b></div><div><small>Evaluation</small><b>${cnt.e}</b></div></div>
+      <div class="tip"><b class="h">What to improve</b>${adv.map((a) => `<div>${esc(a)}</div>`).join("")}</div><p class="note">Badges are keyword signals only. A sentence can be tagged wrongly, and a good sentence can be missed.</p>${rows.join("")}`;
+  };
+}
+xray($("#xr"));
+
+/* ---------- question bank ---------- */
+const TOP = { mf: "Market failure and intervention", ms: "Market structures and firms", ct: "Consumer theory", lm: "Labour markets", mon: "Inflation, unemployment and monetary policy", fp: "Fiscal policy, growth and the multiplier", bop: "Balance of payments and exchange rates", gl: "Globalisation and trade", dev: "Development, standard of living, aid and debt" };
+const SECB = ["mf", "ms", "ct", "lm"];
+// [id, topic, diagram demanded, question, planning prompt, also]
+const QB = [
+  ["M23/42 Q2", "mf", 1, "The use of air travel leads to market failure caused by negative externalities. With the help of a diagram, assess the extent to which a government can intervene to correct this market failure.", "Air travel is a consumption externality: MPB, MSB, MC. Chains: tax, regulation, negative advertising. Evaluate: tax level hard to measure, lags, advertising costly and uncertain. 'The extent' needs a degree in the verdict.", ""],
+  ["M23/42 Q3", "ms", 0, "Some firms in oligopoly markets choose to collude rather than engage in price competition. This will lead to higher prices and a less efficient allocation of resources. Evaluate this statement.", "Collusion moves the market towards monopoly behaviour; develop the chain from collusion to price to allocative efficiency and X-inefficiency. Evaluate: economies of scale, dynamic efficiency, choice, regulation. Question the statement.", ""],
+  ["M23/42 Q4", "bop", 0, "Expenditure-reducing policies will reduce a balance of payments deficit but will also cause significant unemployment. Evaluate this statement.", "Cut AD, so less spending on imports (higher interest rates, contractionary fiscal). Name cyclical unemployment and give two chains. Evaluate how significant: state of the economy, cause of unemployment, supply-side policies alongside.", ""],
+  ["M23/42 Q5", "gl", 0, "Assess the impact of globalisation on the standard of living in low-income countries.", "Define globalisation as more than trade: capital, labour, technology. Build in low-income features (primary exports) and link to the standard of living. Evaluate: MNC exploitation, resource depletion, dependency, unequal gains.", ""],
+  ["S23/41 Q2", "mf", 1, "To improve allocative efficiency economists frequently advise governments to remove existing subsidies to the private sector providers of education. With the help of a diagram, evaluate this advice.", "Education as a merit good with positive externalities; diagram of under-consumption. Removing a subsidy may reduce output below the social optimum. Evaluate: measuring the subsidy, opportunity cost, access by ability to pay. No diagram, no Level 3.", "also 43"],
+  ["S23/41 Q3", "ms", 0, "Some firms frequently use price discrimination. Assess the view that when this occurs, price discrimination will always benefit the producer at the expense of the consumer and society.", "Conditions for price discrimination; third-degree diagram with different elasticities. Producer gains surplus; some consumers get lower prices; profits may fund dynamic efficiency. Judge 'always'.", "also 43"],
+  ["S23/41 Q4", "fp", 0, "An increase in a government's budget surplus will increase unemployment in the short run but it will make it easier to control a balance of payments deficit on the current account in the long run. Evaluate this statement.", "A surplus is contractionary: AD falls, cyclical unemployment rises, import demand falls. The report found the balance of payments link weak. Evaluate: spare capacity, cause of unemployment, supply-side alternatives, lower interest rates.", "also 43"],
+  ["S23/41 Q5", "dev", 0, "To what extent do you agree that an increase in productivity will lead to a higher standard of living in low-income countries?", "Do not confuse production with productivity. Link productivity to output, income, health and education. Evaluate: FDI exploitation, capital replacing labour, distribution, measuring the standard of living.", "also 43"],
+  ["S23/42 Q2", "mf", 1, "The increased use of electric vehicles (EVs) is encouraged as part of governments' climate change policies because they create fewer negative externalities than diesel and petrol (gas) vehicles. Evaluate, with the help of a diagram(s), two policies that a government may use to encourage the use of EVs.", "Diagram of the externality reduction. Choose exactly two policies (for example subsidy for EVs, tax on petrol and diesel) and analyse each. Evaluate each: cost, elasticity, charging infrastructure, lags.", ""],
+  ["S23/42 Q3", "ms", 1, "Evaluate, with the help of a diagram(s) how total market demand and minimum efficient scale may determine the form of market structure in an industry.", "LRAC with MES against market demand: MES large relative to demand points to monopoly or oligopoly; small points to competition. Few answers linked every part. Evaluate: MES changes with technology, market definition, niche markets.", ""],
+  ["S23/42 Q4", "bop", 0, "Consider the extent to which the depreciation of its foreign exchange rate contributes to the economic growth of a low-income country.", "AD/AS: exports up, imports down, AD up. Include low-income features: primary exports, inelastic supply, imported inputs, foreign-currency debt. Evaluate: Marshall–Lerner, supply capacity, inflation, short versus long run.", ""],
+  ["S23/42 Q5", "mon", 0, "Evaluate the effectiveness of using monetary policy to reduce the rate of inflation and how this policy may affect a government's ability to achieve its other macroeconomic aims.", "Contractionary monetary policy (not expansionary). AD/AS or 45-degree diagram. Two jobs: effectiveness, and effects on growth, unemployment and the balance of payments. Evaluate: lags, expectations, conflicts between aims.", ""],
+  ["W23/41 Q2", "mf", 0, "The provision of health care by the public sector is inefficient and therefore all health care should be provided by firms operating in the private sector. Evaluate this comment.", "Merit good, positive externalities, allocative efficiency, public versus private. A positive externality diagram helps. Evaluate: profit motive cuts waste but ignores externalities, equity, ability to pay. Test 'all'.", ""],
+  ["W23/41 Q3", "ms", 1, "A government allows the merger of two large firms in the same industry. With the help of a diagram, evaluate the view that this merger should not have been allowed.", "Identify horizontal integration. Monopoly diagram against economies of scale. Evaluate: dynamic efficiency, regulation, consumer choice. Reach a verdict.", ""],
+  ["W23/41 Q4", "mon", 0, "Assess the extent to which monetary policy can be used effectively to solve the problem of unemployment.", "Instruments: interest rates, money supply, exchange rate. Link to types of unemployment: stronger for cyclical, weak for structural. Evaluate: supply-side alternatives, side effects on inflation and the exchange rate.", ""],
+  ["W23/41 Q5", "gl", 0, "To what extent do you agree with the view that globalisation benefits high-income countries at the expense of low-income countries?", "Define free trade and the characteristics of both groups; cover both. Expect a balanced conclusion: both can gain, depending on several factors.", ""],
+  ["W23/42 Q2", "ct", 0, "Evaluate the use of indifference curve analysis to derive the demand curve for a normal good and the demand curve for an inferior good.", "Use indifference curves, not marginal utility (that capped answers at Level 1). Budget line pivot, SE and YE for normal and inferior. Evaluate assumptions: rationality, two goods, static, indivisible purchases.", ""],
+  ["W23/42 Q3", "ms", 1, "The model of perfect competition is the ideal form of market structure because it is the most efficient. With the help of diagrams, evaluate this statement.", "Short-run and long-run diagrams, productive and allocative efficiency. Evaluate: few real examples, monopoly R&D and dynamic efficiency, compare other structures.", ""],
+  ["W23/42 Q4", "dev", 0, "The presence of multinational corporations (MNCs) in a low-income country always promotes economic growth in that country. Evaluate this statement.", "Define MNC, low-income country, actual and potential growth. Use AD/AS or the multiplier and LRAS. Evaluate: exploitation, transfer pricing, local firms destroyed, low-skilled jobs. Test 'always'.", ""],
+  ["W23/42 Q5", "dev", 0, "Consider the relative merits of gross national income (GNI) and the multidimensional poverty index (MPI) as measures of the standard of living.", "Define the standard of living. GNI: money, per head, real. MPI: health, education, living standards with weights. Compare using real limits: informal economy, distribution, data coverage, inputs versus outputs.", ""],
+  ["W23/43 Q2", "mf", 1, "Pollution is caused when consumers or producers make decisions based on self-interest. This is a sign of market failure. With the help of a diagram, evaluate the extent to which government policies should rely upon market forces to address this market failure.", "Externality diagram. Market-based tools (tax, permits) against direct tools (bans, regulation). Evaluate: measuring the right tax, cost, lags, precision of a ban. Conclude on net benefits.", ""],
+  ["W23/43 Q3", "ms", 0, "Evaluate the view that monopolistically competitive firms will always charge lower prices and operate more efficiently than a monopoly firm.", "Short-run and long-run diagrams for both. Dynamic efficiency and economies of scale may favour monopoly; non-price competition costs may raise prices under monopolistic competition. Test 'always'.", ""],
+  ["W23/43 Q4", "fp", 1, "With the help of a diagram, assess the effectiveness of using fiscal policy to close a negative output gap in an economy.", "AD/AS output gap diagram; expansionary fiscal policy and the multiplier. Evaluate: crowding out, forecasting the gap, inflation, imports, supply-side alternative.", ""],
+  ["W23/43 Q5", "dev", 0, "Assess the impact of international aid on the standard of living in low-income countries.", "Types of aid (humanitarian, development; tied, bilateral, multilateral), low-income features, standard of living. Evaluate: corruption, tied aid costs, dependency, political motives, long-term loans.", ""],
+  ["M24/42 Q2", "mf", 1, "With the help of a diagram, assess the effectiveness of a government's intervention in the price mechanism to address the causes of climate change.", "Climate change as a negative externality; production or consumption diagram accepted. Price-mechanism tools: taxes, permits, subsidies. Evaluate: measuring the externality, minimum prices only partial, bans are precise, lags.", ""],
+  ["M24/42 Q3", "lm", 1, "The introduction of a trade union into a perfectly competitive labour market will always lead to higher wage levels and a higher level of unemployment. With the help of a diagram, evaluate this statement.", "Perfect labour market diagram; a union wage above equilibrium cuts employment. Do not drift into minimum wages or monopsony. Evaluate: productivity gains, capital substitution, elasticities. Test 'always'.", ""],
+  ["M24/42 Q4", "mon", 1, "With the help of a diagram, assess the effectiveness of government policies which might be used to reduce cost-push inflation.", "AD/AS diagram with SRAS shifting left. Short run: subsidies, lower taxes, tariff removal, incomes policy. Long run supply-side policy is needed for Level 3. Evaluate: budget costs, trade-offs, time. The conclusion must weigh, not summarise.", ""],
+  ["M24/42 Q5", "gl", 0, "Globalisation will help to achieve economic growth in high-income economies and this will automatically improve living standards. Evaluate this statement.", "Characteristics of high-income countries (not low-income). Growth versus living standards. Evaluate: growth is a quantity not quality, transport externalities, cheap imports and jobs, use of the gains. Test 'automatically'.", ""],
+  ["S24/41 Q2", "mf", 0, "The long-term equilibrium position in perfect competition is frequently used to illustrate efficient resource allocation in a free market economy. Explain why this is so and consider what prevents efficiency from being achieved.", "Allocative and productive efficiency on a long-run diagram, then what prevents it: externalities, merit and public goods, monopoly, information. Evaluate: the model is theoretical, government failure. Develop efficiency fully.", "also 43"],
+  ["S24/41 Q3", "ct", 1, "With the help of an indifference curve diagram, assess the extent to which a rise in price would affect the demand for a normal good differently from the demand for a Giffen good.", "IC diagram showing SE and YE for both goods. Address 'extent': compare the sizes, link to PED and the slope or MRS. Few answers dealt with the extent.", "also 43"],
+  ["S24/41 Q4", "fp", 0, "In many countries increased government spending is regarded as a cause of economic growth. It is sensible, therefore, for a government to spend more to increase economic growth as it is good for its country. To what extent do you agree with this argument?", "Actual versus potential growth and the multiplier. Counter: spare capacity, inflation, imports, crowding out, environment, inequality. Judge 'sensible' and 'good for its country'.", "also 43"],
+  ["S24/41 Q5", "dev", 0, "National income statistics are often used as a measure of the standard of living. Consider to what extent national income statistics can be used to compare the standard of living between low-income countries and high-income countries.", "Define the standard of living; GNI per head and PPP. Limits: informal economy, subsistence, distribution, exchange rates, climate and culture. Alternatives: HDI, MEW.", "also 43"],
+  ["S24/42 Q2", "mf", 1, "Market failure exists in all economies. Evaluate, with the aid of a diagram(s), the meaning of market failure and two policies a government may use to correct market failure.", "Define market failure; diagram; exactly two policies. Evaluate: elasticity (E2 when explained), measuring the failure, cost, lags.", ""],
+  ["S24/42 Q3", "ms", 1, "Evaluate, with the aid of a diagram(s), whether excess profit (supernormal profit) is always necessary for the continued existence of firms in perfect competition and monopoly.", "Perfect competition: supernormal profit is eroded in the long run and normal profit suffices. Monopoly can keep it. Evaluate: natural monopoly, sales maximisation, profit funding dynamic efficiency.", ""],
+  ["S24/42 Q4", "mon", 0, "In 2022, many countries experienced a high rate of inflation caused by disruptions to the supply of goods and services arising from the Covid-19 pandemic and the conflict between Russia and Ukraine. In one country, the government cut taxes and the central bank raised interest rates. Evaluate the likely impact of these policies on that government's ability to control inflation.", "Spot cost-push. A tax cut raises AD, a rate rise lowers AD, neither fixes supply. Evaluate: lags, expectations, size, short versus long run, opportunity cost. Ignoring the context limited marks.", ""],
+  ["S24/42 Q5", "gl", 0, "Evaluate the likely impact of globalisation on a low-income country's standard of living.", "Define globalisation, low-income country, standard of living (material and non-material). FDI, multiplier, PPF shift. Evaluate with developed points: exploitation, transfer pricing, local firms, low-skilled jobs.", ""],
+  ["W24/41 Q2", "mf", 1, "Governments in many countries are promoting policies that reduce the impact of the negative externalities. Evaluate, using appropriate diagram(s), the extent to which two policies used to reduce negative externalities can also improve allocative efficiency.", "Exactly two policies; always connect each to allocative efficiency (many did not). Evaluate: cost, impact on efficiency, jobs, regressive effects, information failure.", ""],
+  ["W24/41 Q3", "ms", 0, "Evaluate the consequences for the price and output of a firm if it changes its objective from profit maximisation to sales maximisation as a response to the principal-agent problem.", "Explain the principal-agent problem. MR = MC against AR = AC diagram: price lower, output higher under sales maximisation. Evaluate: consumer gains, misallocation, equity.", ""],
+  ["W24/41 Q4", "mon", 1, "In periods of rising and persistent inflation, consumers and workers change their expectations of the future rate of inflation. Evaluate, with the help of a diagram(s), the consequences of these changes of expectations for fiscal policy.", "Expectations, Phillips curve shifting, wage-price spiral, AD/AS. Fiscal expansion lowers unemployment only temporarily. Evaluate: shape of AS, validity of the Phillips curve, supply-side.", ""],
+  ["W24/41 Q5", "gl", 1, "In recent years many countries have joined or established a free trade area (FTA). Evaluate, with the help of a diagram(s), whether membership of an FTA is always beneficial to a country.", "Define FTA; tariff diagram, consumer surplus, trade creation. Evaluate: PED and PES, structural unemployment, polluting production moved, MPX and MPM with the multiplier. Test 'always'.", ""],
+  ["W24/42 Q2", "ct", 0, "Evaluate whether marginal utility theory can fully explain the link between the changing price of a good and quantity demanded of that good.", "Diminishing marginal utility, equi-marginal principle MUx/Px = MUy/Py, link to the demand curve. Evaluate: rationality, no income and substitution effects so no Giffen, ceteris paribus, constant utility of money, one-off goods.", ""],
+  ["W24/42 Q3", "mf", 0, "Privatisation is often required by the International Monetary Fund (IMF) and the World Bank before they are prepared to offer support to countries requiring loans, grants, debt relief and debt cancellation programs. Evaluate the view that privatisation will always improve the allocation of resources in a country.", "Define privatisation, productive and allocative efficiency, X-inefficiency. Use a market structure model. Evaluate: natural monopoly, private monopoly replaces state monopoly, regulation, externalities, equity, job losses.", ""],
+  ["W24/42 Q4", "dev", 0, "The table below contains some key economic data for Mexico in 2020. Gross National Income (GNI) 18.5 billion pesos; nominal wages +2.8%; disposable income +1.2%; unemployment rate 4.2%; population growth rate 1.1%; inflation rate 3.4%. Evaluate the use of these statistics in assessing the standard of living in Mexico in 2020.", "Use the numbers: nominal wages up 2.8% against inflation of 3.4% means real wages fell. GNI needs a per-head figure and a base year. Define material and non-material standard of living; suggest HDI, MPI.", ""],
+  ["W24/42 Q5", "dev", 0, "Between 2010 and 2020, very low interest rates encouraged low-income countries to borrow money from foreign investors and governments to finance long-term economic growth. Evaluate this approach to promoting long-term economic growth.", "Savings gap, investment, LRAS or PPC. Evaluate: rising US rates, foreign-currency debt, quality of projects, tied loans, commodity slumps. Keep the focus on low-income countries.", ""],
+  ["W24/43 Q2", "mf", 1, "Negative externalities of production cause market failure. With the help of a diagram, assess the extent to which the introduction of indirect taxation is likely to address this cause of market failure.", "MPC to MSC with the tax shift. Evaluate: measuring the right tax, inelastic demand, bureaucracy, regressive effect, permits as an alternative.", ""],
+  ["W24/43 Q3", "lm", 1, "Wages in a perfectly competitive labour market will always be higher than wages in a monopsony labour market. With the help of a diagram, evaluate this statement.", "Perfect market (MRP and supply) against monopsony (MCL above supply, wage below MRP). Evaluate: unions, minimum wage, capital substitution. Test 'always'.", ""],
+  ["W24/43 Q4", "mon", 0, "Central banks can control the money supply. An increase in the money supply will cause inflation, therefore central banks can control inflation. Evaluate this statement.", "Instruments (open market operations, QE, rates); link money supply, AD and inflation. Evaluate: measuring money, uncertain link, higher rates can raise savings, the cause of inflation.", ""],
+  ["W24/43 Q5", "gl", 1, "Some high-income countries have introduced a policy of high tariffs on some imports to reduce the negative effects of globalisation on their economies. With the help of a diagram, evaluate this policy.", "Tariff diagram: higher price, lower imports, revenue, welfare loss. Evaluate: retaliation, trade war, higher prices, protecting inefficient firms, lost choice.", ""],
+  ["M25/42 Q2", "ms", 0, "Oligopolies are able to avoid price competition while maintaining supernormal profits in the long run. Evaluate this statement.", "Kinked demand and price rigidity, game theory, barriers, collusion, limit pricing, non-price competition. Evaluate: collusion illegal and unstable, contestable markets, advertising costs, break-even pricing.", ""],
+  ["M25/42 Q3", "lm", 1, "With the help of a diagram, evaluate the consequences of imposing an effective minimum wage on the employment level and the wage level in a monopsony labour market.", "Draw a monopsony diagram, not a competitive one. An effective minimum wage can raise both pay and employment up to a point. Stay micro. Evaluate: elasticities, size of the rise, productivity effects, small-firm closures.", ""],
+  ["M25/42 Q4", "mon", 1, "With the help of a diagram, assess the effectiveness of government policies that might be used to reduce demand-pull inflation.", "AD/AS diagram; contractionary fiscal and monetary policy, exchange rate; supply-side accepted. Evaluate: long-run growth, public services, state of the economy, Marshall–Lerner, lags.", ""],
+  ["M25/42 Q5", "bop", 1, "With the help of a diagram, evaluate the effectiveness of the use of expenditure-switching policies to reduce a current account deficit on the balance of payments.", "At least two expenditure-switching policies and a diagram (tariffs; devaluation with Marshall–Lerner and the J curve). Evaluate: retaliation, cost-push inflation, welfare loss, size and duration of the deficit.", ""],
+  ["S25/41 Q2", "ct", 1, "With the help of a diagram, evaluate the use of indifference curve analysis to explain the relationship between a change in the price of a product and the change in an individual consumer's demand for this product.", "Indifference curves, budget line, equilibrium; a price fall pivots the budget line. Both substitution and income effects for Level 3. Evaluate assumptions: satisfaction maximising, two goods, advertising changes tastes.", "also 43 Q2"],
+  ["S25/41 Q3", "ms", 0, "The growth of a firm using a takeover is desirable because it enables consumers to benefit from lower prices and the firm to gain additional profits. Evaluate this statement.", "A takeover is not a merger. Horizontal and vertical integration, economies of scale. Evaluate: savings not passed on, monopoly power, diseconomies, competition authority.", "also 43 Q3"],
+  ["S25/41 Q4", "fp", 1, "A country is experiencing stagflation, when there is a high rate of inflation at the same time as a negative output gap. With the help of a diagram, evaluate the effectiveness of using fiscal policy to solve this problem.", "AD/AS with SRAS left. Fiscal policy can ease one problem and worsen the other. Do not confuse a negative with a positive output gap. Evaluate: supply-side alternative, crowding out.", "also 43 Q4"],
+  ["S25/41 Q5", "gl", 0, "A free trade area gains all the benefits associated with being a member of a customs union while avoiding all the costs associated with being a member of a customs union. Evaluate this statement.", "State the difference clearly: an FTA has no common external tariff. Benefits: trade creation, scale. Costs: lost control of trade policy in a CU; rules of origin and enforcement in an FTA. Test both 'all's.", "also 43 Q5"],
+  ["S25/42 Q2", "ms", 1, "Monopolies restrict output to raise prices to exploit consumers. With the help of a diagram, assess the extent to which a government should intervene in monopoly markets.", "Monopoly diagram (supernormal profit area correct); allocative inefficiency. Policies: tax, maximum price, regulation. Evaluate: natural monopoly, investment incentives and X-inefficiency, lost economies of scale.", ""],
+  ["S25/42 Q3", "lm", 1, "With the help of a diagram, assess whether the impact of an increase in labour productivity on the wages and employment of a firm is likely to be greater in a perfectly competitive labour market than in an imperfectly competitive labour market.", "Four elements: a productivity rise (MRP shifts), perfect market, imperfect market (monopsony), wages and employment. Missing one caps the answer. Evaluate: assumptions, measuring productivity, capital substitution.", ""],
+  ["S25/42 Q4", "mon", 1, "With the help of an injections and withdrawals graph, assess the impact of a decrease in interest rates on the level of employment in an economy.", "It must be a J/W graph, not AD/AS. A fall in rates raises consumption and investment, injections rise, multiplier, employment. Not an increase in rates, and no other policies. Evaluate: inflation, depreciation, house prices, type of unemployment.", ""],
+  ["S25/42 Q5", "gl", 0, "Globalisation will have an equally beneficial effect on the standard of living in both high-income and low-income countries. Evaluate this statement.", "Cover both income groups and the standard of living; one group only caps at Level 2. Evaluate: unequal gains, externalities, cheap imports and jobs, how gains are used. Test 'equally'.", ""],
+  ["S25/44 Q2", "mf", 1, "With the help of a diagram, consider whether economic efficiency can be achieved without government intervention in a market economy.", "Productive and allocative efficiency; perfect competition as the benchmark; market failures (externalities, public goods, information, monopoly, equity). Evaluate: opportunity cost, measuring failure, government failure.", ""],
+  ["S25/44 Q3", "lm", 0, "Evaluate whether the marginal revenue product theory (MRP) always explains the differences in wages.", "MRP = MPP × price as demand, with supply factors. Evaluate: perfect competition assumption, measuring productivity (health, education), unions, minimum wages, discrimination, monopsony. Test 'always'.", ""],
+  ["S25/44 Q4", "bop", 0, "A country with an open economy has falling demand for exports. Consider the view that monetary policy alone will solve this problem.", "Falling exports reduce AD. Monetary route: lower rates or more money depreciate the currency. Evaluate: export elasticity, lags, inflation, supply-side policies. Test 'alone'.", ""],
+  ["S25/44 Q5", "fp", 0, "Evaluate how a country might increase its potential economic growth.", "Define potential growth (LRAS or PPC). Analyse at least two supply-side policies. Evaluate: borrowing limits, political constraints, factor shortages, lags, environment.", ""],
+  ["S26/41 Q2", "ms", 1, "With the help of a diagram(s), assess the view that larger firms always have lower average costs than smaller firms.", "LRAC with MES and diseconomies. Aim for three developed points. 'Always': potential versus actual, low-MES industries, technology. Judgement should say what size relative to MES decides.", "also 43"],
+  ["S26/41 Q3", "ms", 1, "Third-degree price discrimination benefits the firm but not its customers. With the help of a diagram, assess the consequences of third-degree price discrimination to both the firm and its customers.", "Two-market diagram. Profit rises; some customers lose surplus, others gain lower prices. Evaluate: cost of segmenting, innovation from profits, accessibility.", "also 43"],
+  ["S26/41 Q4", "fp", 0, "Due to the multiplier process, governments conducting an expansionary fiscal policy do not need to increase spending by the full amount of the negative output gap to bring the output of the economy to its full employment level. Evaluate this statement.", "Multiplier 1 ÷ (1 − MPC) = 1 ÷ MPW; spending needed ≈ gap ÷ multiplier. Evaluate: uncertain multiplier, overshooting and inflation, crowding out, high MPM, debt.", "also 43"],
+  ["S26/41 Q5", "dev", 0, "Assess the view that high levels of external debt are an unsustainable burden to low-income countries.", "Define external debt; debt service diverts spending; currency risk; crowding out. Evaluate: debt can fund growth and infrastructure, conditions can drive reform, depends on how the borrowing is used.", "also 43"],
+  ["S26/42 Q2", "ct", 0, "Evaluate whether the marginal utility theory of demand provides an adequate explanation of market demand for both normal goods and inferior goods.", "Assumptions, diminishing marginal utility, equi-marginal principle, adding individual demands. Evaluate: no income and substitution effects so inferior goods are unexplained, rationality, indivisible goods.", ""],
+  ["S26/42 Q3", "lm", 1, "Governments and trade unions should be excluded from taking part in wage negotiations as their intervention always causes higher levels of unemployment. With the help of a diagram(s), evaluate this statement.", "Perfect competition wage from MRP and supply; a minimum or union wage creates unemployment. Evaluate: realism of assumptions, productivity agreements, governments as monopsonist employers. Test 'always'.", ""],
+  ["S26/42 Q4", "mon", 0, "Evaluate whether the quantity theory of money is a satisfactory explanation of the cause of inflation.", "Likely content: MV = PT, with V and T constant so money growth leads to inflation. Evaluate: velocity changes, cost-push inflation, periods of QE without inflation.", ""],
+  ["S26/42 Q5", "dev", 0, "Consider whether the use of gross national income (GNI) alone is sufficient to measure the standard of living in a high-income country (HIC).", "GNI per head limits: distribution, non-material factors, inflation, hours worked, environment. Alternatives HDI, MEW, MPI. Test 'alone'.", ""],
+  ["S26/44 Q2", "ct", 0, "Assess the extent to which marginal utility theory explains the downward sloping market demand curve for a good.", "Likely content: diminishing marginal utility and the equi-marginal principle explain a falling individual demand curve; add individual curves for market demand. Evaluate: assumptions, income and substitution effects, rationality.", ""],
+  ["S26/44 Q3", "ms", 1, "Although firms in an oligopolistic market may be in competition with each other, they will find it advantageous to collude. With the help of a diagram or a pay-off matrix, evaluate this statement.", "Likely content: pay-off matrix and the prisoners' dilemma, cartel diagram. Evaluate: incentive to cheat, illegality, number of firms, repeated games.", ""],
+  ["S26/44 Q4", "fp", 0, "Knowledge of both the multiplier and the accelerator enable a government to implement effective fiscal policies to close a deflationary gap. Evaluate this statement.", "Likely content: the multiplier and accelerator link investment to income changes in closing a negative output gap. Evaluate: forecasting problems, lags, crowding out, estimating the gap.", ""],
+  ["S26/44 Q5", "bop", 0, "Discuss whether expenditure-reducing policies are preferable to expenditure-switching policies in order to correct a persistent deficit on the current account of the balance of payments.", "Likely content: compare the two policy families rather than describe them. Evaluate: unemployment and growth costs against inflation and retaliation, elasticities, lags. 'Preferable' needs criteria.", ""],
+];
+const cmdOf = (q) => { const L = q.toLowerCase(), c = ["evaluate", "assess", "consider", "to what extent", "explain", "discuss"].map((w) => [L.indexOf(w), w]).filter((x) => x[0] >= 0).sort((a, b) => a[0] - b[0]); return c.length ? c[0][1] : "other"; };
+const LIM = /\b(always|alone|equally|automatically|all the benefits|fully|ideal|adequate|satisfactory|sufficient)\b/i;
+QB.forEach((q) => { q.cmd = cmdOf(q[3]); q.lim = LIM.test(q[3]); });
+const CMDN = { evaluate: "Evaluate", assess: "Assess", consider: "Consider", "to what extent": "To what extent", explain: "Explain … and consider", discuss: "Discuss" };
+const cmdCount = {}; QB.forEach((q) => (cmdCount[q.cmd] = (cmdCount[q.cmd] || 0) + 1));
+bars($("#barCmd"), Object.entries(cmdCount).sort((a, b) => b[1] - a[1]).map(([k, v]) => [CMDN[k] || "Other", v]));
+const topCount = {}; QB.forEach((q) => (topCount[q[1]] = (topCount[q[1]] || 0) + 1));
+bars($("#barTop"), Object.entries(topCount).sort((a, b) => b[1] - a[1]).map(([k, v]) => [TOP[k], v]));
+const nDia = QB.filter((q) => q[2]).length, nLim = QB.filter((q) => q.lim).length;
+$("#topNote").textContent = `${QB.length} questions. ${nDia} name a diagram in the wording (${Math.round((100 * nDia) / QB.length)}%). ${nLim} contain a strong limit word such as always, alone or equally.`;
+$("#fTop").innerHTML = `<option value="">All topics</option>` + Object.entries(TOP).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
+function renderBank() {
+  const sec = $("#fSec").value, top = $("#fTop").value, dia = $("#fDia").checked, lim = $("#fLim").checked, tx = $("#fTxt").value.toLowerCase().trim();
+  const L = QB.filter((q) => (!sec || (SECB.includes(q[1]) ? "B" : "C") === sec) && (!top || q[1] === top) && (!dia || q[2]) && (!lim || q.lim) && (!tx || (q[3] + " " + q[4]).toLowerCase().includes(tx)));
+  $("#fCnt").textContent = L.length + " of " + QB.length + " questions";
+  $("#qList").innerHTML = L.map((q) => `<div class="qi"><div class="meta"><span class="id">${q[0]}${q[5] ? " (" + q[5] + ")" : ""}</span><span class="tag">${TOP[q[1]]}</span><span class="tag">${CMDN[q.cmd] || "Other"}</span>${q[2] ? '<span class="tag dia">Diagram</span>' : ""}${q.lim ? '<span class="tag lim">Limit word</span>' : ""}</div><p>${esc(q[3])} <span class="mark">20</span></p><details><summary>Planning prompt</summary><p>${esc(q[4])}</p></details></div>`).join("") || "<p>No questions match.</p>";
+}
+["fSec", "fTop", "fDia", "fLim"].forEach((id) => $("#" + id).addEventListener("change", renderBank)); $("#fTxt").addEventListener("input", renderBank); renderBank();
+const TT = [
+  ["Market failure and intervention", "Draw the diagram that matches the type of externality. Always link policies to allocative efficiency. Name merit goods and positive externalities for health and education. Exactly two policies when told. Evaluate with measuring the right tax, elasticity, cost, lags, regressive effects, alternatives."],
+  ["Market structures and firms", "Accurate diagrams: MC through minimum AC, supernormal profit as (AR − AC) × output, long-run adjustment. Compare structures rather than describe each. Evaluate with dynamic efficiency, natural monopoly, regulation, collusion that breaks down. Test 'always'."],
+  ["Consumer theory", "Use the model the question names. Separate substitution and income effects for each type of good. 'Extent' means compare sizes. Evaluate the assumptions: rational consumers, two goods, static preferences, indivisible purchases."],
+  ["Labour markets", "Use both demand (MRP) and supply. Draw the right market: monopsony diagrams for monopsony. Cover every element of a long stem. Evaluate with elasticities, capital substitution, productivity effects and the realism of perfect competition."],
+  ["Inflation, unemployment and monetary policy", "Identify the cause (cost-push or demand-pull) and the type of unemployment first. Draw AD/AS with macro labels or the graph named. Include supply-side policy where the question needs it. Evaluate with lags, other aims, expectations, the exchange rate, alternatives."],
+  ["Fiscal policy, growth and the multiplier", "Define the output gap and draw it correctly. Use the multiplier formula where relevant. Evaluate with crowding out, forecasting the gap, inflation, imports, debt, supply-side alternatives."],
+  ["Balance of payments and exchange rates", "Separate expenditure-reducing from expenditure-switching. Draw the tariff diagram and include welfare loss. Use Marshall–Lerner and the J curve. Evaluate with retaliation, inflation, elasticities, size and duration of the deficit."],
+  ["Globalisation and trade", "Define globalisation as trade, capital, labour and technology. Cover each income group the question names. Distinguish a free trade area from a customs union. Evaluate who gains, externalities, exploitation, cheap imports and jobs. Test 'always', 'equally', 'automatically'."],
+  ["Development, standard of living, aid and debt", "Define the standard of living (material and non-material) and the income group. Use data in the question. Compare GNI, HDI, MPI with real limits. For aid and debt, name types and currency risk. Evaluate with corruption, tied aid, dependency, the quality of the projects."],
+];
+$("#tTopic").innerHTML = `<tr><th>Topic</th><th>What to do</th></tr>` + TT.map((r) => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td></tr>`).join("");
+
+/* ---------- five-minute plan challenge ---------- */
+function planner(el) {
+  let timer = 0, left = 300, cur = null;
+  const fmt = (s) => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+  el.innerHTML = `<div class="row"><button class="b pri" data-s="B">Micro question</button><button class="b pri" data-s="C">Macro question</button><button class="b" data-s="">Any</button></div><div id="plBody"></div>`;
+  const body = $("#plBody", el);
+  const stop = () => { clearInterval(timer); timer = 0; };
+  const pick = (sec) => {
+    stop(); left = 300;
+    const pool = QB.filter((q) => !sec || (SECB.includes(q[1]) ? "B" : "C") === sec); cur = pool[Math.floor(Math.random() * pool.length)];
+    body.innerHTML = `<div class="pl-q"><span class="id" style="font:700 .78rem var(--mono);color:var(--muted)">${cur[0]}</span><p style="margin:6px 0 0">${esc(cur[3])}</p></div>
+      <div class="row"><span class="pl-t" id="plT">${fmt(left)}</span><button class="b pri" data-a="go">Start timer</button><button class="b" data-a="rs">Reset</button></div>
+      <div class="pl-ck"><label><input type="checkbox"> Command word, limit word and context underlined</label><label><input type="checkbox"> One-sentence answer to the question written</label><label><input type="checkbox"> Three analytical chains chosen, with the diagram</label><label><input type="checkbox"> An application chosen for each chain</label><label><input type="checkbox"> Three evaluation levers (CASTLES) chosen</label><label><input type="checkbox"> First line of the judgement drafted</label></div>
+      <div class="row"><button class="b" data-a="rv">Reveal planning prompt</button></div><div class="tip" id="plH" hidden><b class="h">Planning prompt</b>${esc(cur[4])}</div>`;
+    const t = $("#plT", body), go = $("[data-a=go]", body);
+    go.onclick = () => { if (timer) { stop(); go.textContent = "Resume"; return; } go.textContent = "Pause"; timer = setInterval(() => { left--; t.textContent = fmt(Math.max(left, 0)); if (left <= 0) { stop(); go.textContent = "Time is up"; } }, 1000); };
+    $("[data-a=rs]", body).onclick = () => { stop(); left = 300; t.textContent = fmt(left); go.textContent = "Start timer"; };
+    $("[data-a=rv]", body).onclick = () => { $("#plH", body).hidden = false; };
+  };
+  $$("[data-s]", el).forEach((b) => (b.onclick = () => pick(b.dataset.s)));
+}
+planner($("#plan"));
+
+Lib.initTabs();
+</script>
+</body></html>
