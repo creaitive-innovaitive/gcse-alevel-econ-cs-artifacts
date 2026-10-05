@@ -1,0 +1,231 @@
+<style>
+.bits{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.bit{display:flex;flex-direction:column;align-items:center;gap:3px}
+.bit small{font:700 .7rem var(--mono);color:var(--muted)}
+.bit button{width:46px;height:52px;font:700 1.5rem var(--mono);border-radius:9px;border:2px solid var(--accent);background:var(--surface);color:var(--ink);cursor:pointer}
+.bit button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.bit.sign button{border-color:var(--bad)} .bit.sign button[aria-pressed="true"]{background:var(--bad);color:#fff}
+.bitrow{display:flex;gap:4px;font:700 1.3rem var(--mono);margin:6px 0;flex-wrap:wrap}
+.bitrow span{width:34px;height:40px;display:grid;place-items:center;border-radius:7px;background:var(--soft);border:1px solid var(--line)}
+.bitrow span.lost{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.bitrow span.new{background:var(--good-soft);border-color:var(--good)}
+.bitrow span.mid{margin-left:12px}
+.swatch{height:110px;border-radius:12px;border:1px solid var(--line);margin:8px 0}
+.drill input{font:700 1.1rem var(--mono);padding:8px 12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,280px)}
+.drill .qline{font:700 1.35rem var(--mono);margin:8px 0}
+.drill select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 1 · 1.1</div>
+  <h1>Number Systems</h1>
+  <p class="lead">Binary, denary and hexadecimal, how to convert between them, how computers add, shift and store negative numbers, and why it all comes down to on and off.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A computer is built from billions of tiny switches (transistors) that are either <b>on</b> or <b>off</b>. Two states means two digits, so all data is stored as <span class="kw">binary</span>: 1 for on, 0 for off. Humans prefer <span class="kw">denary</span> (base 10) and, for reading long binary values, <span class="kw">hexadecimal</span> (base 16).</p>
+  </div>
+
+  <h2>Three number systems</h2>
+  <div class="tw"><table class="t">
+    <tr><th>System</th><th>Base</th><th>Digits</th><th>Place values (right to left)</th></tr>
+    <tr><td>Denary</td><td>10</td><td>0 to 9</td><td>1, 10, 100, 1000 …</td></tr>
+    <tr><td>Binary</td><td>2</td><td>0, 1</td><td>1, 2, 4, 8, 16, 32, 64, 128 …</td></tr>
+    <tr><td>Hexadecimal</td><td>16</td><td>0 to 9, then A to F</td><td>1, 16, 256, 4096 …</td></tr>
+  </table></div>
+  <p>In hex, A = 10, B = 11, C = 12, D = 13, E = 14, F = 15.</p>
+  <p class="note">A <b>bit</b> is one binary digit. A <b>nibble</b> is 4 bits. A <b>byte</b> is 8 bits and holds 0 to 255 (256 values). The leftmost bit has the biggest place value: the <b>most significant bit</b> (MSB). The rightmost is the <b>least significant bit</b> (LSB).</p>
+
+  <h2>Converting</h2>
+  <div class="grid2">
+    <div class="card"><h3>Binary to denary</h3><p>Write the place values above the bits and add up the ones with a 1 beneath.</p><p><code>1 0 1 1 0 1 0 1</code><br>128 + 32 + 16 + 4 + 1 = <b>181</b></p></div>
+    <div class="card"><h3>Denary to binary</h3><p>Go from 128 downwards. If the place value fits into what is left, write 1 and subtract it. Otherwise write 0.</p><p>181: 128 fits (53 left), 64 no, 32 fits (21), 16 fits (5), 8 no, 4 fits (1), 2 no, 1 fits → <b>10110101</b></p></div>
+    <div class="card"><h3>Binary to hex</h3><p>Split into nibbles from the right and convert each nibble on its own.</p><p><code>1011 1110</code> → B and E → <b>BE</b></p></div>
+    <div class="card"><h3>Hex to binary</h3><p>Turn each hex digit into a 4-bit nibble. Keep the leading zeros.</p><p>3F → 0011 and 1111 → <b>00111111</b></p></div>
+  </div>
+  <p>Hex to denary: multiply the left digit by 16 and add the right. <b>3F</b> = 3 × 16 + 15 = <b>63</b>. Denary to hex: divide by 16; the quotient is the left digit and the remainder is the right. 203 ÷ 16 = 12 remainder 11 → C and B → <b>CB</b>.</p>
+
+  <h2>Why use hexadecimal?</h2>
+  <ul>
+    <li><b>Shorter.</b> One hex digit replaces four bits, so 8 bits become 2 digits.</li>
+    <li><b>Easier for humans to read, remember and copy,</b> with fewer transcription errors than a string of 1s and 0s.</li>
+    <li><b>Converts to binary easily,</b> because 16 is 2⁴: each hex digit is exactly one nibble.</li>
+  </ul>
+  <div class="warn"><b class="h">Not the reason</b>Hex does not take less storage. The computer still stores binary. Hex is only a human-friendly way to write it.</div>
+  <p>Where you will see hex: HTML colour codes (#FF8800), MAC addresses, IPv6 addresses, memory addresses and memory dumps, error codes.</p>
+
+  <h2>Binary addition</h2>
+  <p>Work from the right, column by column. 0+0 = 0, 0+1 = 1, 1+1 = 10 (write 0, carry 1), 1+1+1 = 11 (write 1, carry 1).</p>
+  <div class="card"><p><b>Overflow.</b> A register holds a fixed number of bits. If the sum needs more bits than are available (for 8 bits, anything above 255), the extra carry has nowhere to go. It is lost, the stored answer is wrong, and an <span class="kw">overflow error</span> occurs.</p></div>
+
+  <h2>Logical shifts</h2>
+  <p>A <span class="kw">logical shift</span> moves every bit left or right by a number of places. Empty places fill with 0 and bits shifted off the end are lost.</p>
+  <div class="grid2">
+    <div class="card"><h3>Left shift by n</h3><p>Multiplies by 2ⁿ. 00010110 (22) shifted left 2 → 01011000 (88).</p><p>If a 1 is pushed off the left end, the answer is wrong.</p></div>
+    <div class="card"><h3>Right shift by n</h3><p>Divides by 2ⁿ, dropping any remainder. 00010110 (22) shifted right 2 → 00000101 (5).</p><p>If a 1 is pushed off the right end, precision is lost (22 ÷ 4 is 5.5, not 5).</p></div>
+  </div>
+
+  <h2>Negative numbers: two's complement</h2>
+  <p>In 8-bit <span class="kw">two's complement</span> the leftmost bit has a place value of <b>−128</b> instead of +128. The other columns are normal. A leading 1 means the number is negative.</p>
+  <div class="tw"><table class="t">
+    <tr><th>−128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th><th>Value</th></tr>
+    <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>−128 + 64 + 16 + 2 + 1 = −45</td></tr>
+  </table></div>
+  <p>To <b>make a number negative</b>: write the positive value in binary, flip every bit, add 1. The range of 8-bit two's complement is <b>−128 to +127</b>.</p>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · Denary to binary: 181</h2><div id="stA"></div>
+  <h2>2 · Binary addition and overflow</h2><div id="stB"></div>
+  <h2>3 · Making −45 in two's complement</h2><div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · The bit flipper</h2>
+  <p>Click the bits. Watch the denary and hex values change, and switch on two's complement to turn the left bit into −128.</p>
+  <div class="card">
+    <div class="bits" id="bitsrow"></div>
+    <label style="display:inline-flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="tc"> Read as two's complement</label>
+    <div class="readout"><div><small>Denary</small><strong id="r1"></strong></div><div><small>Hex</small><strong id="r2"></strong></div><div><small>Nibbles</small><strong id="r3"></strong></div></div>
+    <div class="row"><button class="b" id="bz">All 0</button><button class="b" id="bo">All 1</button><button class="b" id="br">Random</button></div>
+  </div>
+
+  <h2>Lab 2 · Shift machine</h2>
+  <p>Choose a number and a shift. Red bits fall off the end and are lost.</p>
+  <div class="card"><div id="s1"></div><div id="s2"></div>
+    <div id="shiftvis"></div>
+    <div class="readout"><div><small>Before</small><strong id="q1"></strong></div><div><small>After</small><strong id="q2"></strong></div><div><small>Expected (× or ÷ 2ⁿ)</small><strong id="q3"></strong></div></div>
+    <div class="verdict" id="qv"></div></div>
+
+  <h2>Lab 3 · Hex colour mixer</h2>
+  <p>Web colours are three bytes written in hex: red, green, blue. Each byte is 00 to FF.</p>
+  <div class="card"><div class="grid2"><div><div id="c_r"></div><div id="c_g"></div><div id="c_b"></div></div>
+    <div><div class="swatch" id="sw"></div><div class="readout"><div><small>Colour code</small><strong id="cc"></strong></div></div></div></div>
+    <div class="tw"><table class="t" id="ctab"></table></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Binary or hex?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Put the steps in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Conversions and calculations</h2>
+  <p class="note">Binary and hex answers: type them without spaces. Hex letters can be in either case.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Endless conversion drill</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Check current figures before quoting numbers.</p>
+  <div class="rw"><h3>HTML and CSS colour codes</h3><p>A web page colour such as #1E90FF is three bytes in hex: 1E for red, 90 for green, FF for blue. That is 16.7 million combinations from 24 bits.</p><div class="use"><b>Exam use:</b> a ready example for "give a use of hexadecimal". Be ready to convert each pair to binary.</div></div>
+  <div class="rw"><h3>MAC and IPv6 addresses</h3><p>A MAC address identifies a network card and is written as six pairs of hex digits, such as 3C:22:FB:1A:09:D4. IPv6 addresses are written in hex groups for the same reason: they are 128 bits long, which would be unreadable in binary.</p><div class="use"><b>Exam use:</b> shows that hex makes long binary values shorter and easier to read and copy without mistakes.</div></div>
+  <div class="rw"><h3>Memory dumps and error codes</h3><p>When a program crashes, debugging tools show memory addresses and contents in hex. Windows "blue screen" stop codes are hex too (for example 0x0000007B).</p><div class="use"><b>Exam use:</b> programmers need to read raw memory, and hex maps neatly onto bytes.</div></div>
+  <div class="rw"><h3>Ariane 5, 1996</h3><p>The first Ariane 5 rocket veered off course and was destroyed after about 37 seconds. A speed-related value held as a 64-bit floating-point number was converted into a 16-bit signed integer. It was too big, the conversion overflowed, and the guidance computer shut down.</p><div class="use"><b>Exam use:</b> a famous consequence of overflow: the value needs more bits than are available.</div></div>
+  <div class="rw"><h3>Boeing 787 and the 248-day counter</h3><p>In 2015 aviation regulators warned that a Boeing 787 power-control unit could shut down if it ran for 248 days without a restart. A 32-bit counter ticking in hundredths of a second would overflow after that time. The fix was to restart the units regularly until a software update.</p><div class="use"><b>Exam use:</b> shows that a fixed number of bits has a maximum, and overflow causes real faults.</div></div>
+  <div class="rw"><h3>Gangnam Style breaks YouTube's counter</h3><p>In 2014 the video passed 2,147,483,647 views, the largest value a 32-bit two's complement integer can hold (2³¹ − 1). YouTube switched the counter to 64 bits.</p><div class="use"><b>Exam use:</b> the range of a signed number is limited by the bits used. Positive values stop at 2ⁿ⁻¹ − 1.</div></div>
+  <div class="rw"><h3>Shifts for fast multiplication</h3><p>Processors can multiply or divide by powers of two with a single shift, which is quicker than a full multiplication. Graphics and audio code use this often.</p><div class="use"><b>Exam use:</b> say a left shift of n places multiplies by 2ⁿ, and mention what is lost when bits fall off.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each underlined phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Convert</span> <span class="mark">2 marks</span> Convert the binary number 10110101 into denary. Show your working.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Write the place values (128 down to 1) above the bits. One mark for the method, one for the answer.</div>
+    <div class="ans"><span class="mk k" data-t="1">128 + 32 + 16 + 4 + 1</span> <span class="mk k" data-t="2">= 181</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Reading the place values left to right as 1, 2, 4 … The smallest value is on the right.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Convert</span> <span class="mark">2 marks</span> Convert the denary number 203 into hexadecimal.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Divide by 16 for the left digit, and the remainder is the right digit. Swap 10 to 15 for A to F.</div>
+    <div class="ans"><span class="mk k" data-t="1">203 ÷ 16 = 12 remainder 11, so C and B</span> <span class="mk k" data-t="2">= CB</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing 1211. Values above 9 must be a letter.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Give</span> <span class="mark">2 marks</span> Give two reasons why programmers use hexadecimal instead of binary.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Give two separate points. Each is about shorter, easier or fewer errors.</div>
+    <div class="ans"><span class="mk k" data-t="1">It is shorter, so fewer digits are needed to represent the same value (one hex digit is four bits).</span> <span class="mk k" data-t="2">It is easier for humans to read, remember and copy, with fewer transcription errors.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying hex uses less memory or is faster for the computer. The computer still works in binary.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Two 8-bit registers hold 11001010 and 01101100. The values are added together. Explain what happens.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Do the addition. Count the bits in the answer. Name the error and its effect.</div>
+    <div class="ans"><span class="mk k" data-t="1">The sum is 100110110, which needs 9 bits.</span> <span class="mk k" data-t="2">The register can store only 8 bits, so the ninth (carry) bit is lost.</span> <span class="mk k" data-t="3">An overflow error occurs, and the stored value, 00110110 (54), is wrong.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Just writing "overflow" without saying why. Link it to the number of bits that fit.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Describe</span> <span class="mark">3 marks</span> A register holds 00010110. A logical right shift of two places is performed. State the new value, and describe the effect on the number.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Shift all bits two places right, fill with 0s. Link to division by 4 and to the bits lost.</div>
+    <div class="ans"><span class="mk k" data-t="1">00000101</span> <span class="mk k" data-t="2">The value has been divided by 4 (from 22 to 5).</span> <span class="mk k" data-t="3">The two bits that fell off the right (10) are lost, so the answer is truncated (5.5 would be 22 ÷ 4 exactly).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Moving the bits but keeping the old zeros on the left, giving a 6- or 7-bit answer. Always write 8 bits.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Show</span> <span class="mark">3 marks</span> Write −45 as an 8-bit two's complement binary number.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Positive version, flip, add 1. Check by adding the place values with −128.</div>
+    <div class="ans"><span class="mk k" data-t="1">45 = 00101101</span> <span class="mk k" data-t="2">Flip the bits: 11010010</span> <span class="mk k" data-t="3">Add 1: 11010011</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Flipping without adding 1 (that gives −46). Or putting a 1 in front of the positive number.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Convert</span> <span class="mark">4 marks</span> The colour code #1E90FF is used on a web page. Write each pair of hex digits as an 8-bit binary number.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Each hex digit is one nibble. 1 = 0001, E = 1110, 9 = 1001, 0 = 0000, F = 1111.</div>
+    <div class="ans"><span class="mk k" data-t="1">1E = 00011110</span> <span class="mk k" data-t="2">90 = 10010000</span> <span class="mk k" data-t="3">FF = 11111111</span> <span class="mk k" data-t="4">Each hex digit converted to its own 4-bit nibble and joined in order, with leading zeros kept.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Dropping the leading zeros in 0001 (writing 1E as 111110).</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Write the place values above the bits first.</b> 128 64 32 16 8 4 2 1. It takes five seconds and avoids slips.</li>
+    <li><b>Always give 8 bits</b> when the question says 8-bit, with leading zeros.</li>
+    <li><b>Check conversions by going back.</b> Convert your binary answer to denary again.</li>
+    <li><b>Hex: work in nibbles.</b> Never convert the whole byte at once.</li>
+    <li><b>Hex is for humans.</b> Never say it saves memory or is faster for the computer.</li>
+    <li><b>Overflow answers need three things:</b> the sum needs too many bits, the extra bit is lost, the stored value is wrong.</li>
+    <li><b>Shifts:</b> left × 2ⁿ, right ÷ 2ⁿ, and a 1 falling off an end means an error or lost precision.</li>
+    <li><b>Two's complement:</b> flip, add 1, and remember the left bit is −128. The range is −128 to 127.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Give</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Convert</td><td>The value in the new number system. Show working when marks are given.</td></tr>
+    <tr><td>Show</td><td>Working or evidence leading to the answer.</td></tr>
+    <tr><td>Describe</td><td>What happens, step by step, or the main features.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>

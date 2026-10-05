@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="en"><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Text, Sound and Images</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<style>
+.txin{font:600 1.1rem var(--mono);padding:9px 12px;border-radius:9px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,420px)}
+.drill input{font:700 1.1rem var(--mono);padding:8px 12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,280px)}
+.drill .qline{font-size:1.1rem;font-weight:600;margin:8px 0}
+.drill select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+#cv{width:100%;max-width:400px;aspect-ratio:1;image-rendering:pixelated;border-radius:10px;border:1px solid var(--line);display:block}
+.flag{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--bad-soft);color:var(--bad)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 1 · 1.2</div>
+  <h1>Text, Sound and Images</h1>
+  <p class="lead">How characters, sound waves and pictures become binary: character sets, sampling, pixels and colour depth, and how each choice changes quality and file size.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A computer can only store binary, so every letter, sound and picture has to be turned into numbers first and then into 1s and 0s. Text uses a <span class="kw">character set</span>. Sound is <span class="kw">sampled</span>. Images are broken into <span class="kw">pixels</span>. In each case, more bits mean more accuracy and bigger files.</p>
+  </div>
+
+  <h2>Text</h2>
+  <p>A <span class="kw">character set</span> is every character a computer system can recognise, each with its own unique binary code. When you press a key, its code is stored.</p>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>ASCII</th><th>Extended ASCII</th><th>Unicode</th></tr>
+    <tr><td>Bits per character</td><td>7</td><td>8</td><td>Up to 32 (UTF-8 uses 8 to 32)</td></tr>
+    <tr><td>Number of characters</td><td>128</td><td>256</td><td>Over 140,000</td></tr>
+    <tr><td>Covers</td><td>English letters, digits, punctuation, control codes</td><td>Adds accented letters and symbols</td><td>Almost every language, symbols, emoji</td></tr>
+    <tr><td>File size</td><td>Smallest</td><td>Small</td><td>Bigger per character</td></tr>
+  </table></div>
+  <p><b>Why Unicode?</b> ASCII cannot represent Chinese, Arabic, Hindi or emoji. Unicode has enough codes for all of them, so text can be shared worldwide. The price is more bits per character, so larger files. The first 128 Unicode codes match ASCII.</p>
+  <div class="card"><h3>Codes run in order</h3>
+    <p>Letters are numbered in sequence, so if you know one code you can work out the rest.</p>
+    <div class="tw"><table class="t"><tr><th>Character</th><th>Space</th><th>0</th><th>A</th><th>B</th><th>a</th><th>b</th></tr><tr><td>ASCII code</td><td>32</td><td>48</td><td>65</td><td>66</td><td>97</td><td>98</td></tr></table></div>
+    <p>If G is 71, then K is 71 + 4 = 75. A lowercase letter is its uppercase code + 32.</p></div>
+
+  <h2>Sound</h2>
+  <p>Real sound is an <b>analogue</b> wave: it can take any value. A computer needs <b>digital</b> values, so the wave is <span class="kw">sampled</span>: its height (amplitude) is measured at regular intervals and each measurement is stored as a binary number.</p>
+  <div class="grid2">
+    <div class="card"><h3>Sample rate</h3><p>The number of samples taken <b>per second</b>, measured in hertz (Hz). 44,100 Hz means 44,100 samples every second.</p><p>Higher: <b>closer to the original</b>, but a larger file.</p></div>
+    <div class="card"><h3>Sample resolution</h3><p>The <b>number of bits</b> used to store each sample (also called bit depth). More bits means more possible heights, so each sample is measured more precisely.</p><p>Higher: <b>more accurate</b>, but a larger file.</p></div>
+  </div>
+  <div class="card big"><h3>Sound file size</h3>
+    <div class="formula">file size (bits) = sample rate × sample resolution × length in seconds</div>
+    <p>Divide by 8 for bytes. Example: 44,100 Hz × 16 bits × 10 s = 7,056,000 bits = 882,000 bytes.</p></div>
+
+  <h2>Images</h2>
+  <p>A bitmap image is a grid of tiny squares called <span class="kw">pixels</span>. Each pixel stores one binary number that says which colour it is.</p>
+  <div class="grid2">
+    <div class="card"><h3>Resolution</h3><p>The number of pixels, width × height. A 100 × 50 image has 5,000 pixels.</p><p>Higher: <b>sharper, more detail</b>, bigger file.</p></div>
+    <div class="card"><h3>Colour depth</h3><p>The number of <b>bits per pixel</b>. n bits gives 2ⁿ colours.</p><p>Higher: <b>more colours, smoother shading</b>, bigger file.</p></div>
+  </div>
+  <div class="tw"><table class="t">
+    <tr><th>Colour depth</th><th>1 bit</th><th>2 bits</th><th>4 bits</th><th>8 bits</th><th>24 bits</th></tr>
+    <tr><td>Colours</td><td>2</td><td>4</td><td>16</td><td>256</td><td>16,777,216</td></tr>
+  </table></div>
+  <div class="card big"><h3>Image file size</h3>
+    <div class="formula">file size (bits) = width × height × colour depth</div>
+    <p>Example: 64 × 32 pixels at 4 bits = 2,048 × 4 = 8,192 bits = 1,024 bytes.</p></div>
+  <p>The file also holds <span class="kw">metadata</span>, such as the width, height and colour depth, so the software knows how to rebuild the picture. File size sums in exam questions usually ignore the metadata unless told otherwise.</p>
+  <div class="warn"><b class="h">Not the same thing</b>Resolution is how many pixels. Colour depth is how many bits <i>each</i> pixel uses. Sample rate is how often; sample resolution is how precisely. Keep the pairs apart.</div>
+  <p class="note">Making these files smaller is covered in 1.3 (compression), with its own lab.</p>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · From keypress to binary: "Hi!"</h2><div id="stA"></div>
+  <h2>2 · Sampling a sound wave</h2><div id="stB"></div>
+  <h2>3 · An image is a grid of numbers</h2><div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Text encoder</h2>
+  <p>Type anything. See each character's code and how many bits it needs in each system. Try an accented letter or an emoji.</p>
+  <div class="card"><input class="txin" id="txt" type="text" value="Hello, Léa 😀" aria-label="Text to encode" maxlength="24">
+    <div class="tw"><table class="t" id="ttab"></table></div>
+    <div class="readout"><div><small>ASCII (7-bit)</small><strong id="tz1"></strong></div><div><small>Extended ASCII (8-bit)</small><strong id="tz2"></strong></div><div><small>Unicode (32-bit)</small><strong id="tz3"></strong></div></div>
+    <div class="verdict" id="tv"></div></div>
+
+  <h2>Lab 2 · Sampling lab</h2>
+  <p>The grey curve is the real sound. The green steps are what the computer stores. Raise the sample rate and the resolution to close the gap.</p>
+  <div class="card"><div class="grid2"><div><div id="w1"></div><div id="w2"></div>
+    <div class="readout"><div><small>Samples shown</small><strong id="wa"></strong></div><div><small>Levels (2ⁿ)</small><strong id="wb"></strong></div><div><small>Bits in snippet</small><strong id="wc"></strong></div></div><div class="verdict" id="wv"></div></div>
+    <div><svg id="wave" viewBox="0 0 560 320" role="img" aria-label="A sound wave and its sampled version"></svg></div></div></div>
+
+  <h2>Lab 3 · Sound file size calculator</h2>
+  <div class="card"><div class="grid2"><div><div id="k1"></div><div id="k2"></div><div id="k3"></div></div>
+    <div><div class="readout"><div><small>Bits</small><strong id="ka"></strong></div><div><small>Bytes</small><strong id="kb"></strong></div><div><small>Megabytes</small><strong id="kc"></strong></div></div><div class="verdict" id="kv"></div></div></div></div>
+
+  <h2>Lab 4 · Resolution and colour depth</h2>
+  <p>The same picture, stored two ways. Lower the resolution and it goes blocky. Lower the colour depth and the shading turns into bands.</p>
+  <div class="card"><div class="grid2"><div><canvas id="cv" width="64" height="64" role="img" aria-label="A sunset picture at the chosen resolution and colour depth"></canvas></div>
+    <div><div id="i1"></div><div id="i2"></div>
+    <div class="readout"><div><small>Pixels</small><strong id="ia"></strong></div><div><small>Colours</small><strong id="ib"></strong></div><div><small>File size</small><strong id="ic"></strong></div></div><div class="verdict" id="iv"></div></div></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · ASCII or Unicode?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Turning sound into a file</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Calculations</h2>
+  <p class="note">Give answers as plain numbers, no units or commas needed. For binary answers, no spaces.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Endless file-size drill</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Check current figures before quoting numbers.</p>
+  <div class="rw"><h3>Emoji and Unicode</h3><p>Every emoji has its own Unicode code, which is why a message can show 😀 on any phone. Most websites use the Unicode encoding UTF-8, so one page can mix English, Arabic and Chinese.</p><div class="use"><b>Exam use:</b> the reason ASCII is not enough for global communication, and why Unicode files are bigger.</div></div>
+  <div class="rw"><h3>Phone calls versus CDs</h3><p>Traditional phone lines sample speech at about 8,000 Hz, enough to understand a voice but dull for music. An audio CD samples at 44,100 Hz with 16 bits per sample. Studio recordings often use 96,000 Hz and 24 bits.</p><div class="use"><b>Exam use:</b> an example of a trade-off. Lower sample rate and resolution give smaller files and poorer quality, higher give better quality and larger files.</div></div>
+  <div class="rw"><h3>Streaming quality settings</h3><p>Music and video apps let you choose "data saver" or "high quality". Higher quality uses more data per second, so it needs a faster connection and costs more of a mobile data allowance.</p><div class="use"><b>Exam use:</b> connects file size to download time and storage.</div></div>
+  <div class="rw"><h3>Camera megapixels</h3><p>A 12-megapixel camera captures roughly 12 million pixels per photo. More pixels allow bigger prints and more zoom before the picture turns blocky, but every photo takes more storage.</p><div class="use"><b>Exam use:</b> a real figure for resolution. Use it to explain why higher resolution means bigger files.</div></div>
+  <div class="rw"><h3>GIFs, photos and QR codes</h3><p>A GIF can show up to 256 colours (8 bits per pixel). A normal photo uses 24 bits per pixel, about 16.7 million colours. A QR code or a black-and-white fax uses only 1 bit per pixel.</p><div class="use"><b>Exam use:</b> shows how colour depth is chosen to match the content: only as many bits as needed.</div></div>
+  <div class="rw"><h3>Photo metadata</h3><p>Besides the pixels, a phone photo stores metadata such as its dimensions, colour depth, the date, and often the camera model and location.</p><div class="use"><b>Exam use:</b> an example of metadata. Software needs the width, height and colour depth to rebuild the picture from the bits.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each underlined phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">State</span> <span class="mark">2 marks</span> What is meant by a character set?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two points: all the characters a system can recognise, and a unique binary code for each.</div>
+    <div class="ans"><span class="mk k" data-t="1">A character set is all of the characters that a computer system can recognise and use</span> <span class="mk k" data-t="2">where each character is given a unique binary code.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Naming ASCII without defining what a character set is. ASCII is an example, not the definition.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Unicode needs more storage per character than ASCII. Explain why Unicode is still used.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two uses of Unicode, and the link to the number of codes available.</div>
+    <div class="ans"><span class="mk k" data-t="1">Unicode uses more bits per character (up to 32), so it has many more codes available (over 140,000).</span> <span class="mk k" data-t="2">This lets it represent characters from almost every language, as well as symbols and emoji, which ASCII cannot.</span> <span class="mk k" data-t="3">Text can therefore be shared and displayed correctly across different countries and devices.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "Unicode is better" without a reason. Always link more bits → more characters → more languages.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Give</span> <span class="mark">2 marks</span> The ASCII code for G is 71. Give the 8-bit binary code for K.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>G, H, I, J, K: count along. Then convert to binary.</div>
+    <div class="ans"><span class="mk k" data-t="1">K is four letters after G, so 71 + 4 = 75</span> <span class="mk k" data-t="2">75 = 01001011</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing 7 bits, or counting from G as 1 and getting 74.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a sound is converted into a digital sound file.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Put the steps in order: analogue wave, sampling at intervals, measure each sample, store as binary.</div>
+    <div class="ans"><span class="mk k" data-t="1">The sound wave is analogue, and it is sampled by measuring its amplitude (height).</span> <span class="mk k" data-t="2">The measurements are taken at regular time intervals, a set number of times per second (the sample rate).</span> <span class="mk k" data-t="3">Each measurement is rounded to the nearest value that can be stored, using a set number of bits (the sample resolution).</span> <span class="mk k" data-t="4">Each sample is stored as a binary number, and the sequence of binary values makes up the file.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the wave is "converted to binary" in one step with no mention of sampling or intervals.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Describe</span> <span class="mark">3 marks</span> The sample rate of a recording is increased. Describe the effect on the sound quality and the file size.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Quality and file size both need a statement. Say why.</div>
+    <div class="ans"><span class="mk k" data-t="1">More samples are taken each second, so the digital sound is closer to the original wave.</span> <span class="mk k" data-t="2">The quality is therefore higher (more accurate).</span> <span class="mk k" data-t="3">More samples are stored, so the file size increases.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Mixing up sample rate and sample resolution. Rate is how often; resolution is how many bits per sample.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Calculate</span> <span class="mark">3 marks</span> A bitmap image is 100 pixels wide and 50 pixels high. Each pixel uses 8 bits. Calculate the file size in bytes. Ignore metadata.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Pixels × bits per pixel gives bits. Divide by 8 for bytes.</div>
+    <div class="ans"><span class="mk k" data-t="1">100 × 50 = 5,000 pixels</span> <span class="mk k" data-t="2">5,000 × 8 = 40,000 bits</span> <span class="mk k" data-t="3">40,000 ÷ 8 = 5,000 bytes</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Stopping at 40,000, which is in bits. The question asks for bytes.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Explain how a bitmap image is stored in a file, and why the file needs metadata.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Pixels, a binary value for each, and then what the metadata contains and what it is for.</div>
+    <div class="ans"><span class="mk k" data-t="1">The image is divided into a grid of pixels.</span> <span class="mk k" data-t="2">Each pixel is stored as a binary number that represents its colour, using the colour depth (bits per pixel).</span> <span class="mk k" data-t="3">The file holds metadata, such as the width, height and colour depth of the image,</span> <span class="mk k" data-t="4">so the software knows how to split the stream of bits back into pixels and rebuild the picture correctly.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Describing metadata as "the image data". Metadata is data about the image.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Explain</span> <span class="mark">4 marks</span> A music app offers two options: 44,100 Hz with 16-bit samples, or 8,000 Hz with 8-bit samples. Explain the benefits of each.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two benefits for each option, using rate and resolution.</div>
+    <div class="ans"><span class="mk k" data-t="1">44,100 Hz takes many more samples per second, so the sound is closer to the original.</span> <span class="mk k" data-t="2">16 bits per sample allows more levels, so each sample is more accurate.</span> <span class="mk k" data-t="3">The 8,000 Hz, 8-bit option has far fewer bits per second, so the file is much smaller.</span> <span class="mk k" data-t="4">It uses less storage and downloads or streams faster, though with lower quality.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Only describing one option. "Benefits of each" needs a point for both.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Define before you name.</b> A character set is all the characters a system can use, each with a unique code. ASCII and Unicode are examples.</li>
+    <li><b>Unicode answers need the chain:</b> more bits, more codes, more languages and symbols, bigger files.</li>
+    <li><b>Use the order of the codes.</b> Count along from the code you are given.</li>
+    <li><b>Sound: two settings.</b> Sample rate is how often, sample resolution is how many bits each. Both raise quality and file size.</li>
+    <li><b>Images: two settings.</b> Resolution is how many pixels, colour depth is how many bits each.</li>
+    <li><b>File sizes:</b> multiply everything, then ÷ 8 for bytes. Say "bits" or "bytes" in your answer.</li>
+    <li><b>Show each step of a calculation.</b> You can earn marks even if the final answer slips.</li>
+    <li><b>Metadata is data about the file</b> (width, height, colour depth), not the picture itself.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Give</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Calculate</td><td>Working and a final answer with units.</td></tr>
+    <tr><td>Describe</td><td>What happens, step by step, or the main features.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+window.Lib = { initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+const MONO = "font-family:ui-monospace,Menlo,Consolas,monospace;";
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const bin8 = (n) => n.toString(2).padStart(8, "0");
+const bigTxt = (x, y, t, cls, px = 28, extra) => SV.text(x, y, t, "lbl bd " + (cls || ""), { "text-anchor": "middle", style: MONO + "font-size:" + px + "px", ...extra });
+const fmtInt = (n) => Math.round(n).toLocaleString("en-GB");
+
+/* ---------- 1. text to binary ---------- */
+const CH = [["H", 72], ["i", 105], ["!", 33]];
+function textChart(s) {
+  const X = (i) => 230 + i * 190, rows = [["Character", 70], ["ASCII code", 150], ["8-bit binary", 225]];
+  let o = "";
+  rows.forEach(([lab, y], r) => {
+    const op = clamp01(s.k - r + 1);
+    if (op <= 0.01) return;
+    o += SV.text(24, y + 6, lab, "sm bd", { "text-anchor": "start", opacity: op, style: "font-size:14px" });
+    CH.forEach(([c, n], i) => {
+      o += SV.rect(X(i) - 80, y - 36, 160, 56, "f1", { rx: 10, opacity: op });
+      o += bigTxt(X(i), y + 5, r === 0 ? c : r === 1 ? n : bin8(n), r === 0 ? "t1" : r === 1 ? "t4" : "t3", r === 2 ? 22 : 34, { opacity: op });
+    });
+  });
+  const op3 = clamp01(s.k - 2);
+  if (op3 > 0.01) {
+    o += SV.text(380, 285, "01001000 01101001 00100001", "lbl bd t3", { "text-anchor": "middle", opacity: op3, style: MONO + "font-size:20px" });
+    o += SV.text(380, 308, "3 characters × 8 bits = 24 bits stored", "sm bd", { "text-anchor": "middle", opacity: op3, style: "font-size:14px" });
+  }
+  return o;
+}
+Lib.stepper($("#stA"), { w: 760, h: 320, label: "Typing Hi! and storing it as binary", base: { k: 0 }, tween: 700, dwell: 4200, draw: textChart, steps: [
+  { cap: "You type <b>Hi!</b> on the keyboard. The computer sees three characters.", s: { k: 0 } },
+  { cap: "Each character has a unique code in the <b>character set</b>. In ASCII, H = 72, i = 105 and ! = 33.", s: { k: 1 } },
+  { cap: "Each code is converted into <b>binary</b>. In extended ASCII every character uses 8 bits.", s: { k: 2 } },
+  { cap: "The three binary codes are stored one after the other: <b>24 bits</b>. With 32-bit Unicode the same text would take 96 bits.", s: { k: 3 } },
+] });
+
+/* ---------- 2. sampling ---------- */
+const wf = (t) => 0.62 * Math.sin(2 * Math.PI * 2 * t) + 0.28 * Math.sin(2 * Math.PI * 5 * t + 1);
+const quant = (v, L) => { L = Math.max(2, Math.round(L)); return (Math.round(((v + 1) / 2) * (L - 1)) / (L - 1)) * 2 - 1; };
+function waveSvg(x0, x1, yc, amp, n, L, opts = {}) {
+  const X = (t) => x0 + t * (x1 - x0), Y = (v) => yc - v * amp;
+  let o = "";
+  if (opts.axis !== false) o += SV.line(x0, yc, x1, yc, "gr");
+  if (L <= 16 && opts.levels !== false) for (let i = 0; i < L; i++) { const v = (i / (L - 1)) * 2 - 1; o += SV.line(x0, Y(v), x1, Y(v), "gr", { opacity: 0.8 }); }
+  const pts = []; for (let i = 0; i <= 240; i++) pts.push([X(i / 240), Y(wf(i / 240))]);
+  o += SV.path(ptsPath(pts), "c1", { opacity: 0.55 });
+  if (n > 0) {
+    let d = "";
+    for (let i = 0; i < n; i++) { const t0 = i / n, t1 = (i + 1) / n, y = Y(quant(wf(t0), L)); d += (i ? "L" : "M") + X(t0).toFixed(1) + " " + y.toFixed(1) + "L" + X(t1).toFixed(1) + " " + y.toFixed(1); if (i < n - 1) d += "L" + X(t1).toFixed(1) + " " + Y(quant(wf(t1), L)).toFixed(1); }
+    o += SV.path(d, "c3");
+    for (let i = 0; i < n; i++) { const t = i / n, y = Y(quant(wf(t), L)); o += SV.line(X(t), yc, X(t), y, "gr", { opacity: 0.9 }) + SV.circle(X(t), y, n > 40 ? 2.5 : 4.5, "dot3"); }
+  }
+  return o;
+}
+function sampChart(s) {
+  const n = Math.round(s.n), L = Math.round(s.lv);
+  let o = waveSvg(30, 730, 175, 120, n, L);
+  o += SV.text(30, 22, n === 0 ? "Analogue sound wave (continuous)" : `${n} samples · ${Math.log2(L).toFixed(0)} bits per sample (${L} levels)`, "lbl bd", { "text-anchor": "start" });
+  o += SV.text(730, 318, "time →", "sm", { "text-anchor": "end" });
+  return o;
+}
+Lib.stepper($("#stB"), { w: 760, h: 330, label: "A sound wave being sampled", base: { n: 0, lv: 64 }, tween: 900, dwell: 4500, draw: sampChart, steps: [
+  { cap: "A real sound is an <b>analogue</b> wave: a smooth curve with infinitely many possible values.", s: { n: 0, lv: 64 } },
+  { cap: "The computer measures the height of the wave at <b>regular intervals</b>. These are <b>samples</b>. Here there are only 10, so the stored wave (green) misses a lot of detail.", s: { n: 10, lv: 64 } },
+  { cap: "A <b>higher sample rate</b> takes more samples each second. With 40 samples the green steps follow the original much more closely, but there is more data to store.", s: { n: 40, lv: 64 } },
+  { cap: "Each sample must be stored in a fixed number of bits (the <b>sample resolution</b>). With only 2 bits there are just <b>4 levels</b>, so each sample is rounded a long way.", s: { n: 40, lv: 4 } },
+  { cap: "With 4 bits there are <b>16 levels</b>. Each sample can sit closer to the true height. More bits per sample means more accuracy and a bigger file.", s: { n: 40, lv: 16 } },
+] });
+
+/* ---------- 3. pixels and colour depth ---------- */
+const HEART = ["00000000", "03300330", "32133113", "31111113", "03111130", "00311300", "00033000", "00000000"].map((r) => [...r].map(Number));
+const PAL2 = ["#ffffff", "#d64550", "#f4a6b0", "#5a1a22"], CODE2 = ["00", "01", "10", "11"];
+function imgChart(s) {
+  const m = Math.round(s.m), C = 34, X0 = 40, Y0 = 24;
+  let o = "";
+  HEART.forEach((row, y) => row.forEach((v, x) => {
+    const px = X0 + x * C, py = Y0 + y * C;
+    let fill = "#ffffff", txt = "", tc = "#111";
+    if (m === 1) { const b = v > 0 ? 1 : 0; fill = b ? "#111111" : "#ffffff"; txt = b; tc = b ? "#fff" : "#111"; }
+    if (m >= 2) { fill = PAL2[v]; txt = m === 2 ? CODE2[v] : ""; tc = v === 3 || v === 1 ? "#fff" : "#111"; }
+    o += `<rect x="${px}" y="${py}" width="${C}" height="${C}" fill="${fill}" stroke="#9aa8b2" stroke-width="1"/>`;
+    if (txt !== "") o += SV.text(px + C / 2, py + C / 2 + 5, txt, "lbl bd", { "text-anchor": "middle", style: MONO + `fill:${tc};font-size:${m === 2 ? 12 : 15}px` });
+  }));
+  const T = (y, t, cls = "lbl", px = 16) => SV.text(350, y, t, cls, { "text-anchor": "start", style: "font-size:" + px + "px" });
+  if (m === 0) o += T(60, "The picture is split into a grid of pixels.", "lbl bd") + T(92, "This one is 8 pixels wide and 8 high:") + T(116, "8 × 8 = 64 pixels. That is its resolution.", "lbl bd t1");
+  if (m === 1) o += T(60, "1 bit per pixel: only two colours.", "lbl bd") + T(92, "0 = white, 1 = black") + T(122, "64 pixels × 1 bit = 64 bits", "lbl bd t1") + T(152, "Colour depth = 1 bit → 2¹ = 2 colours", "lbl bd t3");
+  if (m === 2) o += T(60, "2 bits per pixel: four colours.", "lbl bd") + T(92, "00 = white   01 = red") + T(116, "10 = pink    11 = dark red") + T(146, "64 pixels × 2 bits = 128 bits", "lbl bd t1") + T(176, "Colour depth = 2 bits → 2² = 4 colours", "lbl bd t3");
+  if (m === 3) {
+    o += SV.rect(350, 36, 360, 96, "f1", { rx: 10 }) + T(60, "Metadata (file header)", "lbl bd t4") + T(84, "width = 8, height = 8", "lbl", 15) + T(106, "colour depth = 2 bits", "lbl", 15);
+    o += T(160, "Pixel data: 00 00 00 00 00 00 00 00 00 11 …", "sm", 12.5) + T(196, "128 bits ÷ 8 = 16 bytes of pixel data", "lbl bd t3", 16) + T(224, "(metadata makes the real file a little bigger)", "sm", 13);
+  }
+  return o;
+}
+Lib.stepper($("#stC"), { w: 760, h: 330, label: "A small image stored as pixels", base: { m: 0 }, tween: 500, dwell: 4500, draw: imgChart, steps: [
+  { cap: "A bitmap image is a grid of tiny squares called <b>pixels</b>. The number of pixels is the <b>resolution</b>.", s: { m: 0 } },
+  { cap: "Each pixel stores a binary value for its colour. With <b>1 bit per pixel</b> there are only two colours, so the heart is black and white.", s: { m: 1 } },
+  { cap: "With a <b>colour depth of 2 bits</b> each pixel has 4 possible values, so we get 4 colours and some shading.", s: { m: 2 } },
+  { cap: "The file stores <b>metadata</b> (width, height, colour depth) and then the pixel values in order. File size = 8 × 8 × 2 = 128 bits.", s: { m: 3 } },
+] });
+
+/* ---------- Lab 1: text encoder ---------- */
+(() => {
+  const inp = $("#txt"), tab = $("#ttab");
+  const grp = (n) => n.toString(2).padStart(32, "0").match(/.{8}/g).join(" ");
+  const upd = () => {
+    const chars = Array.from(inp.value), codes = chars.map((c) => c.codePointAt(0));
+    const inA = codes.every((c) => c < 128), inE = codes.every((c) => c < 256), bad = chars.filter((c, i) => codes[i] > 127);
+    tab.innerHTML = `<tr><th>Char</th><th>Code</th><th>Binary</th><th>In ASCII?</th></tr>` + chars.map((c, i) => `<tr><td style="font-size:1.2rem">${c === " " ? "␣" : esc(c)}</td><td>${codes[i]}</td><td style="font-family:var(--mono);font-size:.82rem">${codes[i] < 256 ? bin8(codes[i]) : grp(codes[i])}</td><td>${codes[i] < 128 ? "Yes" : codes[i] < 256 ? '<span class="flag">extended only</span>' : '<span class="flag">Unicode only</span>'}</td></tr>`).join("");
+    const n = chars.length;
+    $("#tz1").textContent = inA ? n * 7 + " bits" : "can't store";
+    $("#tz2").textContent = inE ? n * 8 + " bits" : "can't store";
+    $("#tz3").textContent = n * 32 + " bits";
+    $("#tv").textContent = !n ? "Type something above." : inA ? "Every character is in standard ASCII, so 7 bits each is enough. Unicode would use more bits for the same text." : `${bad.map((c) => "“" + c + "”").join(" ")} ${bad.length > 1 ? "are" : "is"} outside standard ASCII. ${inE ? "Extended ASCII (8 bits) can hold it." : "Only Unicode has a code for it."}`;
+  };
+  inp.addEventListener("input", upd); upd();
+})();
+
+/* ---------- Lab 2: sampling lab ---------- */
+(() => {
+  let sn, sr;
+  const upd = () => {
+    if (!sn || !sr) return;
+    const n = sn.get(), b = sr.get(), L = 2 ** b;
+    $("#wave").innerHTML = waveSvg(24, 540, 160, 125, n, L);
+    $("#wa").textContent = n; $("#wb").textContent = L; $("#wc").textContent = n * b;
+    let err = 0; for (let i = 0; i < 400; i++) { const t = i / 400, k = Math.min(n - 1, Math.floor(t * n)); err += Math.abs(wf(t) - quant(wf(k / n), L)); }
+    const e = (err / 400 / 2) * 100;
+    $("#wv").textContent = `Average gap from the real wave: about ${e.toFixed(1)}% of the full height. ` + (e < 3 ? "A very close copy, but note the number of bits in the file." : n < 10 ? "Too few samples: the steps miss the shape." : b < 3 ? "Too few bits per sample: the steps are rounded too far." : "A fair copy. Push either slider to see the trade-off with size.");
+  };
+  sn = Lib.slider($("#w1"), { id: "wn", label: "Sample rate (samples in this snippet)", min: 4, max: 80, step: 1, value: 12, fmt: (v) => v, onInput: upd });
+  sr = Lib.slider($("#w2"), { id: "wr", label: "Sample resolution (bits per sample)", min: 1, max: 6, step: 1, value: 3, fmt: (v) => v + (v === 1 ? " bit" : " bits"), onInput: upd });
+  upd();
+})();
+
+/* ---------- Lab 3: sound size calculator ---------- */
+(() => {
+  const RATES = [8000, 11025, 22050, 44100, 48000, 96000], RES = [8, 16, 24];
+  let a, b, c;
+  const upd = () => {
+    if (!a || !b || !c) return;
+    const r = RATES[a.get()], d = RES[b.get()], t = c.get(), bits = r * d * t, bytes = bits / 8;
+    $("#ka").textContent = fmtInt(bits); $("#kb").textContent = fmtInt(bytes); $("#kc").textContent = Lib.fmtN(bytes / 1e6, 2) + " MB";
+    $("#kv").innerHTML = `${fmtInt(r)} × ${d} × ${t} = ${fmtInt(bits)} bits, and ÷ 8 = ${fmtInt(bytes)} bytes.`;
+  };
+  a = Lib.slider($("#k1"), { id: "ka1", label: "Sample rate", min: 0, max: 5, step: 1, value: 3, fmt: (i) => fmtInt(RATES[i]) + " Hz", onInput: upd });
+  b = Lib.slider($("#k2"), { id: "kb1", label: "Sample resolution", min: 0, max: 2, step: 1, value: 1, fmt: (i) => RES[i] + " bits", onInput: upd });
+  c = Lib.slider($("#k3"), { id: "kc1", label: "Length", min: 1, max: 300, step: 1, value: 10, fmt: (v) => v + " s", onInput: upd });
+  upd();
+})();
+
+/* ---------- Lab 4: resolution and colour depth ---------- */
+(() => {
+  const RES = [4, 8, 16, 32, 64], cv = $("#cv"), ctx = cv.getContext("2d");
+  const STOPS = [[11, 29, 81], [106, 44, 145], [255, 122, 47], [255, 230, 109]];
+  const ramp = (t) => { const p = t * (STOPS.length - 1), i = Math.min(STOPS.length - 2, Math.floor(p)), f = p - i; return STOPS[i].map((c, k) => Math.round(c + (STOPS[i + 1][k] - c) * f)); };
+  const val = (u, v) => {
+    if (v < 0.65) { const dx = u - 0.5, dy = v - 0.55, dist = Math.hypot(dx, dy); return dist < 0.17 ? 1 : Math.min(0.95, 0.04 + 0.55 * (v / 0.65) + 0.35 * Math.exp(-(dist * dist) / 0.04)); }
+    const refl = Math.exp(-(((u - 0.5) / 0.14) ** 2)) * (1 - ((v - 0.65) / 0.35) * 0.6);
+    return 0.1 + 0.55 * refl + 0.08 * Math.sin(v * 40) * refl;
+  };
+  let ri, di;
+  const upd = () => {
+    if (!ri || !di) return;
+    const r = RES[ri.get()], d = di.get(), L = 2 ** d, cell = 64 / r;
+    for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+      const u = (Math.floor(x / cell) + 0.5) / r, v = (Math.floor(y / cell) + 0.5) / r;
+      const t = L === 1 ? 0 : Math.round(Math.max(0, Math.min(1, val(u, v))) * (L - 1)) / (L - 1);
+      const [R, G, B] = ramp(t); ctx.fillStyle = `rgb(${R},${G},${B})`; ctx.fillRect(x, y, 1, 1);
+    }
+    const bits = r * r * d, bytes = bits / 8;
+    $("#ia").textContent = fmtInt(r * r); $("#ib").textContent = fmtInt(L); $("#ic").textContent = bytes >= 1024 ? Lib.fmtN(bytes / 1024, 1) + " KiB" : fmtInt(bytes) + " B";
+    $("#iv").textContent = `${r} × ${r} × ${d} = ${fmtInt(bits)} bits (${fmtInt(bytes)} bytes). ` + (r <= 8 ? "Low resolution: you can see the individual pixels." : d <= 2 ? "Low colour depth: the smooth sky has turned into bands." : "Plenty of detail, at the cost of a larger file.");
+  };
+  ri = Lib.slider($("#i1"), { id: "ir", label: "Resolution", min: 0, max: 4, step: 1, value: 3, fmt: (i) => RES[i] + " × " + RES[i], onInput: upd });
+  di = Lib.slider($("#i2"), { id: "id", label: "Colour depth", min: 1, max: 8, step: 1, value: 5, fmt: (v) => v + (v === 1 ? " bit" : " bits"), onInput: upd });
+  upd();
+})();
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), { prompt: "Drag each statement to the character set it describes.", buckets: [{ label: "ASCII" }, { label: "Unicode" }], items: [
+  { text: "7 bits per character (standard)", b: 0 }, { text: "128 characters", b: 0 }, { text: "English letters, digits and punctuation", b: 0 }, { text: "Smaller files for plain English text", b: 0 },
+  { text: "Up to 32 bits per character", b: 1 }, { text: "Over 140,000 characters", b: 1 }, { text: "Covers Chinese, Arabic, Hindi and emoji", b: 1 }, { text: "Needs more storage per character", b: 1 },
+], done: "ASCII is compact, Unicode is universal." });
+
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Character set", "All the characters a system can use, each with a unique code"], ["Sample rate", "The number of samples taken every second"], ["Sample resolution", "The number of bits used for each sample"],
+  ["Pixel", "The smallest element of a bitmap image"], ["Image resolution", "The number of pixels in the image, width × height"], ["Colour depth", "The number of bits used for each pixel"], ["Metadata", "Data about the file, such as width, height and colour depth"],
+] });
+
+Lib.order($("#o1"), { prompt: "Put the steps for turning a sound into a digital file in the right order.", items: [
+  "A microphone turns the sound into an analogue electrical signal", "The height of the signal is measured at regular time intervals (sampling)", "Each measurement is rounded to the nearest value the bits can store", "Each sample is stored as a binary number", "The binary values are saved together as a sound file",
+], done: "Analogue, sample, round, binary, file." });
+
+Lib.calc($("#c1"), { qs: [
+  { q: "The ASCII code for A is 65. What is the ASCII code for F?", a: 70, sol: "A, B, C, D, E, F: five letters on. 65 + 5 = 70.", hint: "Count along from A." },
+  { q: "The ASCII code for A is 65. Give the 8-bit binary code for C.", t: ["01000011"], ph: "8 bits", sol: "C = 65 + 2 = 67 = 64 + 2 + 1 → 01000011", hint: "Work out the denary code first." },
+  { q: "How many different colours can be shown with a colour depth of 6 bits?", a: 64, sol: "2⁶ = 64 colours.", hint: "n bits gives 2ⁿ." },
+  { q: "What colour depth is needed to show 256 different colours?", a: 8, sol: "2⁸ = 256, so 8 bits per pixel." },
+  { q: "A 10 × 10 pixel image uses 2 bits per pixel. How many bits are needed for the pixel data?", a: 200, sol: "10 × 10 = 100 pixels. 100 × 2 = 200 bits." },
+  { q: "An image is 64 pixels wide and 32 high with a colour depth of 4 bits. Calculate the file size in bytes. Ignore metadata.", a: 1024, sol: "64 × 32 = 2,048 pixels. × 4 = 8,192 bits. ÷ 8 = 1,024 bytes.", hint: "Pixels × bits, then ÷ 8." },
+  { q: "A photo is 800 × 600 pixels with 24-bit colour. Calculate the file size in bytes. Ignore metadata.", a: 1440000, sol: "800 × 600 = 480,000 pixels. × 24 = 11,520,000 bits. ÷ 8 = 1,440,000 bytes.", hint: "Careful: bits first, then bytes." },
+  { q: "A sound is sampled at 8,000 Hz with 8 bits per sample for 5 seconds. Calculate the file size in bits.", a: 320000, sol: "8,000 × 8 × 5 = 320,000 bits." },
+  { q: "A sound is sampled at 44,100 Hz with 16 bits per sample for 10 seconds. Calculate the file size in bytes.", a: 882000, sol: "44,100 × 16 × 10 = 7,056,000 bits. ÷ 8 = 882,000 bytes.", hint: "Rate × resolution × seconds, then ÷ 8." },
+] });
+
+(() => {
+  const el = $("#drill"), modes = [["img", "image file size (bytes)"], ["imgb", "image file size (bits)"], ["snd", "sound file size (bytes)"], ["sndb", "sound file size (bits)"]];
+  el.innerHTML = `<label>Practise: <select>${modes.map(([v, t]) => `<option value="${v}">${t}</option>`).join("")}</select></label>
+    <div class="qline" aria-live="polite"></div>
+    <div class="row"><input type="text" inputmode="numeric" autocomplete="off" aria-label="Your answer"><button class="b pri" data-a="c">Check</button><button class="b" data-a="s">Show working</button><button class="b" data-a="n">New question</button><span class="fb" aria-live="polite"></span></div>
+    <p class="note" data-s></p><p class="note" data-w></p>`;
+  const sel = $("select", el), ql = $(".qline", el), inp = $("input", el), fb = $(".fb", el), st = $("[data-s]", el), wk = $("[data-w]", el);
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  let ans = 0, work = "", streak = 0, best = 0, solved = false;
+  function gen() {
+    const m = sel.value; solved = false;
+    if (m.startsWith("img")) {
+      const w = pick([16, 24, 32, 40, 64, 80, 100, 120, 200]), h = pick([8, 16, 24, 32, 48, 50, 60]), d = pick([1, 2, 4, 8, 16, 24]), bits = w * h * d;
+      ans = m === "img" ? bits / 8 : bits; ql.textContent = `An image is ${w} × ${h} pixels with a colour depth of ${d} bit${d > 1 ? "s" : ""}. Give its file size in ${m === "img" ? "bytes" : "bits"}, ignoring metadata.`;
+      work = `${w} × ${h} × ${d} = ${fmtInt(bits)} bits` + (m === "img" ? `, ÷ 8 = ${fmtInt(bits / 8)} bytes.` : ".");
+    } else {
+      const r = pick([8000, 16000, 22050, 44100, 48000]), d = pick([8, 16, 24]), t = pick([2, 3, 5, 10, 15, 20, 30]), bits = r * d * t;
+      ans = m === "snd" ? bits / 8 : bits; ql.textContent = `A sound is sampled at ${fmtInt(r)} Hz with ${d} bits per sample for ${t} seconds. Give its file size in ${m === "snd" ? "bytes" : "bits"}.`;
+      work = `${fmtInt(r)} × ${d} × ${t} = ${fmtInt(bits)} bits` + (m === "snd" ? `, ÷ 8 = ${fmtInt(bits / 8)} bytes.` : ".");
+    }
+    inp.value = ""; fb.textContent = ""; fb.className = "fb"; wk.textContent = "";
+  }
+  const check = () => {
+    const v = parseFloat(inp.value.replace(/[,\s]/g, "")), good = !isNaN(v) && Math.abs(v - ans) < 0.5;
+    if (!solved) { streak = good ? streak + 1 : 0; best = Math.max(best, streak); }
+    if (good) solved = true;
+    fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); st.textContent = `Streak ${streak} · best ${best}`;
+  };
+  $("[data-a=c]", el).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && (solved ? gen() : check()));
+  $("[data-a=n]", el).onclick = gen; sel.onchange = () => { streak = 0; st.textContent = ""; gen(); };
+  $("[data-a=s]", el).onclick = () => { streak = 0; solved = true; wk.textContent = "Working: " + work; st.textContent = "Streak 0 · best " + best; };
+  gen();
+})();
+
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Which statement about Unicode is correct?", opts: ["It uses fewer bits than ASCII", "It can represent characters from many languages and emoji", "It only has 128 characters", "It cannot be used on the web"], a: 1, why: "Unicode has over 140,000 characters, using more bits per character than ASCII." },
+  { q: "A student increases the sample rate of a recording. What is the effect?", opts: ["Smaller file, lower quality", "Larger file, closer to the original", "Smaller file, closer to the original", "No change to the file size"], a: 1, why: "More samples per second follow the wave more closely, but more data is stored." },
+  { q: "How many colours can a colour depth of 3 bits show?", opts: ["3", "6", "8", "9"], a: 2, why: "2³ = 8." },
+  { q: "What is stored in an image file's metadata?", opts: ["Only the pixel colours", "The width, height and colour depth", "The sample rate", "The ASCII codes"], a: 1, why: "Metadata is data about the image, so software can rebuild it from the bits." },
+  { q: "How many bits does the word 'Hi' need in extended ASCII?", opts: ["2", "8", "14", "16"], a: 3, why: "2 characters × 8 bits = 16 bits." },
+  { q: "Which change would make an image file smaller?", opts: ["Increase the colour depth", "Increase the resolution", "Decrease the resolution", "Add more metadata"], a: 2, why: "Fewer pixels means fewer bits to store, though the image has less detail." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Character set", "All the characters a computer system can use, each with a unique binary code."], ["ASCII", "A character set with 128 characters (7 bits); extended ASCII has 256 (8 bits)."], ["Unicode", "A character set with over 140,000 characters, using up to 32 bits each. Covers most languages and emoji."],
+  ["Analogue", "A continuous signal that can take any value, like a sound wave."], ["Sample", "One measurement of a sound wave's amplitude at a moment in time."], ["Sample rate", "The number of samples taken per second, in hertz (Hz)."],
+  ["Sample resolution", "The number of bits used to store each sample (bit depth)."], ["Pixel", "The smallest element of a bitmap image; stores one colour value."], ["Image resolution", "The number of pixels in an image, width × height."],
+  ["Colour depth", "The number of bits used for each pixel. n bits give 2ⁿ colours."], ["Metadata", "Data about a file, such as an image's width, height and colour depth."],
+] });
+
+Lib.initTabs();
+</script>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}.site-pill .pill-more{display:none}@media(max-width:700px){body{padding-bottom:64px}.site-pill{right:8px;bottom:8px;opacity:.6;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 16px)}.site-pill>*:not(.pill-more){display:none}.site-pill.open{opacity:.95}.site-pill.open>*:not(.pill-more):not([hidden]){display:inline-block}.site-pill .pill-more{display:block;border:0;border-radius:999px;width:36px;height:36px;padding:0;text-align:center;font-size:18px}.site-pill.open .pill-more{border-left:0}}</style><div class="site-pill"><button type="button" class="pill-more" aria-label="Menu" onclick="this.parentNode.classList.toggle(&#39;open&#39;)">☰</button><a href="../../ig-cs/ch-01/">← Chapter 1</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="text-sound-and-images" hidden></button><button data-role-toggle="text-sound-and-images" hidden></button><button data-role-delete="text-sound-and-images" hidden></button><button data-role-restore="text-sound-and-images" hidden></button></div><script src="../../assets/config.js?v=1791167167"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js?v=1791167167"></script><script src="../../assets/gate.js?v=1791167167" data-courses="ig-cs"></script><script>document.addEventListener('click',function(e){var t=e.target.closest('[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script><script>document.addEventListener('click',function(e){var p=document.querySelector('.site-pill.open');if(p&&!p.contains(e.target))p.classList.remove('open')});addEventListener('scroll',function(){var p=document.querySelector('.site-pill.open');if(p)p.classList.remove('open')},{passive:true});</script></body></html>

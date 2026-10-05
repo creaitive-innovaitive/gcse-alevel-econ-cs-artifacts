@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Number Systems</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<style>
+.bits{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.bit{display:flex;flex-direction:column;align-items:center;gap:3px}
+.bit small{font:700 .7rem var(--mono);color:var(--muted)}
+.bit button{width:46px;height:52px;font:700 1.5rem var(--mono);border-radius:9px;border:2px solid var(--accent);background:var(--surface);color:var(--ink);cursor:pointer}
+.bit button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.bit.sign button{border-color:var(--bad)} .bit.sign button[aria-pressed="true"]{background:var(--bad);color:#fff}
+.bitrow{display:flex;gap:4px;font:700 1.3rem var(--mono);margin:6px 0;flex-wrap:wrap}
+.bitrow span{width:34px;height:40px;display:grid;place-items:center;border-radius:7px;background:var(--soft);border:1px solid var(--line)}
+.bitrow span.lost{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.bitrow span.new{background:var(--good-soft);border-color:var(--good)}
+.bitrow span.mid{margin-left:12px}
+.swatch{height:110px;border-radius:12px;border:1px solid var(--line);margin:8px 0}
+.drill input{font:700 1.1rem var(--mono);padding:8px 12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,280px)}
+.drill .qline{font:700 1.35rem var(--mono);margin:8px 0}
+.drill select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 1 · 1.1</div>
+  <h1>Number Systems</h1>
+  <p class="lead">Binary, denary and hexadecimal, how to convert between them, how computers add, shift and store negative numbers, and why it all comes down to on and off.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A computer is built from billions of tiny switches (transistors) that are either <b>on</b> or <b>off</b>. Two states means two digits, so all data is stored as <span class="kw">binary</span>: 1 for on, 0 for off. Humans prefer <span class="kw">denary</span> (base 10) and, for reading long binary values, <span class="kw">hexadecimal</span> (base 16).</p>
+  </div>
+
+  <h2>Three number systems</h2>
+  <div class="tw"><table class="t">
+    <tr><th>System</th><th>Base</th><th>Digits</th><th>Place values (right to left)</th></tr>
+    <tr><td>Denary</td><td>10</td><td>0 to 9</td><td>1, 10, 100, 1000 …</td></tr>
+    <tr><td>Binary</td><td>2</td><td>0, 1</td><td>1, 2, 4, 8, 16, 32, 64, 128 …</td></tr>
+    <tr><td>Hexadecimal</td><td>16</td><td>0 to 9, then A to F</td><td>1, 16, 256, 4096 …</td></tr>
+  </table></div>
+  <p>In hex, A = 10, B = 11, C = 12, D = 13, E = 14, F = 15.</p>
+  <p class="note">A <b>bit</b> is one binary digit. A <b>nibble</b> is 4 bits. A <b>byte</b> is 8 bits and holds 0 to 255 (256 values). The leftmost bit has the biggest place value: the <b>most significant bit</b> (MSB). The rightmost is the <b>least significant bit</b> (LSB).</p>
+
+  <h2>Converting</h2>
+  <div class="grid2">
+    <div class="card"><h3>Binary to denary</h3><p>Write the place values above the bits and add up the ones with a 1 beneath.</p><p><code>1 0 1 1 0 1 0 1</code><br>128 + 32 + 16 + 4 + 1 = <b>181</b></p></div>
+    <div class="card"><h3>Denary to binary</h3><p>Go from 128 downwards. If the place value fits into what is left, write 1 and subtract it. Otherwise write 0.</p><p>181: 128 fits (53 left), 64 no, 32 fits (21), 16 fits (5), 8 no, 4 fits (1), 2 no, 1 fits → <b>10110101</b></p></div>
+    <div class="card"><h3>Binary to hex</h3><p>Split into nibbles from the right and convert each nibble on its own.</p><p><code>1011 1110</code> → B and E → <b>BE</b></p></div>
+    <div class="card"><h3>Hex to binary</h3><p>Turn each hex digit into a 4-bit nibble. Keep the leading zeros.</p><p>3F → 0011 and 1111 → <b>00111111</b></p></div>
+  </div>
+  <p>Hex to denary: multiply the left digit by 16 and add the right. <b>3F</b> = 3 × 16 + 15 = <b>63</b>. Denary to hex: divide by 16; the quotient is the left digit and the remainder is the right. 203 ÷ 16 = 12 remainder 11 → C and B → <b>CB</b>.</p>
+
+  <h2>Why use hexadecimal?</h2>
+  <ul>
+    <li><b>Shorter.</b> One hex digit replaces four bits, so 8 bits become 2 digits.</li>
+    <li><b>Easier for humans to read, remember and copy,</b> with fewer transcription errors than a string of 1s and 0s.</li>
+    <li><b>Converts to binary easily,</b> because 16 is 2⁴: each hex digit is exactly one nibble.</li>
+  </ul>
+  <div class="warn"><b class="h">Not the reason</b>Hex does not take less storage. The computer still stores binary. Hex is only a human-friendly way to write it.</div>
+  <p>Where you will see hex: HTML colour codes (#FF8800), MAC addresses, IPv6 addresses, memory addresses and memory dumps, error codes.</p>
+
+  <h2>Binary addition</h2>
+  <p>Work from the right, column by column. 0+0 = 0, 0+1 = 1, 1+1 = 10 (write 0, carry 1), 1+1+1 = 11 (write 1, carry 1).</p>
+  <div class="card"><p><b>Overflow.</b> A register holds a fixed number of bits. If the sum needs more bits than are available (for 8 bits, anything above 255), the extra carry has nowhere to go. It is lost, the stored answer is wrong, and an <span class="kw">overflow error</span> occurs.</p></div>
+
+  <h2>Logical shifts</h2>
+  <p>A <span class="kw">logical shift</span> moves every bit left or right by a number of places. Empty places fill with 0 and bits shifted off the end are lost.</p>
+  <div class="grid2">
+    <div class="card"><h3>Left shift by n</h3><p>Multiplies by 2ⁿ. 00010110 (22) shifted left 2 → 01011000 (88).</p><p>If a 1 is pushed off the left end, the answer is wrong.</p></div>
+    <div class="card"><h3>Right shift by n</h3><p>Divides by 2ⁿ, dropping any remainder. 00010110 (22) shifted right 2 → 00000101 (5).</p><p>If a 1 is pushed off the right end, precision is lost (22 ÷ 4 is 5.5, not 5).</p></div>
+  </div>
+
+  <h2>Negative numbers: two's complement</h2>
+  <p>In 8-bit <span class="kw">two's complement</span> the leftmost bit has a place value of <b>−128</b> instead of +128. The other columns are normal. A leading 1 means the number is negative.</p>
+  <div class="tw"><table class="t">
+    <tr><th>−128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th><th>Value</th></tr>
+    <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>−128 + 64 + 16 + 2 + 1 = −45</td></tr>
+  </table></div>
+  <p>To <b>make a number negative</b>: write the positive value in binary, flip every bit, add 1. The range of 8-bit two's complement is <b>−128 to +127</b>.</p>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · Denary to binary: 181</h2><div id="stA"></div>
+  <h2>2 · Binary addition and overflow</h2><div id="stB"></div>
+  <h2>3 · Making −45 in two's complement</h2><div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · The bit flipper</h2>
+  <p>Click the bits. Watch the denary and hex values change, and switch on two's complement to turn the left bit into −128.</p>
+  <div class="card">
+    <div class="bits" id="bitsrow"></div>
+    <label style="display:inline-flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="tc"> Read as two's complement</label>
+    <div class="readout"><div><small>Denary</small><strong id="r1"></strong></div><div><small>Hex</small><strong id="r2"></strong></div><div><small>Nibbles</small><strong id="r3"></strong></div></div>
+    <div class="row"><button class="b" id="bz">All 0</button><button class="b" id="bo">All 1</button><button class="b" id="br">Random</button></div>
+  </div>
+
+  <h2>Lab 2 · Shift machine</h2>
+  <p>Choose a number and a shift. Red bits fall off the end and are lost.</p>
+  <div class="card"><div id="s1"></div><div id="s2"></div>
+    <div id="shiftvis"></div>
+    <div class="readout"><div><small>Before</small><strong id="q1"></strong></div><div><small>After</small><strong id="q2"></strong></div><div><small>Expected (× or ÷ 2ⁿ)</small><strong id="q3"></strong></div></div>
+    <div class="verdict" id="qv"></div></div>
+
+  <h2>Lab 3 · Hex colour mixer</h2>
+  <p>Web colours are three bytes written in hex: red, green, blue. Each byte is 00 to FF.</p>
+  <div class="card"><div class="grid2"><div><div id="c_r"></div><div id="c_g"></div><div id="c_b"></div></div>
+    <div><div class="swatch" id="sw"></div><div class="readout"><div><small>Colour code</small><strong id="cc"></strong></div></div></div></div>
+    <div class="tw"><table class="t" id="ctab"></table></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Binary or hex?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Put the steps in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Conversions and calculations</h2>
+  <p class="note">Binary and hex answers: type them without spaces. Hex letters can be in either case.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Endless conversion drill</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Check current figures before quoting numbers.</p>
+  <div class="rw"><h3>HTML and CSS colour codes</h3><p>A web page colour such as #1E90FF is three bytes in hex: 1E for red, 90 for green, FF for blue. That is 16.7 million combinations from 24 bits.</p><div class="use"><b>Exam use:</b> a ready example for "give a use of hexadecimal". Be ready to convert each pair to binary.</div></div>
+  <div class="rw"><h3>MAC and IPv6 addresses</h3><p>A MAC address identifies a network card and is written as six pairs of hex digits, such as 3C:22:FB:1A:09:D4. IPv6 addresses are written in hex groups for the same reason: they are 128 bits long, which would be unreadable in binary.</p><div class="use"><b>Exam use:</b> shows that hex makes long binary values shorter and easier to read and copy without mistakes.</div></div>
+  <div class="rw"><h3>Memory dumps and error codes</h3><p>When a program crashes, debugging tools show memory addresses and contents in hex. Windows "blue screen" stop codes are hex too (for example 0x0000007B).</p><div class="use"><b>Exam use:</b> programmers need to read raw memory, and hex maps neatly onto bytes.</div></div>
+  <div class="rw"><h3>Ariane 5, 1996</h3><p>The first Ariane 5 rocket veered off course and was destroyed after about 37 seconds. A speed-related value held as a 64-bit floating-point number was converted into a 16-bit signed integer. It was too big, the conversion overflowed, and the guidance computer shut down.</p><div class="use"><b>Exam use:</b> a famous consequence of overflow: the value needs more bits than are available.</div></div>
+  <div class="rw"><h3>Boeing 787 and the 248-day counter</h3><p>In 2015 aviation regulators warned that a Boeing 787 power-control unit could shut down if it ran for 248 days without a restart. A 32-bit counter ticking in hundredths of a second would overflow after that time. The fix was to restart the units regularly until a software update.</p><div class="use"><b>Exam use:</b> shows that a fixed number of bits has a maximum, and overflow causes real faults.</div></div>
+  <div class="rw"><h3>Gangnam Style breaks YouTube's counter</h3><p>In 2014 the video passed 2,147,483,647 views, the largest value a 32-bit two's complement integer can hold (2³¹ − 1). YouTube switched the counter to 64 bits.</p><div class="use"><b>Exam use:</b> the range of a signed number is limited by the bits used. Positive values stop at 2ⁿ⁻¹ − 1.</div></div>
+  <div class="rw"><h3>Shifts for fast multiplication</h3><p>Processors can multiply or divide by powers of two with a single shift, which is quicker than a full multiplication. Graphics and audio code use this often.</p><div class="use"><b>Exam use:</b> say a left shift of n places multiplies by 2ⁿ, and mention what is lost when bits fall off.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each underlined phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Convert</span> <span class="mark">2 marks</span> Convert the binary number 10110101 into denary. Show your working.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Write the place values (128 down to 1) above the bits. One mark for the method, one for the answer.</div>
+    <div class="ans"><span class="mk k" data-t="1">128 + 32 + 16 + 4 + 1</span> <span class="mk k" data-t="2">= 181</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Reading the place values left to right as 1, 2, 4 … The smallest value is on the right.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Convert</span> <span class="mark">2 marks</span> Convert the denary number 203 into hexadecimal.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Divide by 16 for the left digit, and the remainder is the right digit. Swap 10 to 15 for A to F.</div>
+    <div class="ans"><span class="mk k" data-t="1">203 ÷ 16 = 12 remainder 11, so C and B</span> <span class="mk k" data-t="2">= CB</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing 1211. Values above 9 must be a letter.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Give</span> <span class="mark">2 marks</span> Give two reasons why programmers use hexadecimal instead of binary.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Give two separate points. Each is about shorter, easier or fewer errors.</div>
+    <div class="ans"><span class="mk k" data-t="1">It is shorter, so fewer digits are needed to represent the same value (one hex digit is four bits).</span> <span class="mk k" data-t="2">It is easier for humans to read, remember and copy, with fewer transcription errors.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying hex uses less memory or is faster for the computer. The computer still works in binary.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Two 8-bit registers hold 11001010 and 01101100. The values are added together. Explain what happens.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Do the addition. Count the bits in the answer. Name the error and its effect.</div>
+    <div class="ans"><span class="mk k" data-t="1">The sum is 100110110, which needs 9 bits.</span> <span class="mk k" data-t="2">The register can store only 8 bits, so the ninth (carry) bit is lost.</span> <span class="mk k" data-t="3">An overflow error occurs, and the stored value, 00110110 (54), is wrong.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Just writing "overflow" without saying why. Link it to the number of bits that fit.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Describe</span> <span class="mark">3 marks</span> A register holds 00010110. A logical right shift of two places is performed. State the new value, and describe the effect on the number.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Shift all bits two places right, fill with 0s. Link to division by 4 and to the bits lost.</div>
+    <div class="ans"><span class="mk k" data-t="1">00000101</span> <span class="mk k" data-t="2">The value has been divided by 4 (from 22 to 5).</span> <span class="mk k" data-t="3">The two bits that fell off the right (10) are lost, so the answer is truncated (5.5 would be 22 ÷ 4 exactly).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Moving the bits but keeping the old zeros on the left, giving a 6- or 7-bit answer. Always write 8 bits.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Show</span> <span class="mark">3 marks</span> Write −45 as an 8-bit two's complement binary number.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Positive version, flip, add 1. Check by adding the place values with −128.</div>
+    <div class="ans"><span class="mk k" data-t="1">45 = 00101101</span> <span class="mk k" data-t="2">Flip the bits: 11010010</span> <span class="mk k" data-t="3">Add 1: 11010011</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Flipping without adding 1 (that gives −46). Or putting a 1 in front of the positive number.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Convert</span> <span class="mark">4 marks</span> The colour code #1E90FF is used on a web page. Write each pair of hex digits as an 8-bit binary number.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Each hex digit is one nibble. 1 = 0001, E = 1110, 9 = 1001, 0 = 0000, F = 1111.</div>
+    <div class="ans"><span class="mk k" data-t="1">1E = 00011110</span> <span class="mk k" data-t="2">90 = 10010000</span> <span class="mk k" data-t="3">FF = 11111111</span> <span class="mk k" data-t="4">Each hex digit converted to its own 4-bit nibble and joined in order, with leading zeros kept.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Dropping the leading zeros in 0001 (writing 1E as 111110).</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Write the place values above the bits first.</b> 128 64 32 16 8 4 2 1. It takes five seconds and avoids slips.</li>
+    <li><b>Always give 8 bits</b> when the question says 8-bit, with leading zeros.</li>
+    <li><b>Check conversions by going back.</b> Convert your binary answer to denary again.</li>
+    <li><b>Hex: work in nibbles.</b> Never convert the whole byte at once.</li>
+    <li><b>Hex is for humans.</b> Never say it saves memory or is faster for the computer.</li>
+    <li><b>Overflow answers need three things:</b> the sum needs too many bits, the extra bit is lost, the stored value is wrong.</li>
+    <li><b>Shifts:</b> left × 2ⁿ, right ÷ 2ⁿ, and a 1 falling off an end means an error or lost precision.</li>
+    <li><b>Two's complement:</b> flip, add 1, and remember the left bit is −128. The range is −128 to 127.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Give</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Convert</td><td>The value in the new number system. Show working when marks are given.</td></tr>
+    <tr><td>Show</td><td>Working or evidence leading to the answer.</td></tr>
+    <tr><td>Describe</td><td>What happens, step by step, or the main features.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+window.Lib = { initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+const MONO = "font-family:ui-monospace,Menlo,Consolas,monospace;";
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const bin8 = (n) => n.toString(2).padStart(8, "0");
+const hex2 = (n) => n.toString(16).toUpperCase().padStart(2, "0");
+const bigTxt = (x, y, t, cls, px = 28, extra) => SV.text(x, y, t, "lbl bd " + (cls || ""), { "text-anchor": "middle", style: MONO + "font-size:" + px + "px", ...extra });
+
+/* ---------- 1. denary to binary ---------- */
+const PV = [128, 64, 32, 16, 8, 4, 2, 1], N1 = 181;
+const trace = (() => { let r = N1; return PV.map((p) => { const before = r, bit = r >= p ? 1 : 0; r -= bit * p; return { p, before, bit, after: r }; }); })();
+function denChart(s) {
+  const k = Math.round(s.k);
+  let o = SV.text(380, 28, "Convert " + N1 + " to 8-bit binary", "lbl bd", { "text-anchor": "middle" });
+  PV.forEach((p, i) => {
+    const x = 36 + i * 88, cx = x + 36, done = i < k, cur = i === k - 1;
+    o += SV.text(cx, 78, p, "lbl bd t1", { "text-anchor": "middle", style: MONO + "font-size:20px" });
+    o += SV.rect(x, 96, 72, 70, done ? (trace[i].bit ? "f3" : "f1") : "f1", { rx: 10, opacity: done ? 1 : 0.35, ...(cur ? { stroke: "var(--accent)", "stroke-width": 3 } : {}) });
+    if (done) o += bigTxt(cx, 145, trace[i].bit, trace[i].bit ? "t3" : "", 40);
+  });
+  if (k > 0) {
+    const t = trace[k - 1];
+    o += SV.text(380, 220, t.bit ? t.p + " fits into " + t.before + ": write 1, subtract" : t.p + " is bigger than " + t.before + ": write 0", "lbl bd", { "text-anchor": "middle", style: "font-size:18px" });
+    o += SV.text(380, 252, "Left to give: " + t.after, "lbl bd t2", { "text-anchor": "middle", style: "font-size:18px" });
+  } else o += SV.text(380, 236, "Left to give: " + N1, "lbl bd t2", { "text-anchor": "middle", style: "font-size:18px" });
+  if (k === 8) o += SV.text(380, 292, "128 + 32 + 16 + 4 + 1 = 181", "lbl bd t3", { "text-anchor": "middle", style: "font-size:17px" });
+  return o;
+}
+const denSteps = [{ cap: "Write the place values 128 down to 1. Start at the left with <b>" + N1 + "</b> to give out.", s: { k: 0 } }];
+trace.forEach((t, i) => denSteps.push({ cap: t.bit ? `<b>${t.p}</b> fits into ${t.before}. Write <b>1</b>, subtract: ${t.after} left.` : `<b>${t.p}</b> is too big for ${t.before}. Write <b>0</b>.`, s: { k: i + 1 } }));
+denSteps[8].cap += " The answer is <b>10110101</b>. Check: 128 + 32 + 16 + 4 + 1 = 181.";
+Lib.stepper($("#stA"), { w: 760, h: 310, label: "Converting 181 to binary one column at a time", base: { k: 0 }, tween: 500, dwell: 3200, draw: denChart, steps: denSteps });
+
+/* ---------- 2. binary addition and overflow ---------- */
+const A = "11001010", B = "01101100";
+const add = (() => { let c = 0; const r = []; for (let p = 0; p < 8; p++) { const a = +A[7 - p], b = +B[7 - p], t = a + b + c; r.push({ a, b, cin: c, t, sum: t % 2, cout: t >> 1 }); c = t >> 1; } return r; })();
+function addChart(s) {
+  const k = Math.round(s.k), X = (j) => 110 + j * 66, ov = s.ov;
+  const col = (p) => 8 - p; // column index j for bit position p
+  let o = SV.text(24, 66, "carry", "sm", { "text-anchor": "start" }) + SV.text(64, 164, "+", "lbl bd", { "text-anchor": "middle", style: "font-size:30px" });
+  for (let j = 1; j <= 8; j++) {
+    o += bigTxt(X(j), 118, A[j - 1], "") + bigTxt(X(j), 168, B[j - 1], "");
+  }
+  o += SV.line(90, 186, X(8) + 28, 186, "ax");
+  for (let p = 0; p < 8; p++) {
+    const j = col(p);
+    if (p < k) {
+      o += bigTxt(X(j), 226, add[p].sum, "t3");
+      if (add[p].cout) o += bigTxt(X(j - 1), 70, "1", "t2", 22);
+    }
+    if (p === k - 1 && ov < 0.01) o +=SV.rect(X(j) - 28, 92, 56, 150, "f1", { rx: 8 });
+  }
+  if (k >= 8) o += SV.rect(X(0) - 28, 196, 56, 42, "f2", { rx: 8, opacity: 1 }) + bigTxt(X(0), 226, add[7].cout, "t2", 28, { opacity: 1 });
+  if (ov > 0.01) {
+    o += SV.line(X(0) - 26, 232, X(0) + 26, 214, "c2", { opacity: ov });
+    o += SV.text(X(0) + 4, 262, "9th bit: lost", "lbl bd t2", { "text-anchor": "middle", opacity: ov });
+    o += SV.rect(X(1) - 30, 196, X(8) - X(1) + 60, 46, "f1", { rx: 10, opacity: ov * 0.8 });
+    o += SV.text(X(4.5), 276, "8-bit register stores 00110110 = 54, but 202 + 108 = 310", "lbl bd t2", { "text-anchor": "middle", opacity: ov, style: "font-size:15px" });
+    o += SV.text(X(4.5), 296, "OVERFLOW ERROR", "lbl bd t2", { "text-anchor": "middle", opacity: ov, style: "font-size:18px" });
+  }
+  return o;
+}
+const addSteps = [{ cap: "Add <b>11001010</b> (202) and <b>01101100</b> (108) in an 8-bit register. Start at the right-hand column.", s: { k: 0, ov: 0 } }];
+add.forEach((c, p) => addSteps.push({ cap: `Column ${p + 1}: ${c.a} + ${c.b}${c.cin ? " + carry 1" : ""} = ${c.t}. Write <b>${c.sum}</b>${c.cout ? " and carry <b>1</b> to the next column" : ""}.`, s: { k: p + 1, ov: 0 } }));
+addSteps[8].cap += " There is a carry out of the leftmost column.";
+addSteps.push({ cap: "The answer needs <b>9 bits</b>, but the register holds only 8. The ninth bit is lost and the stored answer is wrong. This is <b>overflow</b>.", s: { k: 8, ov: 1 } });
+Lib.stepper($("#stB"), { w: 760, h: 310, label: "Adding two 8-bit numbers and getting an overflow", base: { k: 0, ov: 0 }, tween: 500, dwell: 3200, draw: addChart, steps: addSteps });
+
+/* ---------- 3. two's complement ---------- */
+const P = "00101101", F = "11010010", R = "11010011";
+function tcChart(s) {
+  const X = (i) => 190 + i * 62, rows = [["45", P, 70], ["flip", F, 140], ["+ 1", R, 210]];
+  let o = "";
+  rows.forEach(([lab, bits, y], r) => {
+    const op = clamp01(s.p - r + 1);
+    if (op <= 0.01) return;
+    o += SV.text(40, y + 8, lab, "lbl bd t1", { opacity: op, "text-anchor": "start", style: "font-size:20px" });
+    [...bits].forEach((b, i) => {
+      const changed = r === 1 || (r === 2 && bits[i] !== F[i]);
+      o += SV.rect(X(i) - 26, y - 28, 52, 52, changed ? "f4" : "f1", { rx: 8, opacity: op }) + bigTxt(X(i), y + 10, b, changed ? "t4" : "", 30, { opacity: op });
+    });
+  });
+  const op3 = clamp01(s.p - 2);
+  if (op3 > 0.01) {
+    const pv = [-128, 64, 32, 16, 8, 4, 2, 1];
+    pv.forEach((v, i) => { o += SV.text(X(i), 262, v, "lbl bd " + (v < 0 ? "t2" : "t1"), { "text-anchor": "middle", opacity: op3, style: MONO + "font-size:15px" }); });
+    o += SV.text(380, 296, "−128 + 64 + 16 + 2 + 1 = −45", "lbl bd t3", { "text-anchor": "middle", opacity: op3, style: "font-size:18px" });
+  }
+  return o;
+}
+Lib.stepper($("#stC"), { w: 760, h: 310, label: "Writing minus 45 in two's complement", base: { p: 0 }, tween: 700, dwell: 4200, draw: tcChart, steps: [
+  { cap: "Start with the <b>positive</b> number, 45, in 8-bit binary: <b>00101101</b>.", s: { p: 0 } },
+  { cap: "<b>Flip every bit.</b> 0 becomes 1 and 1 becomes 0: <b>11010010</b>.", s: { p: 1 } },
+  { cap: "<b>Add 1:</b> 11010010 + 1 = <b>11010011</b>. That is −45 in 8-bit two's complement.", s: { p: 2 } },
+  { cap: "<b>Check it.</b> The left place value is <b>−128</b>. Add the columns that hold a 1: −128 + 64 + 16 + 2 + 1 = −45.", s: { p: 3 } },
+] });
+
+/* ---------- Lab 1: bit flipper ---------- */
+(() => {
+  const row = $("#bitsrow"), tc = $("#tc"), bits = [0, 1, 0, 1, 1, 0, 1, 0];
+  const btns = PV.map((p, i) => { const w = document.createElement("div"); w.className = "bit"; w.innerHTML = `<button type="button" aria-pressed="false" aria-label="Bit ${p}"></button><small></small>`; row.appendChild(w); const b = $("button", w); b.onclick = () => { bits[i] ^= 1; paint(); }; return w; });
+  function paint() {
+    const neg = tc.checked;
+    btns.forEach((w, i) => { const b = $("button", w); b.textContent = bits[i]; b.setAttribute("aria-pressed", bits[i] === 1); $("small", w).textContent = i === 0 && neg ? "−128" : PV[i]; w.classList.toggle("sign", i === 0 && neg); });
+    const u = parseInt(bits.join(""), 2), v = neg && bits[0] ? u - 256 : u;
+    $("#r1").textContent = v; $("#r2").textContent = hex2(u); $("#r3").textContent = bits.slice(0, 4).join("") + " " + bits.slice(4).join("");
+  }
+  tc.onchange = paint;
+  $("#bz").onclick = () => { bits.fill(0); paint(); }; $("#bo").onclick = () => { bits.fill(1); paint(); };
+  $("#br").onclick = () => { bits.forEach((_, i) => (bits[i] = Math.random() < 0.5 ? 1 : 0)); paint(); };
+  paint();
+})();
+
+/* ---------- Lab 2: shift machine ---------- */
+(() => {
+  let num, sh;
+  const upd = () => {
+    if (!num || !sh) return;
+    const n = num.get(), v = sh.get(), b = bin8(n), m = Math.abs(v);
+    let after = b, lost = "";
+    if (v > 0) { lost = b.slice(0, v); after = b.slice(v) + "0".repeat(v); }
+    if (v < 0) { lost = b.slice(8 - m); after = "0".repeat(m) + b.slice(0, 8 - m); }
+    const span = (c, cls = "") => `<span class="${cls}">${c}</span>`;
+    const before = [...b].map((c, i) => span(c, (v > 0 && i < v) || (v < 0 && i >= 8 - m) ? "lost" : "")).join("");
+    const aft = [...after].map((c, i) => span(c, (v > 0 && i >= 8 - v) || (v < 0 && i < m) ? "new" : "")).join("");
+    $("#shiftvis").innerHTML = `<p class="note" style="margin:6px 0 0">Before</p><div class="bitrow">${before}</div><p class="note" style="margin:6px 0 0">After</p><div class="bitrow">${aft}</div>`;
+    const a = parseInt(after, 2), exp = v >= 0 ? n * 2 ** v : n / 2 ** m;
+    $("#q1").textContent = n; $("#q2").textContent = a; $("#q3").textContent = Lib.fmtN(exp, 2);
+    const lostOne = lost.includes("1");
+    $("#qv").textContent = v === 0 ? "No shift: nothing changes." : v > 0 ? (lostOne ? `A 1 was pushed off the left end, so the answer is wrong. This is an overflow: ${n} × ${2 ** v} would need more than 8 bits.` : `No 1s were lost, so the left shift multiplied exactly: ${n} × ${2 ** v} = ${a}.`) : (lostOne ? `A 1 was pushed off the right end, so the remainder is dropped and precision is lost: ${Lib.fmtN(exp, 2)} became ${a}.` : `No 1s were lost, so the right shift divided exactly: ${n} ÷ ${2 ** m} = ${a}.`);
+  };
+  num = Lib.slider($("#s1"), { id: "sn", label: "Starting number (denary)", min: 0, max: 255, step: 1, value: 22, fmt: (v) => v + " = " + bin8(v), onInput: upd });
+  sh = Lib.slider($("#s2"), { id: "ss", label: "Logical shift", min: -4, max: 4, step: 1, value: 2, fmt: (v) => (v > 0 ? "left by " + v : v < 0 ? "right by " + -v : "none"), onInput: upd });
+  upd();
+})();
+
+/* ---------- Lab 3: hex colour mixer ---------- */
+(() => {
+  const val = { r: 30, g: 144, b: 255 }, S = {};
+  const upd = () => {
+    const h = ["r", "g", "b"].map((k) => hex2(val[k]));
+    $("#sw").style.background = `rgb(${val.r},${val.g},${val.b})`;
+    $("#cc").textContent = "#" + h.join("");
+    $("#ctab").innerHTML = `<tr><th>Channel</th><th>Denary</th><th>Hex</th><th>Binary</th></tr>` + ["r", "g", "b"].map((k, i) => `<tr><td>${{ r: "Red", g: "Green", b: "Blue" }[k]}</td><td>${val[k]}</td><td>${h[i]}</td><td style="font-family:var(--mono)">${bin8(val[k]).slice(0, 4)} ${bin8(val[k]).slice(4)}</td></tr>`).join("");
+  };
+  [["r", "Red"], ["g", "Green"], ["b", "Blue"]].forEach(([k, l]) => { S[k] = Lib.slider($("#c_" + k), { id: "cs" + k, label: l, min: 0, max: 255, step: 1, value: val[k], fmt: (v) => v + " = " + hex2(v), onInput: (v) => { val[k] = v; upd(); } }); });
+  upd();
+})();
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), { prompt: "Drag each reason to the right place. Why do computers use binary, and why do humans like hex?", buckets: [{ label: "Why computers use binary" }, { label: "Why humans use hex" }], items: [
+  { text: "Transistors have two states: on or off", b: 0 }, { text: "Circuits only need to tell two voltage levels apart", b: 0 }, { text: "Every kind of data can be stored as 1s and 0s", b: 0 }, { text: "Simple, reliable electronics", b: 0 },
+  { text: "Shorter than binary", b: 1 }, { text: "Easier to read and remember", b: 1 }, { text: "Fewer copying mistakes", b: 1 }, { text: "Each digit matches one nibble", b: 1 },
+], done: "Binary suits the machine, hex suits the person." });
+
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Nibble", "4 bits"], ["Byte", "8 bits"], ["Overflow", "A result too large for the bits available"], ["Logical left shift by 1", "Multiplies by 2"], ["Two's complement", "A way to store negative integers"], ["Most significant bit", "The leftmost bit, with the biggest place value"],
+] });
+
+Lib.order($("#o1"), { prompt: "Put the steps for writing −45 in 8-bit two's complement in the right order.", items: [
+  "Write 45 as 8-bit binary: 00101101", "Flip every bit: 11010010", "Add 1: 11010011", "Check: −128 + 64 + 16 + 2 + 1 = −45",
+], done: "Positive, flip, add 1, check." });
+
+Lib.calc($("#c1"), { qs: [
+  { q: "Convert the binary number 10110101 to denary.", a: 181, sol: "128 + 32 + 16 + 4 + 1 = 181", hint: "Place values 128 64 32 16 8 4 2 1 above the bits." },
+  { q: "Convert the denary number 77 to 8-bit binary.", t: ["01001101"], ph: "8 bits", sol: "77 = 64 + 8 + 4 + 1 → 01001101", hint: "64 fits (13 left), then 8, 4, 1." },
+  { q: "Convert the hexadecimal number 3F to denary.", a: 63, sol: "3 × 16 + 15 = 63", hint: "F = 15." },
+  { q: "Convert the binary number 11010110 to hexadecimal.", t: ["D6"], ph: "hex", sol: "1101 = D, 0110 = 6 → D6", hint: "Split into two nibbles." },
+  { q: "Convert the hexadecimal number A9 to 8-bit binary.", t: ["10101001"], ph: "8 bits", sol: "A = 1010, 9 = 1001 → 10101001", hint: "One nibble per hex digit." },
+  { q: "What is the largest denary value that can be stored in 8 bits (no negatives)?", a: 255, sol: "2⁸ − 1 = 255 (all eight bits are 1)." },
+  { q: "Add 00101101 and 00011011 (8-bit). Give the answer in binary.", t: ["01001000"], ph: "8 bits", sol: "45 + 27 = 72 = 01001000. Work right to left and carry.", hint: "Rows of carries, right to left." },
+  { q: "A register holds 00001101 (13). It is shifted left 3 places. What is the new denary value?", a: 104, sol: "13 × 2³ = 104 → 01101000. No 1s are lost.", hint: "Each left shift doubles." },
+  { q: "What denary value is the 8-bit two's complement number 11111010?", a: -6, sol: "Flip: 00000101. Add 1: 00000110 = 6. So −6. (Or −128 + 64 + 32 + 16 + 8 + 2 = −6.)", hint: "Left bit is −128." },
+] });
+
+(() => {
+  const el = $("#drill"), modes = [["d2b", "denary → 8-bit binary"], ["b2d", "8-bit binary → denary"], ["d2h", "denary → hex"], ["h2d", "hex → denary"], ["b2h", "binary → hex"], ["h2b", "hex → binary"]];
+  el.innerHTML = `<label>Practise: <select>${modes.map(([v, t]) => `<option value="${v}">${t}</option>`).join("")}</select></label>
+    <div class="qline" aria-live="polite"></div>
+    <div class="row"><input type="text" autocomplete="off" autocapitalize="off" aria-label="Your answer"><button class="b pri" data-a="c">Check</button><button class="b" data-a="s">Show answer</button><button class="b" data-a="n">New question</button><span class="fb" aria-live="polite"></span></div>
+    <p class="note" data-s></p>`;
+  const sel = $("select", el), ql = $(".qline", el), inp = $("input", el), fb = $(".fb", el), st = $("[data-s]", el);
+  let ans = "", streak = 0, best = 0, solved = false;
+  const nib = (s) => s.slice(0, 4) + " " + s.slice(4);
+  function gen() {
+    const m = sel.value, n = 1 + Math.floor(Math.random() * 254); solved = false;
+    const q = { d2b: [n + " in binary", bin8(n)], b2d: [nib(bin8(n)) + " in denary", String(n)], d2h: [n + " in hex", hex2(n)], h2d: [hex2(n) + " (hex) in denary", String(n)], b2h: [nib(bin8(n)) + " in hex", hex2(n)], h2b: [hex2(n) + " (hex) in 8-bit binary", bin8(n)] }[m];
+    ql.textContent = q[0]; ans = q[1]; inp.value = ""; fb.textContent = ""; fb.className = "fb"; inp.focus({ preventScroll: true });
+  }
+  const check = () => {
+    const v = inp.value.replace(/\s/g, "").toUpperCase(), good = v === ans;
+    if (!solved) { streak = good ? streak + 1 : 0; best = Math.max(best, streak); }
+    if (good) solved = true;
+    fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); st.textContent = `Streak ${streak} · best ${best}`;
+  };
+  $("[data-a=c]", el).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && (solved ? gen() : check()));
+  $("[data-a=n]", el).onclick = gen; sel.onchange = () => { streak = 0; st.textContent = ""; gen(); };
+  $("[data-a=s]", el).onclick = () => { streak = 0; solved = true; fb.textContent = "Answer: " + (/^[01]{8}$/.test(ans) ? nib(ans) : ans); fb.className = "fb"; st.textContent = "Streak 0 · best " + best; };
+  gen(); inp.blur();
+})();
+
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Why do computers store all data in binary?", opts: ["Binary is easier for humans to read", "Transistors have two states, on and off", "Binary uses less memory than denary", "Hexadecimal cannot be stored"], a: 1, why: "Digital circuits are built from switches that are on or off, so two digits map directly onto the hardware." },
+  { q: "What is the hexadecimal value of binary 11111111?", opts: ["EE", "FF", "FE", "99"], a: 1, why: "1111 is F, so 11111111 is FF (255)." },
+  { q: "00000101 is shifted left by 3 places. What is the result in denary?", opts: ["8", "15", "40", "20"], a: 2, why: "Each left shift doubles: 5 × 2³ = 40 (00101000)." },
+  { q: "What range of values can 8-bit two's complement store?", opts: ["0 to 255", "−127 to +127", "−128 to +127", "−255 to +255"], a: 2, why: "The left bit is worth −128. All 0s with the rest 1s gives +127, and 10000000 is −128." },
+  { q: "When does an overflow error occur?", opts: ["When a result needs more bits than the register can hold", "When a number is negative", "When a hex digit is a letter", "When a shift is to the right"], a: 0, why: "The carry out of the leftmost bit is lost, so the stored value is wrong." },
+  { q: "How many bits does one hexadecimal digit represent?", opts: ["2", "4", "8", "16"], a: 1, why: "16 values need 4 bits: 2⁴ = 16. One hex digit equals one nibble." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Bit", "A single binary digit, 0 or 1."], ["Nibble", "A group of 4 bits. One hex digit."], ["Byte", "A group of 8 bits. Holds 0 to 255."],
+  ["Denary", "Base 10, the number system humans normally use."], ["Binary", "Base 2. Uses only 0 and 1."], ["Hexadecimal", "Base 16. Digits 0 to 9 and A to F."],
+  ["Overflow", "A result too big for the number of bits available, so the extra bit is lost and the answer is wrong."], ["Logical shift", "Moving all bits left or right; empty places fill with 0 and bits shifted off the end are lost."],
+  ["Two's complement", "A method of storing negative integers. The left bit has a place value of −128 (in 8 bits)."], ["Most significant bit", "The leftmost bit. It has the largest place value."],
+] });
+
+Lib.initTabs();
+</script>
+</body></html>

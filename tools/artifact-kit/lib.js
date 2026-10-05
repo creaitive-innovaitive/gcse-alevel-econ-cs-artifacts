@@ -147,10 +147,10 @@ function quiz(el, o) {
 function calc(el, o) {
   el.classList.add("calc");
   el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
-    <div class="row"><input type="text" inputmode="decimal" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
     <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
   $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
-    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
     $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
     $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
     $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });

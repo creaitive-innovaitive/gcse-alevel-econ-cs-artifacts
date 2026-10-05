@@ -248,6 +248,12 @@ ARTIFACTS = [
      "places": [("investing", "all")]},
 
     # IGCSE Computer Science
+    {"src": "number-systems", "role": "review", "at": "1.1", "title": "Number Systems", "kind": "Interactive",
+     "desc": "1.1 Binary, denary and hex conversions, addition and overflow, logical shifts, two's complement, labs and exam questions.",
+     "places": [("ig-cs", "ch-01")]},
+    {"src": "text-sound-and-images", "role": "review", "at": "1.2", "title": "Text, Sound and Images", "kind": "Interactive",
+     "desc": "1.2 ASCII and Unicode, sampling, pixels and colour depth, file size calculations, labs and exam questions.",
+     "places": [("ig-cs", "ch-01")]},
     {"src": "igcse-compression-lab", "title": "IGCSE Compression Lab", "kind": "Interactive",
      "desc": "Run-length encoding step by step, RLE on a bitmap, encode and decode tasks, lossy sliders and real-world examples.",
      "places": [("ig-cs", "ch-01")]},

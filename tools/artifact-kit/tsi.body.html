@@ -1,0 +1,222 @@
+<style>
+.txin{font:600 1.1rem var(--mono);padding:9px 12px;border-radius:9px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,420px)}
+.drill input{font:700 1.1rem var(--mono);padding:8px 12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,280px)}
+.drill .qline{font-size:1.1rem;font-weight:600;margin:8px 0}
+.drill select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+#cv{width:100%;max-width:400px;aspect-ratio:1;image-rendering:pixelated;border-radius:10px;border:1px solid var(--line);display:block}
+.flag{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--bad-soft);color:var(--bad)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 1 · 1.2</div>
+  <h1>Text, Sound and Images</h1>
+  <p class="lead">How characters, sound waves and pictures become binary: character sets, sampling, pixels and colour depth, and how each choice changes quality and file size.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A computer can only store binary, so every letter, sound and picture has to be turned into numbers first and then into 1s and 0s. Text uses a <span class="kw">character set</span>. Sound is <span class="kw">sampled</span>. Images are broken into <span class="kw">pixels</span>. In each case, more bits mean more accuracy and bigger files.</p>
+  </div>
+
+  <h2>Text</h2>
+  <p>A <span class="kw">character set</span> is every character a computer system can recognise, each with its own unique binary code. When you press a key, its code is stored.</p>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>ASCII</th><th>Extended ASCII</th><th>Unicode</th></tr>
+    <tr><td>Bits per character</td><td>7</td><td>8</td><td>Up to 32 (UTF-8 uses 8 to 32)</td></tr>
+    <tr><td>Number of characters</td><td>128</td><td>256</td><td>Over 140,000</td></tr>
+    <tr><td>Covers</td><td>English letters, digits, punctuation, control codes</td><td>Adds accented letters and symbols</td><td>Almost every language, symbols, emoji</td></tr>
+    <tr><td>File size</td><td>Smallest</td><td>Small</td><td>Bigger per character</td></tr>
+  </table></div>
+  <p><b>Why Unicode?</b> ASCII cannot represent Chinese, Arabic, Hindi or emoji. Unicode has enough codes for all of them, so text can be shared worldwide. The price is more bits per character, so larger files. The first 128 Unicode codes match ASCII.</p>
+  <div class="card"><h3>Codes run in order</h3>
+    <p>Letters are numbered in sequence, so if you know one code you can work out the rest.</p>
+    <div class="tw"><table class="t"><tr><th>Character</th><th>Space</th><th>0</th><th>A</th><th>B</th><th>a</th><th>b</th></tr><tr><td>ASCII code</td><td>32</td><td>48</td><td>65</td><td>66</td><td>97</td><td>98</td></tr></table></div>
+    <p>If G is 71, then K is 71 + 4 = 75. A lowercase letter is its uppercase code + 32.</p></div>
+
+  <h2>Sound</h2>
+  <p>Real sound is an <b>analogue</b> wave: it can take any value. A computer needs <b>digital</b> values, so the wave is <span class="kw">sampled</span>: its height (amplitude) is measured at regular intervals and each measurement is stored as a binary number.</p>
+  <div class="grid2">
+    <div class="card"><h3>Sample rate</h3><p>The number of samples taken <b>per second</b>, measured in hertz (Hz). 44,100 Hz means 44,100 samples every second.</p><p>Higher: <b>closer to the original</b>, but a larger file.</p></div>
+    <div class="card"><h3>Sample resolution</h3><p>The <b>number of bits</b> used to store each sample (also called bit depth). More bits means more possible heights, so each sample is measured more precisely.</p><p>Higher: <b>more accurate</b>, but a larger file.</p></div>
+  </div>
+  <div class="card big"><h3>Sound file size</h3>
+    <div class="formula">file size (bits) = sample rate × sample resolution × length in seconds</div>
+    <p>Divide by 8 for bytes. Example: 44,100 Hz × 16 bits × 10 s = 7,056,000 bits = 882,000 bytes.</p></div>
+
+  <h2>Images</h2>
+  <p>A bitmap image is a grid of tiny squares called <span class="kw">pixels</span>. Each pixel stores one binary number that says which colour it is.</p>
+  <div class="grid2">
+    <div class="card"><h3>Resolution</h3><p>The number of pixels, width × height. A 100 × 50 image has 5,000 pixels.</p><p>Higher: <b>sharper, more detail</b>, bigger file.</p></div>
+    <div class="card"><h3>Colour depth</h3><p>The number of <b>bits per pixel</b>. n bits gives 2ⁿ colours.</p><p>Higher: <b>more colours, smoother shading</b>, bigger file.</p></div>
+  </div>
+  <div class="tw"><table class="t">
+    <tr><th>Colour depth</th><th>1 bit</th><th>2 bits</th><th>4 bits</th><th>8 bits</th><th>24 bits</th></tr>
+    <tr><td>Colours</td><td>2</td><td>4</td><td>16</td><td>256</td><td>16,777,216</td></tr>
+  </table></div>
+  <div class="card big"><h3>Image file size</h3>
+    <div class="formula">file size (bits) = width × height × colour depth</div>
+    <p>Example: 64 × 32 pixels at 4 bits = 2,048 × 4 = 8,192 bits = 1,024 bytes.</p></div>
+  <p>The file also holds <span class="kw">metadata</span>, such as the width, height and colour depth, so the software knows how to rebuild the picture. File size sums in exam questions usually ignore the metadata unless told otherwise.</p>
+  <div class="warn"><b class="h">Not the same thing</b>Resolution is how many pixels. Colour depth is how many bits <i>each</i> pixel uses. Sample rate is how often; sample resolution is how precisely. Keep the pairs apart.</div>
+  <p class="note">Making these files smaller is covered in 1.3 (compression), with its own lab.</p>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · From keypress to binary: "Hi!"</h2><div id="stA"></div>
+  <h2>2 · Sampling a sound wave</h2><div id="stB"></div>
+  <h2>3 · An image is a grid of numbers</h2><div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Text encoder</h2>
+  <p>Type anything. See each character's code and how many bits it needs in each system. Try an accented letter or an emoji.</p>
+  <div class="card"><input class="txin" id="txt" type="text" value="Hello, Léa 😀" aria-label="Text to encode" maxlength="24">
+    <div class="tw"><table class="t" id="ttab"></table></div>
+    <div class="readout"><div><small>ASCII (7-bit)</small><strong id="tz1"></strong></div><div><small>Extended ASCII (8-bit)</small><strong id="tz2"></strong></div><div><small>Unicode (32-bit)</small><strong id="tz3"></strong></div></div>
+    <div class="verdict" id="tv"></div></div>
+
+  <h2>Lab 2 · Sampling lab</h2>
+  <p>The grey curve is the real sound. The green steps are what the computer stores. Raise the sample rate and the resolution to close the gap.</p>
+  <div class="card"><div class="grid2"><div><div id="w1"></div><div id="w2"></div>
+    <div class="readout"><div><small>Samples shown</small><strong id="wa"></strong></div><div><small>Levels (2ⁿ)</small><strong id="wb"></strong></div><div><small>Bits in snippet</small><strong id="wc"></strong></div></div><div class="verdict" id="wv"></div></div>
+    <div><svg id="wave" viewBox="0 0 560 320" role="img" aria-label="A sound wave and its sampled version"></svg></div></div></div>
+
+  <h2>Lab 3 · Sound file size calculator</h2>
+  <div class="card"><div class="grid2"><div><div id="k1"></div><div id="k2"></div><div id="k3"></div></div>
+    <div><div class="readout"><div><small>Bits</small><strong id="ka"></strong></div><div><small>Bytes</small><strong id="kb"></strong></div><div><small>Megabytes</small><strong id="kc"></strong></div></div><div class="verdict" id="kv"></div></div></div></div>
+
+  <h2>Lab 4 · Resolution and colour depth</h2>
+  <p>The same picture, stored two ways. Lower the resolution and it goes blocky. Lower the colour depth and the shading turns into bands.</p>
+  <div class="card"><div class="grid2"><div><canvas id="cv" width="64" height="64" role="img" aria-label="A sunset picture at the chosen resolution and colour depth"></canvas></div>
+    <div><div id="i1"></div><div id="i2"></div>
+    <div class="readout"><div><small>Pixels</small><strong id="ia"></strong></div><div><small>Colours</small><strong id="ib"></strong></div><div><small>File size</small><strong id="ic"></strong></div></div><div class="verdict" id="iv"></div></div></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · ASCII or Unicode?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Turning sound into a file</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Calculations</h2>
+  <p class="note">Give answers as plain numbers, no units or commas needed. For binary answers, no spaces.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Endless file-size drill</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Check current figures before quoting numbers.</p>
+  <div class="rw"><h3>Emoji and Unicode</h3><p>Every emoji has its own Unicode code, which is why a message can show 😀 on any phone. Most websites use the Unicode encoding UTF-8, so one page can mix English, Arabic and Chinese.</p><div class="use"><b>Exam use:</b> the reason ASCII is not enough for global communication, and why Unicode files are bigger.</div></div>
+  <div class="rw"><h3>Phone calls versus CDs</h3><p>Traditional phone lines sample speech at about 8,000 Hz, enough to understand a voice but dull for music. An audio CD samples at 44,100 Hz with 16 bits per sample. Studio recordings often use 96,000 Hz and 24 bits.</p><div class="use"><b>Exam use:</b> an example of a trade-off. Lower sample rate and resolution give smaller files and poorer quality, higher give better quality and larger files.</div></div>
+  <div class="rw"><h3>Streaming quality settings</h3><p>Music and video apps let you choose "data saver" or "high quality". Higher quality uses more data per second, so it needs a faster connection and costs more of a mobile data allowance.</p><div class="use"><b>Exam use:</b> connects file size to download time and storage.</div></div>
+  <div class="rw"><h3>Camera megapixels</h3><p>A 12-megapixel camera captures roughly 12 million pixels per photo. More pixels allow bigger prints and more zoom before the picture turns blocky, but every photo takes more storage.</p><div class="use"><b>Exam use:</b> a real figure for resolution. Use it to explain why higher resolution means bigger files.</div></div>
+  <div class="rw"><h3>GIFs, photos and QR codes</h3><p>A GIF can show up to 256 colours (8 bits per pixel). A normal photo uses 24 bits per pixel, about 16.7 million colours. A QR code or a black-and-white fax uses only 1 bit per pixel.</p><div class="use"><b>Exam use:</b> shows how colour depth is chosen to match the content: only as many bits as needed.</div></div>
+  <div class="rw"><h3>Photo metadata</h3><p>Besides the pixels, a phone photo stores metadata such as its dimensions, colour depth, the date, and often the camera model and location.</p><div class="use"><b>Exam use:</b> an example of metadata. Software needs the width, height and colour depth to rebuild the picture from the bits.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each underlined phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">State</span> <span class="mark">2 marks</span> What is meant by a character set?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two points: all the characters a system can recognise, and a unique binary code for each.</div>
+    <div class="ans"><span class="mk k" data-t="1">A character set is all of the characters that a computer system can recognise and use</span> <span class="mk k" data-t="2">where each character is given a unique binary code.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Naming ASCII without defining what a character set is. ASCII is an example, not the definition.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Unicode needs more storage per character than ASCII. Explain why Unicode is still used.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two uses of Unicode, and the link to the number of codes available.</div>
+    <div class="ans"><span class="mk k" data-t="1">Unicode uses more bits per character (up to 32), so it has many more codes available (over 140,000).</span> <span class="mk k" data-t="2">This lets it represent characters from almost every language, as well as symbols and emoji, which ASCII cannot.</span> <span class="mk k" data-t="3">Text can therefore be shared and displayed correctly across different countries and devices.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "Unicode is better" without a reason. Always link more bits → more characters → more languages.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Give</span> <span class="mark">2 marks</span> The ASCII code for G is 71. Give the 8-bit binary code for K.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>G, H, I, J, K: count along. Then convert to binary.</div>
+    <div class="ans"><span class="mk k" data-t="1">K is four letters after G, so 71 + 4 = 75</span> <span class="mk k" data-t="2">75 = 01001011</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing 7 bits, or counting from G as 1 and getting 74.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a sound is converted into a digital sound file.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Put the steps in order: analogue wave, sampling at intervals, measure each sample, store as binary.</div>
+    <div class="ans"><span class="mk k" data-t="1">The sound wave is analogue, and it is sampled by measuring its amplitude (height).</span> <span class="mk k" data-t="2">The measurements are taken at regular time intervals, a set number of times per second (the sample rate).</span> <span class="mk k" data-t="3">Each measurement is rounded to the nearest value that can be stored, using a set number of bits (the sample resolution).</span> <span class="mk k" data-t="4">Each sample is stored as a binary number, and the sequence of binary values makes up the file.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the wave is "converted to binary" in one step with no mention of sampling or intervals.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Describe</span> <span class="mark">3 marks</span> The sample rate of a recording is increased. Describe the effect on the sound quality and the file size.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Quality and file size both need a statement. Say why.</div>
+    <div class="ans"><span class="mk k" data-t="1">More samples are taken each second, so the digital sound is closer to the original wave.</span> <span class="mk k" data-t="2">The quality is therefore higher (more accurate).</span> <span class="mk k" data-t="3">More samples are stored, so the file size increases.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Mixing up sample rate and sample resolution. Rate is how often; resolution is how many bits per sample.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Calculate</span> <span class="mark">3 marks</span> A bitmap image is 100 pixels wide and 50 pixels high. Each pixel uses 8 bits. Calculate the file size in bytes. Ignore metadata.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Pixels × bits per pixel gives bits. Divide by 8 for bytes.</div>
+    <div class="ans"><span class="mk k" data-t="1">100 × 50 = 5,000 pixels</span> <span class="mk k" data-t="2">5,000 × 8 = 40,000 bits</span> <span class="mk k" data-t="3">40,000 ÷ 8 = 5,000 bytes</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Stopping at 40,000, which is in bits. The question asks for bytes.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Explain how a bitmap image is stored in a file, and why the file needs metadata.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Pixels, a binary value for each, and then what the metadata contains and what it is for.</div>
+    <div class="ans"><span class="mk k" data-t="1">The image is divided into a grid of pixels.</span> <span class="mk k" data-t="2">Each pixel is stored as a binary number that represents its colour, using the colour depth (bits per pixel).</span> <span class="mk k" data-t="3">The file holds metadata, such as the width, height and colour depth of the image,</span> <span class="mk k" data-t="4">so the software knows how to split the stream of bits back into pixels and rebuild the picture correctly.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Describing metadata as "the image data". Metadata is data about the image.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Explain</span> <span class="mark">4 marks</span> A music app offers two options: 44,100 Hz with 16-bit samples, or 8,000 Hz with 8-bit samples. Explain the benefits of each.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two benefits for each option, using rate and resolution.</div>
+    <div class="ans"><span class="mk k" data-t="1">44,100 Hz takes many more samples per second, so the sound is closer to the original.</span> <span class="mk k" data-t="2">16 bits per sample allows more levels, so each sample is more accurate.</span> <span class="mk k" data-t="3">The 8,000 Hz, 8-bit option has far fewer bits per second, so the file is much smaller.</span> <span class="mk k" data-t="4">It uses less storage and downloads or streams faster, though with lower quality.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Only describing one option. "Benefits of each" needs a point for both.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Define before you name.</b> A character set is all the characters a system can use, each with a unique code. ASCII and Unicode are examples.</li>
+    <li><b>Unicode answers need the chain:</b> more bits, more codes, more languages and symbols, bigger files.</li>
+    <li><b>Use the order of the codes.</b> Count along from the code you are given.</li>
+    <li><b>Sound: two settings.</b> Sample rate is how often, sample resolution is how many bits each. Both raise quality and file size.</li>
+    <li><b>Images: two settings.</b> Resolution is how many pixels, colour depth is how many bits each.</li>
+    <li><b>File sizes:</b> multiply everything, then ÷ 8 for bytes. Say "bits" or "bytes" in your answer.</li>
+    <li><b>Show each step of a calculation.</b> You can earn marks even if the final answer slips.</li>
+    <li><b>Metadata is data about the file</b> (width, height, colour depth), not the picture itself.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Give</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Calculate</td><td>Working and a final answer with units.</td></tr>
+    <tr><td>Describe</td><td>What happens, step by step, or the main features.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
