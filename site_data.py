@@ -303,7 +303,7 @@ ARTIFACTS = [
 
     # A-Level Economics
     {"src": "as-resit-exam-technique", "title": "AS Resit Exam Technique Pack", "kind": "Exam pack",
-     "desc": "Eight printable resources for Paper 2: command words, scope, evaluation, application and 12-mark structure.",
+     "desc": "Nine printable resources for Paper 2: command words, scope, evaluation, application, and 8- and 12-mark structure.",
      "places": [("a-econ", "as/exam-technique")]},
     {"src": "a-level-paper4-essay", "title": "Paper 4: The 20-Mark Essay", "kind": "Interactive", "at": "54",
      "desc": "How to earn application, analysis and evaluation marks: mark scheme decoded, examiner patterns, activities, four model essays and 76 past questions from 2023 to 2026.",
