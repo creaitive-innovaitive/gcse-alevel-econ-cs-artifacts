@@ -320,7 +320,7 @@ ARTIFACTS = [
     {"src": "a-level-paper4-essay", "title": "Paper 4: The 20-Mark Essay", "kind": "Interactive", "at": "54",
      "desc": "How to earn application, analysis and evaluation marks: mark scheme decoded, examiner patterns, activities, four model essays and 76 past questions from 2023 to 2026.",
      "places": [("a-econ", "a-level/ch-54")]},
-    {"src": "a-level-bop-policies", "title": "Policies to Correct Balance of Payments Disequilibrium", "kind": "Interactive", "at": "48",
+    {"src": "a-level-bop-policies", "role": "review", "title": "Policies to Correct Balance of Payments Disequilibrium", "kind": "Interactive", "at": "48",
      "desc": "The BoP accounts, five policy families, expenditure-switching versus reducing, with animated diagrams, labs, calculations and 20-mark exam practice.",
      "places": [("a-econ", "a-level/ch-48")]},
     {"src": "giffen-paradox", "title": "The Giffen Paradox", "kind": "Interactive",
