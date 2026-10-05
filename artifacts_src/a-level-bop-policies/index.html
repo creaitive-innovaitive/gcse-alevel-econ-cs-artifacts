@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Policies to Correct Disequilibrium in the Balance of Payments</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .arr{fill:var(--muted)}
+svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+table.mx td,table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+table.mx td.z{color:var(--muted);opacity:.6} table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+table.mx td.ls{text-align:left}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Economics · 9708 · Chapter 48</div>
+  <h1>Policies to Correct Disequilibrium in the Balance of Payments</h1>
+  <p class="lead">The accounts that must add up to zero, the five policy families a government can use, and the difference between switching spending and reducing it. Includes the costs and limits of each.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>The <span class="kw">balance of payments</span> records all transactions between a country's residents and the rest of the world. Because every credit has a matching debit, the accounts <b>add up to zero</b>. But the <b>individual accounts</b> rarely balance: a deficit on the current account is matched by a surplus on the financial and capital accounts. A <span class="kw">disequilibrium</span> means one account, usually the current account, is persistently out of line. Governments then choose between <b>expenditure-switching</b> and <b>expenditure-reducing</b> policies to correct it.</p>
+  </div>
+
+  <h2>1 · The components of the balance of payments</h2>
+  <div class="grid2">
+    <div class="card"><h3>Current account</h3><p>Trade in goods, trade in services, primary income and secondary income (Chapter 27). The account most exam questions on policy focus on.</p></div>
+    <div class="card"><h3>Financial account</h3><p>Movements of funds into and out of the country: direct investment, portfolio investment, other investment and reserve assets. For some countries it is the biggest part of the balance of payments.</p></div>
+    <div class="card"><h3>Capital account</h3><p>Usually small. Non-produced, non-financial assets: debt forgiveness, money brought in or taken out by migrants, sales and purchases of copyrights, patents, trademarks and mineral rights.</p></div>
+    <div class="card"><h3>Net errors and omissions</h3><p>The balancing item. Mistakes and missing transactions mean the other accounts do not quite sum to zero, so a figure is added to make the total zero. It usually shrinks as data improves.</p></div>
+  </div>
+  <div class="formula">Current account + capital account + financial account + net errors and omissions = 0<br>If the first three add up to −$2,000m, net errors and omissions = +$2,000m</div>
+
+  <h3>The four parts of the financial account</h3>
+  <div class="tw"><table class="t">
+    <tr><th>Part</th><th>What it covers</th><th>Example</th></tr>
+    <tr><td>Direct investment</td><td>Building a factory abroad or taking over a firm abroad. Multinationals setting up in the home country are an inflow.</td><td>A car maker opens a plant in Vietnam</td></tr>
+    <tr><td>Portfolio investment</td><td>Buying and selling shares and government bonds <b>without</b> legal control of the firm.</td><td>A pension fund buys foreign government bonds</td></tr>
+    <tr><td>Other investment</td><td>Shorter-term flows: bank deposits, bank loans, inter-government loans.</td><td>A bank lends to a firm overseas</td></tr>
+    <tr><td>Reserve assets</td><td>Central bank holdings of gold, foreign exchange, SDRs and the IMF reserve position. Used to settle debts and influence the exchange rate.</td><td>The central bank sells dollars to support the currency</td></tr>
+  </table></div>
+  <div class="warn"><b class="h">Do not mix these up</b>The <b>investment</b> goes in the financial account. The <b>income that investment earns</b> (profits, interest, dividends) goes in the primary income part of the <b>current</b> account.</div>
+
+  <h3>Financial account deficit or surplus: good or bad?</h3>
+  <div class="grid2">
+    <div class="card"><h3>A financial account surplus</h3><ul><li>Can <b>finance a current account deficit</b>.</li><li>May create jobs and raise growth as foreign firms and investors enter.</li><li>In the long run, <b>profits, interest and dividends flow out</b>, which can push the primary income balance into deficit.</li></ul></div>
+    <div class="card"><h3>A financial account deficit</h3><ul><li>Not necessarily a problem: it brings <b>future inflows</b> of investment income.</li><li>May be short term, such as <b>hot money</b> chasing higher interest rates elsewhere.</li><li>A real concern if it reflects <b>lost confidence</b> and <b>capital flight</b>, which cuts tax revenue, jobs and growth, and may cause the currency to depreciate.</li></ul></div>
+  </div>
+
+  <h2>2 · Five policy families</h2>
+  <p>A government and its central bank can use these to influence the balance of payments. Most questions concentrate on a <b>current account deficit</b>.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Policy</th><th>How it could help</th><th>Type</th><th>Costs and limits</th></tr>
+    <tr><td><b>Fiscal</b> (contractionary: higher taxes, lower government spending)</td><td>Lower disposable income and aggregate demand, so spending on imports falls; firms may look for export sales to replace lost home sales.</td><td>Expenditure-<b>reducing</b></td><td>Slower growth, higher unemployment; hits spending on home goods too; may take time to work.</td></tr>
+    <tr><td><b>Monetary</b> (higher interest rates, tighter credit)</td><td>Dearer borrowing cuts consumption and investment, so imports fall. May also attract hot money, raising the exchange rate.</td><td>Expenditure-<b>reducing</b></td><td>Effect on trade is <b>uncertain</b>: a higher exchange rate makes exports dearer and imports cheaper, working against the aim.</td></tr>
+    <tr><td><b>Supply-side</b> (education, training, infrastructure, technology, trade union reform)</td><td>Raises productivity and lowers costs, so exports become more competitive and imports are replaced by home output. Also attracts foreign direct investment.</td><td>Expenditure-<b>switching</b></td><td>Slow, costly and uncertain. Only used for a deficit, not a surplus.</td></tr>
+    <tr><td><b>Protectionist</b> (tariffs, quotas, subsidies, embargoes)</td><td>Raises the price of imports or limits their quantity, so buyers switch to home-produced goods.</td><td>Expenditure-<b>switching</b></td><td>Works best if good home substitutes exist. Retaliation, higher prices, less efficiency, WTO rules.</td></tr>
+    <tr><td><b>Exchange rate</b> (devaluation or a lower exchange rate)</td><td>Cuts export prices abroad and raises import prices at home, switching demand to home goods. Letting an overvalued rate rise to its market level can also correct a deficit.</td><td>Expenditure-<b>switching</b></td><td>Often only short-term; depends on price elasticities; imported inflation (Chapter 49).</td></tr>
+  </table></div>
+  <div class="tip"><b class="h">Surplus or deficit?</b>Fiscal, monetary and exchange rate policy can be used against <b>either</b> a deficit or a surplus (use the opposite tool). Supply-side and protectionist policy are normally used only to reduce a <b>deficit</b>.</div>
+
+  <h2>3 · Expenditure-switching versus expenditure-reducing</h2>
+  <div class="grid2">
+    <div class="card"><h3>Expenditure-switching</h3><p>Any action designed to persuade buyers, at home and abroad, to buy <b>more of this country's goods and less of other countries'</b>. It does not aim to cut total spending, only to <b>redirect</b> it. Intended effect: import expenditure falls, export earnings rise.</p><p class="note">Typical tools: tariffs, quotas, subsidies, a lower exchange rate, supply-side policy.</p></div>
+    <div class="card"><h3>Expenditure-reducing</h3><p>Any action designed to <b>reduce total spending</b> in the economy. Spending on imports falls, and domestic firms that lose home sales may try harder to export.</p><p class="note">Typical tools: contractionary fiscal policy (tax up, spending down) and contractionary monetary policy (interest rates up, credit limits).</p></div>
+  </div>
+  <div class="tip"><b class="h">The test</b>Ask: what does this do to <b>total spending</b>? If total spending stays the same but moves from imports to home goods, it is switching. If total spending falls, it is reducing. A limit on bank lending is reducing, even though it sounds like a trade policy.</div>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Expenditure-switching</th><th>Expenditure-reducing</th></tr>
+    <tr><td>Total spending</td><td>Unchanged (redirected)</td><td>Falls</td></tr>
+    <tr><td>Likely effect on employment</td><td>May <b>rise</b> as exports and home production grow</td><td>May <b>fall</b>; growth slows</td></tr>
+    <tr><td>Likely effect on inflation</td><td>May <b>rise</b> (dearer imports)</td><td>May <b>fall</b></td></tr>
+    <tr><td>Main risks</td><td>Retaliation, higher prices, inefficiency, elasticity limits</td><td>Recession, unemployment, lower living standards</td></tr>
+    <tr><td>Equity issue</td><td>Can raise inequality if it increases unemployment elsewhere</td><td>Unemployment and lower incomes often fall hardest on poorer households</td></tr>
+  </table></div>
+
+  <h2>4 · Evaluating policy to correct a deficit</h2>
+  <ul>
+    <li><b>Cause of the deficit.</b> A <b>cyclical</b> deficit from a boom may self-correct and needs no harsh policy. A <b>structural</b> deficit from low competitiveness needs supply-side measures.</li>
+    <li><b>Internal against external economy.</b> Fixing the balance of payments may harm growth, employment or inflation. Always mention both.</li>
+    <li><b>Time lags and elasticities.</b> Exchange rate and tariff effects depend on how responsive demand is, and on how quickly.</li>
+    <li><b>Retaliation.</b> Other countries may impose their own barriers or devalue, cancelling the gain.</li>
+    <li><b>Conflict between objectives.</b> Cutting spending reduces inflation and imports but raises unemployment. Lowering income tax to cut unemployment may suck in imports.</li>
+    <li><b>Size and state of the economy.</b> Raising interest rates in an economy with high inflation and a positive output gap has a limited effect on unemployment.</li>
+    <li><b>Combining policies.</b> Demand-side restraint with supply-side improvement can reduce the deficit and later help unemployment.</li>
+  </ul>
+  <p class="note">Exchange rates, the Marshall–Lerner condition and the J curve are covered in Chapter 49.</p>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <h2>1 · The accounts must add up to zero</h2>
+  <p>A country with a current account deficit has to be paid for somehow.</p>
+  <div id="stA"></div>
+  <h2>2 · Switching or reducing spending?</h2>
+  <p>Compare the effect of each policy type on <b>total</b> spending.</p>
+  <div id="stB"></div>
+  <h2>3 · Exchange rate policy</h2>
+  <p>How a central bank can push the exchange rate down to make exports cheaper.</p>
+  <div id="stC"></div>
+  <h2>4 · The chain of effects of contractionary policy</h2>
+  <div id="stD"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Make the balance of payments balance</h2>
+  <p>Figures in $ billion. Set the current account and the capital and financial accounts, and see the net errors and omissions needed to bring the total to zero.</p>
+  <div class="card"><div class="grid2"><div><div id="g1"></div><div id="g2"></div><div id="g3"></div><div id="g4"></div><div id="g5"></div><div id="g6"></div></div>
+    <div><div class="readout"><div><small>Current account</small><strong id="k1"></strong></div><div><small>Capital + financial</small><strong id="k2"></strong></div><div><small>Net errors and omissions</small><strong id="k3"></strong></div></div>
+    <div class="verdict" id="kv"></div></div></div>
+    <svg id="labK" viewBox="0 0 760 330" role="img" aria-label="Waterfall of the balance of payments accounts"></svg></div>
+
+  <h2>Lab 2 · Which policy does what?</h2>
+  <p>Pick a policy a government might use to cut a current account deficit and see its likely effects. Arrows show the usual direction in the short run.</p>
+  <div class="card"><div class="row" id="pbtn"></div>
+    <div class="tw"><table class="t" id="ptab"><tr><th>Imports</th><th>Exports</th><th>Total spending</th><th>Unemployment</th><th>Inflation</th><th>Type</th></tr><tr><td colspan="6">Choose a policy.</td></tr></table></div>
+    <div class="verdict" id="pv">Choose a policy.</div></div>
+
+  <h2>Lab 3 · Can cutting spending close a deficit?</h2>
+  <p>Illustrative model. GDP is 1,000 and the deficit starts at 40 (4% of GDP). A contractionary policy lowers national income; imports fall by the marginal propensity to import times the fall in income.</p>
+  <div class="card"><div class="grid2"><div><div id="g7"></div><div id="g8"></div></div>
+    <div><div class="readout"><div><small>New deficit</small><strong id="r1"></strong></div><div><small>Deficit % of GDP</small><strong id="r2"></strong></div><div><small>Extra unemployment (rule of thumb)</small><strong id="r3"></strong></div></div>
+    <div class="verdict" id="rv"></div></div></div>
+    <svg id="labT" viewBox="0 0 760 260" role="img" aria-label="Deficit before and after a contractionary policy"></svg></div>
+
+  <h2>Lab 4 · Does a lower exchange rate fix the deficit?</h2>
+  <p>Illustrative model. Exports and imports both start at 100. Change the size of the depreciation and how responsive demand is.</p>
+  <div class="card"><div class="row"><button class="b" id="srb">Short run: inelastic demand</button><button class="b" id="lrb">Long run: elastic demand</button></div>
+    <div class="grid2"><div><div id="g9"></div><div id="g10"></div><div id="g11"></div></div>
+    <div><div class="readout"><div><small>Export revenue</small><strong id="d1"></strong></div><div><small>Import spending</small><strong id="d2"></strong></div><div><small>Trade balance</small><strong id="d3"></strong></div></div>
+    <div class="verdict" id="dv"></div></div></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which account?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Switching or reducing?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Match the problem to the policy</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>4 · Put the chain in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>5 · Calculations</h2>
+  <div id="c1"></div>
+
+  <h2>6 · Match the term</h2>
+  <div id="m2" class="card"></div>
+
+  <h2>7 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions follow the coursebook case studies and are kept general. Check current figures before quoting numbers in an exam answer.</p>
+  <div class="rw"><h3>Argentina: imports, debt and repeated crises</h3><p>Argentina's current account is usually in deficit, caused largely by high spending on imports and by high-interest debt repayments. The country spends more than it produces and borrows to cover the gap. In 2020 the government tried to restructure its foreign debt and delay interest payments.</p><div class="use"><b>Exam use:</b> a deficit financed by borrowing from abroad. Link to the financial account (loans inflow) and the cost: future outflows of interest in primary income. Evaluate: how serious depends on the size of the debt relative to GDP.</div></div>
+  <div class="rw"><h3>South Africa: goods surplus, income outflows</h3><p>South Africa usually runs a surplus in trade in goods but a deficit on current account. Large past inflows of portfolio investment now produce large outflows of interest and dividends, and workers' remittances sent abroad add to the deficit. The deficit has often led to a fall in the rand.</p><div class="use"><b>Exam use:</b> shows a deficit with a structural cause in primary and secondary income, and that a deficit can lower the exchange rate, which may later help exports. Self-correction is possible but not certain.</div></div>
+  <div class="rw"><h3>India: oil, software services and remittances</h3><p>India pays a lot for imported oil, which feeds a deficit in goods. It usually earns a surplus on services, mainly software exports (to the USA, UK and EU), and a surplus on secondary income because of workers' remittances. The biggest contributor to the deficit is the deficit on primary income, from foreign investment and loans.</p><div class="use"><b>Exam use:</b> a good example of different accounts pulling in different directions, and of the case for diversifying services exports so the country depends less on one product and a few markets.</div></div>
+  <div class="rw"><h3>Sri Lanka: protecting industries against dumping</h3><p>In 2018 Sri Lanka's government announced legislation to protect domestic industries against unfair competition, in the form of dumping and foreign export subsidies, and said it would impose tariffs where harm was shown.</p><div class="use"><b>Exam use:</b> a protectionist, expenditure-switching measure. Evaluate with: retaliation, higher prices for consumers, and whether good home substitutes exist.</div></div>
+  <div class="rw"><h3>Germany: a current account surplus mirrored by the financial account</h3><p>In the coursebook's 2019 data, Germany had a large current account surplus (about €246bn) and a financial account deficit of about €220bn, as German residents invested abroad. The accounts offset each other.</p><div class="use"><b>Exam use:</b> illustrates that the accounts sum to zero, and that a surplus on one account is matched by a deficit on another. A financial account deficit is not necessarily a problem.</div></div>
+  <div class="rw"><h3>Ghana: a falling currency and a smaller deficit</h3><p>In the coursebook's Chapter 49 data, the cedi fell against other currencies in each year shown while Ghana's current account deficit got smaller. High Ghanaian inflation compared with some trading partners also reduced competitiveness.</p><div class="use"><b>Exam use:</b> a link between exchange rate policy and the balance of payments. Use hedged wording: a lower exchange rate may have contributed, alongside other factors.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Answers are colour-coded to the mark scheme. Paper 4 essays carry 20 marks: <b>14 for knowledge, application and analysis</b> and <b>6 for evaluation</b>.</p>
+  <div class="key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Define</span> <span class="mark">2 marks</span> What is meant by the financial account of the balance of payments?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Say what it records and give at least one of its parts.</div>
+    <div class="ans"><span class="mk k" data-t="K">The financial account records movements of funds into and out of a country,</span> <span class="mk k" data-t="K">including direct investment, portfolio investment, other investment such as bank loans, and changes in reserve assets.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Confusing it with the income that investment earns, which belongs in the primary income part of the current account.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate</span> <span class="mark">4 marks</span> A country has a deficit of $52bn on trade in goods, a surplus of $18bn on trade in services, a deficit of $9bn on primary income and a surplus of $6bn on secondary income. Its capital account shows +$1bn and its financial account +$30bn. Calculate (a) the current account balance and (b) the net errors and omissions figure.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Add the four parts of the current account first, then add the capital and financial accounts. Net errors and omissions is the figure that makes the total zero.</div>
+    <div class="ans"><span class="mk a" data-t="A">Current account = −52 + 18 − 9 + 6</span> <span class="mk a" data-t="A">= −$37bn, a deficit.</span> <span class="mk a" data-t="A">Sum of the three accounts = −37 + 1 + 30 = −$6bn.</span> <span class="mk a" data-t="A">Net errors and omissions = +$6bn, so that the total is zero.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Giving −$6bn for net errors and omissions. It must be the opposite sign to the total, to cancel it.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Distinguish</span> <span class="mark">4 marks</span> Distinguish between an expenditure-switching policy and an expenditure-reducing policy.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The difference is the effect on total spending. Give an example of each.</div>
+    <div class="ans"><span class="mk k" data-t="K">An expenditure-switching policy persuades buyers to switch spending from foreign goods to home-produced goods without reducing total spending,</span> <span class="mk a" data-t="A">for example an import tariff or a lower exchange rate.</span> <span class="mk k" data-t="K">An expenditure-reducing policy cuts the total level of spending in the economy, so spending on imports falls with it,</span> <span class="mk a" data-t="A">for example higher income tax or higher interest rates.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Calling a limit on bank lending or a rise in interest rates "switching". These reduce spending on everything.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Analyse</span> <span class="mark">6 marks</span> Analyse how supply-side policy could help to reduce a current account deficit.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Give a measure, then the chain: productivity up → costs and prices down → exports more competitive and home goods replace imports → deficit narrows.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">Supply-side policy aims to raise the quantity and quality of a country's resources.</span> <span class="mk n" data-t="N">Spending on education, training and infrastructure could raise labour productivity and cut firms' costs of production, so the price of the country's goods may fall relative to foreign goods.</span> <span class="mk n" data-t="N">Exports could then become more price competitive, raising export revenue, and domestic consumers may switch from imports to home-produced goods, lowering import spending, so the deficit could narrow.</span></p>
+    <p><span class="mk n" data-t="N">Better infrastructure and skills may also attract foreign direct investment, creating a surplus on the financial account that helps to finance the deficit and could increase future exports.</span> <span class="mk e" data-t="E">However, these effects may take years to appear and are uncertain, so supply-side policy is not a quick remedy.</span> <span class="mk e" data-t="E">It also costs government money.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Evaluate</span> <span class="mark">8 marks</span> Evaluate the effectiveness of an increase in import tariffs as a way to correct a current account deficit.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>An 8-marker needs developed analysis and a clear judgement. Say it is expenditure-switching, then the chain, then limits.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">A tariff is a tax on imports, and it is an expenditure-switching, protectionist policy.</span> <span class="mk n" data-t="N">It raises the price of imports in the domestic market, so quantity demanded for imports is likely to fall and some buyers may switch to home-produced goods, lowering import expenditure and narrowing the deficit.</span></p>
+    <p><span class="mk e" data-t="E">The effectiveness is likely to depend on whether good domestic substitutes exist. If they do not, buyers may keep buying imports at the higher price, and import spending may hardly fall.</span> <span class="mk e" data-t="E">Other countries may retaliate with their own tariffs, reducing exports, and the tariff may raise costs for firms using imported raw materials, which may lower competitiveness and push up prices.</span> <span class="mk e" data-t="E">Overall, a tariff is likely to reduce the deficit only in the short run and where substitutes are close, and it may be less effective than supply-side policy for a structural deficit.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Assess</span> <span class="mark">12 marks</span> Assess the extent to which expenditure-reducing policies are the best way to correct a current account deficit.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>"The extent to which" means size the effect. Both sides, with the evaluation judging how far, and what decides it. 8 marks analysis, 4 marks evaluation.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">Expenditure-reducing policies, such as higher taxes, lower government spending and higher interest rates, aim to reduce total spending in the economy, including spending on imports.</span></p>
+    <p><span class="mk n" data-t="N">Expenditure-reducing policies could be an effective way to correct a current account deficit because they cut spending on imports.</span> <span class="mk n" data-t="N">If the government raises income tax, disposable income falls, so consumers buy fewer imports, and firms that lose home sales may try to sell more abroad. The deficit could therefore narrow.</span> <span class="mk e" data-t="E">This is most likely to work when the deficit is caused by a boom pulling in imports, but the effect on imports may be small if the marginal propensity to import is low.</span></p>
+    <p><span class="mk n" data-t="N">They may not be the best way because they cut spending on home goods too, so output and employment may fall and economic growth slows, which could lower living standards.</span> <span class="mk n" data-t="N">Expenditure-switching policies such as a lower exchange rate or supply-side policy aim to switch spending to home goods without cutting total spending, so they may correct the deficit with less damage to jobs.</span> <span class="mk e" data-t="E">However, these have their own limits: a lower exchange rate may raise import prices, and supply-side policy takes time.</span></p>
+    <p><span class="mk e" data-t="E">Overall, expenditure-reducing policies are best to a limited extent: they are likely to be useful for a cyclical deficit caused by a boom, particularly alongside high inflation, but a poor choice for a structural deficit or an economy with high unemployment. The extent depends on the cause of the deficit and the state of the economy, so a combination with supply-side policy is likely to be better.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Evaluate</span> <span class="mark">20 marks</span> Expenditure-reducing policies will reduce a balance of payments deficit but will also cause significant unemployment. Evaluate this statement. <span class="small">(Paper 4, Feb/Mar 2023 Q4. Model answer written for this site.)</span></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two claims to test: (1) they reduce the deficit, (2) they cause significant unemployment. Develop both, then evaluate. 14 marks analysis, 6 marks evaluation. Open each paragraph with the question's wording, end with a link back to the statement and one micro-evaluation.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">Expenditure-reducing policies are policies designed to lower the total level of spending in an economy, such as contractionary fiscal policy, where the government raises taxes or cuts its own spending, and contractionary monetary policy, where the central bank raises the interest rate or limits credit. A balance of payments deficit, usually a current account deficit, occurs when the value of imports and other debit items exceeds credit items.</span></p>
+    <p><span class="mk n" data-t="N">Expenditure-reducing policies are likely to reduce a balance of payments deficit because lower spending means lower demand for imports.</span> <span class="mk n" data-t="N">For example, a rise in the interest rate raises the cost of borrowing and the reward for saving, so households cut consumption and firms cut investment, which lowers aggregate demand and spending on imported goods and capital equipment. Some firms that lose sales at home may try to sell more abroad, raising exports.</span> <span class="mk n" data-t="N">A fall in domestic inflation relative to trading partners could also make exports more price competitive over time.</span> <span class="mk a" data-t="A">This could be relevant for a country such as Argentina, where high spending on imports contributes to the deficit.</span> <span class="mk e" data-t="E">However, this effect may be small if the marginal propensity to import is low or if imports are mainly necessities such as oil, so the deficit may fall by less than hoped.</span> <span class="mk n" data-t="N">The first part of the statement could therefore be true, but only to an extent.</span></p>
+    <p><span class="mk n" data-t="N">Expenditure-reducing policies are also likely to cause unemployment because lower aggregate demand reduces output.</span> <span class="mk n" data-t="N">Firms facing falling sales may cut production and workers, and the multiplier may amplify the fall in income, so cyclical, or demand-deficient, unemployment may rise. Higher taxes and lower government spending could also cut jobs in the public sector and in industries that supply it.</span> <span class="mk e" data-t="E">Whether the unemployment is significant is likely to depend on the size of the policy and on how much spare capacity there is. If the economy is already near full employment, the fall in spending may mostly reduce inflation rather than jobs.</span> <span class="mk n" data-t="N">So the second part of the statement may also be true, especially for a large and sudden policy.</span></p>
+    <p><span class="mk e" data-t="E">The extent to which the statement holds is likely to depend on the state of the economy. Raising interest rates when inflation is high and there is a positive output gap may have a limited effect on unemployment, because it mainly removes excess demand.</span> <span class="mk e" data-t="E">It also depends on the cause of the existing unemployment: if it is mainly structural, contractionary demand-side policy may not make it much worse, and supply-side policies used alongside, such as training, could reduce it at the same time.</span> <span class="mk e" data-t="E">Time matters too: unemployment may rise quickly, while the improvement in the deficit may take longer, and expenditure-switching policies, such as supply-side measures, could achieve the same aim with less harm to jobs, although they have their own costs and delays.</span></p>
+    <p><span class="mk e" data-t="E">Overall, the statement is likely to be partly true. Expenditure-reducing policies are likely to reduce a deficit, especially one caused by a boom, but unemployment is likely to be significant only if the policy is large and the economy has little spare demand. For a structural deficit, they are probably a poor tool on their own, and a combination with supply-side policy may be better.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing only about the deficit, or only about unemployment. The statement has two claims, and each needs analysis and a judgement.</div>
+  </div></details>
+
+  <h2>Past paper questions on this chapter</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Paper</th><th>Question</th><th>Marks</th></tr>
+    <tr><td>9708/42, Feb/Mar 2023, Q4</td><td>Expenditure-reducing policies will reduce a balance of payments deficit but will also cause significant unemployment. Evaluate this statement.</td><td>20</td></tr>
+    <tr><td>9708/42, Feb/Mar 2025, Q5</td><td>With the help of a diagram, evaluate the effectiveness of the use of expenditure-switching policies to reduce a current account deficit.</td><td>20</td></tr>
+    <tr><td>9708/22, May/June 2023, Q4(b) (AS)</td><td>Assess whether protectionism is the best way to correct a deficit on the current account.</td><td>12</td></tr>
+  </table></div>
+  <p class="note">Download the full papers and mark schemes from the past papers pages and mark your own attempt against the indicative content.</p>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>The accounts add up to zero.</b> A deficit on the current account is matched by a surplus on the financial and capital accounts, with net errors and omissions to tidy up.</li>
+    <li><b>Investment is in the financial account; the income it earns is in the current account.</b></li>
+    <li><b>Classify every policy.</b> Does total spending change? No: switching. Yes: reducing.</li>
+    <li><b>Supply-side and protectionist policy are used for a deficit, not a surplus.</b> Fiscal, monetary and exchange rate policy can be used for either.</li>
+    <li><b>Always mention the internal economy.</b> Cutting a deficit with higher unemployment is a trade-off worth evaluating.</li>
+    <li><b>Say why the deficit exists.</b> A cyclical deficit may self-correct; a structural one needs supply-side policy.</li>
+    <li><b>Use evaluation words that compare:</b> "this is more effective than... because", "this depends on... and in this case...".</li>
+    <li><b>Hedge.</b> "Could", "may" and "is likely to" are better than "will", especially for exchange rate and tariff effects.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Define / Distinguish</td><td>A precise meaning, and the key difference with an example of each.</td></tr>
+    <tr><td>Calculate</td><td>Show each stage with signs and units.</td></tr>
+    <tr><td>Analyse</td><td>A chain of cause and effect.</td></tr>
+    <tr><td>Assess whether</td><td>A verdict on a claim ("always", "the best"). Test the loaded word, then conclude.</td></tr>
+    <tr><td>Assess the extent to which</td><td>A degree. Identify what makes the effect bigger or smaller and place the answer on a scale.</td></tr>
+    <tr><td>Evaluate (20 marks)</td><td>14 marks for analysis, 6 for evaluation. Judge each claim, then give an overall conclusion.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.max(0, Math.min(fr.length - 1, Math.round(s.i)))].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const sgn = (x, d = 0) => (x > 0 ? "+" : x < 0 ? "−" : "") + Lib.fmtN(Math.abs(x), d);
+
+/* ---------- waterfall: items add up to zero ---------- */
+function wf(items, n, H) {
+  let run = 0; const rows = items.map((it) => { const a = run; run += it.v; return { ...it, a, b: run }; });
+  const vals = rows.flatMap((r) => [r.a, r.b]).concat([0]);
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * 0.14 || 10; lo -= pad; hi += pad;
+  const top = 44, bottom = H - 54, Y = (x) => bottom - ((x - lo) / (hi - lo)) * (bottom - top), step = 660 / rows.length, bw = Math.min(80, step - 14), X = (i) => 70 + i * step;
+  let o = SV.line(56, Y(0), 744, Y(0), "ax") + SV.text(60, Y(0) - 6, "0", "sm") + SV.text(60, 24, "$ billion (credits above zero, debits below)", "sm");
+  rows.forEach((r, i) => {
+    const op = clamp01(n - i); if (op <= 0) return;
+    const y1 = Y(Math.max(r.a, r.b)), y2 = Y(Math.min(r.a, r.b)), h = Math.max(2, y2 - y1), cls = r.v >= 0 ? "f3" : "f2";
+    o += `<rect x="${X(i)}" y="${y1}" width="${bw}" height="${h}" class="${cls}" style="opacity:${op * 0.7}"/><rect x="${X(i)}" y="${y1}" width="${bw}" height="${h}" fill="none" stroke="currentColor" stroke-width="1.5" opacity="${op * 0.6}"/>`;
+    o += SV.text(X(i) + bw / 2, r.v >= 0 ? y1 - 6 : y2 + 16, sgn(r.v, 0), "lbl bd" + (r.v >= 0 ? " t3" : " t2"), { "text-anchor": "middle", opacity: op });
+    const parts = r.l.split("|"); parts.forEach((t, k) => { o += SV.text(X(i) + bw / 2, H - 30 + k * 13, t, "sm", { "text-anchor": "middle", opacity: op }); });
+    if (i < rows.length - 1 && op > 0.9) o += SV.line(X(i) + bw, Y(r.b), X(i) + step, Y(r.b), "gr");
+  });
+  if (n >= rows.length) o += SV.text(400, 40, "Everything adds up to 0", "lbl bd t4", { "text-anchor": "middle" });
+  return o;
+}
+
+/* ---------- stepper A: accounts add to zero ---------- */
+const ITEMS_A = [{ l: "Current|account", v: -120 }, { l: "Capital|account", v: 4 }, { l: "Financial|account", v: 100 }, { l: "Net errors|and omissions", v: 16 }];
+Lib.stepper($("#stA"), { w: 760, h: 340, label: "Waterfall showing the current, capital and financial accounts and net errors and omissions adding to zero", base: { n: 0 }, tween: 1100, dwell: 4400, draw: (s) => wf(ITEMS_A, s.n, 340), steps: [
+  { cap: "A country has a <b>current account deficit of $120bn</b>: it paid out more for goods, services, income and transfers than it received.", s: { n: 1 } },
+  { cap: "The <b>capital account</b> is small: +$4bn (for example, money brought in by migrants).", s: { n: 2 } },
+  { cap: "The <b>financial account</b> is +$100bn: foreigners invested in or lent to the country. This inflow <b>finances</b> most of the deficit.", s: { n: 3 } },
+  { cap: "That leaves −$16bn unexplained. <b>Net errors and omissions</b> of +$16bn is added for missing or mistaken records, so the whole balance of payments sums to <b>zero</b>.", s: { n: 4 } },
+  { cap: "Key point: the <b>individual accounts</b> are not in balance, only the total is. A persistent deficit needs borrowing or foreign investment to pay for it, and that brings future outflows of interest, profits and dividends.", s: { n: 4 } },
+] });
+
+/* ---------- stepper B: switching vs reducing ---------- */
+function spend(s) {
+  const x0 = 130, k = 5.4, rows = [["Before policy", 60, 40, 1], ["After expenditure-switching", 80, 20, s.sw], ["After expenditure-reducing", 50, 30, s.rd]];
+  let o = SV.text(x0, 24, "Spending in the economy (index, before = 100)", "sm") + SV.line(x0 + 100 * k, 36, x0 + 100 * k, 300, "gr");
+  rows.forEach(([lab, d, m, op], i) => {
+    if (op <= 0.01) return;
+    const y = 50 + i * 90, dd = d * k, mm = m * k;
+    o += SV.text(x0, y - 8, lab, "lbl bd", { opacity: op });
+    o += `<rect x="${x0}" y="${y}" width="${dd}" height="46" class="f3" style="opacity:${op * 0.75}"/><rect x="${x0 + dd}" y="${y}" width="${mm}" height="46" class="f2" style="opacity:${op * 0.75}"/>`;
+    o += SV.text(x0 + dd / 2, y + 28, "Home goods " + d, "lbl bd", { "text-anchor": "middle", opacity: op });
+    o += SV.text(x0 + dd + mm / 2, y + 28, "Imports " + m, "lbl bd", { "text-anchor": "middle", opacity: op });
+    o += SV.text(x0 + dd + mm + 10, y + 28, "Total " + (d + m), "lbl bd t1", { opacity: op });
+  });
+  return o;
+}
+Lib.stepper($("#stB"), { w: 760, h: 320, label: "Bars showing how total spending is split between home goods and imports under each policy", base: { sw: 0, rd: 0 }, tween: 1100, dwell: 4300, draw: spend, steps: [
+  { cap: "Before the policy, total spending is 100: 60 on <b>home-produced goods</b> and 40 on <b>imports</b>. The country has a current account deficit.", s: { sw: 0, rd: 0 } },
+  { cap: "<b>Expenditure-switching</b> (a tariff, a lower exchange rate, supply-side policy): imports fall to 20 and home goods rise to 80. <b>Total spending is still 100.</b> Spending has been redirected, not reduced.", s: { sw: 1, rd: 0 } },
+  { cap: "<b>Expenditure-reducing</b> (higher taxes, higher interest rates): total spending falls to 80. Imports fall to 30, but <b>home goods also fall to 50</b>, so output and jobs are likely to be hit.", s: { sw: 1, rd: 1 } },
+  { cap: "Both policies reduce import spending. The difference: switching keeps home output and employment up (but may raise prices and prompt retaliation); reducing cuts spending on everything, which is likely to slow growth and raise unemployment.", s: { sw: 1, rd: 1 } },
+] });
+
+/* ---------- stepper C: exchange rate ---------- */
+function fx(s) {
+  const k = 240 / 530, d = 110 * s.sh, x1 = 375, y1 = 190, x2 = 375 + d / 2, y2 = 190 + 0.2264 * d;
+  const Dy = (x) => 70 + (x - 110) * k, Sy = (x, sh) => 310 - (x - 110 - sh) * k;
+  let o = SV.line(90, 330, 90, 36, "ax") + SV.line(90, 330, 680, 330, "ax") + SV.text(94, 34, "Exchange rate", "sm") + SV.text(94, 46, "(foreign currency per unit of home currency)", "sm") + SV.text(676, 350, "Quantity of home currency", "sm", { "text-anchor": "end" });
+  o += SV.line(110, Dy(110), 640, Dy(640), "c2") + SV.text(646, Dy(640) + 4, "D", "lbl bd t2");
+  o += SV.line(110, Sy(110, 0), 640, Sy(640, 0), "c1", { opacity: s.sh > 0.05 ? 0.45 : 1 }) + SV.text(646, Sy(640, 0) + 4, "S₁", "lbl bd t1", { opacity: s.sh > 0.05 ? 0.5 : 1 });
+  if (s.sh > 0.02) { const xs = 110 + d, xe = 650, ys = Sy(xs, d), ye = Sy(xe, d); o += SV.line(xs, ys, xe, Math.max(ye, 40), "c4") + SV.text(xe - 4, Math.max(ye, 40) - 8, "S₂", "lbl bd t4"); }
+  o += SV.line(90, y1, x1, y1, "gr") + SV.line(x1, y1, x1, 330, "gr") + SV.circle(x1, y1, 5, "dot1") + SV.text(60, y1 + 4, "e₁", "lbl bd t1") + SV.text(x1 - 6, 346, "Q₁", "sm");
+  if (s.sh > 0.02) { o += SV.line(90, y2, x2, y2, "gr") + SV.line(x2, y2, x2, 330, "gr") + SV.circle(x2, y2, 6, "dot4") + SV.text(60, y2 + 4, "e₂", "lbl bd t4") + SV.text(x2 - 6, 346, "Q₂", "sm"); }
+  if (s.tx > 0.5) { o += SV.rect(420, 40, 250, 74, "f4", { rx: 8 }) + SV.text(430, 62, "Lower exchange rate:", "lbl bd") + SV.text(430, 80, "export prices abroad fall,", "sm") + SV.text(430, 95, "import prices at home rise", "sm") + SV.text(430, 110, "(expenditure-switching)", "sm"); }
+  return o;
+}
+Lib.stepper($("#stC"), { w: 700, h: 360, label: "Currency market diagram: supply of the home currency shifts right and the exchange rate falls", base: { sh: 0, tx: 0 }, tween: 1300, dwell: 4600, draw: fx, steps: [
+  { cap: "The exchange rate is set where <b>demand for</b> the home currency (D, from foreign buyers of exports and investors) meets <b>supply of</b> it (S₁, from residents buying imports and assets abroad). Equilibrium is e₁.", s: { sh: 0, tx: 0 } },
+  { cap: "To correct a current account deficit, the central bank may <b>sell the home currency</b> and buy foreign currency (adding to reserves) or cut interest rates. The <b>supply of the currency increases</b>: S₁ shifts right to S₂.", s: { sh: 1, tx: 0 } },
+  { cap: "The exchange rate <b>falls from e₁ to e₂</b>. This is an <b>expenditure-switching</b> policy.", s: { sh: 1, tx: 0 } },
+  { cap: "The lower rate makes exports <b>cheaper abroad</b> and imports <b>dearer at home</b>, so spending may switch to home goods. The trade balance improves <b>only if demand is elastic enough</b>, and dearer imports may cause inflation. The effect may be short term (see Chapter 49).", s: { sh: 1, tx: 1 } },
+] });
+
+/* ---------- stepper D: chain of effects ---------- */
+const BW = 132, BH = 66, BXS = [6, 150, 294, 438, 582];
+const BOX = [
+  { c: 0, y: 24, t: ["Higher taxes, lower", "govt spending or", "higher interest rate"], need: 1, k: "f1" },
+  { c: 1, y: 24, t: ["Disposable income", "and aggregate", "demand fall"], need: 2, k: "f1" },
+  { c: 2, y: 24, t: ["Spending on", "imports falls"], need: 3, k: "f3" },
+  { c: 3, y: 24, t: ["Home firms seek", "export markets to", "replace lost sales"], need: 4, k: "f3" },
+  { c: 4, y: 24, t: ["Current account", "deficit narrows"], need: 5, k: "f3" },
+  { c: 1, y: 190, t: ["Output and", "employment may", "fall; growth slows"], need: 6, k: "f2" },
+  { c: 2, y: 190, t: ["Inflation may", "fall (a benefit)"], need: 6, k: "f4" },
+  { c: 3, y: 190, t: ["Trade-off: a better", "balance of payments,", "a weaker home economy"], need: 7, k: "f2", w: 2 },
+];
+const ARR = [[0, 1], [1, 2], [2, 3], [3, 4], [1, 5], [5, 6], [6, 7]];
+function chain(s) {
+  let o = "";
+  const bx = (b) => ({ x: BXS[b.c], y: b.y, w: b.w ? BXS[b.c + 1] - BXS[b.c] + BW : BW });
+  const op = (b) => clamp01(s.n - b.need + 1);
+  ARR.forEach(([f, t]) => {
+    const A = BOX[f], B = BOX[t], a = bx(A), b = bx(B), o2 = op(B); if (o2 <= 0) return;
+    if (A.y === B.y) o += SV.line(a.x + a.w, a.y + BH / 2, b.x - 8, b.y + BH / 2, "c3", { opacity: o2, "stroke-width": 2.5 }) + SV.arrowHead(b.x - 1, b.y + BH / 2, "r", "dot3").replace("<polygon", `<polygon opacity="${o2}"`);
+    else o += SV.line(a.x + a.w / 2, a.y + BH, a.x + a.w / 2, b.y - 8, "c2", { opacity: o2, "stroke-width": 2.5 }) + SV.arrowHead(a.x + a.w / 2, b.y - 1, "d", "dot2").replace("<polygon", `<polygon opacity="${o2}"`);
+  });
+  o += SV.text(6, 14, "Benefit: the deficit narrows", "sm") + SV.text(6, 180, "Cost: the home economy weakens", "sm");
+  BOX.forEach((B) => {
+    const p = op(B); if (p <= 0) return; const b = bx(B);
+    o += `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${BH}" rx="8" class="${B.k}" style="opacity:${p * 0.8}"/><rect x="${b.x}" y="${b.y}" width="${b.w}" height="${BH}" rx="8" fill="none" stroke="currentColor" stroke-width="1.5" opacity="${p * 0.5}"/>`;
+    B.t.forEach((ln, i) => { o += SV.text(b.x + b.w / 2, b.y + 24 + i * 15 - (B.t.length === 2 ? 7 : 0) + (B.t.length === 2 ? 8 : 0) - 8 + 8, ln, "sm", { "text-anchor": "middle", opacity: p, style: "fill:currentColor;font-size:11.5px" }); });
+  });
+  return o;
+}
+Lib.stepper($("#stD"), { w: 740, h: 280, label: "Flow chart of how contractionary policy narrows a current account deficit and what it costs", base: { n: 0 }, tween: 900, dwell: 4300, draw: chain, steps: [
+  { cap: "A government or central bank uses an <b>expenditure-reducing</b> policy: it raises taxes, cuts its spending or raises the interest rate.", s: { n: 1 } },
+  { cap: "Households and firms have <b>less to spend</b>, so aggregate demand falls.", s: { n: 2 } },
+  { cap: "Part of the lower spending is on <b>imports</b>, so import expenditure falls.", s: { n: 3 } },
+  { cap: "Home firms that lose domestic sales may <b>look for export markets</b>, which could raise export earnings.", s: { n: 4 } },
+  { cap: "Lower imports and possibly higher exports mean the <b>current account deficit narrows</b>.", s: { n: 5 } },
+  { cap: "But the same fall in demand cuts <b>output and employment</b>, and slows growth. The lower inflation could be a benefit.", s: { n: 6 } },
+  { cap: "The exam judgement: how big is the improvement against the cost? That depends on the <b>cause of the deficit</b>, the <b>state of the economy</b> and the <b>marginal propensity to import</b>.", s: { n: 7 } },
+] });
+
+/* ---------- Lab 1 ---------- */
+function lab1() {
+  const ids = ["b_a", "b_b", "b_c", "b_d", "b_e", "b_f"]; if (ids.some((i) => !$("#" + i))) return;
+  const [g, s, p, sec, cap, fin] = ids.map((i) => +$("#" + i).value), ca = g + s + p + sec, ne = -(ca + cap + fin);
+  $("#k1").textContent = sgn(ca, 0); $("#k2").textContent = sgn(cap + fin, 0); $("#k3").textContent = sgn(ne, 0);
+  const big = Math.abs(ne) > 0.1 * Math.max(Math.abs(ca), 1);
+  $("#kv").textContent = (ca < 0 ? `A current account deficit of ${Lib.fmtN(-ca, 0)} has to be matched by inflows on the capital and financial accounts.` : ca > 0 ? `A current account surplus of ${Lib.fmtN(ca, 0)} is matched by net outflows on the capital and financial accounts (residents investing and lending abroad).` : "The current account is balanced.") + (big ? " The net errors and omissions figure is large compared with the current account, which may suggest unreliable data or unrecorded flows." : "");
+  $("#labK").innerHTML = wf([{ l: "Goods", v: g }, { l: "Services", v: s }, { l: "Primary|income", v: p }, { l: "Secondary|income", v: sec }, { l: "Capital|account", v: cap }, { l: "Financial|account", v: fin }, { l: "Net errors|and omissions", v: ne }], 8, 330);
+}
+const sl = (c, id, label, min, max, step, v, fn) => Lib.slider($("#" + c), { id, label, min, max, step, value: v, fmt: (x) => x, onInput: fn });
+sl("g1", "b_a", "Goods balance", -400, 400, 5, -90, lab1); sl("g2", "b_b", "Services balance", -200, 200, 5, 45, lab1); sl("g3", "b_c", "Primary income balance", -150, 150, 5, -15, lab1);
+sl("g4", "b_d", "Secondary income balance", -100, 100, 5, 22, lab1); sl("g5", "b_e", "Capital account", -20, 20, 1, 3, lab1); sl("g6", "b_f", "Financial account", -300, 300, 5, 35, lab1);
+
+/* ---------- Lab 2 ---------- */
+const POL = [
+  { n: "Raise income tax", r: ["↓", "↗", "↓", "↑", "↓"], t: "R", v: "Disposable income falls, so spending on all goods, including imports, falls. Home firms may export more. The cost: slower growth and higher unemployment." },
+  { n: "Cut government spending", r: ["↓", "↗", "↓", "↑", "↓"], t: "R", v: "Lower government spending reduces aggregate demand through the multiplier, so imports fall. Public sector jobs and suppliers may lose out." },
+  { n: "Raise the interest rate", r: ["↓", "?", "↓", "↑", "↓"], t: "R", v: "Dearer borrowing cuts consumption and investment, lowering imports. But a higher rate may attract hot money and raise the exchange rate, making exports dearer and imports cheaper, so the net effect on trade is uncertain." },
+  { n: "Limit bank lending", r: ["↓", "↗", "↓", "↑", "↓"], t: "R", v: "Less credit means less spending on everything, so this is expenditure-reducing even though it is not a tax or a tariff." },
+  { n: "Import tariff", r: ["↓", "↘", "↔", "↓", "↑"], t: "S", v: "Dearer imports push buyers to home goods. Works best with close home substitutes. Risks: retaliation (exports may fall), higher prices and less efficiency." },
+  { n: "Lower the exchange rate", r: ["↓", "↑", "↗", "↓", "↑"], t: "S", v: "Exports are cheaper abroad and imports dearer at home. Depends on elasticities and often only short term. Dearer imported inputs raise costs and prices." },
+  { n: "Subsidise exporters", r: ["↔", "↑", "↔", "↓", "↔"], t: "S", v: "Lowers the price of exports abroad. Costs the government money and may break trade rules, inviting retaliation." },
+  { n: "Training and infrastructure", r: ["↓", "↑", "↔", "↓", "↓"], t: "S", v: "Raises productivity and cuts costs, so exports become competitive and home goods replace imports. Slow, costly and uncertain, but benefits unemployment and inflation too." },
+];
+const pb = $("#pbtn");
+POL.forEach((p, i) => { const b = document.createElement("button"); b.className = "b"; b.textContent = p.n; b.onclick = () => {
+  $$("button", pb).forEach((x) => x.classList.remove("pri")); b.classList.add("pri");
+  const lab = { "↓": "Falls", "↑": "Rises", "↗": "Likely rises", "↘": "May fall", "↔": "No direct change", "?": "Uncertain" };
+  $("#ptab").innerHTML = `<tr><th>Imports</th><th>Exports</th><th>Total spending</th><th>Unemployment</th><th>Inflation</th><th>Type</th></tr><tr>${p.r.map((a) => `<td><b>${a}</b> ${lab[a]}</td>`).join("")}<td><b>${p.t === "S" ? "Expenditure-switching" : "Expenditure-reducing"}</b></td></tr>`;
+  $("#pv").textContent = p.v; };
+  pb.appendChild(b); });
+
+/* ---------- Lab 3 ---------- */
+function lab3() {
+  if (!$("#t_a") || !$("#t_b")) return;
+  const cut = +$("#t_a").value, m = +$("#t_b").value, dY = 1000 * cut / 100, dM = m * dY, nd = 40 - dM, need = 4 / m;
+  $("#r1").textContent = (nd >= 0 ? "Deficit " : "Surplus ") + Lib.fmtN(Math.abs(nd), 1);
+  $("#r2").textContent = Lib.fmtN(Math.abs(nd) / 10, 1) + "%"; $("#r3").textContent = "+" + Lib.fmtN(cut * 0.5, 1) + " points";
+  $("#rv").textContent = `Imports fall by ${Lib.fmtN(dM, 1)}. With a marginal propensity to import of ${m}, closing the whole deficit of 40 would need income to fall by about ${Lib.fmtN(need, 0)}% of GDP, which would probably mean a deep recession. The lower the marginal propensity to import, the more costly expenditure-reducing policy is as a way to fix the balance of payments.`;
+  const sc = 4, bars = [["Before", 40, "f2"], ["After the policy", nd, nd >= 0 ? "f2" : "f3"]];
+  let o = SV.line(60, 40, 60, 230, "ax") + SV.line(60, 230, 720, 230, "ax") + SV.text(64, 30, "Current account deficit (+) or surplus (−), index of GDP = 1,000", "sm");
+  bars.forEach(([l, v, c], i) => { const x = 140 + i * 240, h = Math.abs(v) * sc, y = v >= 0 ? 230 - h : 230; o += SV.rect(x, y, 120, Math.max(2, h), c, { style: "opacity:.75" }) + SV.text(x + 60, v >= 0 ? y - 8 : y + h + 16, (v >= 0 ? "" : "−") + Lib.fmtN(Math.abs(v), 1), "lbl bd", { "text-anchor": "middle" }) + SV.text(x + 60, 248, l, "sm", { "text-anchor": "middle" }); });
+  $("#labT").innerHTML = o;
+}
+sl("g7", "t_a", "Fall in national income (% of GDP)", 0, 15, 0.5, 3, lab3); sl("g8", "t_b", "Marginal propensity to import", 0.05, 0.5, 0.05, 0.25, lab3);
+
+/* ---------- Lab 4 ---------- */
+function lab4() {
+  if (!$("#x_a") || !$("#x_b") || !$("#x_c")) return;
+  const d = +$("#x_a").value / 100, ex = +$("#x_b").value, im = +$("#x_c").value;
+  const X = 100 * (1 + ex * d), M = 100 * (1 + d) * (1 - im * d), bal = X - M;
+  $("#d1").textContent = Lib.fmtN(X, 1); $("#d2").textContent = Lib.fmtN(M, 1); $("#d3").textContent = sgn(bal, 1);
+  $("#dv").textContent = `Combined elasticity = ${Lib.fmtN(ex + im, 1)}. ` + (ex + im >= 1.05 ? "Above 1: the trade balance improves, as the Marshall–Lerner condition suggests (when trade starts balanced)." : ex + im <= 0.95 ? "Below 1: the trade balance gets worse, because the dearer import bill outweighs the extra export revenue. This is the usual short-run position (the J curve, Chapter 49)." : "Close to 1: little change in the balance.") + " This ignores inflation, retaliation and spare capacity.";
+}
+sl("g9", "x_a", "Depreciation (%)", 0, 30, 1, 10, lab4); sl("g10", "x_b", "Price elasticity of demand for exports", 0, 2.5, 0.1, 0.3, lab4); sl("g11", "x_c", "Price elasticity of demand for imports", 0, 2.5, 0.1, 0.3, lab4);
+const setLab4 = (a, b, c) => { [["x_a", a], ["x_b", b], ["x_c", c]].forEach(([id, v]) => { const el = $("#" + id); el.value = v; el.dispatchEvent(new Event("input")); }); };
+$("#srb").onclick = () => setLab4(10, 0.3, 0.3); $("#lrb").onclick = () => setLab4(10, 1.0, 1.0);
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), {
+  prompt: "Which account does each transaction appear in?",
+  buckets: [{ label: "Current account" }, { label: "Capital account" }, { label: "Financial account" }],
+  items: [
+    { text: "Export of machinery", b: 0 }, { text: "Dividends paid to foreign shareholders", b: 0 }, { text: "Foreign aid received", b: 0 }, { text: "Foreign tourists spending in the country", b: 0 },
+    { text: "Government debt forgiveness", b: 1 }, { text: "Sale of a patent to a foreign firm", b: 1 }, { text: "Money brought in by migrants", b: 1 }, { text: "Foreign company buys mineral rights", b: 1 },
+    { text: "A firm builds a factory abroad", b: 2 }, { text: "Foreign investors buy government bonds", b: 2 }, { text: "A bank loan from a foreign bank", b: 2 }, { text: "Central bank adds to foreign exchange reserves", b: 2 },
+  ], done: "Investment flows go in the financial account; the income they earn goes in the current account.",
+});
+Lib.classify($("#cl2"), {
+  prompt: "Is each policy expenditure-switching or expenditure-reducing?",
+  buckets: [{ label: "Expenditure-switching" }, { label: "Expenditure-reducing" }],
+  items: [
+    { text: "Import tariff", b: 0 }, { text: "Import quota", b: 0 }, { text: "Lower exchange rate", b: 0 }, { text: "Subsidy to exporters", b: 0 }, { text: "Spending on training to raise productivity", b: 0 }, { text: "Embargo on imports of a good", b: 0 },
+    { text: "Increase in income tax", b: 1 }, { text: "Cut in government spending", b: 1 }, { text: "Rise in the interest rate", b: 1 }, { text: "Limit on bank lending", b: 1 },
+  ], done: "Switching redirects spending; reducing lowers it.",
+});
+Lib.match($("#m1"), { prompt: "Match each problem to the policy most likely to address it.", pairs: [
+  ["Overvalued exchange rate harming exports", "Allow the exchange rate to fall to its market level"],
+  ["Boom pulling in imports", "Contractionary fiscal or monetary policy"],
+  ["Low productivity and poor skills", "Supply-side policy such as training and infrastructure"],
+  ["Dumping by foreign firms", "Tariffs on the dumped goods"],
+  ["Need to attract multinationals", "Supply-side policy and tax incentives"],
+], done: "Matching policy to cause is a strong evaluation skill." });
+Lib.order($("#o1"), { prompt: "Order the chain from a rise in income tax to the narrowing of the deficit and its cost.", items: [
+  "The government raises income tax",
+  "Disposable income falls",
+  "Consumption and aggregate demand fall",
+  "Spending on imports falls",
+  "The current account deficit narrows",
+  "Output and employment may fall as a cost",
+], done: "Always end with the cost to the internal economy." });
+Lib.calc($("#c1"), { qs: [
+  { q: "A country has a deficit of $90bn on goods, a surplus of $45bn on services, primary income of −$15bn and secondary income of +$22bn. Calculate the current account balance ($bn).", a: -38, ph: "e.g. -10", sol: "−90 + 45 − 15 + 22 = <b>−$38bn</b>: a deficit." },
+  { q: "Its financial account items are direct investment −$20bn, portfolio investment +$55bn, other investment +$10bn and reserve assets −$5bn. Calculate the financial account balance ($bn).", a: 40, sol: "−20 + 55 + 10 − 5 = <b>+$40bn</b>." },
+  { q: "The capital account is +$3bn. Using the current account (−$38bn) and the financial account (+$40bn), calculate net errors and omissions ($bn).", a: -5, hint: "Add the three accounts. Net errors and omissions must make the total zero.", sol: "−38 + 3 + 40 = +5. To make the total zero, net errors and omissions = <b>−$5bn</b>." },
+  { q: "A good has a world price of $80. The government imposes a 25% tariff. What is the new price paid by domestic buyers ($)?", a: 100, sol: "80 × 1.25 = <b>$100</b>." },
+  { q: "After the tariff, 2,000 units are still imported. Calculate the government's tariff revenue ($).", a: 40000, sol: "Tariff per unit = $20. 20 × 2,000 = <b>$40,000</b>." },
+  { q: "A country's current account deficit is $36bn and its GDP is $600bn. Calculate the deficit as a percentage of GDP.", a: 6, sol: "36 ÷ 600 × 100 = <b>6%</b>." },
+  { q: "The marginal propensity to import is 0.3. A contractionary policy reduces national income by $50bn. By how much do imports fall ($bn)?", a: 15, sol: "0.3 × 50 = <b>$15bn</b>." },
+  { q: "Export prices fall by 10% in foreign currency after a depreciation. Price elasticity of demand for exports is 0.5. By what percentage does the quantity of exports demanded rise?", a: 5, sol: "PED = % change in quantity ÷ % change in price, so % change in quantity = 0.5 × 10 = <b>5%</b>" },
+] });
+Lib.match($("#m2"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Direct investment", "Building or taking over a firm abroad"],
+  ["Portfolio investment", "Buying shares or bonds without control of the firm"],
+  ["Reserve assets", "Central bank holdings of gold and foreign exchange"],
+  ["Hot money", "Short-term funds that move to find the highest interest rate"],
+  ["Capital flight", "Residents moving money and production out of a country because of lost confidence"],
+  ["Net errors and omissions", "The balancing item that makes the accounts sum to zero"],
+  ["Expenditure-switching", "A policy that redirects spending from imports to home goods"],
+], done: "Good vocabulary." });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Foreign investors buy shares in a domestic firm but do not gain control of it. Where does this appear?", opts: ["Current account, primary income", "Financial account, portfolio investment", "Capital account", "Current account, secondary income"], a: 1, why: "Buying shares without control is portfolio investment, part of the financial account. The dividends later paid appear in primary income." },
+  { q: "Which is an expenditure-reducing policy?", opts: ["An import quota", "A lower exchange rate", "A rise in income tax", "A subsidy to exporters"], a: 2, why: "Higher income tax reduces disposable income and spending on everything, including imports." },
+  { q: "Which type of policy is normally used only to reduce a deficit, not a surplus?", opts: ["Fiscal policy", "Monetary policy", "Exchange rate policy", "Supply-side policy"], a: 3, why: "Fiscal, monetary and exchange rate policy can go either way. Supply-side policy aims to raise competitiveness and so is used against a deficit." },
+  { q: "Why might a higher interest rate have an uncertain effect on the trade balance?", opts: ["It always raises exports", "It may raise the exchange rate, making exports dearer and imports cheaper", "It raises government spending", "It lowers saving"], a: 1, why: "Spending falls, but hot money inflows may push up the exchange rate, which works against the aim." },
+  { q: "A country imports 8,000 cars a year and sets an import quota of 10,000. What is the likely effect?", opts: ["Imports fall to 8,000", "Imports fall to 10,000", "Little or no effect on imports", "The deficit disappears"], a: 2, why: "A quota above the current quantity is not binding, so imports do not need to change." },
+  { q: "What is an advantage of expenditure-switching over expenditure-reducing policy?", opts: ["It lowers inflation", "It may increase employment by raising exports", "It always raises the exchange rate", "It cuts government spending"], a: 1, why: "Switching redirects spending to home goods, so it may support jobs, whereas reducing policies cut output." },
+  { q: "A financial account deficit is most worrying when it is caused by:", opts: ["Residents investing abroad for future income", "Capital flight due to lost confidence in the economy", "A rise in reserve assets", "Direct investment abroad by a multinational"], a: 1, why: "A loss of confidence can reduce tax revenue, jobs and growth and may cause the currency to depreciate." },
+  { q: "The current account is −$60bn, the capital account +$2bn and the financial account +$50bn. What is net errors and omissions?", opts: ["−$8bn", "+$8bn", "+$112bn", "−$112bn"], a: 1, why: "−60 + 2 + 50 = −8, so net errors and omissions = +8 to make the total zero." },
+  { q: "An import tariff is most likely to cut imports if:", opts: ["No home substitutes exist", "Close home-produced substitutes are available", "Other countries retaliate", "Demand for the good is inelastic"], a: 1, why: "Buyers can only switch if good domestic substitutes exist at similar quality." },
+] });
+Lib.cards($("#fc1"), { cards: [
+  ["Balance of payments", "A record of all economic transactions between a country's residents and the rest of the world."],
+  ["Financial account", "Movements of funds into and out of the country: direct, portfolio and other investment, and reserve assets."],
+  ["Capital account", "A small account for non-produced, non-financial assets such as debt forgiveness, migrants' funds and patents."],
+  ["Net errors and omissions", "The balancing item that makes the accounts sum to zero."],
+  ["Direct investment", "Building or taking over a firm in another country."],
+  ["Portfolio investment", "Buying shares and bonds without control of a firm."],
+  ["Reserve assets", "Central bank holdings of gold, foreign exchange, SDRs and the IMF reserve position."],
+  ["Hot money", "Short-term funds that move between countries to chase higher interest rates or expected currency gains."],
+  ["Capital flight", "Residents and firms moving money and production abroad because of lost confidence."],
+  ["Expenditure-switching policy", "A policy that redirects spending from imports to home-produced goods without lowering total spending."],
+  ["Expenditure-reducing policy", "A policy that lowers total spending in the economy, including spending on imports."],
+  ["Contractionary fiscal policy", "Higher taxes and/or lower government spending."],
+  ["Contractionary monetary policy", "A higher interest rate and tighter credit."],
+  ["Protectionism", "Policy that restricts imports to protect domestic producers, for example tariffs and quotas."],
+  ["Marginal propensity to import", "The proportion of an extra unit of income that is spent on imports."],
+] });
+
+Lib.initTabs();
+</script>
+</body></html>
