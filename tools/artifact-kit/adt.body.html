@@ -1,0 +1,273 @@
+<style>
+.pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.pick select,.pick input[type=number]{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);width:auto}
+.pick input[type=number]{width:90px;font-family:var(--mono)}
+.pick label{font-weight:600;font-size:.92rem}
+.lab .msg{font-weight:700;margin:8px 0;min-height:1.6em}
+.listrow{font:600 1rem var(--mono);background:var(--soft);border-radius:8px;padding:8px 12px;margin:8px 0;overflow-x:auto}
+pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font:500 .85rem/1.5 var(--mono);overflow-x:auto;margin:8px 0}
+.lab svg{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.adt4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
+.adt4 .card{margin:0;border-top:4px solid var(--accent)}
+.adt4 .card:nth-child(2){border-top-color:var(--good)} .adt4 .card:nth-child(3){border-top-color:var(--warn)} .adt4 .card:nth-child(4){border-top-color:var(--n)}
+.adt4 b.k{display:block;font:700 .7rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Computer Science · 9618 · Chapter 19 · 19.1.3</div>
+  <h1>Abstract Data Types: Stacks, Queues, Linked Lists and Binary Trees</h1>
+  <p class="lead">An abstract data type is defined by what you can do with it, not by how it is stored. Watch each ADT work step by step on arrays, operate your own, and practise the trace and pseudocode questions.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>An <span class="kw">abstract data type (ADT)</span> is a collection of data together with the operations that can be performed on it. It describes <i>what</i> you can do (push, pop, insert, delete) and hides <i>how</i> the data is stored. The same ADT can be built from an array, from records and pointers, or from another ADT (see 19.1.4).</p>
+  </div>
+
+  <div class="adt4">
+    <div class="card"><h3>Stack</h3><p><b>Last in, first out</b> (LIFO). Items are added and removed at the same end, the top.</p>
+      <b class="k">Operations</b><p>push, pop, peek, isEmpty, isFull</p>
+      <b class="k">Pointer</b><p>Top of stack</p></div>
+    <div class="card"><h3>Queue</h3><p><b>First in, first out</b> (FIFO). Add at the rear, remove from the front.</p>
+      <b class="k">Operations</b><p>enqueue, dequeue, isEmpty, isFull</p>
+      <b class="k">Pointers</b><p>Front and rear (plus a count if circular)</p></div>
+    <div class="card"><h3>Linked list</h3><p>A chain of <b>nodes</b>, each holding data and a <b>pointer</b> to the next node. Order is held by the pointers, not by position.</p>
+      <b class="k">Operations</b><p>traverse, insert, delete, search</p>
+      <b class="k">Pointers</b><p>Start pointer, null pointer, free-list pointer</p></div>
+    <div class="card"><h3>Binary tree</h3><p>Each node has at most <b>two children</b>: left and right. In a binary search tree, smaller values go left, larger go right.</p>
+      <b class="k">Operations</b><p>insert, search, traverse (pre, in, post)</p>
+      <b class="k">Pointers</b><p>Root, left and right pointers</p></div>
+  </div>
+
+  <h2>Stack</h2>
+  <p>Think of a pile of plates. You can only add to or take from the top. Using an array with a <span class="kw">top-of-stack pointer</span> that starts at −1 when empty:</p>
+  <div class="tw"><table class="t">
+    <tr><th>Operation</th><th>What it does</th><th>Check first</th></tr>
+    <tr><td>push(item)</td><td>Add 1 to the pointer, store the item there</td><td>Stack full: pointer = MaxSize − 1</td></tr>
+    <tr><td>pop()</td><td>Read the item at the pointer, subtract 1 from the pointer, return the item</td><td>Stack empty: pointer = −1</td></tr>
+    <tr><td>peek()</td><td>Read the top item without removing it</td><td>Stack empty</td></tr>
+  </table></div>
+
+  <h2>Queue</h2>
+  <p>A queue at a shop till. In a <b>linear queue</b>, the front pointer moves along as items leave, so space at the start of the array is wasted. A <span class="kw">circular queue</span> reuses that space by wrapping the pointers round with <code>MOD MaxSize</code>.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Operation</th><th>What it does</th><th>Check first</th></tr>
+    <tr><td>enqueue(item)</td><td>Rear ← (Rear + 1) MOD MaxSize, store the item, count + 1</td><td>Queue full: count = MaxSize</td></tr>
+    <tr><td>dequeue()</td><td>Read the item at Front, Front ← (Front + 1) MOD MaxSize, count − 1</td><td>Queue empty: count = 0</td></tr>
+  </table></div>
+
+  <h2>Linked list</h2>
+  <p>Instead of items sitting next to each other, each node says where the next one is. Using two parallel arrays, <code>Data</code> and <code>Pointer</code>, a pointer of <b>−1</b> means null (the end). Unused nodes are chained into a <span class="kw">free list</span>, so a new node is taken from the front of the free list and a deleted node is returned to it.</p>
+  <div class="grid2">
+    <div class="card"><h3>Insert</h3><p>Take a node from the free list, store the data, find the node that should come before it, then change <b>two pointers</b>: the new node points on to what followed, and the previous node points to the new node. Nothing is shifted.</p></div>
+    <div class="card"><h3>Delete</h3><p>Find the node and the one before it. Make the previous node point to the deleted node's successor. Then return the deleted node to the free list. If it was the first node, move the start pointer instead.</p></div>
+  </div>
+
+  <h2>Binary tree</h2>
+  <p>The first node is the <span class="kw">root</span>. A node with no children is a <span class="kw">leaf</span>. To insert into a binary search tree, start at the root and go left if the new value is smaller or right if it is larger, until you reach an empty place.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Traversal</th><th>Order of visiting</th><th>Use</th></tr>
+    <tr><td>Pre-order</td><td>Node, then left subtree, then right subtree</td><td>Copying a tree</td></tr>
+    <tr><td>In-order</td><td>Left subtree, then node, then right subtree</td><td>Outputs a binary search tree in <b>sorted</b> order</td></tr>
+    <tr><td>Post-order</td><td>Left subtree, then right subtree, then node</td><td>Deleting a tree; evaluating expressions (Reverse Polish)</td></tr>
+  </table></div>
+
+  <h2>Choosing an ADT</h2>
+  <div class="tw"><table class="t">
+    <tr><th>If you need…</th><th>Use a</th></tr>
+    <tr><td>The most recent item first (undo, back button, return addresses)</td><td>Stack</td></tr>
+    <tr><td>Items handled in the order they arrived (print jobs, waiting customers)</td><td>Queue</td></tr>
+    <tr><td>A list that grows, shrinks and is often changed in the middle, kept in order by pointers</td><td>Linked list</td></tr>
+    <tr><td>Ordered data with quick searching and insertion</td><td>Binary search tree</td></tr>
+  </table></div>
+  <div class="tip"><b class="h">Array indexes</b>Code here starts arrays at index 0, with a top pointer of −1 for an empty stack. Many CIE questions start arrays at 1 and use 0 for an empty stack. Read the question first.</div>
+  <p class="note">For deeper single-topic walkthroughs, see the Linked Lists and Binary Search Tree artifacts in this chapter.</p>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps. The highlighted line in the code follows each step. Switch between Pseudocode and Python.</p>
+  <h2>1 · Stack: push and pop</h2>
+  <p>An array of 4 slots. Watch the top pointer, and what happens when the stack is full.</p>
+  <div id="aStk"></div>
+  <h2>2 · Circular queue: enqueue and dequeue</h2>
+  <p>An array of 5 slots with front and rear pointers. Dequeued values stay in memory but are no longer part of the queue. Notice the rear pointer wrap round.</p>
+  <div id="aQue"></div>
+  <h2>3 · Linked list: insert 30</h2>
+  <p>Data and pointer arrays. −1 means null. Notice that no existing item moves.</p>
+  <div id="aIns"></div>
+  <h2>4 · Linked list: delete 20</h2>
+  <div id="aDel"></div>
+  <h2>5 · Binary search tree: insert 45</h2>
+  <div id="aBst"></div>
+  <h2>6 · In-order traversal</h2>
+  <p>Visit the left subtree, then the node, then the right subtree. The output is in sorted order.</p>
+  <div id="aTrv"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Stack</h2>
+  <p>Try to pop an empty stack, then push until it is full. Peek reads the top without removing it.</p>
+  <div class="card lab" id="lab1"></div>
+
+  <h2>Lab 2 · Circular queue</h2>
+  <p>Enqueue until the queue is full, dequeue two, then enqueue again to see the rear pointer wrap to the start.</p>
+  <div class="card lab" id="lab2"></div>
+
+  <h2>Lab 3 · Linked list</h2>
+  <p>The list stays in ascending order. Insert values and delete them, and watch the free list recycle nodes. The chain at the bottom shows the logical order.</p>
+  <div class="card lab" id="lab3"></div>
+
+  <h2>Lab 4 · Binary search tree builder</h2>
+  <p>Add values and see where they land. Pick a traversal and play it to see the output order.</p>
+  <div class="card lab" id="lab4"></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which ADT?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Inserting into a linked list</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Traces and calculations</h2>
+  <p class="note">Plain numbers only. Arrays start at index 0 and an empty stack has top = −1.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Use them as examples of ideas, not as exact descriptions of any company's software.</p>
+  <div class="rw"><h3>Undo in a text editor (stack)</h3><p>Each edit is pushed onto a stack. Pressing undo pops the most recent edit and reverses it. A redo stack holds the edits you have undone.</p><div class="use"><b>Exam use:</b> the standard LIFO example. The last action done is the first undone.</div></div>
+  <div class="rw"><h3>The browser back button (stack)</h3><p>Each page you visit is pushed. Back pops the current page and shows the previous one.</p><div class="use"><b>Exam use:</b> another LIFO example, with a clear push and pop.</div></div>
+  <div class="rw"><h3>Function calls (stack)</h3><p>When one subroutine calls another, the return address and local variables are pushed onto the call stack, and popped when the subroutine finishes. Too many nested calls causes a stack overflow.</p><div class="use"><b>Exam use:</b> why recursion needs a stack, and what "stack full" means in practice.</div></div>
+  <div class="rw"><h3>Print queue (queue)</h3><p>Documents are printed in the order they were sent. New jobs join the rear; the printer takes from the front.</p><div class="use"><b>Exam use:</b> the standard FIFO example.</div></div>
+  <div class="rw"><h3>Keyboard buffer (circular queue)</h3><p>Keypresses wait in a small fixed buffer until the program reads them in order. A fixed-size buffer that reuses its space is a circular queue.</p><div class="use"><b>Exam use:</b> why a circular queue suits a fixed-size memory area: the pointers wrap round instead of the data moving.</div></div>
+  <div class="rw"><h3>A playlist of songs (linked list)</h3><p>Each track knows which track plays next. Adding a track to the middle only changes where two tracks point; nothing else moves.</p><div class="use"><b>Exam use:</b> why a linked list makes insertion and deletion cheap compared with shifting array items.</div></div>
+  <div class="rw"><h3>Folders on a computer (tree)</h3><p>A folder contains files and other folders, forming a tree from the root. Searching or listing everything means traversing the tree. (File systems are general trees, not always binary.)</p><div class="use"><b>Exam use:</b> a real hierarchy. Mention that a binary tree restricts each node to two children.</div></div>
+  <div class="rw"><h3>Sorted data with fast lookup (binary search tree)</h3><p>A program that keeps names in a binary search tree can find one by comparing with the root and going left or right, discarding about half of the remaining tree each time if the tree is balanced.</p><div class="use"><b>Exam use:</b> an in-order traversal gives the names alphabetically; link back to binary search (19.1.1).</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each coloured phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">State</span> <span class="mark">2 marks</span> State two features of a stack.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>LIFO plus where items are added and removed.</div>
+    <div class="ans"><span class="mk k" data-t="1">It is a last in, first out (LIFO) data structure.</span> <span class="mk k" data-t="2">Items are added (pushed) and removed (popped) at the same end, the top, which is tracked by a pointer.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Mixing up LIFO and FIFO. A stack is LIFO; a queue is FIFO.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe how an item is added to a stack that is stored in an array.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Check, move the pointer, store.</div>
+    <div class="ans"><span class="mk k" data-t="1">Check whether the stack is full (top pointer equals the maximum index); if it is, the item cannot be added.</span> <span class="mk k" data-t="2">Otherwise add 1 to the top-of-stack pointer.</span> <span class="mk k" data-t="3">Store the new item in the array at the position of the pointer.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Storing the item before incrementing the pointer, which overwrites the current top.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Complete</span> <span class="mark">4 marks</span> An empty stack is used. These operations are carried out in order: PUSH 5, PUSH 9, POP, PUSH 2, POP, POP. State the value returned by each POP and the final value of the top pointer (an empty stack has top = −1).</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Draw the stack after every operation. POP returns the top item.</div>
+    <div class="ans"><div class="tw"><table class="t"><tr><th>Operation</th><th>Stack (bottom → top)</th><th>Returned</th></tr>
+      <tr><td>PUSH 5</td><td>5</td><td></td></tr><tr><td>PUSH 9</td><td>5, 9</td><td></td></tr>
+      <tr><td>POP</td><td>5</td><td><span class="mk k" data-t="1">9</span></td></tr>
+      <tr><td>PUSH 2</td><td>5, 2</td><td></td></tr>
+      <tr><td>POP</td><td>5</td><td><span class="mk k" data-t="2">2</span></td></tr>
+      <tr><td>POP</td><td>empty</td><td><span class="mk k" data-t="3">5</span></td></tr></table></div>
+      <p><span class="mk k" data-t="4">Final top pointer = −1</span> (empty stack).</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Listing the pushes in order (5, 9, 2) as the pop order. POP always returns the most recent item still on the stack.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain why a circular queue is better than a linear queue when it is stored in an array of fixed size.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>What goes wrong with the linear version, and what the circular version does about it.</div>
+    <div class="ans"><span class="mk k" data-t="1">In a linear queue, as items are removed from the front, the space at the start of the array is never reused, so the queue can appear full while there is spare space.</span> <span class="mk k" data-t="2">In a circular queue, when the rear pointer reaches the end of the array it wraps round to the start (using MOD).</span> <span class="mk k" data-t="3">So the freed space is reused and the fixed memory is used efficiently, without shifting items.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying a circular queue "has no end". It still has a fixed maximum size; it can still become full.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Complete</span> <span class="mark">4 marks</span> A linked list is stored in two arrays. StartPointer = 2, FreePtr = 4, and −1 is the null pointer. The value 30 is inserted so the list stays in ascending order. Complete the table and the pointers after the insertion.
+<div class="tw"><table class="t"><tr><th>Index</th><th>Data</th><th>Pointer</th></tr><tr><td>0</td><td>20</td><td>3</td></tr><tr><td>1</td><td>50</td><td>−1</td></tr><tr><td>2</td><td>10</td><td>0</td></tr><tr><td>3</td><td>40</td><td>1</td></tr><tr><td>4</td><td></td><td>5</td></tr><tr><td>5</td><td></td><td>−1</td></tr></table></div></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The new node comes from the free list. The list order is 10, 20, 40, 50, so 30 goes between 20 and 40. Two list pointers change, and the free pointer moves on.</div>
+    <div class="ans"><div class="tw"><table class="t"><tr><th>Index</th><th>Data</th><th>Pointer</th></tr><tr><td>0</td><td>20</td><td><span class="mk k" data-t="2">4</span></td></tr><tr><td>1</td><td>50</td><td>−1</td></tr><tr><td>2</td><td>10</td><td>0</td></tr><tr><td>3</td><td>40</td><td>1</td></tr><tr><td>4</td><td><span class="mk k" data-t="1">30</span></td><td><span class="mk k" data-t="3">3</span></td></tr><tr><td>5</td><td></td><td>−1</td></tr></table></div>
+      <p>StartPointer = 2 (unchanged). <span class="mk k" data-t="4">FreePtr = 5</span> (the next free node).</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Leaving FreePtr at 4, so the next insertion would overwrite 30.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how an item is deleted from the middle of a linked list stored in arrays.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Find it, bypass it, and recycle the node.</div>
+    <div class="ans"><span class="mk k" data-t="1">Follow the pointers from the start pointer, keeping track of the previous node, until the item to delete is found.</span> <span class="mk k" data-t="2">Set the previous node's pointer to the pointer of the node being deleted, so the list bypasses it.</span> <span class="mk k" data-t="3">Set the deleted node's pointer to the current free-list pointer.</span> <span class="mk k" data-t="4">Set the free-list pointer to the deleted node, so it can be reused.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the later items are "moved up". Linked lists change pointers; nothing moves.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Complete</span> <span class="mark">3 marks</span> Values 50, 30, 70, 20, 40, 60 are inserted into an empty binary search tree in that order. Give the output of each traversal.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Sketch the tree first: 50 at the root, 30 and 70 below, then 20 and 40 under 30, 60 under 70 (left).</div>
+    <div class="ans"><p><b>Pre-order</b> (node, left, right): <span class="mk k" data-t="1">50, 30, 20, 40, 70, 60</span></p><p><b>In-order</b> (left, node, right): <span class="mk k" data-t="2">20, 30, 40, 50, 60, 70</span></p><p><b>Post-order</b> (left, right, node): <span class="mk k" data-t="3">20, 40, 30, 60, 70, 50</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Reading the tree level by level. That is breadth-first, not one of the three required traversals.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Explain</span> <span class="mark">4 marks</span> A program keeps an ordered list that is often changed by adding and removing items in the middle. Explain why a linked list may be more suitable than an array.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Give the advantage, the reason, and one drawback to balance.</div>
+    <div class="ans"><span class="mk k" data-t="1">In an array, inserting or deleting in the middle means shifting many items along to make or close a gap, which is slow for large lists.</span> <span class="mk k" data-t="2">In a linked list only one or two pointers need to change, and no other item moves.</span> <span class="mk k" data-t="3">A linked list can also grow and shrink as needed by using free nodes.</span> <span class="mk k" data-t="4">However, each node needs extra memory for its pointer, and items cannot be reached directly by index, so searching needs a traversal from the start.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying linked lists are "faster". They are faster for insertion and deletion, but slower for direct access.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q9 <span class="cmd">Write</span> <span class="mark">5 marks</span> A stack is stored in the array Stack with the pointer TopPointer (−1 when empty) and MaxSize items. Write a function Pop that returns the top item, or outputs "Stack empty" if there is none. Use Python or pseudocode.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Empty check, read the item, move the pointer down, return.</div>
+    <div class="ans"><pre class="plain">def pop():
+    global top
+    if top == -1:                  # (1) test for empty
+        print("Stack empty")       # (2) message
+    else:
+        item = stack[top]          # (3) read the top item
+        top -= 1                   # (4) pointer moves down
+        return item                # (5) return the item</pre>
+    <p><span class="mk k" data-t="1">Test top = −1.</span> <span class="mk k" data-t="2">Output the message in that case.</span> <span class="mk k" data-t="3">Read the item at the top pointer.</span> <span class="mk k" data-t="4">Subtract 1 from the pointer.</span> <span class="mk k" data-t="5">Return the item.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Decrementing the pointer before reading the item, which returns the wrong value.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Define an ADT by its operations.</b> It is the data plus what you can do with it, with the storage hidden.</li>
+    <li><b>Stack = LIFO, queue = FIFO.</b> Say the full name and give a real example.</li>
+    <li><b>Check first, then change.</b> Full before push, empty before pop, in the same order as the code.</li>
+    <li><b>Draw the structure.</b> For any trace, sketch the array after every operation. Marks follow the sketch.</li>
+    <li><b>Circular queues use MOD.</b> (Rear + 1) MOD MaxSize. It can still become full.</li>
+    <li><b>Linked lists change pointers, not positions.</b> Insert: new node points on, previous points to new. Delete: previous bypasses. Return the node to the free list.</li>
+    <li><b>Mind the free pointer.</b> Forgetting to update it is the commonest lost mark in linked-list tables.</li>
+    <li><b>Tree traversals have a word order.</b> Pre = node first, in = node in the middle, post = node last. In-order of a binary search tree is sorted.</li>
+    <li><b>Check array bounds.</b> This artifact starts at 0 with top = −1 for empty. Many CIE questions start at 1.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Describe</td><td>The steps or main features, in order.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+    <tr><td>Complete</td><td>Fill every blank. Show the state after each operation.</td></tr>
+    <tr><td>Write</td><td>Code or pseudocode that works. Marks for each feature.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>

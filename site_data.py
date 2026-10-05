@@ -285,6 +285,15 @@ ARTIFACTS = [
      "places": [("ig-econ", "ch-25")]},
 
     # A-Level Computer Science
+    {"src": "searching-algorithms", "role": "review", "at": "19.1.1", "title": "Searching: Linear and Binary Search", "kind": "Interactive",
+     "desc": "19.1.1 Animated traces with pseudocode and Python, comparison labs, a binary search game and exam questions.",
+     "places": [("a-cs", "a-level/ch-19")]},
+    {"src": "sorting-algorithms", "role": "review", "at": "19.1.2", "title": "Sorting: Bubble Sort and Insertion Sort", "kind": "Interactive",
+     "desc": "19.1.2 Step-through sorts, a race on different lists, a bubble sort game and exam questions.",
+     "places": [("a-cs", "a-level/ch-19")]},
+    {"src": "abstract-data-types", "role": "review", "at": "19.1.3", "title": "Abstract Data Types: Stacks, Queues, Lists and Trees", "kind": "Interactive",
+     "desc": "19.1.3 Stacks, circular queues, array-based linked lists and binary trees: animated code, sandboxes and exam questions.",
+     "places": [("a-cs", "a-level/ch-19")]},
     {"src": "linked-lists", "role": "review", "title": "Linked Lists", "kind": "Walkthrough",
      "desc": "Abstract data types: how a linked list stores, inserts and deletes nodes using pointers.",
      "places": [("a-cs", "a-level/ch-19")]},

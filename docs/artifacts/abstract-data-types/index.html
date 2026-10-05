@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="en"><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abstract Data Types: Stacks, Queues, Lists and Trees</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<style>
+.pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.pick select,.pick input[type=number]{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);width:auto}
+.pick input[type=number]{width:90px;font-family:var(--mono)}
+.pick label{font-weight:600;font-size:.92rem}
+.lab .msg{font-weight:700;margin:8px 0;min-height:1.6em}
+.listrow{font:600 1rem var(--mono);background:var(--soft);border-radius:8px;padding:8px 12px;margin:8px 0;overflow-x:auto}
+pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font:500 .85rem/1.5 var(--mono);overflow-x:auto;margin:8px 0}
+.lab svg{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.adt4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
+.adt4 .card{margin:0;border-top:4px solid var(--accent)}
+.adt4 .card:nth-child(2){border-top-color:var(--good)} .adt4 .card:nth-child(3){border-top-color:var(--warn)} .adt4 .card:nth-child(4){border-top-color:var(--n)}
+.adt4 b.k{display:block;font:700 .7rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Computer Science · 9618 · Chapter 19 · 19.1.3</div>
+  <h1>Abstract Data Types: Stacks, Queues, Linked Lists and Binary Trees</h1>
+  <p class="lead">An abstract data type is defined by what you can do with it, not by how it is stored. Watch each ADT work step by step on arrays, operate your own, and practise the trace and pseudocode questions.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>An <span class="kw">abstract data type (ADT)</span> is a collection of data together with the operations that can be performed on it. It describes <i>what</i> you can do (push, pop, insert, delete) and hides <i>how</i> the data is stored. The same ADT can be built from an array, from records and pointers, or from another ADT (see 19.1.4).</p>
+  </div>
+
+  <div class="adt4">
+    <div class="card"><h3>Stack</h3><p><b>Last in, first out</b> (LIFO). Items are added and removed at the same end, the top.</p>
+      <b class="k">Operations</b><p>push, pop, peek, isEmpty, isFull</p>
+      <b class="k">Pointer</b><p>Top of stack</p></div>
+    <div class="card"><h3>Queue</h3><p><b>First in, first out</b> (FIFO). Add at the rear, remove from the front.</p>
+      <b class="k">Operations</b><p>enqueue, dequeue, isEmpty, isFull</p>
+      <b class="k">Pointers</b><p>Front and rear (plus a count if circular)</p></div>
+    <div class="card"><h3>Linked list</h3><p>A chain of <b>nodes</b>, each holding data and a <b>pointer</b> to the next node. Order is held by the pointers, not by position.</p>
+      <b class="k">Operations</b><p>traverse, insert, delete, search</p>
+      <b class="k">Pointers</b><p>Start pointer, null pointer, free-list pointer</p></div>
+    <div class="card"><h3>Binary tree</h3><p>Each node has at most <b>two children</b>: left and right. In a binary search tree, smaller values go left, larger go right.</p>
+      <b class="k">Operations</b><p>insert, search, traverse (pre, in, post)</p>
+      <b class="k">Pointers</b><p>Root, left and right pointers</p></div>
+  </div>
+
+  <h2>Stack</h2>
+  <p>Think of a pile of plates. You can only add to or take from the top. Using an array with a <span class="kw">top-of-stack pointer</span> that starts at −1 when empty:</p>
+  <div class="tw"><table class="t">
+    <tr><th>Operation</th><th>What it does</th><th>Check first</th></tr>
+    <tr><td>push(item)</td><td>Add 1 to the pointer, store the item there</td><td>Stack full: pointer = MaxSize − 1</td></tr>
+    <tr><td>pop()</td><td>Read the item at the pointer, subtract 1 from the pointer, return the item</td><td>Stack empty: pointer = −1</td></tr>
+    <tr><td>peek()</td><td>Read the top item without removing it</td><td>Stack empty</td></tr>
+  </table></div>
+
+  <h2>Queue</h2>
+  <p>A queue at a shop till. In a <b>linear queue</b>, the front pointer moves along as items leave, so space at the start of the array is wasted. A <span class="kw">circular queue</span> reuses that space by wrapping the pointers round with <code>MOD MaxSize</code>.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Operation</th><th>What it does</th><th>Check first</th></tr>
+    <tr><td>enqueue(item)</td><td>Rear ← (Rear + 1) MOD MaxSize, store the item, count + 1</td><td>Queue full: count = MaxSize</td></tr>
+    <tr><td>dequeue()</td><td>Read the item at Front, Front ← (Front + 1) MOD MaxSize, count − 1</td><td>Queue empty: count = 0</td></tr>
+  </table></div>
+
+  <h2>Linked list</h2>
+  <p>Instead of items sitting next to each other, each node says where the next one is. Using two parallel arrays, <code>Data</code> and <code>Pointer</code>, a pointer of <b>−1</b> means null (the end). Unused nodes are chained into a <span class="kw">free list</span>, so a new node is taken from the front of the free list and a deleted node is returned to it.</p>
+  <div class="grid2">
+    <div class="card"><h3>Insert</h3><p>Take a node from the free list, store the data, find the node that should come before it, then change <b>two pointers</b>: the new node points on to what followed, and the previous node points to the new node. Nothing is shifted.</p></div>
+    <div class="card"><h3>Delete</h3><p>Find the node and the one before it. Make the previous node point to the deleted node's successor. Then return the deleted node to the free list. If it was the first node, move the start pointer instead.</p></div>
+  </div>
+
+  <h2>Binary tree</h2>
+  <p>The first node is the <span class="kw">root</span>. A node with no children is a <span class="kw">leaf</span>. To insert into a binary search tree, start at the root and go left if the new value is smaller or right if it is larger, until you reach an empty place.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Traversal</th><th>Order of visiting</th><th>Use</th></tr>
+    <tr><td>Pre-order</td><td>Node, then left subtree, then right subtree</td><td>Copying a tree</td></tr>
+    <tr><td>In-order</td><td>Left subtree, then node, then right subtree</td><td>Outputs a binary search tree in <b>sorted</b> order</td></tr>
+    <tr><td>Post-order</td><td>Left subtree, then right subtree, then node</td><td>Deleting a tree; evaluating expressions (Reverse Polish)</td></tr>
+  </table></div>
+
+  <h2>Choosing an ADT</h2>
+  <div class="tw"><table class="t">
+    <tr><th>If you need…</th><th>Use a</th></tr>
+    <tr><td>The most recent item first (undo, back button, return addresses)</td><td>Stack</td></tr>
+    <tr><td>Items handled in the order they arrived (print jobs, waiting customers)</td><td>Queue</td></tr>
+    <tr><td>A list that grows, shrinks and is often changed in the middle, kept in order by pointers</td><td>Linked list</td></tr>
+    <tr><td>Ordered data with quick searching and insertion</td><td>Binary search tree</td></tr>
+  </table></div>
+  <div class="tip"><b class="h">Array indexes</b>Code here starts arrays at index 0, with a top pointer of −1 for an empty stack. Many CIE questions start arrays at 1 and use 0 for an empty stack. Read the question first.</div>
+  <p class="note">For deeper single-topic walkthroughs, see the Linked Lists and Binary Search Tree artifacts in this chapter.</p>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps. The highlighted line in the code follows each step. Switch between Pseudocode and Python.</p>
+  <h2>1 · Stack: push and pop</h2>
+  <p>An array of 4 slots. Watch the top pointer, and what happens when the stack is full.</p>
+  <div id="aStk"></div>
+  <h2>2 · Circular queue: enqueue and dequeue</h2>
+  <p>An array of 5 slots with front and rear pointers. Dequeued values stay in memory but are no longer part of the queue. Notice the rear pointer wrap round.</p>
+  <div id="aQue"></div>
+  <h2>3 · Linked list: insert 30</h2>
+  <p>Data and pointer arrays. −1 means null. Notice that no existing item moves.</p>
+  <div id="aIns"></div>
+  <h2>4 · Linked list: delete 20</h2>
+  <div id="aDel"></div>
+  <h2>5 · Binary search tree: insert 45</h2>
+  <div id="aBst"></div>
+  <h2>6 · In-order traversal</h2>
+  <p>Visit the left subtree, then the node, then the right subtree. The output is in sorted order.</p>
+  <div id="aTrv"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Stack</h2>
+  <p>Try to pop an empty stack, then push until it is full. Peek reads the top without removing it.</p>
+  <div class="card lab" id="lab1"></div>
+
+  <h2>Lab 2 · Circular queue</h2>
+  <p>Enqueue until the queue is full, dequeue two, then enqueue again to see the rear pointer wrap to the start.</p>
+  <div class="card lab" id="lab2"></div>
+
+  <h2>Lab 3 · Linked list</h2>
+  <p>The list stays in ascending order. Insert values and delete them, and watch the free list recycle nodes. The chain at the bottom shows the logical order.</p>
+  <div class="card lab" id="lab3"></div>
+
+  <h2>Lab 4 · Binary search tree builder</h2>
+  <p>Add values and see where they land. Pick a traversal and play it to see the output order.</p>
+  <div class="card lab" id="lab4"></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which ADT?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Inserting into a linked list</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Traces and calculations</h2>
+  <p class="note">Plain numbers only. Arrays start at index 0 and an empty stack has top = −1.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Use them as examples of ideas, not as exact descriptions of any company's software.</p>
+  <div class="rw"><h3>Undo in a text editor (stack)</h3><p>Each edit is pushed onto a stack. Pressing undo pops the most recent edit and reverses it. A redo stack holds the edits you have undone.</p><div class="use"><b>Exam use:</b> the standard LIFO example. The last action done is the first undone.</div></div>
+  <div class="rw"><h3>The browser back button (stack)</h3><p>Each page you visit is pushed. Back pops the current page and shows the previous one.</p><div class="use"><b>Exam use:</b> another LIFO example, with a clear push and pop.</div></div>
+  <div class="rw"><h3>Function calls (stack)</h3><p>When one subroutine calls another, the return address and local variables are pushed onto the call stack, and popped when the subroutine finishes. Too many nested calls causes a stack overflow.</p><div class="use"><b>Exam use:</b> why recursion needs a stack, and what "stack full" means in practice.</div></div>
+  <div class="rw"><h3>Print queue (queue)</h3><p>Documents are printed in the order they were sent. New jobs join the rear; the printer takes from the front.</p><div class="use"><b>Exam use:</b> the standard FIFO example.</div></div>
+  <div class="rw"><h3>Keyboard buffer (circular queue)</h3><p>Keypresses wait in a small fixed buffer until the program reads them in order. A fixed-size buffer that reuses its space is a circular queue.</p><div class="use"><b>Exam use:</b> why a circular queue suits a fixed-size memory area: the pointers wrap round instead of the data moving.</div></div>
+  <div class="rw"><h3>A playlist of songs (linked list)</h3><p>Each track knows which track plays next. Adding a track to the middle only changes where two tracks point; nothing else moves.</p><div class="use"><b>Exam use:</b> why a linked list makes insertion and deletion cheap compared with shifting array items.</div></div>
+  <div class="rw"><h3>Folders on a computer (tree)</h3><p>A folder contains files and other folders, forming a tree from the root. Searching or listing everything means traversing the tree. (File systems are general trees, not always binary.)</p><div class="use"><b>Exam use:</b> a real hierarchy. Mention that a binary tree restricts each node to two children.</div></div>
+  <div class="rw"><h3>Sorted data with fast lookup (binary search tree)</h3><p>A program that keeps names in a binary search tree can find one by comparing with the root and going left or right, discarding about half of the remaining tree each time if the tree is balanced.</p><div class="use"><b>Exam use:</b> an in-order traversal gives the names alphabetically; link back to binary search (19.1.1).</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each coloured phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">State</span> <span class="mark">2 marks</span> State two features of a stack.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>LIFO plus where items are added and removed.</div>
+    <div class="ans"><span class="mk k" data-t="1">It is a last in, first out (LIFO) data structure.</span> <span class="mk k" data-t="2">Items are added (pushed) and removed (popped) at the same end, the top, which is tracked by a pointer.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Mixing up LIFO and FIFO. A stack is LIFO; a queue is FIFO.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe how an item is added to a stack that is stored in an array.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Check, move the pointer, store.</div>
+    <div class="ans"><span class="mk k" data-t="1">Check whether the stack is full (top pointer equals the maximum index); if it is, the item cannot be added.</span> <span class="mk k" data-t="2">Otherwise add 1 to the top-of-stack pointer.</span> <span class="mk k" data-t="3">Store the new item in the array at the position of the pointer.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Storing the item before incrementing the pointer, which overwrites the current top.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Complete</span> <span class="mark">4 marks</span> An empty stack is used. These operations are carried out in order: PUSH 5, PUSH 9, POP, PUSH 2, POP, POP. State the value returned by each POP and the final value of the top pointer (an empty stack has top = −1).</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Draw the stack after every operation. POP returns the top item.</div>
+    <div class="ans"><div class="tw"><table class="t"><tr><th>Operation</th><th>Stack (bottom → top)</th><th>Returned</th></tr>
+      <tr><td>PUSH 5</td><td>5</td><td></td></tr><tr><td>PUSH 9</td><td>5, 9</td><td></td></tr>
+      <tr><td>POP</td><td>5</td><td><span class="mk k" data-t="1">9</span></td></tr>
+      <tr><td>PUSH 2</td><td>5, 2</td><td></td></tr>
+      <tr><td>POP</td><td>5</td><td><span class="mk k" data-t="2">2</span></td></tr>
+      <tr><td>POP</td><td>empty</td><td><span class="mk k" data-t="3">5</span></td></tr></table></div>
+      <p><span class="mk k" data-t="4">Final top pointer = −1</span> (empty stack).</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Listing the pushes in order (5, 9, 2) as the pop order. POP always returns the most recent item still on the stack.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain why a circular queue is better than a linear queue when it is stored in an array of fixed size.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>What goes wrong with the linear version, and what the circular version does about it.</div>
+    <div class="ans"><span class="mk k" data-t="1">In a linear queue, as items are removed from the front, the space at the start of the array is never reused, so the queue can appear full while there is spare space.</span> <span class="mk k" data-t="2">In a circular queue, when the rear pointer reaches the end of the array it wraps round to the start (using MOD).</span> <span class="mk k" data-t="3">So the freed space is reused and the fixed memory is used efficiently, without shifting items.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying a circular queue "has no end". It still has a fixed maximum size; it can still become full.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Complete</span> <span class="mark">4 marks</span> A linked list is stored in two arrays. StartPointer = 2, FreePtr = 4, and −1 is the null pointer. The value 30 is inserted so the list stays in ascending order. Complete the table and the pointers after the insertion.
+<div class="tw"><table class="t"><tr><th>Index</th><th>Data</th><th>Pointer</th></tr><tr><td>0</td><td>20</td><td>3</td></tr><tr><td>1</td><td>50</td><td>−1</td></tr><tr><td>2</td><td>10</td><td>0</td></tr><tr><td>3</td><td>40</td><td>1</td></tr><tr><td>4</td><td></td><td>5</td></tr><tr><td>5</td><td></td><td>−1</td></tr></table></div></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The new node comes from the free list. The list order is 10, 20, 40, 50, so 30 goes between 20 and 40. Two list pointers change, and the free pointer moves on.</div>
+    <div class="ans"><div class="tw"><table class="t"><tr><th>Index</th><th>Data</th><th>Pointer</th></tr><tr><td>0</td><td>20</td><td><span class="mk k" data-t="2">4</span></td></tr><tr><td>1</td><td>50</td><td>−1</td></tr><tr><td>2</td><td>10</td><td>0</td></tr><tr><td>3</td><td>40</td><td>1</td></tr><tr><td>4</td><td><span class="mk k" data-t="1">30</span></td><td><span class="mk k" data-t="3">3</span></td></tr><tr><td>5</td><td></td><td>−1</td></tr></table></div>
+      <p>StartPointer = 2 (unchanged). <span class="mk k" data-t="4">FreePtr = 5</span> (the next free node).</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Leaving FreePtr at 4, so the next insertion would overwrite 30.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how an item is deleted from the middle of a linked list stored in arrays.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Find it, bypass it, and recycle the node.</div>
+    <div class="ans"><span class="mk k" data-t="1">Follow the pointers from the start pointer, keeping track of the previous node, until the item to delete is found.</span> <span class="mk k" data-t="2">Set the previous node's pointer to the pointer of the node being deleted, so the list bypasses it.</span> <span class="mk k" data-t="3">Set the deleted node's pointer to the current free-list pointer.</span> <span class="mk k" data-t="4">Set the free-list pointer to the deleted node, so it can be reused.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the later items are "moved up". Linked lists change pointers; nothing moves.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Complete</span> <span class="mark">3 marks</span> Values 50, 30, 70, 20, 40, 60 are inserted into an empty binary search tree in that order. Give the output of each traversal.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Sketch the tree first: 50 at the root, 30 and 70 below, then 20 and 40 under 30, 60 under 70 (left).</div>
+    <div class="ans"><p><b>Pre-order</b> (node, left, right): <span class="mk k" data-t="1">50, 30, 20, 40, 70, 60</span></p><p><b>In-order</b> (left, node, right): <span class="mk k" data-t="2">20, 30, 40, 50, 60, 70</span></p><p><b>Post-order</b> (left, right, node): <span class="mk k" data-t="3">20, 40, 30, 60, 70, 50</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Reading the tree level by level. That is breadth-first, not one of the three required traversals.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Explain</span> <span class="mark">4 marks</span> A program keeps an ordered list that is often changed by adding and removing items in the middle. Explain why a linked list may be more suitable than an array.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Give the advantage, the reason, and one drawback to balance.</div>
+    <div class="ans"><span class="mk k" data-t="1">In an array, inserting or deleting in the middle means shifting many items along to make or close a gap, which is slow for large lists.</span> <span class="mk k" data-t="2">In a linked list only one or two pointers need to change, and no other item moves.</span> <span class="mk k" data-t="3">A linked list can also grow and shrink as needed by using free nodes.</span> <span class="mk k" data-t="4">However, each node needs extra memory for its pointer, and items cannot be reached directly by index, so searching needs a traversal from the start.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying linked lists are "faster". They are faster for insertion and deletion, but slower for direct access.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q9 <span class="cmd">Write</span> <span class="mark">5 marks</span> A stack is stored in the array Stack with the pointer TopPointer (−1 when empty) and MaxSize items. Write a function Pop that returns the top item, or outputs "Stack empty" if there is none. Use Python or pseudocode.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Empty check, read the item, move the pointer down, return.</div>
+    <div class="ans"><pre class="plain">def pop():
+    global top
+    if top == -1:                  # (1) test for empty
+        print("Stack empty")       # (2) message
+    else:
+        item = stack[top]          # (3) read the top item
+        top -= 1                   # (4) pointer moves down
+        return item                # (5) return the item</pre>
+    <p><span class="mk k" data-t="1">Test top = −1.</span> <span class="mk k" data-t="2">Output the message in that case.</span> <span class="mk k" data-t="3">Read the item at the top pointer.</span> <span class="mk k" data-t="4">Subtract 1 from the pointer.</span> <span class="mk k" data-t="5">Return the item.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Decrementing the pointer before reading the item, which returns the wrong value.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Define an ADT by its operations.</b> It is the data plus what you can do with it, with the storage hidden.</li>
+    <li><b>Stack = LIFO, queue = FIFO.</b> Say the full name and give a real example.</li>
+    <li><b>Check first, then change.</b> Full before push, empty before pop, in the same order as the code.</li>
+    <li><b>Draw the structure.</b> For any trace, sketch the array after every operation. Marks follow the sketch.</li>
+    <li><b>Circular queues use MOD.</b> (Rear + 1) MOD MaxSize. It can still become full.</li>
+    <li><b>Linked lists change pointers, not positions.</b> Insert: new node points on, previous points to new. Delete: previous bypasses. Return the node to the free list.</li>
+    <li><b>Mind the free pointer.</b> Forgetting to update it is the commonest lost mark in linked-list tables.</li>
+    <li><b>Tree traversals have a word order.</b> Pre = node first, in = node in the middle, post = node last. In-order of a binary search tree is sorted.</li>
+    <li><b>Check array bounds.</b> This artifact starts at 0 with top = −1 for empty. Many CIE questions start at 1.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Describe</td><td>The steps or main features, in order.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+    <tr><td>Complete</td><td>Fill every blank. Show the state after each operation.</td></tr>
+    <tr><td>Write</td><td>Code or pseudocode that works. Marks for each feature.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.round(s.i)].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+window.Lib = { cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+/* ====================== code listings ====================== */
+const STK_PS = ["PROCEDURE Push(Item)", "   IF TopPointer = MaxSize - 1 THEN", '      OUTPUT "Stack full"', "   ELSE", "      TopPointer ← TopPointer + 1", "      Stack[TopPointer] ← Item", "   ENDIF", "ENDPROCEDURE", "", "FUNCTION Pop() RETURNS INTEGER", "   IF TopPointer = -1 THEN", '      OUTPUT "Stack empty"', "   ELSE", "      Item ← Stack[TopPointer]", "      TopPointer ← TopPointer - 1", "      RETURN Item", "   ENDIF", "ENDFUNCTION"];
+const STK_PY = ["def push(item):", "    global top", "    if top == MAX - 1:", '        print("Stack full")', "    else:", "        top += 1", "        stack[top] = item", "", "def pop():", "    global top", "    if top == -1:", '        print("Stack empty")', "    else:", "        item = stack[top]", "        top -= 1", "        return item"];
+const QUE_PS = ["PROCEDURE Enqueue(Item)", "   IF Count = MaxSize THEN", '      OUTPUT "Queue full"', "   ELSE", "      Rear ← (Rear + 1) MOD MaxSize", "      Queue[Rear] ← Item", "      Count ← Count + 1", "   ENDIF", "ENDPROCEDURE", "", "FUNCTION Dequeue() RETURNS INTEGER", "   IF Count = 0 THEN", '      OUTPUT "Queue empty"', "   ELSE", "      Item ← Queue[Front]", "      Front ← (Front + 1) MOD MaxSize", "      Count ← Count - 1", "      RETURN Item", "   ENDIF", "ENDFUNCTION"];
+const QUE_PY = ["def enqueue(item):", "    global rear, count", "    if count == MAX:", '        print("Queue full")', "    else:", "        rear = (rear + 1) % MAX", "        queue[rear] = item", "        count += 1", "", "def dequeue():", "    global front, count", "    if count == 0:", '        print("Queue empty")', "    else:", "        item = queue[front]", "        front = (front + 1) % MAX", "        count -= 1", "        return item"];
+const LI_PS = ["PROCEDURE Insert(NewItem)", "   IF FreePtr = -1 THEN", '      OUTPUT "List full"', "   ELSE", "      NewPtr ← FreePtr", "      FreePtr ← Pointer[FreePtr]", "      Data[NewPtr] ← NewItem", "      Current ← StartPointer", "      Previous ← -1", "      WHILE Current <> -1 AND Data[Current] < NewItem", "         Previous ← Current", "         Current ← Pointer[Current]", "      ENDWHILE", "      Pointer[NewPtr] ← Current", "      IF Previous = -1 THEN", "         StartPointer ← NewPtr", "      ELSE", "         Pointer[Previous] ← NewPtr", "      ENDIF", "   ENDIF", "ENDPROCEDURE"];
+const LI_PY = ["def insert(new_item):", "    global start, free", "    if free == -1:", '        print("List full")', "    else:", "        new = free", "        free = pointer[free]", "        data[new] = new_item", "        current = start", "        previous = -1", "        while current != -1 and data[current] < new_item:", "            previous = current", "            current = pointer[current]", "        pointer[new] = current", "        if previous == -1:", "            start = new", "        else:", "            pointer[previous] = new"];
+const LD_PS = ["PROCEDURE Delete(Item)", "   Current ← StartPointer", "   Previous ← -1", "   WHILE Current <> -1 AND Data[Current] <> Item", "      Previous ← Current", "      Current ← Pointer[Current]", "   ENDWHILE", "   IF Current = -1 THEN", '      OUTPUT "Not found"', "   ELSE", "      IF Previous = -1 THEN", "         StartPointer ← Pointer[Current]", "      ELSE", "         Pointer[Previous] ← Pointer[Current]", "      ENDIF", "      Pointer[Current] ← FreePtr", "      FreePtr ← Current", "   ENDIF", "ENDPROCEDURE"];
+const LD_PY = ["def delete(item):", "    global start, free", "    current = start", "    previous = -1", "    while current != -1 and data[current] != item:", "        previous = current", "        current = pointer[current]", "    if current == -1:", '        print("Not found")', "    else:", "        if previous == -1:", "            start = pointer[current]", "        else:", "            pointer[previous] = pointer[current]", "        pointer[current] = free", "        free = current"];
+const BI_PS = ["PROCEDURE Insert(Root, NewItem)", "   IF Root = NULL THEN", "      Root ← NewNode(NewItem)", "   ELSE", "      Current ← Root", "      Placed ← FALSE", "      WHILE Placed = FALSE", "         IF NewItem < Current.Data THEN", "            IF Current.Left = NULL THEN", "               Current.Left ← NewNode(NewItem)", "               Placed ← TRUE", "            ELSE", "               Current ← Current.Left", "            ENDIF", "         ELSE", "            IF Current.Right = NULL THEN", "               Current.Right ← NewNode(NewItem)", "               Placed ← TRUE", "            ELSE", "               Current ← Current.Right", "            ENDIF", "         ENDIF", "      ENDWHILE", "   ENDIF", "ENDPROCEDURE"];
+const BI_PY = ["def insert(root, new):", "    if root is None:", "        return Node(new)", "    current = root", "    placed = False", "    while not placed:", "        if new < current.data:", "            if current.left is None:", "                current.left = Node(new)", "                placed = True", "            else:", "                current = current.left", "        else:", "            if current.right is None:", "                current.right = Node(new)", "                placed = True", "            else:", "                current = current.right", "    return root"];
+const TR_PS = ["PROCEDURE InOrder(Node)", "   IF Node <> NULL THEN", "      InOrder(Node.Left)", "      OUTPUT Node.Data", "      InOrder(Node.Right)", "   ENDIF", "ENDPROCEDURE"];
+const TR_PY = ["def in_order(node):", "    if node is not None:", "        in_order(node.left)", "        print(node.data)", "        in_order(node.right)"];
+
+const W = 640, MONO = "font-family:var(--mono);";
+const hdr = (t, r) => SV.text(14, 26, t, "lbl bd", { "text-anchor": "start" }) + (r ? SV.text(W - 14, 26, r, "lbl bd t4", { "text-anchor": "end", style: MONO }) : "");
+const note = (t, c, y = 232) => (t ? SV.text(W / 2, y, t, "lbl bd " + (c || ""), { "text-anchor": "middle" }) : "");
+
+/* ====================== stack ====================== */
+function stkView(st, top, MAXN, o = {}) {
+  const w = 76, g = 10, x0 = (W - (MAXN * w + (MAXN - 1) * g)) / 2, dim = []; for (let i = top + 1; i < MAXN; i++) dim.push(i);
+  return hdr("Stack (array of " + MAXN + ")", "TopPointer = " + top) + Lib.cells(st, { x0, y: 90, w, h: 56, gap: g, dim, cls: o.cls || (top >= 0 ? { [top]: "cur" } : {}), ptr: top >= 0 ? { [top]: "Top" } : {} }) + note(o.note, o.nc) + SV.text(14, 214, "Shaded slots are empty (or hold stale data).", "sm", { "text-anchor": "start" });
+}
+function stkFrames() {
+  const MAXN = 4, st = Array(MAXN).fill(null); let top = -1; const F = [];
+  const f = (cap, ps, py, o) => F.push({ cap, ps, py, svg: stkView([...st], top, MAXN, o) });
+  f("An empty stack in an array of 4 slots. <b>TopPointer = −1</b> means empty.", [], []);
+  [["push", 5], ["push", 8], ["push", 2], ["pop"], ["push", 9], ["push", 7], ["push", 4]].forEach(([op, v]) => {
+    if (op === "push") {
+      if (top === MAXN - 1) return f(`<b>Push ${v}.</b> TopPointer = ${top} = MaxSize − 1, so the stack is <b>full</b>. Output "Stack full". The item is rejected.`, [1, 2], [2, 3], { note: "Stack full: " + v + " rejected", nc: "t2", cls: { [top]: "no" } });
+      f(`<b>Push ${v}.</b> Is the stack full? TopPointer ${top} ≠ ${MAXN - 1}, so there is space.`, [1], [2]);
+      top++; f(`TopPointer ← TopPointer + 1 = <b>${top}</b>.`, [4], [5], { cls: { [top]: "cur" } });
+      st[top] = v; f(`Stack[${top}] ← <b>${v}</b>. Pushed.`, [5], [6], { cls: { [top]: "ok" } });
+    } else {
+      f(`<b>Pop.</b> Is the stack empty? TopPointer = ${top}, not −1, so there is an item.`, [10], [10]);
+      const item = st[top]; f(`Item ← Stack[${top}] = <b>${item}</b>. The item is read from the top.`, [13], [13], { cls: { [top]: "warn" } });
+      top--; f(`TopPointer ← TopPointer − 1 = <b>${top}</b>. The slot is now treated as empty.`, [14], [14], { cls: top >= 0 ? { [top]: "cur" } : {} });
+      f(`Return <b>${item}</b>. The last item pushed was the first out: LIFO.`, [15], [15], { note: "Returned " + item, nc: "t3", cls: top >= 0 ? { [top]: "cur" } : {} });
+    }
+  });
+  return F;
+}
+
+/* ====================== circular queue ====================== */
+function queView(q, front, rear, count, MAXN, o = {}) {
+  const w = 84, g = 10, x0 = (W - (MAXN * w + (MAXN - 1) * g)) / 2, inQ = new Set(); for (let k = 0; k < count; k++) inQ.add((front + k) % MAXN);
+  const dim = []; for (let i = 0; i < MAXN; i++) if (!inQ.has(i)) dim.push(i);
+  const ptr = { [front]: "Front" }; if (rear >= 0) ptr[rear] = rear === front ? "Front + Rear" : "Rear";
+  return hdr("Circular queue (array of " + MAXN + ")", `Front ${front} · Rear ${rear} · Count ${count}`) + Lib.cells(q, { x0, y: 90, w, h: 56, gap: g, dim, cls: o.cls || {}, ptr }) + note(o.note, o.nc) + SV.text(14, 214, "Shaded slots are not part of the queue (stale or empty).", "sm", { "text-anchor": "start" });
+}
+function queFrames() {
+  const MAXN = 4, q = Array(MAXN).fill(null); let front = 0, rear = -1, count = 0; const F = [];
+  const f = (cap, ps, py, o) => F.push({ cap, ps, py, svg: queView([...q], front, rear, count, MAXN, o) });
+  f("An empty circular queue in an array of 4 slots. Front = 0, Rear = −1, Count = 0.", [], []);
+  [["e", "A"], ["e", "B"], ["e", "C"], ["e", "D"], ["e", "E"], ["d"], ["d"], ["e", "F"]].forEach(([op, v]) => {
+    if (op === "e") {
+      if (count === MAXN) return f(`<b>Enqueue ${v}.</b> Count = ${count} = MaxSize, so the queue is <b>full</b>. Output "Queue full".`, [1, 2], [2, 3], { note: "Queue full: " + v + " rejected", nc: "t2" });
+      f(`<b>Enqueue ${v}.</b> Is the queue full? Count ${count} ≠ ${MAXN}, so there is space.`, [1], [2]);
+      const wrap = rear === MAXN - 1;
+      rear = (rear + 1) % MAXN; q[rear] = v;
+      f(`Rear ← (Rear + 1) MOD ${MAXN} = <b>${rear}</b>${wrap ? " (it wrapped round to the start!)" : ""}. Queue[${rear}] ← ${v}.`, [4, 5], [5, 6], { cls: { [rear]: "ok" } });
+      count++; f(`Count ← ${count}.`, [6], [7], { cls: { [rear]: "ok" } });
+    } else {
+      f(`<b>Dequeue.</b> Is the queue empty? Count = ${count}, so there is an item.`, [11], [11]);
+      const item = q[front]; f(`Item ← Queue[${front}] = <b>${item}</b>. The item at the front is read.`, [14], [14], { cls: { [front]: "warn" } });
+      const old = front; front = (front + 1) % MAXN; f(`Front ← (Front + 1) MOD ${MAXN} = <b>${front}</b>. Slot ${old} is now free to reuse.`, [15], [15], { cls: { [old]: "warn" } });
+      count--; f(`Count ← ${count}. Return <b>${item}</b>. The first item in was the first out: FIFO.`, [16, 17], [16, 17], { note: "Returned " + item, nc: "t3" });
+    }
+  });
+  return F;
+}
+
+/* ====================== linked list in arrays ====================== */
+function chain(st) { const out = []; let p = st.start, g = 0; while (p !== -1 && g++ < 12) { out.push(st.data[p]); p = st.ptr[p]; } return out; }
+function freeSet(st) { const s = []; let p = st.free, g = 0; while (p !== -1 && p !== undefined && g++ < 12) { s.push(p); p = st.ptr[p]; } return s; }
+function llView(st, o = {}) {
+  const N = st.data.length, w = Math.min(64, Math.floor(490 / N) - 8), g = 8, x0 = 126, cd = {}, cp = {};
+  const mark = (i, c) => { if (i >= 0 && i < N) { cd[i] = c; cp[i] = c; } };
+  mark(o.prev, "warn"); mark(o.cur, "cur"); mark(o.nw, "ok");
+  let s = hdr("Linked list stored in two arrays", o.right || "−1 = null");
+  s += SV.text(14, 78, "Data", "lbl bd", { "text-anchor": "start" }) + SV.text(14, 128, "Pointer", "lbl bd", { "text-anchor": "start" }) + SV.text(14, 50, "Index", "sm", { "text-anchor": "start" });
+  st.data.forEach((_, i) => (s += SV.text(x0 + i * (w + g) + w / 2, 50, i, "sm bd", { "text-anchor": "middle" })));
+  s += Lib.cells(st.data, { x0, y: 58, w, h: 38, gap: g, idx: false, cls: cd, dim: freeSet(st) });
+  s += Lib.cells(st.ptr, { x0, y: 108, w, h: 38, gap: g, idx: false, cls: cp });
+  const vars = [["StartPointer", st.start], ["FreePtr", st.free]]; if (o.cur !== undefined) vars.push(["Current", o.cur]); if (o.prev !== undefined) vars.push(["Previous", o.prev]); if (o.nw !== undefined) vars.push(["NewPtr", o.nw]);
+  s += SV.text(14, 182, vars.map(([k, v]) => `${k} = ${v}`).join("    "), "lbl bd", { "text-anchor": "start", style: MONO + "font-size:13.5px" });
+  s += SV.text(14, 212, "Shaded data cells are free nodes (on the free list).", "sm", { "text-anchor": "start" });
+  const ch = chain(st); s += SV.text(14, 252, "List order:", "lbl bd", { "text-anchor": "start" });
+  let x = 104; ch.forEach((v, i) => { s += SV.rect(x, 234, 48, 28, "cell cell-cur", { rx: 6 }) + SV.text(x + 24, 253, v, "lbl bd", { "text-anchor": "middle", style: MONO }); if (i < ch.length - 1) s += SV.line(x + 48, 248, x + 66, 248, "ax") + SV.arrowHead(x + 68, 248, "r", "dot1"); x += 74; });
+  s += SV.text(x + 2, 253, "→ null", "sm bd", { "text-anchor": "start" });
+  return s + note(o.note, o.nc, 292);
+}
+const LL0 = () => ({ data: [20, 50, 10, 40, null, null], ptr: [3, -1, 0, 1, 5, -1], start: 2, free: 4 });
+function liFrames() {
+  const st = LL0(), F = [];
+  const f = (cap, ps, py, o) => F.push({ cap, ps, py, svg: llView({ data: [...st.data], ptr: [...st.ptr], start: st.start, free: st.free }, o) });
+  f("The list holds <b>10 → 20 → 40 → 50</b> in ascending order, but the nodes are stored out of order in the arrays. Nodes 4 and 5 are free. Insert 30.", [], []);
+  f(`Is the list full? FreePtr = ${st.free}, not −1, so a free node is available.`, [1], [2]);
+  const nw = st.free; f(`NewPtr ← FreePtr = <b>${nw}</b>. This free node will hold the new item.`, [4], [5], { nw });
+  st.free = st.ptr[nw]; f(`FreePtr ← Pointer[${nw}] = <b>${st.free}</b>. The next free node is now at the front of the free list.`, [5], [6], { nw });
+  st.data[nw] = 30; f(`Data[${nw}] ← <b>30</b>.`, [6], [7], { nw });
+  let cur = st.start, prev = -1; f(`Start at the head of the list: Current ← ${cur}, Previous ← −1.`, [7, 8], [8, 9], { nw, cur, prev: -1 });
+  while (cur !== -1 && st.data[cur] < 30) {
+    f(`Is Data[${cur}] &lt; 30? ${st.data[cur]} &lt; 30 is true, so keep going.`, [9], [10], { nw, cur, prev });
+    prev = cur; cur = st.ptr[cur]; f(`Previous ← ${prev}, Current ← Pointer[${prev}] = <b>${cur}</b>.`, [10, 11], [11, 12], { nw, cur, prev });
+  }
+  f(`Is Data[${cur}] &lt; 30? ${st.data[cur]} &lt; 30 is false, so stop. 30 belongs <b>between ${st.data[prev]} and ${st.data[cur]}</b>.`, [9], [10], { nw, cur, prev });
+  st.ptr[nw] = cur; f(`Pointer[${nw}] ← Current = <b>${cur}</b>. The new node now points on to ${st.data[cur]}.`, [13], [13], { nw, cur, prev });
+  st.ptr[prev] = nw; f(`Previous is not −1, so Pointer[${prev}] ← NewPtr = <b>${nw}</b>. ${st.data[prev]} now points to the new node. No other item moved.`, [14, 16, 17], [14, 16, 17], { nw, prev, note: "Inserted: " + chain(st).join(" → "), nc: "t3" });
+  return F;
+}
+function ldFrames() {
+  const st = { data: [20, 50, 10, 40, 30, null], ptr: [4, -1, 0, 1, 3, -1], start: 2, free: 5 }, F = [];
+  const f = (cap, ps, py, o) => F.push({ cap, ps, py, svg: llView({ data: [...st.data], ptr: [...st.ptr], start: st.start, free: st.free }, o) });
+  f("The list holds <b>10 → 20 → 30 → 40 → 50</b>. Delete 20.", [], []);
+  let cur = st.start, prev = -1; f(`Start at the head: Current ← ${cur}, Previous ← −1.`, [1, 2], [2, 3], { cur, prev: -1 });
+  while (cur !== -1 && st.data[cur] !== 20) {
+    f(`Is Data[${cur}] ≠ 20? ${st.data[cur]} ≠ 20, so keep looking.`, [3], [4], { cur, prev });
+    prev = cur; cur = st.ptr[cur]; f(`Previous ← ${prev}, Current ← Pointer[${prev}] = <b>${cur}</b>.`, [4, 5], [5, 6], { cur, prev });
+  }
+  f(`Data[${cur}] = 20, so the loop stops. Found at node ${cur}, with the previous node ${prev}.`, [3], [4], { cur, prev });
+  f(`Current is not −1, so the item was found. Previous is not −1, so it is not the first node.`, [7, 9, 10], [7, 9, 10], { cur, prev });
+  const nxt = st.ptr[cur]; st.ptr[prev] = nxt; f(`Pointer[${prev}] ← Pointer[${cur}] = <b>${nxt}</b>. Node ${prev} (value 10) now skips over 20 and points straight to 30.`, [12, 13], [12, 13], { cur, prev });
+  st.ptr[cur] = st.free; f(`Pointer[${cur}] ← FreePtr = ${st.free}. The deleted node is linked to the front of the free list.`, [15], [14], { cur, prev });
+  st.free = cur; f(`FreePtr ← <b>${cur}</b>. Node ${cur} can be reused by the next insertion. 20 is gone from the list, but nothing moved.`, [16], [15], { prev, note: "Deleted: " + chain(st).join(" → "), nc: "t3" });
+  return F;
+}
+
+/* ====================== binary tree ====================== */
+const bstIns = (root, v) => { const n = { v, l: null, r: null }; if (!root) return n; let c = root; for (;;) { if (v < c.v) { if (!c.l) { c.l = n; break; } c = c.l; } else { if (!c.r) { c.r = n; break; } c = c.r; } } return root; };
+const buildT = (arr) => arr.reduce(bstIns, null);
+function layoutT(root) { const pos = new Map(); let k = 0, maxD = 0; const rec = (n, d) => { if (!n) return; rec(n.l, d + 1); pos.set(n.v, { n, rank: k++, d }); maxD = Math.max(maxD, d); rec(n.r, d + 1); }; rec(root, 0); return { pos, N: k, maxD }; }
+function treeSvg(root, o = {}) {
+  const { pos, N } = layoutT(root), WW = o.W || W, dy = o.dy || 54, y0 = o.y0 || 62, xs = N > 1 ? Math.min(78, (WW - 70) / (N - 1)) : 0, X = (p) => WW / 2 + (p.rank - (N - 1) / 2) * xs, Y = (p) => y0 + p.d * dy;
+  const show = o.show || new Set(pos.keys()), cls = o.cls || {}, on = o.edges || new Set(), badge = o.badge || {};
+  let s = "";
+  pos.forEach((p, v) => { if (!show.has(v)) return; [p.n.l, p.n.r].forEach((c) => { if (c && show.has(c.v)) { const q = pos.get(c.v), e = on.has(v + ">" + c.v); s += SV.line(X(p), Y(p), X(q), Y(q), e ? "edge-on" : "edge"); } }); });
+  pos.forEach((p, v) => { if (!show.has(v)) return; s += SV.circle(X(p), Y(p), 20, "nd" + (cls[v] ? " nd-" + cls[v] : "")) + SV.text(X(p), Y(p) + 6, v, "lbl bd", { "text-anchor": "middle", style: MONO + "font-size:15px" }); if (badge[v]) s += SV.text(X(p) + 22, Y(p) - 16, badge[v], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px" }); });
+  return s;
+}
+function biFrames() {
+  const base = [50, 30, 70, 20, 40, 60, 80], NEW = 45, final = buildT([...base, NEW]), F = [], show = new Set(base);
+  const f = (cap, ps, py, o = {}) => F.push({ cap, ps, py, svg: hdr("Binary search tree: insert " + NEW) + treeSvg(final, { show, cls: o.cls, edges: o.edges, y0: 74 }) + note(o.note, o.nc, 238) });
+  f(`A binary search tree built from 50, 30, 70, 20, 40, 60, 80. Insert <b>${NEW}</b>. Smaller values go left, larger go right.`, [], []);
+  f(`The tree is not empty (Root ≠ NULL), so Current ← Root = <b>50</b>.`, [1, 4, 5], [1, 3, 4], { cls: { 50: "cur" } });
+  let cur = buildT(base), edges = new Set();
+  for (;;) {
+    const left = NEW < cur.v, nxt = left ? cur.l : cur.r;
+    f(`Is ${NEW} &lt; ${cur.v}? ${left ? "Yes" : "No"}, so go <b>${left ? "left" : "right"}</b>.`, [left ? 7 : 14], [left ? 6 : 12], { cls: { [cur.v]: "cur" }, edges });
+    if (nxt) { f(`${left ? "Left" : "Right"} child of ${cur.v} is ${nxt.v}, which is not NULL. Current ← ${nxt.v}.`, left ? [8, 11, 12] : [15, 18, 19], left ? [7, 10, 11] : [13, 16, 17], { cls: { [nxt.v]: "cur" }, edges: new Set([...edges, cur.v + ">" + nxt.v]) }); edges.add(cur.v + ">" + nxt.v); cur = nxt; }
+    else { show.add(NEW); f(`${left ? "Left" : "Right"} child of ${cur.v} is NULL, so create the new node here. <b>${NEW} is inserted</b> as the ${left ? "left" : "right"} child of ${cur.v}.`, left ? [8, 9, 10] : [15, 16, 17], left ? [7, 8, 9] : [13, 14, 15], { cls: { [NEW]: "ok" }, edges: new Set([...edges, cur.v + ">" + NEW]), note: "Inserted after 3 comparisons: 50, 30, 40", nc: "t3" }); break; }
+  }
+  return F;
+}
+function trFrames() {
+  const root = buildT([40, 20, 60, 10, 30]), F = [], out = [], seen = {};
+  const f = (cap, ps, py, cur, nul) => F.push({ cap, ps, py, svg: hdr("In-order traversal") + treeSvg(root, { cls: { ...seen, ...(cur !== undefined ? { [cur]: "cur" } : {}) }, y0: 70 }) + SV.text(14, 214, "Output: " + (out.join(", ") || "(nothing yet)"), "lbl bd t3", { "text-anchor": "start", style: MONO }) + (nul ? SV.text(W / 2, 238, nul, "lbl bd t2", { "text-anchor": "middle" }) : "") });
+  f("Call InOrder on the root. Output starts empty.", [], []);
+  const rec = (n, parent) => {
+    if (!n) return f(`<b>InOrder(NULL)</b>: there is no node, so nothing happens and the call returns to ${parent}.`, [1], [1], parent, "NULL: return");
+    f(`<b>InOrder(${n.v})</b>: the node is not NULL, so first call InOrder on its <b>left</b> child.`, [1, 2], [1, 2], n.v);
+    rec(n.l, n.v);
+    out.push(n.v); seen[n.v] = "seen"; f(`Left subtree finished. <b>OUTPUT ${n.v}</b>, then call InOrder on its <b>right</b> child.`, [3, 4], [3, 4], n.v);
+    rec(n.r, n.v);
+  };
+  rec(root, "the caller");
+  F.push({ cap: "Every call has returned. The output <b>10, 20, 30, 40, 60</b> is in ascending order: an in-order traversal of a binary search tree gives sorted data.", ps: [], py: [], svg: hdr("In-order traversal") + treeSvg(root, { cls: seen, y0: 70 }) + SV.text(14, 214, "Output: " + out.join(", "), "lbl bd t3", { "text-anchor": "start", style: MONO }) });
+  return F;
+}
+
+Lib.algo($("#aStk"), { w: W, h: 250, label: "Stack animation", pseudo: STK_PS, py: STK_PY, dwell: 1900, frames: stkFrames() });
+Lib.algo($("#aQue"), { w: W, h: 250, label: "Circular queue animation", pseudo: QUE_PS, py: QUE_PY, dwell: 1900, frames: queFrames() });
+Lib.algo($("#aIns"), { w: W, h: 305, label: "Linked list insertion animation", pseudo: LI_PS, py: LI_PY, dwell: 2400, frames: liFrames() });
+Lib.algo($("#aDel"), { w: W, h: 305, label: "Linked list deletion animation", pseudo: LD_PS, py: LD_PY, dwell: 2400, frames: ldFrames() });
+Lib.algo($("#aBst"), { w: W, h: 250, label: "Binary search tree insertion animation", pseudo: BI_PS, py: BI_PY, dwell: 2400, frames: biFrames() });
+Lib.algo($("#aTrv"), { w: W, h: 250, label: "In-order traversal animation", pseudo: TR_PS, py: TR_PY, dwell: 1800, frames: trFrames() });
+
+/* ====================== labs ====================== */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+function labShell(el, svgH) {
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${svgH}" role="img" aria-label="Interactive diagram"></svg><div class="pick" data-c></div><div class="msg" aria-live="polite"></div>`;
+  return { svg: $("svg", el), ctl: $("[data-c]", el), msg: $(".msg", el) };
+}
+const mkCtl = (ctl, items) => items.forEach(([k, label, cls]) => { if (k === "num") { ctl.insertAdjacentHTML("beforeend", `<label>Value <input type="number" min="1" max="99" value="${label}" aria-label="Value"></label>`); } else ctl.insertAdjacentHTML("beforeend", `<button class="b ${cls || ""}" data-k="${k}">${label}</button>`); });
+
+/* ---- Lab 1: stack ---- */
+(() => {
+  const { svg, ctl, msg } = labShell($("#lab1"), 250); const MAXN = 6; let st, top;
+  mkCtl(ctl, [["num", rnd(10, 99)], ["push", "Push", "pri"], ["pop", "Pop"], ["peek", "Peek"], ["reset", "Reset"]]);
+  const inp = $("input", ctl), draw = (m, bad, cls) => { svg.innerHTML = stkView([...st], top, MAXN, cls ? { cls } : {}); msg.textContent = m || ""; msg.style.color = bad ? "var(--bad)" : "var(--good)"; };
+  const reset = () => { st = Array(MAXN).fill(null); top = -1; inp.value = rnd(10, 99); draw("Empty stack. Push something."); };
+  ctl.onclick = (e) => { const k = e.target.dataset.k; if (!k) return;
+    if (k === "reset") return reset();
+    if (k === "push") { const v = +inp.value || rnd(10, 99); if (top === MAXN - 1) return draw(`Stack full: ${v} rejected. Pop something first.`, true, { [top]: "no" }); top++; st[top] = v; inp.value = rnd(10, 99); return draw(`Pushed ${v}. TopPointer = ${top}.`, false, { [top]: "ok" }); }
+    if (top === -1) return draw(k === "pop" ? "Stack empty: nothing to pop." : "Stack empty: nothing to peek at.", true);
+    if (k === "peek") return draw(`Peek: the top item is ${st[top]}. It stays on the stack.`, false, { [top]: "cur" });
+    const v = st[top]; top--; draw(`Popped ${v}. TopPointer = ${top}. The last item in was the first out.`, false); };
+  reset();
+})();
+
+/* ---- Lab 2: circular queue ---- */
+(() => {
+  const { svg, ctl, msg } = labShell($("#lab2"), 250); const MAXN = 6; let q, front, rear, count, nextL;
+  mkCtl(ctl, [["enq", "Enqueue", "pri"], ["deq", "Dequeue"], ["reset", "Reset"]]);
+  const draw = (m, bad, cls) => { svg.innerHTML = queView([...q], front, rear, count, MAXN, cls ? { cls } : {}); msg.textContent = m || ""; msg.style.color = bad ? "var(--bad)" : "var(--good)"; };
+  const reset = () => { q = Array(MAXN).fill(null); front = 0; rear = -1; count = 0; nextL = 0; draw("Empty queue. Enqueue some items."); };
+  ctl.onclick = (e) => { const k = e.target.dataset.k; if (!k) return;
+    if (k === "reset") return reset();
+    if (k === "enq") { const v = String.fromCharCode(65 + (nextL++ % 26)); if (count === MAXN) { nextL--; return draw(`Queue full: ${v} rejected. Dequeue first.`, true); } const wrap = rear === MAXN - 1; rear = (rear + 1) % MAXN; q[rear] = v; count++; return draw(`Enqueued ${v} at index ${rear}${wrap ? ". Rear wrapped round to the start" : ""}.`, false, { [rear]: "ok" }); }
+    if (count === 0) return draw("Queue empty: nothing to dequeue.", true);
+    const v = q[front], old = front; front = (front + 1) % MAXN; count--; draw(`Dequeued ${v} from index ${old}. First in, first out. The slot can be reused.`, false, { [old]: "warn" }); };
+  reset();
+})();
+
+/* ---- Lab 3: linked list ---- */
+(() => {
+  const { svg, ctl, msg } = labShell($("#lab3"), 305); let st;
+  mkCtl(ctl, [["num", 30], ["ins", "Insert", "pri"], ["del", "Delete"], ["reset", "Reset"]]);
+  const inp = $("input", ctl), draw = (m, bad, o) => { svg.innerHTML = llView({ data: [...st.data], ptr: [...st.ptr], start: st.start, free: st.free }, o); msg.textContent = m || ""; msg.style.color = bad ? "var(--bad)" : "var(--good)"; };
+  const reset = () => { st = { data: [20, 50, 10, 40, null, null, null, null], ptr: [3, -1, 0, 1, 5, 6, 7, -1], start: 2, free: 4 }; draw("List: 10 → 20 → 40 → 50. Try inserting 30, then deleting 10."); };
+  ctl.onclick = (e) => { const k = e.target.dataset.k; if (!k) return;
+    if (k === "reset") return reset();
+    const v = +inp.value; if (!v) return draw("Enter a value from 1 to 99.", true);
+    if (k === "ins") {
+      if (st.free === -1) return draw("List full: there are no free nodes. Delete something first.", true);
+      const nw = st.free; st.free = st.ptr[nw]; st.data[nw] = v; let cur = st.start, prev = -1;
+      while (cur !== -1 && st.data[cur] < v) { prev = cur; cur = st.ptr[cur]; }
+      st.ptr[nw] = cur; if (prev === -1) st.start = nw; else st.ptr[prev] = nw;
+      return draw(`Inserted ${v} in node ${nw}. ${prev === -1 ? "It is the new first node, so StartPointer changed." : `Pointer[${prev}] now points to it.`} Nothing else moved.`, false, { nw, prev: prev === -1 ? undefined : prev });
+    }
+    let cur = st.start, prev = -1; while (cur !== -1 && st.data[cur] !== v) { prev = cur; cur = st.ptr[cur]; }
+    if (cur === -1) return draw(`${v} is not in the list.`, true);
+    if (prev === -1) st.start = st.ptr[cur]; else st.ptr[prev] = st.ptr[cur];
+    st.ptr[cur] = st.free; st.free = cur; st.data[cur] = st.data[cur];
+    draw(`Deleted ${v} from node ${cur}. ${prev === -1 ? "It was the first node, so StartPointer moved on." : `Pointer[${prev}] now skips it.`} Node ${cur} returned to the free list.`, false, {});
+  };
+  reset();
+})();
+
+/* ---- Lab 4: BST builder ---- */
+(() => {
+  const el = $("#lab4"); let vals = [50, 30, 70, 20, 40], timer = 0, step = 0, order = [];
+  el.innerHTML = `<svg viewBox="0 0 ${W} 300" role="img" aria-label="Binary search tree"></svg>
+    <div class="pick"><label>Value <input type="number" min="1" max="99" value="45" aria-label="Value"></label><button class="b pri" data-k="add">Add</button><button class="b" data-k="rand">Random value</button><button class="b" data-k="clear">Clear</button></div>
+    <div class="pick"><label>Traversal <select aria-label="Traversal"><option value="pre">Pre-order (node, left, right)</option><option value="in" selected>In-order (left, node, right)</option><option value="post">Post-order (left, right, node)</option></select></label><button class="b pri" data-k="play">▶ Play traversal</button></div>
+    <div class="listrow" data-o></div><div class="msg" aria-live="polite"></div>`;
+  const svg = $("svg", el), inp = $("input", el), sel = $("select", el), out = $("[data-o]", el), msg = $(".msg", el);
+  const trav = (n, k, a = []) => { if (!n) return a; if (k === "pre") a.push(n.v); trav(n.l, k, a); if (k === "in") a.push(n.v); trav(n.r, k, a); if (k === "post") a.push(n.v); return a; };
+  const draw = () => {
+    const root = buildT(vals), { maxD } = layoutT(root), H = Math.max(120, 60 + maxD * 54 + 40), cls = {}, badge = {};
+    order.slice(0, step).forEach((v, i) => { cls[v] = "seen"; badge[v] = i + 1; }); if (step > 0 && step <= order.length) cls[order[step - 1]] = "cur";
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.innerHTML = vals.length ? treeSvg(root, { cls, badge, y0: 40 }) : SV.text(W / 2, 60, "Empty tree. Add a value.", "lbl", { "text-anchor": "middle" });
+    out.textContent = step ? "Output: " + order.slice(0, step).join(", ") : "Insertion order: " + (vals.join(", ") || "(none)");
+  };
+  const stop = () => { clearInterval(timer); timer = 0; };
+  const add = (v) => { if (!v || v < 1 || v > 99) { msg.textContent = "Enter a value from 1 to 99."; msg.style.color = "var(--bad)"; return; } if (vals.includes(v)) { msg.textContent = v + " is already in the tree."; msg.style.color = "var(--bad)"; return; } if (vals.length >= 12) { msg.textContent = "The tree is full for this demo (12 values)."; msg.style.color = "var(--bad)"; return; }
+    stop(); step = 0; vals.push(v); msg.textContent = `Added ${v}. Smaller goes left, larger goes right from the root.`; msg.style.color = "var(--good)"; inp.value = rnd(1, 99); draw(); };
+  el.onclick = (e) => { const k = e.target.dataset.k; if (!k) return;
+    if (k === "add") add(+inp.value);
+    if (k === "rand") { inp.value = rnd(1, 99); }
+    if (k === "clear") { stop(); vals = []; step = 0; msg.textContent = ""; draw(); }
+    if (k === "play") { stop(); if (!vals.length) return; order = trav(buildT(vals), sel.value); step = 0; msg.textContent = ""; draw(); timer = setInterval(() => { step++; draw(); if (step >= order.length) { stop(); msg.textContent = sel.value === "in" ? "In-order gives the values in ascending order." : sel.value === "pre" ? "Pre-order visits each node before its children." : "Post-order visits each node after its children."; msg.style.color = "var(--good)"; } }, reduced ? 0 : 700); }
+  };
+  sel.onchange = () => { stop(); step = 0; draw(); };
+  draw();
+})();
+
+/* ====================== practise ====================== */
+Lib.classify($("#cl1"), { prompt: "Drag each statement to the ADT it describes.", buckets: [{ label: "Stack" }, { label: "Queue" }, { label: "Linked list" }, { label: "Binary tree" }], items: [
+  { text: "The undo button in an editor", b: 0 }, { text: "Documents waiting to be printed", b: 1 }, { text: "The browser's back button", b: 0 }, { text: "Items are added at the rear and removed from the front", b: 1 },
+  { text: "Each node holds data and a pointer to the next node", b: 2 }, { text: "Each node has at most two children", b: 3 }, { text: "Storing return addresses during subroutine calls", b: 0 },
+  { text: "Insertion only changes pointers, nothing is shifted", b: 2 }, { text: "In-order traversal outputs the data in sorted order", b: 3 }, { text: "Customers waiting at a till", b: 1 },
+], done: "Stack: LIFO. Queue: FIFO. Linked list: pointers. Binary tree: two children per node." });
+
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Push", "Add an item to the top of a stack"], ["Dequeue", "Remove the item at the front of a queue"], ["Peek", "Read the top item without removing it"],
+  ["Null pointer", "A pointer value (here −1) that means there is no next node"], ["Free list", "A chain of unused nodes available for new items"], ["Leaf", "A tree node with no children"], ["Root", "The first node in a tree, with no parent"],
+] });
+
+Lib.order($("#o1"), { prompt: "Put the steps for inserting an item into an array-based linked list in the right order.", items: [
+  "Check that the free list is not empty", "Set NewPtr to the free pointer", "Move the free pointer on to the next free node", "Store the new item in the new node",
+  "Follow the pointers to find the node that comes before it", "Set the new node's pointer to the node that followed", "Set the previous node's pointer to the new node",
+], done: "Take a free node, store the item, then change two pointers." });
+
+Lib.calc($("#c1"), { qs: [
+  { q: "A stack's TopPointer is 4 (arrays start at 0). How many items are on the stack?", a: 5, hint: "Indexes 0, 1, 2, 3, 4.", sol: "Indexes 0 to 4 are used: <b>5</b> items." },
+  { q: "Push 4, push 7, push 1, pop, pop. What value is now at the top?", a: 4, hint: "Pop removes 1, then 7.", sol: "After the pops only 4 is left: <b>4</b>." },
+  { q: "A circular queue has MaxSize 5 and Rear = 4. After one more enqueue, what is Rear?", a: 0, hint: "(Rear + 1) MOD MaxSize.", sol: "(4 + 1) MOD 5 = <b>0</b>. It wraps to the start." },
+  { q: "A circular queue has MaxSize 6, Front = 4 and holds 3 items. What is Rear?", a: 0, hint: "The items are at indexes 4, 5, then wrap round.", sol: "Items at 4, 5, 0, so Rear = <b>0</b>. Or (4 + 3 − 1) MOD 6 = 0." },
+  { q: "Data = [20, 50, 10, 40, _, _], Pointer = [3, −1, 0, 1, 5, −1], StartPointer = 2. What is the 3rd item in the list?", a: 40, hint: "Start at index 2, then follow Pointer[2], then Pointer of that.", sol: "Index 2 (10) → Pointer 0 (20) → Pointer 3 (40). The 3rd item is <b>40</b>." },
+  { q: "A binary search tree is built by inserting 50, 30, 70, 20, 40. How many values is 45 compared with when it is inserted?", a: 3, hint: "50, then 30, then 40, then it finds an empty place.", sol: "45 &gt; 30? Path: 50 (go left), 30 (go right), 40 (go right, empty). <b>3</b> comparisons." },
+  { q: "A binary search tree is built by inserting 8, 3, 10, 1, 6. What is the 3rd value output by an in-order traversal?", a: 6, hint: "In-order of a BST is sorted: 1, 3, 6, 8, 10.", sol: "Sorted order is 1, 3, 6, 8, 10. The 3rd value is <b>6</b>." },
+] });
+
+Lib.quiz($("#qz1"), { qs: [
+  { q: "What is an abstract data type?", opts: ["A data structure stored in a fixed array", "A collection of data and the operations on it, without specifying how it is stored", "A type of pointer", "A program that sorts data"], a: 1, why: "An ADT defines the data and operations. The implementation (array, records, pointers) is hidden." },
+  { q: "Which operation takes the most recently added item off a stack?", opts: ["Enqueue", "Dequeue", "Push", "Pop"], a: 3, why: "Pop removes the top item. A stack is last in, first out." },
+  { q: "A circular queue has MaxSize 8 and Rear = 7. After an enqueue, Rear is…", opts: ["8", "0", "7", "1"], a: 1, why: "(7 + 1) MOD 8 = 0. The pointer wraps to the start of the array." },
+  { q: "What is the main advantage of a linked list over an array for inserting in the middle?", opts: ["Direct access to any item", "No pointers are needed", "Only pointers change, so no items are shifted", "It uses less memory"], a: 2, why: "Inserting only changes two pointers. Arrays must shift items along. Linked lists do need extra memory for pointers." },
+  { q: "Which traversal of a binary search tree outputs the values in ascending order?", opts: ["Pre-order", "In-order", "Post-order", "Level order"], a: 1, why: "In-order visits left subtree, node, right subtree, which gives sorted order for a BST." },
+  { q: "After deleting a node from an array-based linked list, what should happen to the deleted node?", opts: ["Its data is shifted up", "It is added to the free list", "It stays as the start pointer", "Its pointer is set to the root"], a: 1, why: "The node's pointer is set to the old free pointer and the free pointer is set to the node, so it can be reused." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Abstract data type (ADT)", "A collection of data and the operations that can be performed on it, defined without saying how it is stored."], ["Stack", "A last in, first out (LIFO) ADT where items are added and removed at the top."],
+  ["Push / Pop / Peek", "Add to the top / remove from the top / read the top without removing it."], ["Queue", "A first in, first out (FIFO) ADT: add at the rear, remove from the front."],
+  ["Enqueue / Dequeue", "Add an item at the rear of a queue / remove the item at the front."], ["Circular queue", "A queue in an array whose pointers wrap round using MOD, so freed space is reused."],
+  ["Linked list", "A chain of nodes, each holding data and a pointer to the next node."], ["Node", "One element of a linked list or tree, holding data and pointer(s)."],
+  ["Null pointer", "A pointer value meaning there is no node to point to; the end of a list."], ["Start pointer", "The pointer to the first node of a linked list."], ["Free list", "A linked chain of unused nodes, ready for new items."],
+  ["Binary tree", "A tree where each node has at most two children, left and right."], ["Root / Leaf", "The first node of a tree / a node with no children."],
+  ["Pre-order", "Traverse node, then left subtree, then right subtree."], ["In-order", "Traverse left subtree, node, right subtree. Sorted output for a binary search tree."], ["Post-order", "Traverse left subtree, right subtree, then the node."],
+] });
+
+Lib.initTabs();
+</script>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}.site-pill .pill-more{display:none}@media(max-width:700px){body{padding-bottom:64px}.site-pill{right:8px;bottom:8px;opacity:.6;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 16px)}.site-pill>*:not(.pill-more){display:none}.site-pill.open{opacity:.95}.site-pill.open>*:not(.pill-more):not([hidden]){display:inline-block}.site-pill .pill-more{display:block;border:0;border-radius:999px;width:36px;height:36px;padding:0;text-align:center;font-size:18px}.site-pill.open .pill-more{border-left:0}}</style><div class="site-pill"><button type="button" class="pill-more" aria-label="Menu" onclick="this.parentNode.classList.toggle(&#39;open&#39;)">☰</button><a href="../../a-cs/a-level/ch-19/">← Chapter 19</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="abstract-data-types" hidden></button><button data-role-toggle="abstract-data-types" hidden></button><button data-role-delete="abstract-data-types" hidden></button><button data-role-restore="abstract-data-types" hidden></button></div><script src="../../assets/config.js?v=1791171535"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js?v=1791171535"></script><script src="../../assets/gate.js?v=1791171535" data-courses="a-cs"></script><script>document.addEventListener('click',function(e){var t=e.target.closest('[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script><script>document.addEventListener('click',function(e){var p=document.querySelector('.site-pill.open');if(p&&!p.contains(e.target))p.classList.remove('open')});addEventListener('scroll',function(){var p=document.querySelector('.site-pill.open');if(p)p.classList.remove('open')},{passive:true});</script></body></html>

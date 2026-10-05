@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="en"><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sorting: Bubble Sort and Insertion Sort</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<style>
+.pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.pick select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.pick label{font-weight:600;font-size:.92rem}
+.bars{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;margin:10px 0}
+.bars small{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.bars strong{font:700 1rem var(--mono)}
+.game .msg{font-weight:700;margin:8px 0;min-height:1.6em}
+.gbtn{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.listrow{font:600 1rem var(--mono);background:var(--soft);border-radius:8px;padding:8px 12px;margin:8px 0;overflow-x:auto}
+pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font:500 .85rem/1.5 var(--mono);overflow-x:auto;margin:8px 0}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Computer Science · 9618 · Chapter 19 · 19.1.2</div>
+  <h1>Sorting: Bubble Sort and Insertion Sort</h1>
+  <p class="lead">Two ways to put a list in order. Bubble sort swaps neighbours that are the wrong way round. Insertion sort builds a sorted section one item at a time. Step through both, race them on different lists, and practise the traces and explanations that earn marks.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A <span class="kw">sorting algorithm</span> rearranges data into order, for example smallest to largest. Sorting makes data easier to read, and it makes faster searching possible (binary search, 19.1.1). Both algorithms here are simple, work in place on an array, and take a <b>quadratic</b> number of steps in the worst case.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>Bubble sort</h3>
+      <p>Go through the list comparing each <b>pair of neighbours</b>. If they are in the wrong order, swap them. After one pass the largest unsorted item has "bubbled" to the end. Repeat until a whole pass makes <b>no swaps</b>.</p>
+      <ul><li>Needs a temporary variable to swap.</li>
+      <li>A <b>Swapped flag</b> lets it stop early.</li>
+      <li>After pass k, the last k items are in their final place.</li></ul></div>
+    <div class="card"><h3>Insertion sort</h3>
+      <p>Treat the start of the list as already sorted. Take the next item (the <b>key</b>), shift every larger sorted item one place right, and drop the key into the gap.</p>
+      <ul><li>The sorted section grows from the left.</li>
+      <li>Very quick on <b>nearly sorted</b> data.</li>
+      <li>Items before the key are in order but not final yet.</li></ul></div>
+  </div>
+
+  <h2>Side by side</h2>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Bubble sort</th><th>Insertion sort</th></tr>
+    <tr><td>Main idea</td><td>Swap adjacent items that are out of order, repeat passes</td><td>Insert each item into the sorted part on its left</td></tr>
+    <tr><td>Best case (already sorted)</td><td>One pass, n − 1 comparisons (with Swapped flag)</td><td>n − 1 comparisons, no shifts</td></tr>
+    <tr><td>Worst case (reverse order)</td><td>n(n − 1) / 2 comparisons and swaps</td><td>n(n − 1) / 2 comparisons and shifts</td></tr>
+    <tr><td>Order of growth</td><td>O(n²) worst, O(n) best</td><td>O(n²) worst, O(n) best</td></tr>
+    <tr><td>Memory</td><td>In place, one temporary variable</td><td>In place, one key variable</td></tr>
+    <tr><td>Does well on</td><td>Small lists; nearly sorted data (with flag)</td><td>Small lists; nearly sorted data; lists growing one item at a time</td></tr>
+  </table></div>
+  <p>Both are O(n²) because there is a loop inside a loop: for n items, roughly n passes of up to n comparisons. Doubling the list size roughly <b>quadruples</b> the work (see 19.1.5).</p>
+  <div class="formula">worst-case comparisons = (n − 1) + (n − 2) + … + 1 = n(n − 1) / 2</div>
+
+  <h2>Swapping needs a temporary variable</h2>
+  <div class="card"><p>Writing <code>Data[i] ← Data[i + 1]</code> on its own destroys the old value of <code>Data[i]</code>. Save it first.</p>
+  <pre class="plain">Temp ← Data[i]
+Data[i] ← Data[i + 1]
+Data[i + 1] ← Temp</pre>
+  <p class="note">Python can swap in one line, <code>a[i], a[i+1] = a[i+1], a[i]</code>, but pseudocode answers need the three-line version.</p></div>
+  <div class="tip"><b class="h">Array indexes</b>Code here starts arrays at index 0. Many CIE questions declare arrays from 1. Read the bounds in the question before tracing.</div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps. The highlighted line in the code follows each step. Switch between Pseudocode and Python.</p>
+  <h2>1 · Bubble sort</h2>
+  <p>Green cells are in their final position. The Swapped flag stops the sort as soon as a pass makes no swaps.</p>
+  <div id="aBub"></div>
+  <h2>2 · Insertion sort</h2>
+  <p>The key is lifted out, larger items shift right, then the key drops into the gap.</p>
+  <div id="aIns"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Race the two sorts</h2>
+  <p>Choose the kind of list and see how many comparisons and swaps (shifts) each algorithm needs. Try "nearly sorted".</p>
+  <div class="pick">
+    <label>List <select id="rKind"><option value="rand">Random order</option><option value="near">Nearly sorted</option><option value="rev">Reverse order</option><option value="sorted">Already sorted</option></select></label>
+    <button class="b" id="rNew">New list</button>
+  </div>
+  <div class="card" id="race"></div>
+
+  <h2>Lab 2 · The cost of a bigger list</h2>
+  <p>Drag the slider to change the number of items. Watch how the worst case explodes while the best case stays gentle.</p>
+  <div class="card"><div id="gs"></div>
+    <div class="bars">
+      <small>Worst case</small><div><div class="bar b2" id="bw"></div></div><strong id="vw"></strong>
+      <small>Best case</small><div><div class="bar b3" id="bbst"></div></div><strong id="vbst"></strong>
+    </div>
+    <div class="verdict" id="gv"></div></div>
+
+  <h2>Lab 3 · Be the bubble sort</h2>
+  <p>You compare each pair. Swap if the left item is bigger, otherwise leave it. Do the whole sort.</p>
+  <div class="card game" id="game"></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which sort?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Insertion sort in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Traces and calculations</h2>
+  <p class="note">Plain numbers only. Lists start at index 0.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Use them as examples of ideas, not as exact descriptions of any company's software.</p>
+  <div class="rw"><h3>Sorting a hand of playing cards</h3><p>Most people pick up each new card and slide it into the right place among the cards they already hold. That is an insertion sort.</p><div class="use"><b>Exam use:</b> a quick way to explain the key, the sorted section and the shifting.</div></div>
+  <div class="rw"><h3>A leaderboard that is almost always in order</h3><p>When one player's score changes, only that player moves a few places. A sort that works well on nearly sorted data finishes in very few steps.</p><div class="use"><b>Exam use:</b> why insertion sort (or bubble sort with a Swapped flag) can be better than expected on nearly sorted data.</div></div>
+  <div class="rw"><h3>Sorting before searching</h3><p>A shop sorts its product codes once so that every lookup afterwards can use a binary search.</p><div class="use"><b>Exam use:</b> link 19.1.2 to 19.1.1: the cost of sorting is paid once, then repaid by many fast searches.</div></div>
+  <div class="rw"><h3>Spreadsheet column sort</h3><p>Clicking a column header to sort rows is a sorting algorithm on a large data set. Real software uses faster algorithms than bubble or insertion sort for big lists, though many of them use insertion sort for short sections.</p><div class="use"><b>Exam use:</b> shows that simple sorts matter even when the main algorithm is cleverer, and that quadratic sorts are poor for very large lists.</div></div>
+  <div class="rw"><h3>Re-shelving library books</h3><p>If books are put back in the wrong order, a librarian fixes them by checking neighbours and swapping those that are the wrong way round.</p><div class="use"><b>Exam use:</b> a real picture of swapping adjacent items, as in a bubble sort.</div></div>
+  <div class="rw"><h3>Tiny lists in embedded devices</h3><p>A small device sorting five sensor readings does not need a complicated algorithm. A few lines of bubble sort use almost no extra memory.</p><div class="use"><b>Exam use:</b> a justification for choosing a simple algorithm: short code, in place, fast enough for small n.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each coloured phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a bubble sort puts an array of numbers into ascending order.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Compare adjacent items, swap, pass through the list, repeat until no swaps.</div>
+    <div class="ans"><span class="mk k" data-t="1">Each item is compared with the next item in the array (adjacent pairs).</span> <span class="mk k" data-t="2">If the two items are in the wrong order (the first is larger), they are swapped.</span> <span class="mk k" data-t="3">This is repeated from the start to the end of the array (one pass), which moves the largest unsorted value to the end.</span> <span class="mk k" data-t="4">Further passes are made until a complete pass is made with no swaps, so the array is sorted.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "it finds the smallest and moves it to the front". That describes a different sort.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Complete</span> <span class="mark">4 marks</span> A bubble sort is applied to [8, 3, 5, 1] (ascending). Show the array at the end of each pass until the sort ends.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>A pass compares every remaining pair once. Keep going until a pass makes no swaps; that pass counts.</div>
+    <div class="ans"><div class="tw"><table class="t"><tr><th>Pass</th><th>Array at end of pass</th><th>Swaps</th></tr>
+      <tr><td>1</td><td><span class="mk k" data-t="1">3, 5, 1, 8</span></td><td>3</td></tr>
+      <tr><td>2</td><td><span class="mk k" data-t="2">3, 1, 5, 8</span></td><td>1</td></tr>
+      <tr><td>3</td><td><span class="mk k" data-t="3">1, 3, 5, 8</span></td><td>1</td></tr>
+      <tr><td>4</td><td><span class="mk k" data-t="4">1, 3, 5, 8 (no swaps, so the sort stops)</span></td><td>0</td></tr></table></div></div>
+    <div class="warn"><b class="h">Common mistake</b>Stopping at pass 3. The algorithm only knows the array is sorted when a pass makes no swaps.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how an insertion sort puts an array into ascending order.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The sorted section on the left, the key, shifting, and insertion.</div>
+    <div class="ans"><span class="mk k" data-t="1">The first item is treated as a sorted section. The next unsorted item is taken as the key.</span> <span class="mk k" data-t="2">The key is compared with the items in the sorted section, working from right to left.</span> <span class="mk k" data-t="3">Every item larger than the key is shifted one place to the right.</span> <span class="mk k" data-t="4">The key is placed in the gap, and this repeats for each remaining item until the whole array is sorted.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Describing swaps of adjacent items. Insertion sort shifts items and places the key once.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Complete</span> <span class="mark">3 marks</span> Complete the missing lines of this bubble sort for the array Data with N items (indexes 0 to N - 1).
+<pre class="plain">REPEAT
+   Swapped ← FALSE
+   FOR i ← 0 TO N - 2
+      IF ........(A)........ THEN
+         Temp ← Data[i]
+         ........(B)........
+         Data[i + 1] ← Temp
+         ........(C)........
+      ENDIF
+   NEXT i
+UNTIL Swapped = FALSE</pre></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The comparison must test for the wrong order. The swap needs three lines. The flag records that a swap happened.</div>
+    <div class="ans"><span class="mk k" data-t="1">(A) Data[i] &gt; Data[i + 1]</span><br><span class="mk k" data-t="2">(B) Data[i] ← Data[i + 1]</span><br><span class="mk k" data-t="3">(C) Swapped ← TRUE</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Setting Swapped ← FALSE inside the IF. The flag is cleared at the start of each pass, and set TRUE when a swap happens.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain the purpose of the Swapped flag in a bubble sort.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>What it records, what happens when it stays FALSE, and the benefit.</div>
+    <div class="ans"><span class="mk k" data-t="1">The flag records whether any swap was made during a pass.</span> <span class="mk k" data-t="2">If it is still FALSE at the end of a pass, no items were out of order, so the array is sorted and the algorithm can stop.</span> <span class="mk k" data-t="3">This avoids unnecessary extra passes, so an already or nearly sorted array is finished much sooner.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing that the flag "tells you which items to swap". It tells you whether any swaps happened.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Compare</span> <span class="mark">4 marks</span> An array of 5,000 scores is already almost in order, with only a few values out of place. Compare how well bubble sort (with a Swapped flag) and insertion sort will suit this data.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Use the data in the scenario. Talk about how many comparisons and swaps or shifts are needed.</div>
+    <div class="ans"><span class="mk k" data-t="1">Insertion sort only needs to move the few items that are out of place; most keys are already larger than the item to their left, so there is one comparison and no shift for each.</span> <span class="mk k" data-t="2">That is close to its best case of about n − 1 comparisons.</span> <span class="mk k" data-t="3">Bubble sort with a Swapped flag also benefits, because few swaps are needed and it stops after a pass with no swaps.</span> <span class="mk k" data-t="4">However it may still need several passes, each comparing almost all of the 5,000 items, while a small value near the end moves only one place per pass; insertion sort is likely to be quicker.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying both are "O(n²) so the same". The scenario asks about nearly sorted data, where both can do much better than their worst case.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Calculate</span> <span class="mark">3 marks</span> A bubble sort without a Swapped flag always makes every comparison in every pass, shortening each pass by one. Calculate the number of comparisons needed to sort 50 items.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Pass 1 has 49 comparisons, pass 2 has 48, and so on down to 1. Use n(n − 1) / 2.</div>
+    <div class="ans"><span class="mk k" data-t="1">Comparisons = 49 + 48 + … + 1</span> <span class="mk k" data-t="2">= n(n − 1) / 2 = 50 × 49 / 2</span> <span class="mk k" data-t="3">= 1,225 comparisons.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Using n² = 2,500 or n × (n − 1) = 2,450 and forgetting to halve.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Discuss</span> <span class="mark">4 marks</span> A program holds an unsorted array of 10,000 records and must look up just three of them. A programmer suggests sorting the array first with a bubble sort, then using a binary search for each lookup. Discuss whether this is sensible.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Cost of sorting compared with the saving on searching. Use the numbers.</div>
+    <div class="ans"><span class="mk k" data-t="1">A bubble sort of 10,000 items could need around 50 million comparisons (n(n − 1) / 2).</span> <span class="mk k" data-t="2">A linear search of 10,000 items needs at most 10,000 comparisons, so three searches need at most 30,000.</span> <span class="mk k" data-t="3">Binary search would save time on each lookup (at most 14 comparisons), but with only three lookups the saving is tiny compared with the sorting cost.</span> <span class="mk k" data-t="4">So sorting first is not sensible here; a linear search on the unsorted data is better. Sorting would only pay off with a very large number of searches.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "binary search is always faster" without counting the cost of sorting the data first.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Know what a pass is.</b> In bubble sort, one pass compares every remaining adjacent pair once. After pass k, the last k items are final.</li>
+    <li><b>The last pass has no swaps.</b> A bubble sort trace is not finished until you show a pass where nothing swapped.</li>
+    <li><b>Insertion sort shifts, bubble sort swaps.</b> Do not mix the descriptions up.</li>
+    <li><b>Swapping needs Temp.</b> Three lines in pseudocode. Without it, a value is lost.</li>
+    <li><b>Quote the formula.</b> Worst case n(n − 1) / 2 comparisons for both. Show the substitution.</li>
+    <li><b>Say "nearly sorted".</b> Both sorts (bubble with a flag) approach n − 1 comparisons on nearly sorted data.</li>
+    <li><b>Both are O(n²) in the worst case.</b> Doubling the size roughly quadruples the work.</li>
+    <li><b>Link to searching.</b> Sorting is a cost paid once; binary search repays it only if you search many times.</li>
+    <li><b>Check array bounds.</b> This artifact uses index 0. Many CIE questions use 1.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Describe</td><td>The steps or main features, in order.</td></tr>
+    <tr><td>Complete</td><td>Fill every blank or table cell. Show the state after each pass.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+    <tr><td>Calculate</td><td>Show the formula and substitution, then the answer.</td></tr>
+    <tr><td>Compare / Discuss</td><td>Points about both, linked to the scenario, with a judgement.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.round(s.i)].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+window.Lib = { cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+const BUB_PS = ["n ← N", "REPEAT", "   Swapped ← FALSE", "   FOR i ← 0 TO n - 2", "      IF Data[i] > Data[i + 1] THEN", "         Temp ← Data[i]", "         Data[i] ← Data[i + 1]", "         Data[i + 1] ← Temp", "         Swapped ← TRUE", "      ENDIF", "   NEXT i", "   n ← n - 1", "UNTIL Swapped = FALSE"];
+const BUB_PY = ["n = len(data)", "swapped = True", "while swapped:", "    swapped = False", "    for i in range(n - 1):", "        if data[i] > data[i + 1]:", "            data[i], data[i + 1] = data[i + 1], data[i]", "            swapped = True", "    n -= 1"];
+const INS_PS = ["FOR i ← 1 TO N - 1", "   Key ← Data[i]", "   j ← i - 1", "   WHILE j >= 0 AND Data[j] > Key", "      Data[j + 1] ← Data[j]", "      j ← j - 1", "   ENDWHILE", "   Data[j + 1] ← Key", "NEXT i"];
+const INS_PY = ["for i in range(1, len(data)):", "    key = data[i]", "    j = i - 1", "    while j >= 0 and data[j] > key:", "        data[j + 1] = data[j]", "        j -= 1", "    data[j + 1] = key"];
+
+const SW = 640, SIZE = 5, CW = 64, CG = 8, CX = (SW - (SIZE * CW + (SIZE - 1) * CG)) / 2;
+function sview(arr, o) {
+  let s = SV.text(14, 26, o.title, "lbl bd", { "text-anchor": "start" });
+  s += SV.text(SW - 14, 26, `Comparisons: ${o.c}   ${o.swl}: ${o.s}`, "lbl bd t4", { "text-anchor": "end" });
+  if (o.pass) s += SV.text(14, 50, o.pass, "lbl", { "text-anchor": "start" });
+  s += Lib.cells(arr, { x0: CX, y: 118, w: CW, h: 52, gap: CG, cls: o.cls, ptr: o.ptr, dim: o.dim });
+  if (o.key) { const x = CX + o.key.pos * (CW + CG); s += SV.rect(x, 52, CW, 52, "cell cell-warn", { rx: 8 }) + SV.text(x + CW / 2, 86, o.key.val, "lbl bd", { "text-anchor": "middle", style: "font-size:22px;font-family:var(--mono)" }) + SV.text(x + CW / 2 + 0, 46, "key", "sm bd t4", { "text-anchor": "middle" }); }
+  if (o.note) s += SV.text(SW / 2, 232, o.note, "lbl bd " + (o.nc || ""), { "text-anchor": "middle" });
+  return s;
+}
+
+function bubFrames(data) {
+  const a = [...data], N = a.length, F = [];
+  let c = 0, sw = 0, n = N, pass = 0, swapped;
+  const tail = () => { const m = {}; for (let k = n; k < N; k++) m[k] = "sorted"; return m; };
+  const f = (cap, ps, py, o = {}) => F.push({ cap, ps, py, svg: sview([...a], { title: "Bubble sort", c, s: sw, swl: "Swaps", pass: pass ? `Pass ${pass}` : "", ...o, cls: { ...tail(), ...(o.cls || {}) } }) });
+  f(`The array has N = ${N} items, so n = ${n}. Nothing is sorted yet.`, [0], [0, 1]);
+  do {
+    pass++; swapped = false;
+    f(`<b>Pass ${pass}.</b> Set Swapped to FALSE. We will compare neighbours from index 0 to ${n - 2}.`, [1, 2], [2, 3]);
+    for (let i = 0; i < n - 1; i++) {
+      c++;
+      const bad = a[i] > a[i + 1];
+      f(`Compare ${a[i]} and ${a[i + 1]}. ${bad ? `${a[i]} &gt; ${a[i + 1]}, so they are in the wrong order.` : `${a[i]} is not greater than ${a[i + 1]}, so leave them.`}`, [3, 4], [4, 5], { cls: { [i]: "cur", [i + 1]: "cur" }, ptr: { [i]: "i" } });
+      if (bad) {
+        [a[i], a[i + 1]] = [a[i + 1], a[i]]; sw++; swapped = true;
+        f(`Swap them using Temp. Swapped is now TRUE.`, [5, 6, 7, 8], [6, 7], { cls: { [i]: "warn", [i + 1]: "warn" }, ptr: { [i]: "i" } });
+      }
+    }
+    n--;
+    if (swapped) f(`End of pass ${pass}. <b>${a[n]}</b> has bubbled to its final place. n ← ${n}. Swapped is TRUE, so repeat.`, [10, 11, 12], [8, 2], { note: "Swaps happened: another pass needed" });
+    else f(`End of pass ${pass}. <b>No swaps were made</b>, so Swapped is FALSE and the array is in order. Stop.`, [10, 11, 12], [8, 2], { cls: Object.fromEntries(a.map((_, k) => [k, "sorted"])), note: `Sorted: ${a.join(", ")}`, nc: "t3" });
+  } while (swapped);
+  return F;
+}
+
+function insFrames(data) {
+  const a = [...data], N = a.length, F = [];
+  let c = 0, sh = 0;
+  const f = (cap, ps, py, o = {}) => F.push({ cap, ps, py, svg: sview(o.arr || [...a], { title: "Insertion sort", c, s: sh, swl: "Shifts", ...o }) });
+  const sorted = (upto) => Object.fromEntries(Array.from({ length: upto + 1 }, (_, k) => [k, "sorted"]));
+  f("The first item is treated as a sorted section. Start with i = 1.", [0], [0], { cls: { 0: "sorted" } });
+  for (let i = 1; i < N; i++) {
+    const key = a[i]; let j = i - 1; const w = [...a]; w[i] = null;
+    f(`<b>i = ${i}.</b> Key = ${key}. Lift it out, leaving a gap. j = ${j}.`, [0, 1, 2], [0, 1, 2], { arr: [...w], key: { pos: i, val: key }, cls: sorted(i - 1), pass: `i = ${i}` });
+    while (j >= 0) {
+      c++;
+      if (w[j] > key) {
+        f(`Is Data[${j}] &gt; key? ${w[j]} &gt; ${key}, so yes. Shift ${w[j]} one place right.`, [3], [3], { arr: [...w], key: { pos: j + 1, val: key }, cls: { ...sorted(i - 1), [j]: "cur" }, pass: `i = ${i}` });
+        w[j + 1] = w[j]; w[j] = null; sh++; j--;
+        f(`${w[j + 2]} shifted right. j ← ${j}.`, [4, 5], [4, 5], { arr: [...w], key: { pos: j + 1, val: key }, cls: { [j + 2]: "warn" }, pass: `i = ${i}` });
+      } else {
+        f(`Is Data[${j}] &gt; key? ${w[j]} &gt; ${key} is false, so stop shifting.`, [3], [3], { arr: [...w], key: { pos: j + 1, val: key }, cls: { ...sorted(i - 1), [j]: "cur" }, pass: `i = ${i}` });
+        break;
+      }
+    }
+    if (j < 0) f(`j is ${j}: the start of the array has been reached, so stop shifting.`, [3], [3], { arr: [...w], key: { pos: 0, val: key }, pass: `i = ${i}` });
+    w[j + 1] = key; a.splice(0, N, ...w);
+    f(`Insert the key: Data[${j + 1}] ← ${key}. The first ${i + 1} items are now sorted.`, [7], [6], { cls: sorted(i), pass: `i = ${i}`, ...(i === N - 1 ? { note: `Sorted: ${a.join(", ")}`, nc: "t3" } : {}) });
+  }
+  return F;
+}
+
+const WATCH_DATA = [5, 2, 9, 1, 7];
+Lib.algo($("#aBub"), { w: SW, h: 250, label: "Bubble sort animation", pseudo: BUB_PS, py: BUB_PY, dwell: 1700, frames: bubFrames(WATCH_DATA) });
+Lib.algo($("#aIns"), { w: SW, h: 250, label: "Insertion sort animation", pseudo: INS_PS, py: INS_PY, dwell: 1900, frames: insFrames(WATCH_DATA) });
+
+/* ---------- counting versions for the race ---------- */
+function bubCount(d) { const a = [...d]; let n = a.length, c = 0, s = 0, sw, p = 0; do { sw = false; p++; for (let i = 0; i < n - 1; i++) { c++; if (a[i] > a[i + 1]) { [a[i], a[i + 1]] = [a[i + 1], a[i]]; s++; sw = true; } } n--; } while (sw); return { c, s, p }; }
+function insCount(d) { const a = [...d]; let c = 0, s = 0; for (let i = 1; i < a.length; i++) { const k = a[i]; let j = i - 1; while (j >= 0) { c++; if (a[j] > k) { a[j + 1] = a[j]; s++; j--; } else break; } a[j + 1] = k; } return { c, s }; }
+
+/* ---------- Lab 1: race ---------- */
+(() => {
+  const el = $("#race"), sel = $("#rKind"), N = 12;
+  const mk = (k) => {
+    const s = new Set(); while (s.size < N) s.add(1 + Math.floor(Math.random() * 99));
+    let a = [...s];
+    if (k === "rand") return a;
+    a.sort((x, y) => x - y);
+    if (k === "rev") return a.reverse();
+    if (k === "near") { for (let t = 0; t < 2; t++) { const i = Math.floor(Math.random() * (N - 1)); [a[i], a[i + 1]] = [a[i + 1], a[i]]; } }
+    return a;
+  };
+  let data = mk(sel.value);
+  const draw = () => {
+    const b = bubCount(data), i = insCount(data), top = Math.max(b.c, i.c, b.s, i.s, 1), pct = (v) => Math.max(1, Math.round((v / top) * 100)) + "%";
+    const verdict = i.c < b.c ? `Insertion sort needed ${b.c - i.c} fewer comparisons (${i.c} against ${b.c}).` : i.c === b.c ? "Both needed the same number of comparisons." : `Bubble sort needed fewer comparisons here.`;
+    el.innerHTML = `<div class="listrow">${data.join(", ")}</div>
+      <div class="bars"><small>Bubble · compares</small><div><div class="bar b2" style="width:${pct(b.c)}"></div></div><strong>${b.c}</strong>
+      <small>Insertion · compares</small><div><div class="bar b3" style="width:${pct(i.c)}"></div></div><strong>${i.c}</strong>
+      <small>Bubble · swaps</small><div><div class="bar b2" style="width:${pct(b.s)};opacity:.6"></div></div><strong>${b.s}</strong>
+      <small>Insertion · shifts</small><div><div class="bar b3" style="width:${pct(i.s)};opacity:.6"></div></div><strong>${i.s}</strong></div>
+      <div class="verdict">${verdict} Bubble sort took ${b.p} pass${b.p > 1 ? "es" : ""}. Swaps and shifts match because each one fixes exactly one out-of-order pair.</div>`;
+  };
+  sel.onchange = () => { data = mk(sel.value); draw(); };
+  $("#rNew").onclick = () => { data = mk(sel.value); draw(); };
+  draw();
+})();
+
+/* ---------- Lab 2: growth ---------- */
+(() => {
+  const fmt = (n) => n.toLocaleString("en-GB");
+  const sz = (v) => Math.max(2, Math.round(10 ** (0.3 + v / 60 * 3.7)));
+  let g;
+  g = Lib.slider($("#gs"), { id: "gn", label: "Number of items (n)", min: 0, max: 60, step: 1, value: 20, fmt: (v) => fmt(sz(v)), onInput: upd });
+  function upd() {
+    if (!g) return;
+    const n = sz(g.get()), w = (n * (n - 1)) / 2, b = n - 1;
+    $("#vw").textContent = fmt(w); $("#vbst").textContent = fmt(b);
+    $("#bw").style.width = "100%"; $("#bbst").style.width = Math.max(0.4, (b / w) * 100) + "%";
+    $("#gv").textContent = `For ${fmt(n)} items the worst case is ${fmt(w)} comparisons. Double the items to ${fmt(n * 2)} and it becomes ${fmt((n * 2 * (n * 2 - 1)) / 2)}, about four times as many.`;
+  }
+  upd();
+})();
+
+/* ---------- Lab 3: be the bubble sort ---------- */
+(() => {
+  const el = $("#game"); let a, i, n, pass, swapped, c, s, done, msgTxt, good;
+  function init() { const set = new Set(); while (set.size < 6) set.add(1 + Math.floor(Math.random() * 20)); a = [...set]; i = 0; n = 6; pass = 1; swapped = false; c = 0; s = 0; done = false; msgTxt = "Compare the highlighted pair."; good = true; draw(); }
+  function draw() {
+    const W = 560, w = 56, gap = 8, x0 = (W - (6 * w + 5 * gap)) / 2, cls = {};
+    for (let k = n; k < 6; k++) cls[k] = "sorted";
+    if (done) a.forEach((_, k) => (cls[k] = "sorted")); else { cls[i] = "cur"; cls[i + 1] = "cur"; }
+    const svg = `<svg viewBox="0 0 ${W} 150" role="img" aria-label="Bubble sort game">${SV.text(14, 24, `Pass ${pass}`, "lbl bd", { "text-anchor": "start" })}${SV.text(W - 14, 24, `Comparisons: ${c}   Swaps: ${s}`, "lbl bd t4", { "text-anchor": "end" })}${Lib.cells(a, { x0, y: 46, w, h: 50, gap, cls, ptr: done ? {} : { [i]: "i" } })}</svg>`;
+    el.innerHTML = svg + (done ? "" : `<p>Is <b>${a[i]}</b> greater than <b>${a[i + 1]}</b>?</p><div class="gbtn"><button class="b pri" data-g="s">Swap them</button><button class="b" data-g="l">Leave them</button></div>`) + `<div class="msg" style="color:var(--${good ? "good" : "bad"})" aria-live="polite">${msgTxt}</div><div class="gbtn"><button class="b" data-g="n">New list</button></div>`;
+    $$("[data-g]", el).forEach((b) => (b.onclick = () => act(b.dataset.g)));
+  }
+  function act(k) {
+    if (k === "n") return init();
+    const bad = a[i] > a[i + 1];
+    if ((k === "s") !== bad) { good = false; msgTxt = bad ? `Not quite. ${a[i]} is greater than ${a[i + 1]}, so they must be swapped.` : `Not quite. ${a[i]} is not greater than ${a[i + 1]}, so leave them alone.`; return draw(); }
+    c++; good = true;
+    if (bad) { [a[i], a[i + 1]] = [a[i + 1], a[i]]; s++; swapped = true; }
+    msgTxt = bad ? "Correct, swapped." : "Correct, left.";
+    i++;
+    if (i >= n - 1) {
+      n--;
+      if (!swapped) { done = true; msgTxt = `Sorted after ${pass} passes, ${c} comparisons and ${s} swaps. The final pass made no swaps, which is how bubble sort knows to stop.`; }
+      else { msgTxt = `End of pass ${pass}. The biggest remaining item is in its final place. Start pass ${pass + 1}.`; pass++; i = 0; swapped = false; if (n < 2) { done = true; msgTxt = `Sorted after ${c} comparisons and ${s} swaps.`; } }
+    }
+    draw();
+  }
+  init();
+})();
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), { prompt: "Drag each statement to the sort it describes.", buckets: [{ label: "Bubble sort" }, { label: "Insertion sort" }, { label: "Both" }], items: [
+  { text: "Compares adjacent items and swaps if out of order", b: 0 }, { text: "Shifts larger items right to make a gap", b: 1 }, { text: "Uses a Swapped flag to stop early", b: 0 },
+  { text: "Builds a sorted section growing from the left", b: 1 }, { text: "Worst case n(n − 1) / 2 comparisons", b: 2 }, { text: "After each pass the largest unsorted item is final", b: 0 },
+  { text: "Sorts in place without a second array", b: 2 }, { text: "Takes a key and inserts it into position", b: 1 }, { text: "O(n²) in the worst case", b: 2 }, { text: "Needs a Temp variable to swap two items", b: 0 },
+], done: "Bubble sort swaps neighbours; insertion sort shifts and inserts. Both are quadratic." });
+
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Pass", "One complete trip through the unsorted part of the array"], ["Swapped flag", "A Boolean that records whether a swap happened during a pass"], ["Key", "The item being inserted into the sorted section"],
+  ["Temp", "A variable that holds a value while two items are swapped"], ["In place", "The array is sorted without needing a second copy"], ["n(n − 1) / 2", "Worst-case comparisons for both sorts"],
+] });
+
+Lib.order($("#o1"), { prompt: "Put the steps of an insertion sort in the right order.", items: [
+  "Treat the first item as a sorted section", "Take the next unsorted item as the key", "Compare the key with the sorted item on its left", "While that item is larger than the key, shift it one place right",
+  "Stop when a smaller item or the start of the array is reached", "Put the key into the gap", "Repeat for every remaining item",
+], done: "Take the key, shift larger items, insert." });
+
+Lib.calc($("#c1"), { qs: [
+  { q: "List: 6, 2, 8, 3. After one pass of a bubble sort, what value is at index 1?", a: 6, hint: "6,2 swap → 2,6,8,3. 6,8 no swap. 8,3 swap → 2,6,3,8.", sol: "After pass 1 the list is 2, 6, 3, 8. Index 1 holds <b>6</b>." },
+  { q: "How many comparisons does a bubble sort (no early stop) make to sort 8 items?", a: 28, hint: "n(n − 1) / 2.", sol: "8 × 7 / 2 = <b>28</b>." },
+  { q: "List: 3, 7, 2, 9. Insertion sort, i = 2, key = 2. How many items are shifted right?", a: 2, hint: "Both 7 and 3 are larger than 2.", sol: "7 shifts, then 3 shifts, then j reaches −1. <b>2</b> shifts." },
+  { q: "How many swaps does a bubble sort make to sort 3, 2, 1?", a: 3, hint: "Pass 1: 2,3,1 then 2,1,3. Pass 2: 1,2,3.", sol: "Pass 1 has 2 swaps, pass 2 has 1 swap: <b>3</b> swaps." },
+  { q: "An insertion sort is given 20 items that are already in order. How many comparisons does it make?", a: 19, hint: "Each key is compared once with its left neighbour.", sol: "i runs from 1 to 19, one comparison each: <b>19</b>." },
+  { q: "Bubble sort with a Swapped flag sorts 2, 1, 3, 4, 5. How many passes does it make (including the final check)?", a: 2, hint: "Pass 1 swaps 2 and 1. Pass 2 has no swaps.", sol: "Pass 1: swap → 1,2,3,4,5. Pass 2: no swaps, so stop. <b>2</b> passes." },
+  { q: "List: 9, 4, 7, 1. Insertion sort. After i = 2 has finished, what value is at index 1?", a: 7, hint: "i = 1 gives 4, 9, 7, 1. Then key 7 passes 9.", sol: "After i = 1: 4, 9, 7, 1. After i = 2: 4, 7, 9, 1. Index 1 is <b>7</b>." },
+] });
+
+Lib.quiz($("#qz1"), { qs: [
+  { q: "After the first pass of a bubble sort on 4, 9, 2, 6, which value is certain to be in its final place?", opts: ["4", "9", "2", "6"], a: 1, why: "The largest value bubbles to the end on the first pass." },
+  { q: "What does the Swapped flag tell a bubble sort?", opts: ["Which items to swap next", "Whether any swap happened in the last pass", "The number of passes left", "The index of the largest item"], a: 1, why: "If a whole pass makes no swaps, the array is sorted, so the sort can stop." },
+  { q: "Which sort uses a key and shifts items to the right?", opts: ["Bubble sort", "Insertion sort", "Binary search", "Linear search"], a: 1, why: "Insertion sort lifts out the key, shifts larger items right, then inserts the key into the gap." },
+  { q: "An array of 10 items is already sorted. How many comparisons does a bubble sort with a Swapped flag make?", opts: ["1", "9", "10", "45"], a: 1, why: "One pass of 9 comparisons finds no swaps, so it stops." },
+  { q: "What is the worst-case number of comparisons for n items in either sort?", opts: ["n", "2n", "n(n − 1) / 2", "log₂ n"], a: 2, why: "(n − 1) + (n − 2) + … + 1 = n(n − 1) / 2, an O(n²) order of growth." },
+  { q: "Which list is bubble sort with a Swapped flag fastest on?", opts: ["Reverse order", "Random order", "Already sorted", "All are equally fast"], a: 2, why: "A sorted list needs only one pass with no swaps. Reverse order is the worst case." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Sorting algorithm", "A method that puts items into order, e.g. ascending."], ["Bubble sort", "Repeatedly passes through the array swapping adjacent items that are out of order, until a pass makes no swaps."],
+  ["Insertion sort", "Takes each item in turn and inserts it into its correct place in the sorted section on its left."], ["Pass", "One complete trip through the unsorted part of the array."],
+  ["Swapped flag", "A Boolean set TRUE when a swap happens; if FALSE after a pass the array is sorted."], ["Key", "The item taken from the array and inserted into position during an insertion sort."],
+  ["Temp", "A temporary variable used to hold a value while two items are swapped."], ["In place", "Sorting that uses the original array, with no second array of the same size."],
+  ["Best case", "Already sorted data: n − 1 comparisons for both sorts (bubble sort with a Swapped flag)."], ["Worst case", "Reverse order data: n(n − 1) / 2 comparisons, an O(n²) order of growth."],
+] });
+
+Lib.initTabs();
+</script>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}.site-pill .pill-more{display:none}@media(max-width:700px){body{padding-bottom:64px}.site-pill{right:8px;bottom:8px;opacity:.6;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 16px)}.site-pill>*:not(.pill-more){display:none}.site-pill.open{opacity:.95}.site-pill.open>*:not(.pill-more):not([hidden]){display:inline-block}.site-pill .pill-more{display:block;border:0;border-radius:999px;width:36px;height:36px;padding:0;text-align:center;font-size:18px}.site-pill.open .pill-more{border-left:0}}</style><div class="site-pill"><button type="button" class="pill-more" aria-label="Menu" onclick="this.parentNode.classList.toggle(&#39;open&#39;)">☰</button><a href="../../a-cs/a-level/ch-19/">← Chapter 19</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="sorting-algorithms" hidden></button><button data-role-toggle="sorting-algorithms" hidden></button><button data-role-delete="sorting-algorithms" hidden></button><button data-role-restore="sorting-algorithms" hidden></button></div><script src="../../assets/config.js?v=1791171535"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js?v=1791171535"></script><script src="../../assets/gate.js?v=1791171535" data-courses="a-cs"></script><script>document.addEventListener('click',function(e){var t=e.target.closest('[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script><script>document.addEventListener('click',function(e){var p=document.querySelector('.site-pill.open');if(p&&!p.contains(e.target))p.classList.remove('open')});addEventListener('scroll',function(){var p=document.querySelector('.site-pill.open');if(p)p.classList.remove('open')},{passive:true});</script></body></html>

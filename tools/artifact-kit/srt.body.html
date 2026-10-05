@@ -1,0 +1,232 @@
+<style>
+.pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.pick select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.pick label{font-weight:600;font-size:.92rem}
+.bars{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;margin:10px 0}
+.bars small{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.bars strong{font:700 1rem var(--mono)}
+.game .msg{font-weight:700;margin:8px 0;min-height:1.6em}
+.gbtn{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.listrow{font:600 1rem var(--mono);background:var(--soft);border-radius:8px;padding:8px 12px;margin:8px 0;overflow-x:auto}
+pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font:500 .85rem/1.5 var(--mono);overflow-x:auto;margin:8px 0}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Computer Science · 9618 · Chapter 19 · 19.1.2</div>
+  <h1>Sorting: Bubble Sort and Insertion Sort</h1>
+  <p class="lead">Two ways to put a list in order. Bubble sort swaps neighbours that are the wrong way round. Insertion sort builds a sorted section one item at a time. Step through both, race them on different lists, and practise the traces and explanations that earn marks.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A <span class="kw">sorting algorithm</span> rearranges data into order, for example smallest to largest. Sorting makes data easier to read, and it makes faster searching possible (binary search, 19.1.1). Both algorithms here are simple, work in place on an array, and take a <b>quadratic</b> number of steps in the worst case.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>Bubble sort</h3>
+      <p>Go through the list comparing each <b>pair of neighbours</b>. If they are in the wrong order, swap them. After one pass the largest unsorted item has "bubbled" to the end. Repeat until a whole pass makes <b>no swaps</b>.</p>
+      <ul><li>Needs a temporary variable to swap.</li>
+      <li>A <b>Swapped flag</b> lets it stop early.</li>
+      <li>After pass k, the last k items are in their final place.</li></ul></div>
+    <div class="card"><h3>Insertion sort</h3>
+      <p>Treat the start of the list as already sorted. Take the next item (the <b>key</b>), shift every larger sorted item one place right, and drop the key into the gap.</p>
+      <ul><li>The sorted section grows from the left.</li>
+      <li>Very quick on <b>nearly sorted</b> data.</li>
+      <li>Items before the key are in order but not final yet.</li></ul></div>
+  </div>
+
+  <h2>Side by side</h2>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Bubble sort</th><th>Insertion sort</th></tr>
+    <tr><td>Main idea</td><td>Swap adjacent items that are out of order, repeat passes</td><td>Insert each item into the sorted part on its left</td></tr>
+    <tr><td>Best case (already sorted)</td><td>One pass, n − 1 comparisons (with Swapped flag)</td><td>n − 1 comparisons, no shifts</td></tr>
+    <tr><td>Worst case (reverse order)</td><td>n(n − 1) / 2 comparisons and swaps</td><td>n(n − 1) / 2 comparisons and shifts</td></tr>
+    <tr><td>Order of growth</td><td>O(n²) worst, O(n) best</td><td>O(n²) worst, O(n) best</td></tr>
+    <tr><td>Memory</td><td>In place, one temporary variable</td><td>In place, one key variable</td></tr>
+    <tr><td>Does well on</td><td>Small lists; nearly sorted data (with flag)</td><td>Small lists; nearly sorted data; lists growing one item at a time</td></tr>
+  </table></div>
+  <p>Both are O(n²) because there is a loop inside a loop: for n items, roughly n passes of up to n comparisons. Doubling the list size roughly <b>quadruples</b> the work (see 19.1.5).</p>
+  <div class="formula">worst-case comparisons = (n − 1) + (n − 2) + … + 1 = n(n − 1) / 2</div>
+
+  <h2>Swapping needs a temporary variable</h2>
+  <div class="card"><p>Writing <code>Data[i] ← Data[i + 1]</code> on its own destroys the old value of <code>Data[i]</code>. Save it first.</p>
+  <pre class="plain">Temp ← Data[i]
+Data[i] ← Data[i + 1]
+Data[i + 1] ← Temp</pre>
+  <p class="note">Python can swap in one line, <code>a[i], a[i+1] = a[i+1], a[i]</code>, but pseudocode answers need the three-line version.</p></div>
+  <div class="tip"><b class="h">Array indexes</b>Code here starts arrays at index 0. Many CIE questions declare arrays from 1. Read the bounds in the question before tracing.</div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps. The highlighted line in the code follows each step. Switch between Pseudocode and Python.</p>
+  <h2>1 · Bubble sort</h2>
+  <p>Green cells are in their final position. The Swapped flag stops the sort as soon as a pass makes no swaps.</p>
+  <div id="aBub"></div>
+  <h2>2 · Insertion sort</h2>
+  <p>The key is lifted out, larger items shift right, then the key drops into the gap.</p>
+  <div id="aIns"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Race the two sorts</h2>
+  <p>Choose the kind of list and see how many comparisons and swaps (shifts) each algorithm needs. Try "nearly sorted".</p>
+  <div class="pick">
+    <label>List <select id="rKind"><option value="rand">Random order</option><option value="near">Nearly sorted</option><option value="rev">Reverse order</option><option value="sorted">Already sorted</option></select></label>
+    <button class="b" id="rNew">New list</button>
+  </div>
+  <div class="card" id="race"></div>
+
+  <h2>Lab 2 · The cost of a bigger list</h2>
+  <p>Drag the slider to change the number of items. Watch how the worst case explodes while the best case stays gentle.</p>
+  <div class="card"><div id="gs"></div>
+    <div class="bars">
+      <small>Worst case</small><div><div class="bar b2" id="bw"></div></div><strong id="vw"></strong>
+      <small>Best case</small><div><div class="bar b3" id="bbst"></div></div><strong id="vbst"></strong>
+    </div>
+    <div class="verdict" id="gv"></div></div>
+
+  <h2>Lab 3 · Be the bubble sort</h2>
+  <p>You compare each pair. Swap if the left item is bigger, otherwise leave it. Do the whole sort.</p>
+  <div class="card game" id="game"></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which sort?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Insertion sort in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Traces and calculations</h2>
+  <p class="note">Plain numbers only. Lists start at index 0.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Use them as examples of ideas, not as exact descriptions of any company's software.</p>
+  <div class="rw"><h3>Sorting a hand of playing cards</h3><p>Most people pick up each new card and slide it into the right place among the cards they already hold. That is an insertion sort.</p><div class="use"><b>Exam use:</b> a quick way to explain the key, the sorted section and the shifting.</div></div>
+  <div class="rw"><h3>A leaderboard that is almost always in order</h3><p>When one player's score changes, only that player moves a few places. A sort that works well on nearly sorted data finishes in very few steps.</p><div class="use"><b>Exam use:</b> why insertion sort (or bubble sort with a Swapped flag) can be better than expected on nearly sorted data.</div></div>
+  <div class="rw"><h3>Sorting before searching</h3><p>A shop sorts its product codes once so that every lookup afterwards can use a binary search.</p><div class="use"><b>Exam use:</b> link 19.1.2 to 19.1.1: the cost of sorting is paid once, then repaid by many fast searches.</div></div>
+  <div class="rw"><h3>Spreadsheet column sort</h3><p>Clicking a column header to sort rows is a sorting algorithm on a large data set. Real software uses faster algorithms than bubble or insertion sort for big lists, though many of them use insertion sort for short sections.</p><div class="use"><b>Exam use:</b> shows that simple sorts matter even when the main algorithm is cleverer, and that quadratic sorts are poor for very large lists.</div></div>
+  <div class="rw"><h3>Re-shelving library books</h3><p>If books are put back in the wrong order, a librarian fixes them by checking neighbours and swapping those that are the wrong way round.</p><div class="use"><b>Exam use:</b> a real picture of swapping adjacent items, as in a bubble sort.</div></div>
+  <div class="rw"><h3>Tiny lists in embedded devices</h3><p>A small device sorting five sensor readings does not need a complicated algorithm. A few lines of bubble sort use almost no extra memory.</p><div class="use"><b>Exam use:</b> a justification for choosing a simple algorithm: short code, in place, fast enough for small n.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each coloured phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a bubble sort puts an array of numbers into ascending order.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Compare adjacent items, swap, pass through the list, repeat until no swaps.</div>
+    <div class="ans"><span class="mk k" data-t="1">Each item is compared with the next item in the array (adjacent pairs).</span> <span class="mk k" data-t="2">If the two items are in the wrong order (the first is larger), they are swapped.</span> <span class="mk k" data-t="3">This is repeated from the start to the end of the array (one pass), which moves the largest unsorted value to the end.</span> <span class="mk k" data-t="4">Further passes are made until a complete pass is made with no swaps, so the array is sorted.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "it finds the smallest and moves it to the front". That describes a different sort.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Complete</span> <span class="mark">4 marks</span> A bubble sort is applied to [8, 3, 5, 1] (ascending). Show the array at the end of each pass until the sort ends.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>A pass compares every remaining pair once. Keep going until a pass makes no swaps; that pass counts.</div>
+    <div class="ans"><div class="tw"><table class="t"><tr><th>Pass</th><th>Array at end of pass</th><th>Swaps</th></tr>
+      <tr><td>1</td><td><span class="mk k" data-t="1">3, 5, 1, 8</span></td><td>3</td></tr>
+      <tr><td>2</td><td><span class="mk k" data-t="2">3, 1, 5, 8</span></td><td>1</td></tr>
+      <tr><td>3</td><td><span class="mk k" data-t="3">1, 3, 5, 8</span></td><td>1</td></tr>
+      <tr><td>4</td><td><span class="mk k" data-t="4">1, 3, 5, 8 (no swaps, so the sort stops)</span></td><td>0</td></tr></table></div></div>
+    <div class="warn"><b class="h">Common mistake</b>Stopping at pass 3. The algorithm only knows the array is sorted when a pass makes no swaps.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how an insertion sort puts an array into ascending order.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The sorted section on the left, the key, shifting, and insertion.</div>
+    <div class="ans"><span class="mk k" data-t="1">The first item is treated as a sorted section. The next unsorted item is taken as the key.</span> <span class="mk k" data-t="2">The key is compared with the items in the sorted section, working from right to left.</span> <span class="mk k" data-t="3">Every item larger than the key is shifted one place to the right.</span> <span class="mk k" data-t="4">The key is placed in the gap, and this repeats for each remaining item until the whole array is sorted.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Describing swaps of adjacent items. Insertion sort shifts items and places the key once.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Complete</span> <span class="mark">3 marks</span> Complete the missing lines of this bubble sort for the array Data with N items (indexes 0 to N - 1).
+<pre class="plain">REPEAT
+   Swapped ← FALSE
+   FOR i ← 0 TO N - 2
+      IF ........(A)........ THEN
+         Temp ← Data[i]
+         ........(B)........
+         Data[i + 1] ← Temp
+         ........(C)........
+      ENDIF
+   NEXT i
+UNTIL Swapped = FALSE</pre></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The comparison must test for the wrong order. The swap needs three lines. The flag records that a swap happened.</div>
+    <div class="ans"><span class="mk k" data-t="1">(A) Data[i] &gt; Data[i + 1]</span><br><span class="mk k" data-t="2">(B) Data[i] ← Data[i + 1]</span><br><span class="mk k" data-t="3">(C) Swapped ← TRUE</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Setting Swapped ← FALSE inside the IF. The flag is cleared at the start of each pass, and set TRUE when a swap happens.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain the purpose of the Swapped flag in a bubble sort.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>What it records, what happens when it stays FALSE, and the benefit.</div>
+    <div class="ans"><span class="mk k" data-t="1">The flag records whether any swap was made during a pass.</span> <span class="mk k" data-t="2">If it is still FALSE at the end of a pass, no items were out of order, so the array is sorted and the algorithm can stop.</span> <span class="mk k" data-t="3">This avoids unnecessary extra passes, so an already or nearly sorted array is finished much sooner.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing that the flag "tells you which items to swap". It tells you whether any swaps happened.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Compare</span> <span class="mark">4 marks</span> An array of 5,000 scores is already almost in order, with only a few values out of place. Compare how well bubble sort (with a Swapped flag) and insertion sort will suit this data.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Use the data in the scenario. Talk about how many comparisons and swaps or shifts are needed.</div>
+    <div class="ans"><span class="mk k" data-t="1">Insertion sort only needs to move the few items that are out of place; most keys are already larger than the item to their left, so there is one comparison and no shift for each.</span> <span class="mk k" data-t="2">That is close to its best case of about n − 1 comparisons.</span> <span class="mk k" data-t="3">Bubble sort with a Swapped flag also benefits, because few swaps are needed and it stops after a pass with no swaps.</span> <span class="mk k" data-t="4">However it may still need several passes, each comparing almost all of the 5,000 items, while a small value near the end moves only one place per pass; insertion sort is likely to be quicker.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying both are "O(n²) so the same". The scenario asks about nearly sorted data, where both can do much better than their worst case.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Calculate</span> <span class="mark">3 marks</span> A bubble sort without a Swapped flag always makes every comparison in every pass, shortening each pass by one. Calculate the number of comparisons needed to sort 50 items.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Pass 1 has 49 comparisons, pass 2 has 48, and so on down to 1. Use n(n − 1) / 2.</div>
+    <div class="ans"><span class="mk k" data-t="1">Comparisons = 49 + 48 + … + 1</span> <span class="mk k" data-t="2">= n(n − 1) / 2 = 50 × 49 / 2</span> <span class="mk k" data-t="3">= 1,225 comparisons.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Using n² = 2,500 or n × (n − 1) = 2,450 and forgetting to halve.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Discuss</span> <span class="mark">4 marks</span> A program holds an unsorted array of 10,000 records and must look up just three of them. A programmer suggests sorting the array first with a bubble sort, then using a binary search for each lookup. Discuss whether this is sensible.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Cost of sorting compared with the saving on searching. Use the numbers.</div>
+    <div class="ans"><span class="mk k" data-t="1">A bubble sort of 10,000 items could need around 50 million comparisons (n(n − 1) / 2).</span> <span class="mk k" data-t="2">A linear search of 10,000 items needs at most 10,000 comparisons, so three searches need at most 30,000.</span> <span class="mk k" data-t="3">Binary search would save time on each lookup (at most 14 comparisons), but with only three lookups the saving is tiny compared with the sorting cost.</span> <span class="mk k" data-t="4">So sorting first is not sensible here; a linear search on the unsorted data is better. Sorting would only pay off with a very large number of searches.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "binary search is always faster" without counting the cost of sorting the data first.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Know what a pass is.</b> In bubble sort, one pass compares every remaining adjacent pair once. After pass k, the last k items are final.</li>
+    <li><b>The last pass has no swaps.</b> A bubble sort trace is not finished until you show a pass where nothing swapped.</li>
+    <li><b>Insertion sort shifts, bubble sort swaps.</b> Do not mix the descriptions up.</li>
+    <li><b>Swapping needs Temp.</b> Three lines in pseudocode. Without it, a value is lost.</li>
+    <li><b>Quote the formula.</b> Worst case n(n − 1) / 2 comparisons for both. Show the substitution.</li>
+    <li><b>Say "nearly sorted".</b> Both sorts (bubble with a flag) approach n − 1 comparisons on nearly sorted data.</li>
+    <li><b>Both are O(n²) in the worst case.</b> Doubling the size roughly quadruples the work.</li>
+    <li><b>Link to searching.</b> Sorting is a cost paid once; binary search repays it only if you search many times.</li>
+    <li><b>Check array bounds.</b> This artifact uses index 0. Many CIE questions use 1.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Describe</td><td>The steps or main features, in order.</td></tr>
+    <tr><td>Complete</td><td>Fill every blank or table cell. Show the state after each pass.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+    <tr><td>Calculate</td><td>Show the formula and substitution, then the answer.</td></tr>
+    <tr><td>Compare / Discuss</td><td>Points about both, linked to the scenario, with a judgement.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>

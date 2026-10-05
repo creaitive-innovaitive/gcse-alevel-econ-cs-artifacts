@@ -1,0 +1,244 @@
+<style>
+.pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.pick select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.pick label{font-weight:600;font-size:.92rem}
+.bars{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;margin:10px 0}
+.bars small{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.bars strong{font:700 1rem var(--mono)}
+.game .msg{font-weight:700;margin:8px 0;min-height:1.6em}
+.gbtn{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font:500 .85rem/1.5 var(--mono);overflow-x:auto;margin:8px 0}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Computer Science · 9618 · Chapter 19 · 19.1.1</div>
+  <h1>Searching: Linear and Binary Search</h1>
+  <p class="lead">How to find an item in a list. Linear search checks every item in turn. Binary search throws away half the list each time, but only works on sorted data. Trace both, race them, and practise the questions that come up in Paper 4.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A <span class="kw">searching algorithm</span> finds the position of a target value in a collection of data, or reports that it is not there. The two you need are <span class="kw">linear search</span> and <span class="kw">binary search</span>. The choice depends on whether the data is sorted, and how big it is.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>Linear search</h3>
+      <p>Start at the first item and compare each item with the target, one after another, until you find it or run out of items.</p>
+      <ul><li>Works on <b>unsorted</b> or sorted data.</li>
+      <li><b>Best case:</b> target is the first item, 1 comparison.</li>
+      <li><b>Worst case:</b> target is last or missing, n comparisons.</li>
+      <li>Simple to write. Slow on big lists.</li></ul></div>
+    <div class="card"><h3>Binary search</h3>
+      <p>Look at the <b>middle</b> item. If it is the target, stop. If the target is bigger, discard the lower half; if smaller, discard the upper half. Repeat on what is left.</p>
+      <ul><li>The list <b>must be sorted</b> first.</li>
+      <li><b>Best case:</b> target is the middle item, 1 comparison.</li>
+      <li><b>Worst case:</b> about log₂ n comparisons.</li>
+      <li>Very fast on big lists. Needs direct access by index.</li></ul></div>
+  </div>
+
+  <h2>Binary search in four moves</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Move</th><th>What happens</th><th>Pseudocode</th></tr>
+    <tr><td>1 · Bounds</td><td>Low is the first index, High is the last.</td><td><code>Low ← 0</code>, <code>High ← N - 1</code></td></tr>
+    <tr><td>2 · Middle</td><td>Find the midpoint with integer division.</td><td><code>Mid ← (Low + High) DIV 2</code></td></tr>
+    <tr><td>3 · Compare</td><td>Equal: found. Item at Mid too small: target must be above. Too big: target must be below.</td><td><code>IF Data[Mid] = Target</code></td></tr>
+    <tr><td>4 · Shrink</td><td>Move one bound past Mid, then repeat. Stop when Low &gt; High (not found).</td><td><code>Low ← Mid + 1</code> or <code>High ← Mid - 1</code></td></tr>
+  </table></div>
+  <div class="warn"><b class="h">Classic bug</b>Setting Low ← Mid or High ← Mid (instead of Mid + 1 and Mid - 1) can loop forever, because Mid is already known not to be the target.</div>
+
+  <h2>How fast does it grow?</h2>
+  <p>Every comparison in binary search halves the list. So doubling the list size adds only <b>one</b> extra comparison in the worst case. A list of 1,023 items needs at most 10 comparisons; 1,048,575 items need at most 20. Linear search needs up to a million. This is the idea behind <i>order of growth</i>: linear search is <b>O(n)</b>, binary search is <b>O(log n)</b> (see 19.1.5).</p>
+  <div class="formula">maximum comparisons for binary search = ⌊log₂ n⌋ + 1</div>
+
+  <h2>Which one to choose?</h2>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Linear search</th><th>Binary search</th></tr>
+    <tr><td>Data must be sorted?</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Speed on large lists</td><td>Slow, O(n)</td><td>Fast, O(log n)</td></tr>
+    <tr><td>Best on</td><td>Small lists, unsorted data, data that changes constantly</td><td>Large sorted lists that are searched many times</td></tr>
+    <tr><td>Code</td><td>Short and simple</td><td>Longer, easier to get wrong</td></tr>
+    <tr><td>Extra cost</td><td>None</td><td>Sorting the list first (if not already sorted)</td></tr>
+  </table></div>
+  <div class="tip"><b class="h">Array indexes</b>The code in this artifact starts arrays at index 0. Many CIE questions declare arrays from index 1. Always read the lower bound in the question before tracing.</div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps. The highlighted line in the code follows each step. Switch between Pseudocode and Python.</p>
+  <h2>1 · Linear search for 56</h2><div id="aLin"></div>
+  <h2>2 · Binary search for 33</h2><div id="aBin"></div>
+  <h2>3 · Binary search that fails</h2>
+  <p>Searching for 40, which is not in the list. The search stops when Low passes High.</p>
+  <div id="aMiss"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Run either search on any target</h2>
+  <p>Pick an algorithm and a target. Try the first item, the last item, the middle item and a value that is not in the list. Watch the comparison counter.</p>
+  <div class="pick">
+    <label>Algorithm <select id="lAlg"><option value="lin">Linear search</option><option value="bin">Binary search</option></select></label>
+    <label>Target <select id="lTar"></select></label>
+  </div>
+  <div id="lab1"></div>
+
+  <h2>Lab 2 · Comparisons as the list grows</h2>
+  <p>Drag the slider to grow the list. Linear search grows in step with the list. Binary search barely moves.</p>
+  <div class="card"><div id="gs"></div>
+    <div class="bars">
+      <small>Linear (worst)</small><div><div class="bar b2" id="bl"></div></div><strong id="vl"></strong>
+      <small>Binary (worst)</small><div><div class="bar b3" id="bb"></div></div><strong id="vb"></strong>
+    </div>
+    <div class="verdict" id="gv"></div></div>
+
+  <h2>Lab 3 · Be the binary search</h2>
+  <p>The computer shows you Low, Mid and High. You decide where the target must be. Wrong turns are explained.</p>
+  <div class="card game" id="game"></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which search?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Binary search in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Calculations and traces</h2>
+  <p class="note">Plain numbers only. Lists start at index 0.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Use them as examples of ideas, not as exact descriptions of any company's software.</p>
+  <div class="rw"><h3>Phone contacts</h3><p>Your contacts are kept sorted by name. Typing a name jumps to it quickly rather than scanning from the top, which is the binary-search idea of repeatedly discarding half of the sorted list.</p><div class="use"><b>Exam use:</b> an example of a large sorted list that is searched often, where binary search beats linear search.</div></div>
+  <div class="rw"><h3>Database indexes</h3><p>Databases keep an index of a column in sorted order so a query for one customer ID does not read every row. Real indexes often use tree structures, which build on the same halving idea.</p><div class="use"><b>Exam use:</b> why sorting once and searching many times can pay off.</div></div>
+  <div class="rw"><h3>Finding the commit that broke the code</h3><p>Version control tools include a bisect feature. Given a good version and a bad version, it tests the version halfway between them, then halves again, until it finds the first bad one.</p><div class="use"><b>Exam use:</b> shows that binary search is about halving any ordered range, not only arrays of numbers.</div></div>
+  <div class="rw"><h3>Scanning an unsorted log</h3><p>A server log is written in the order events happen, not sorted by error type. To find the first line containing "ERROR" the program just reads down the file.</p><div class="use"><b>Exam use:</b> linear search is the right choice when data is unsorted and sorting it would cost more than one scan.</div></div>
+  <div class="rw"><h3>Guess the number</h3><p>In a game where someone thinks of a number from 1 to 100 and says "higher" or "lower", guessing the middle each time finds it in at most 7 guesses.</p><div class="use"><b>Exam use:</b> a quick way to explain log₂ n: 2⁷ = 128 ≥ 100.</div></div>
+  <div class="rw"><h3>A short shopping list</h3><p>With 8 items you would just read down the list. Setting up a sort and a midpoint calculation would be more work than it saves.</p><div class="use"><b>Exam use:</b> binary search is not always the better choice. For small or constantly changing lists, linear search can be the sensible answer.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each coloured phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">State</span> <span class="mark">2 marks</span> State two differences between a linear search and a binary search.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Give two separate differences, not one difference said twice. Sorted data is the one examiners most want.</div>
+    <div class="ans"><span class="mk k" data-t="1">A binary search requires the data to be sorted, whereas a linear search works on unsorted data.</span> <span class="mk k" data-t="2">A linear search checks items one at a time from the start, whereas a binary search repeatedly checks the middle item and discards half of the remaining data.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "binary is faster" with no detail. Speed is a result of the method; the question asks about differences in how they work.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a binary search finds a value in an ordered array.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Describe the loop in order: bounds, middle, compare, discard, repeat, stop.</div>
+    <div class="ans"><span class="mk k" data-t="1">The lowest and highest index of the array are used as the bounds. The middle index is found.</span> <span class="mk k" data-t="2">The value at the middle is compared with the target. If they are equal, the search stops, because the item has been found.</span> <span class="mk k" data-t="3">If the target is greater than the middle value, the lower half (up to and including the middle) is discarded; if it is smaller, the upper half is discarded.</span> <span class="mk k" data-t="4">The process repeats on the remaining half, until the item is found or no items remain (low is greater than high), so the item is not in the array.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Forgetting the stopping condition for a value that is not in the array.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Complete</span> <span class="mark">3 marks</span> A binary search is carried out on the array below (indexes start at 0) for the value 33. Complete the trace table.<div class="tw"><table class="t"><tr><th>Index</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr><tr><td>Value</td><td>3</td><td>8</td><td>14</td><td>21</td><td>27</td><td>33</td><td>42</td><td>56</td><td>61</td><td>75</td></tr></table></div></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>A new row each time round the loop. Mid = (Low + High) DIV 2, rounded down.</div>
+    <div class="ans"><div class="tw"><table class="t"><tr><th>Low</th><th>High</th><th>Mid</th><th>Data[Mid]</th></tr>
+      <tr><td><span class="mk k" data-t="1">0</span></td><td>9</td><td>4</td><td>27</td></tr>
+      <tr><td><span class="mk k" data-t="2">5</span></td><td>9</td><td>7</td><td>56</td></tr>
+      <tr><td>5</td><td><span class="mk k" data-t="3">6</span></td><td>5</td><td>33 (found)</td></tr></table></div></div>
+    <div class="warn"><b class="h">Common mistake</b>Using Mid instead of Mid + 1 for the new Low. After 27 (too small) Low becomes 5, not 4.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain why a binary search is usually faster than a linear search on a large list.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Say what binary does each time, then the effect on the number of comparisons, then a comparison with linear.</div>
+    <div class="ans"><span class="mk k" data-t="1">A binary search discards half of the remaining items after every comparison.</span> <span class="mk k" data-t="2">So the number of comparisons grows very slowly as the list gets bigger (about log₂ n in the worst case).</span> <span class="mk k" data-t="3">A linear search may have to check every item, so in the worst case it needs n comparisons.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Forgetting the sorted-data condition. It is worth adding that binary search only gives this benefit if the list is already sorted.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Complete</span> <span class="mark">3 marks</span> Complete the missing lines of this linear search. It outputs the index of Target in the array Data of N items, or "Not found".
+<pre class="plain">Found ← FALSE
+Index ← 0
+WHILE Index &lt; N AND ........(A)........
+   IF Data[Index] = Target THEN
+      ........(B)........
+   ELSE
+      ........(C)........
+   ENDIF
+ENDWHILE</pre></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The loop must stop either when the item is found or when the end of the array is reached. Something must move Index on.</div>
+    <div class="ans"><span class="mk k" data-t="1">(A) Found = FALSE</span><br><span class="mk k" data-t="2">(B) Found ← TRUE</span><br><span class="mk k" data-t="3">(C) Index ← Index + 1</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Putting Index ← Index + 1 outside the ELSE. Index must stay on the matching item so its position can be output.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Calculate</span> <span class="mark">2 marks</span> A sorted array contains 1,023 items. State the maximum number of comparisons a binary search needs, and show how you worked it out.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Keep halving: 1023 → 511 → 255 → ... Count how many halvings until one item is left, then add the final check.</div>
+    <div class="ans"><span class="mk k" data-t="1">2¹⁰ = 1,024, so 1,023 items can be halved 10 times (or ⌊log₂ 1023⌋ + 1)</span> <span class="mk k" data-t="2">Maximum = 10 comparisons.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Answering 1,023 ÷ 2 = 511 or giving log₂ 1,023 as 9.99 with no whole number.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Discuss</span> <span class="mark">4 marks</span> A shop has an array of 12,000 product codes, sorted in order, which is searched thousands of times a day. New products are added once a week. A programmer suggests using a linear search because it is simpler. Discuss whether this is a good choice.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Use the scenario. Give a point for linear, a point against, and a judgement.</div>
+    <div class="ans"><span class="mk k" data-t="1">A linear search is simpler to write and works without the data being sorted.</span> <span class="mk k" data-t="2">However the array is already sorted, so a binary search can be used with no extra sorting cost.</span> <span class="mk k" data-t="3">With 12,000 items, a linear search could need up to 12,000 comparisons per search, whereas a binary search needs at most 14, and the shop searches thousands of times a day.</span> <span class="mk k" data-t="4">So binary search is the better choice; the code is a little more complex but it only has to be written once, and the list only needs re-sorting weekly when products are added.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>A general comparison of the two searches that never mentions the scenario figures (12,000 items, sorted, weekly updates).</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Write</span> <span class="mark">6 marks</span> Write a function BinarySearch(Data, Target) that returns the index of Target in the sorted array Data, or -1 if it is not found. Use Python or pseudocode.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Six marks means six features: bounds, loop condition, midpoint, comparison, both bound updates, return values.</div>
+    <div class="ans"><pre class="plain">def binary_search(data, target):
+    low = 0                          # (1) bounds set
+    high = len(data) - 1
+    while low &lt;= high:               # (2) loop condition
+        mid = (low + high) // 2      # (3) integer midpoint
+        if data[mid] == target:      # (4) comparison, return index
+            return mid
+        elif data[mid] &lt; target:
+            low = mid + 1            # (5) discard lower half
+        else:
+            high = mid - 1           # (5) discard upper half
+    return -1                        # (6) not found</pre>
+    <p><span class="mk k" data-t="1">Low and high initialised to the first and last index.</span> <span class="mk k" data-t="2">Loop while low &lt;= high.</span> <span class="mk k" data-t="3">Mid is the integer midpoint.</span> <span class="mk k" data-t="4">If data[mid] equals the target, the index is returned.</span> <span class="mk k" data-t="5">Low = mid + 1 or high = mid - 1 as appropriate.</span> <span class="mk k" data-t="6">-1 is returned when the loop ends.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Using / instead of // in Python, which gives a float and causes a TypeError when used as an index.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Say "sorted" every time.</b> Any answer about binary search should mention the data must be in order.</li>
+    <li><b>Trace with a table.</b> One row per loop: Low, High, Mid, Data[Mid]. Marks follow the rows.</li>
+    <li><b>Midpoint uses integer division.</b> (Low + High) DIV 2. Round down, never up.</li>
+    <li><b>Move past Mid.</b> Low ← Mid + 1 and High ← Mid - 1. Using Mid itself can loop forever.</li>
+    <li><b>Check the lower bound.</b> This artifact uses 0, but many CIE questions start arrays at 1.</li>
+    <li><b>Count the max comparisons by halving.</b> n items need ⌊log₂ n⌋ + 1 comparisons at most.</li>
+    <li><b>Compare with the scenario.</b> "Binary search is faster" earns little; "12,000 sorted items searched often" earns marks.</li>
+    <li><b>Linear search is not "bad".</b> For small, unsorted, or constantly changing data it is often the right choice.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Describe</td><td>The steps or main features, in order.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+    <tr><td>Complete (trace table)</td><td>Fill every blank. Show the values after each pass.</td></tr>
+    <tr><td>Discuss</td><td>Points for and against, linked to the scenario, with a judgement.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
