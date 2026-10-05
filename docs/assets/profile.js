@@ -226,6 +226,18 @@
   }
   const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 
+  function pwGroups(state) {
+    const rows = (list) => `<div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Email</th><th>Password</th></tr></thead><tbody>${list.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.email)}${p.email2 ? `<br>${esc(p.email2)}` : ""}</td><td><code>${esc(p.password)}</code></td></tr>`).join("")}</tbody></table></div>`;
+    const group = (title, list) => `<details class="cls pwgrp"><summary><h3>${esc(title)}</h3><span class="hint">${plural(list.length, "student")}</span></summary>${list.length ? rows(list) : '<p class="hint">No students in this class yet.</p>'}</details>`;
+    const out = CLASS_LIST.map((c) => {
+      const ids = c.groups.map((g) => g.id);
+      return group(c.title, state.people.filter((p) => (p.classes || []).some((x) => ids.includes(x))));
+    });
+    const loose = state.people.filter((p) => !(p.classes || []).length);
+    if (loose.length) out.unshift(group("Not in a class", loose));
+    return out.join("");
+  }
+
   function adminRows(state, list) {
     return list.map((p) => {
       const all = subjectSlugs(p.subjects), d = state.byEmail.get(p.email) || new Map();
@@ -292,9 +304,7 @@
       <div class="tabpanel" data-panel="pw"><section class="card block"><h3>Student passwords (${state.people.length})</h3>
         <p class="hint">Assigned passwords, visible to admins only. Students sign in with these. If a student changes their own password this list is out of date; Reset login puts it back to the listed one.</p>
         <div class="row"><span></span><button class="mini" id="copypw">Copy as table</button></div>
-        <div class="tablewrap"><table class="tbl"><thead><tr><th>Student</th><th>Email</th><th>Password</th></tr></thead><tbody>
-        ${state.people.map((p) => `<tr><td>${esc(p.name)}</td><td>${esc(p.email)}${p.email2 ? `<br>${esc(p.email2)}` : ""}</td><td><code>${esc(p.password)}</code></td></tr>`).join("") || `<tr><td colspan="3" class="hint">No students yet.</td></tr>`}
-        </tbody></table></div></section>
+        ${pwGroups(state)}</section>
       <section class="card block"><h3>Co-teachers</h3>
         <p class="hint">Can open every subject and class content. No admin panel and no student data.</p>
         ${state.teachers.length ? `<div class="tablewrap"><table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Password</th><th></th></tr></thead><tbody id="tch">

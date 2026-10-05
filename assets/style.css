@@ -231,3 +231,4 @@ nav.main .bell.has { color: var(--ink); }
 .card .adm .restore { display: none; }
 [data-p="del"] .adm .restore { display: inline-block; }
 [data-p="del"] .adm .roletog, [data-p="del"] .adm .roledel { display: none; }
+details.pwgrp { border-top: 1px solid var(--line); padding: 12px 0; }
