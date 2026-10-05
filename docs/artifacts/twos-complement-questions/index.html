@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="en"><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Two's Complement: Every Question Type</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<style>
+.bits{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.bit{display:flex;flex-direction:column;align-items:center;gap:3px}
+.bit small{font:700 .7rem var(--mono);color:var(--muted)}
+.bit button{width:46px;height:52px;font:700 1.5rem var(--mono);border-radius:9px;border:2px solid var(--accent);background:var(--surface);color:var(--ink);cursor:pointer}
+.bit button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.bit.sign button{border-color:var(--bad)} .bit.sign button[aria-pressed="true"]{background:var(--bad);color:#fff}
+.bitrow{display:flex;gap:4px;font:700 1.2rem var(--mono);margin:4px 0;flex-wrap:wrap;align-items:center}
+.bitrow span{width:32px;height:38px;display:grid;place-items:center;border-radius:7px;background:var(--soft);border:1px solid var(--line)}
+.bitrow span.ch{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.bitrow span.neg{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.bitrow b.lab{font:700 .8rem var(--sans);color:var(--muted);width:92px;flex:none}
+.work{margin:8px 0}
+.work .step{display:flex;gap:10px;align-items:baseline;margin:6px 0}
+.work .step i{font:700 .72rem var(--sans);font-style:normal;background:var(--accent);color:var(--accent-ink);border-radius:99px;padding:1px 8px;flex:none}
+.drill input{font:700 1.1rem var(--mono);padding:8px 12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,280px)}
+.drill .qline{font-size:1.1rem;font-weight:600;margin:8px 0}
+.drill select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+.ex{font-family:var(--mono)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 1 · 1.1 · Exam skills</div>
+  <h1>Two's Complement: Every Question Type</h1>
+  <p class="lead">What the wording means, which method to use, and a model answer for each kind of question. Two's complement is how a computer stores negative whole numbers in binary.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="types">Question types</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The one idea you need</h3>
+    <p>In ordinary 8-bit binary the place values are 128, 64, 32, 16, 8, 4, 2, 1. In <span class="kw">two's complement</span> only one thing changes: the <b>leftmost</b> place value becomes <b>−128</b>.</p>
+    <div class="tw"><table class="t">
+      <tr><th>−128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+    </table></div>
+    <p class="ex">−128 + 64 + 16 + 2 + 1 = <b>−45</b></p>
+    <p>That leftmost bit is the <span class="kw">sign bit</span>. <b>0</b> means the number is zero or positive. <b>1</b> means it is negative.</p>
+  </div>
+
+  <h2>What the question is really asking</h2>
+  <p>Students usually know the method. The trouble is working out which job the wording is asking for. Find your wording here.</p>
+  <div class="tw"><table class="t">
+    <tr><th>If the question says…</th><th>It means</th><th>Do this</th></tr>
+    <tr><td>"Represent −45 in 8-bit two's complement"<br>"Write −45 as a two's complement binary number"</td><td>Negative denary → binary</td><td>Method B: positive, flip, add 1</td></tr>
+    <tr><td>"State the denary value of the two's complement number 11010011"<br>"What is 11010011 as a denary number?"</td><td>Binary → denary</td><td>Method A: add the place values, left one is −128</td></tr>
+    <tr><td>"Represent 45 in two's complement"</td><td>Positive denary → binary</td><td>Normal binary. Leading 0. No flipping.</td></tr>
+    <tr><td>"The largest / smallest number that can be stored"<br>"The range of values"</td><td>Range</td><td>−128 to +127 for 8 bits</td></tr>
+    <tr><td>"How many different values can be stored?"</td><td>Count</td><td>2ⁿ, so 256 for 8 bits</td></tr>
+    <tr><td>"Calculate 45 − 20 using two's complement"</td><td>Subtraction</td><td>Turn it into 45 + (−20), then add</td></tr>
+    <tr><td>"Explain why the computer uses two's complement"</td><td>Reasons</td><td>Negatives, subtraction by addition, one zero</td></tr>
+    <tr><td>"in an 8-bit register" / "using 8 bits"</td><td>Your answer must be exactly 8 bits</td><td>Pad with leading 0s</td></tr>
+  </table></div>
+
+  <h2>The three methods</h2>
+  <div class="grid2">
+    <div class="card"><h3>Method A: place values</h3><p>Use it to <b>read</b> a two's complement number.</p><p>Write −128 64 32 16 8 4 2 1 above the bits. Add the values that have a 1 beneath. Remember the −128.</p><p class="ex">11110000 → −128 + 64 + 32 + 16 = −16</p></div>
+    <div class="card"><h3>Method B: flip and add 1</h3><p>Use it to <b>make</b> a negative number.</p><p>1. Write the positive number in 8-bit binary. 2. Flip every bit. 3. Add 1.</p><p class="ex">−20: 00010100 → 11101011 → 11101100</p></div>
+    <div class="card"><h3>Method B works backwards too</h3><p>To read a negative number another way: flip, add 1, and you get the positive size. Put a minus in front.</p><p class="ex">11101100 → 00010011 → 00010100 = 20 → −20</p></div>
+    <div class="card"><h3>Fast method (optional)</h3><p>Starting from the <b>right</b>, copy every bit up to and including the first 1. Flip all the bits after that.</p><p class="ex">00010100: copy 100, flip 00010 → 11101100</p></div>
+  </div>
+  <div class="warn"><b class="h">Special case</b>10000000 is −128. Flipping and adding 1 gives 10000000 again, because +128 does not fit in 8 bits. Just read it with Method A.</div>
+
+  <h2>The range</h2>
+  <p>With <b>n</b> bits the range is <b>−2ⁿ⁻¹ to +(2ⁿ⁻¹ − 1)</b>. There is one more negative value than positive, because 0 uses up one of the positive-side patterns.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Bits</th><th>Smallest</th><th>Largest</th><th>Different values</th></tr>
+    <tr><td>4</td><td>−8</td><td>7</td><td>16</td></tr>
+    <tr><td>8</td><td>−128</td><td>127</td><td>256</td></tr>
+    <tr><td>16</td><td>−32,768</td><td>32,767</td><td>65,536</td></tr>
+  </table></div>
+
+  <h2>Why computers use it</h2>
+  <ul>
+    <li><b>It stores negative numbers</b> using only 1s and 0s.</li>
+    <li><b>Subtraction becomes addition.</b> A − B is calculated as A + (−B), so the processor needs no separate subtraction circuit.</li>
+    <li><b>There is only one zero.</b> (00000000. No separate "negative zero".)</li>
+  </ul>
+  <p class="note">Spelling: it is <b>complement</b> (completes the number), not compliment.</p>
+</section>
+
+<!-- TYPES -->
+<section id="types" role="tabpanel" hidden>
+  <h2>The question types, with model answers</h2>
+  <p>Open each one. Underlined phrases are mark points; the number shows which mark.</p>
+
+  <details class="eq" open><summary>Type 1 <span class="cmd">Represent</span> <span class="mark">3 marks</span> Write −45 as an 8-bit two's complement binary number.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Positive version first, then flip, then add 1. Always 8 bits. Show each stage: the marks are for the stages.</div>
+    <div class="ans"><span class="mk k" data-t="1">45 = 00101101</span> <span class="mk k" data-t="2">Flip the bits: 11010010</span> <span class="mk k" data-t="3">Add 1: 11010011</span></div>
+    <div class="warn"><b class="h">Common mistakes</b>Flipping but forgetting +1 (gives −46). Starting from the wrong number (flipping 45 as 101101 without the leading zeros). Putting a 1 in front of 00101101 and calling it done.</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 2 <span class="cmd">State</span> <span class="mark">2 marks</span> State the denary value of the 8-bit two's complement number 11010011.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Leading 1, so it is negative. Method A: add the place values, with the left one as −128. Check the sign makes sense.</div>
+    <div class="ans"><span class="mk k" data-t="1">−128 + 64 + 16 + 2 + 1</span> <span class="mk k" data-t="2">= −45</span></div>
+    <p><b>Check with Method B:</b> flip 11010011 → 00101100, add 1 → 00101101 = 45, so the number is −45. ✓</p>
+    <div class="warn"><b class="h">Common mistakes</b>Using +128 for the left bit (gives 211). Dropping the minus sign. Adding the 0 columns.</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 3 <span class="cmd">State</span> <span class="mark">1 mark</span> State the denary value of the 8-bit two's complement number 01001101.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Leading 0, so it is positive. It is the same as ordinary binary. No flipping needed.</div>
+    <div class="ans"><span class="mk k" data-t="1">64 + 8 + 4 + 1 = 77</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Flipping and adding 1 anyway. If the left bit is 0, nothing special happens.</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 4 <span class="cmd">Give</span> <span class="mark">2 marks</span> Give the smallest and largest denary numbers that can be stored as an 8-bit two's complement number.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Smallest: 1 followed by all 0s. Largest: 0 followed by all 1s. Learn the pair −128 and 127.</div>
+    <div class="ans"><span class="mk k" data-t="1">Smallest: 10000000 = −128</span> <span class="mk k" data-t="2">Largest: 01111111 = +127</span></div>
+    <p><b>Other bit lengths:</b> n bits gives −2ⁿ⁻¹ to 2ⁿ⁻¹ − 1. For 4 bits that is −8 to 7. The number of different values is always 2ⁿ (256 for 8 bits).</p>
+    <div class="warn"><b class="h">Common mistake</b>Writing −127 to 128, or −128 to 128. The positive side stops one short.</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 5 <span class="cmd">Show</span> <span class="mark">4 marks</span> Calculate 30 − 12 using 8-bit two's complement. Show your working.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Subtraction is turned into addition: 30 − 12 = 30 + (−12). Make −12, add, throw away any ninth bit.</div>
+    <div class="ans"><span class="mk k" data-t="1">30 = 00011110, 12 = 00001100</span> <span class="mk k" data-t="2">−12: flip 00001100 → 11110011, add 1 → 11110100</span> <span class="mk k" data-t="3">00011110 + 11110100 = 1 00010010</span> <span class="mk k" data-t="4">The carry out of the 8th bit is discarded, giving 00010010 = 18</span></div>
+    <div class="warn"><b class="h">Common mistakes</b>Subtracting the binary numbers column by column. Calling the discarded ninth bit "overflow". Here it is expected and the answer is correct. Check by converting back: 00010010 = 18 ✓</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 6 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Explain why the binary number 11111111 is smaller than 00000001 when stored in two's complement.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Give both values, and name the sign bit.</div>
+    <div class="ans"><span class="mk k" data-t="1">The leftmost bit is the sign bit. In 11111111 it is 1, so the number is negative (−128 + 127 = −1).</span> <span class="mk k" data-t="2">00000001 has a 0 sign bit, so it is positive (+1), and any negative number is smaller than a positive one.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Reading both as ordinary binary (255 and 1), which makes 11111111 the bigger.</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 7 <span class="cmd">Give</span> <span class="mark">2 marks</span> Give two reasons why computers use two's complement to store negative numbers.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Two separate points. Pick from: negatives, subtraction by addition, one zero.</div>
+    <div class="ans"><span class="mk k" data-t="1">It allows negative numbers to be stored using only binary digits.</span> <span class="mk k" data-t="2">Subtraction can be done by adding a negative number, so the processor can use the same addition circuit and needs no separate subtraction circuit.</span></div>
+    <p>Another valid point: there is only one representation of zero.</p>
+  </div></details>
+
+  <details class="eq"><summary>Type 8 (extension) <span class="cmd">Describe</span> <span class="mark">2 marks</span> 01100100 + 00110010 is calculated in 8-bit two's complement. Describe the result.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Add, then look at the sign bit. Two positives cannot make a negative.</div>
+    <div class="ans"><span class="mk k" data-t="1">The sum is 10010110, which has a 1 as the sign bit, so it reads as −106.</span> <span class="mk k" data-t="2">100 + 50 = 150 is bigger than 127, so the answer does not fit in 8 bits: overflow has occurred and the stored result is wrong.</span></div>
+    <p>Rule of thumb: if two numbers with the same sign give a result with the opposite sign, there has been overflow.</p>
+  </div></details>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · Reading 11010011 (Method A)</h2><div id="stA"></div>
+  <h2>2 · Writing −20 (Method B)</h2><div id="stB"></div>
+  <h2>3 · 45 − 20 as an addition</h2><div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Number to two's complement, with working</h2>
+  <p>Slide to any number from −128 to 127 and follow the working an examiner wants to see.</p>
+  <div class="card"><div id="a1"></div><div class="work" id="work"></div><div class="verdict" id="wv"></div></div>
+
+  <h2>Lab 2 · Click the bits, read the number</h2>
+  <p>Click the bits and watch the sum. The red −128 is the sign bit.</p>
+  <div class="card"><div class="bits" id="bitsrow"></div>
+    <div class="readout"><div><small>Sum</small><strong id="b1" style="font-size:1rem"></strong></div><div><small>Denary</small><strong id="b2"></strong></div><div><small>Sign</small><strong id="b3" style="font-size:1rem"></strong></div></div>
+    <div class="row"><button class="b" id="bz">All 0</button><button class="b" id="bo">All 1</button><button class="b" id="br">Random</button><button class="b" id="bm">Set to −128</button></div></div>
+
+  <h2>Lab 3 · Range for any number of bits</h2>
+  <div class="card"><div id="r1"></div>
+    <div class="readout"><div><small>Smallest</small><strong id="r2"></strong></div><div><small>Largest</small><strong id="r3"></strong></div><div><small>Different values</small><strong id="r4"></strong></div></div>
+    <div class="bitrow" id="r5"></div><div class="verdict" id="rv"></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · What is the question asking?</h2>
+  <p>Sort each piece of wording by the job it asks you to do.</p>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Subtraction steps in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Questions</h2>
+  <p class="note">Type negative numbers with a minus sign. Binary answers: no spaces, exactly 8 bits.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Endless drill</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general.</p>
+  <div class="rw"><h3>Signed integers in programming</h3><p>An 8-bit signed integer type (such as int8 in C-style languages) holds −128 to 127. A 16-bit one holds −32,768 to 32,767, and a 32-bit one about ±2.1 billion. These are all two's complement.</p><div class="use"><b>Exam use:</b> a ready example of a range question: n bits gives −2ⁿ⁻¹ to 2ⁿ⁻¹ − 1.</div></div>
+  <div class="rw"><h3>Digital audio</h3><p>CD-quality sound is stored as 16-bit samples. The wave goes above and below zero, so each sample is a signed number from −32,768 to 32,767.</p><div class="use"><b>Exam use:</b> links to 1.2 sound sampling, and shows why a negative value is needed.</div></div>
+  <div class="rw"><h3>Temperature sensors</h3><p>A weather station storing the temperature in one byte needs to record −20 °C as well as 35 °C, so it uses two's complement.</p><div class="use"><b>Exam use:</b> a context for "why do we need negative numbers in binary?"</div></div>
+  <div class="rw"><h3>Counters that wrap round</h3><p>When a signed counter passes its largest value it wraps to a large negative one. YouTube's view counter hit this limit in 2014, at 2,147,483,647 views, and moved to a 64-bit counter.</p><div class="use"><b>Exam use:</b> shows overflow in two's complement: two positives cannot give a negative.</div></div>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Decide the job first.</b> Making a number (Method B) or reading one (Method A)?</li>
+    <li><b>Check the left bit.</b> 0 means nothing special. 1 means negative.</li>
+    <li><b>The left place value is −128, not +128.</b></li>
+    <li><b>Write all 8 bits</b> including leading zeros. Pad before flipping.</li>
+    <li><b>Flip, then add 1.</b> Both steps, in that order. Show each line for method marks.</li>
+    <li><b>Subtraction is addition.</b> A − B = A + (−B). Discard a ninth bit.</li>
+    <li><b>Check your answer backwards.</b> Read your binary with Method A and see if you get your starting number.</li>
+    <li><b>Range:</b> −128 to 127, 256 values. The positive side is one short.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Give</td><td>The answer only.</td></tr>
+    <tr><td>Represent / Write / Convert</td><td>The number in the other form. Show working when there are marks.</td></tr>
+    <tr><td>Show</td><td>The working that leads to the answer.</td></tr>
+    <tr><td>Explain</td><td>The reason, with because or so.</td></tr>
+    <tr><td>Describe</td><td>What happens, in order.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+window.Lib = { initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+const MONO = "font-family:ui-monospace,Menlo,Consolas,monospace;";
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const PV = [-128, 64, 32, 16, 8, 4, 2, 1];
+const bin8 = (n) => (n & 255).toString(2).padStart(8, "0");
+const tcVal = (s) => [...s].reduce((a, b, i) => a + (b === "1" ? PV[i] : 0), 0);
+const flip = (s) => [...s].map((c) => (c === "1" ? "0" : "1")).join("");
+const minus = (n) => (n < 0 ? "−" : "") + Math.abs(n);
+const bigTxt = (x, y, t, cls, px = 28, extra) => SV.text(x, y, t, "lbl bd " + (cls || ""), { "text-anchor": "middle", style: MONO + "font-size:" + px + "px", ...extra });
+const spans = (bits, mark = () => "") => [...bits].map((c, i) => `<span class="${mark(i)}">${c}</span>`).join("");
+
+/* ---------- 1. Method A: read 11010011 ---------- */
+const READ = "11010011", run = (() => { let t = 0; return [...READ].map((b, i) => (t += b === "1" ? PV[i] : 0)); })();
+function readChart(s) {
+  const k = Math.round(s.k), X = (i) => 60 + i * 88;
+  let o = SV.text(380, 26, "Read 11010011 as an 8-bit two's complement number", "lbl bd", { "text-anchor": "middle" });
+  PV.forEach((p, i) => {
+    const done = i < k, one = READ[i] === "1", cur = i === k - 1;
+    o += bigTxt(X(i), 78, minus(p), i === 0 ? "t2" : "t1", 20);
+    o += SV.rect(X(i) - 34, 96, 68, 66, done && one ? "f3" : "f1", { rx: 10, opacity: done || k === 0 ? 1 : 0.55, ...(cur ? { stroke: "var(--accent)", "stroke-width": 3 } : {}) });
+    o += bigTxt(X(i), 142, READ[i], one ? "t3" : "", 38);
+  });
+  if (k > 0) {
+    const i = k - 1, one = READ[i] === "1";
+    o += SV.text(380, 212, one ? `Bit is 1: add ${minus(PV[i])}` : "Bit is 0: add nothing", "lbl bd", { "text-anchor": "middle", style: "font-size:18px" });
+    o += SV.text(380, 246, "Running total: " + minus(run[i]), "lbl bd t2", { "text-anchor": "middle", style: "font-size:20px" });
+  }
+  if (k === 8) o += SV.text(380, 290, "−128 + 64 + 16 + 2 + 1 = −45", "lbl bd t3", { "text-anchor": "middle", style: "font-size:17px" });
+  return o;
+}
+const rs = [{ cap: "The leftmost place value is <b>−128</b>, not +128. The other place values are the same as ordinary binary. Add up the columns that hold a 1.", s: { k: 0 } }];
+[...READ].forEach((b, i) => rs.push({ cap: b === "1" ? `Column ${minus(PV[i])} holds a 1, so add it. Running total: <b>${minus(run[i])}</b>.` : `Column ${PV[i]} holds a 0. Add nothing. Total stays <b>${minus(run[i])}</b>.`, s: { k: i + 1 } }));
+rs[8].cap += " The answer is <b>−45</b>.";
+Lib.stepper($("#stA"), { w: 760, h: 310, label: "Reading a two's complement number with place values", base: { k: 0 }, tween: 500, dwell: 3200, draw: readChart, steps: rs });
+
+/* ---------- 2. Method B: write -20 ---------- */
+const P = bin8(20), F = flip(P), R = bin8(-20);
+function mkChart(s) {
+  const X = (i) => 190 + i * 62, rows = [["20", P, 62], ["flip", F, 132], ["+ 1", R, 202]];
+  let o = "";
+  rows.forEach(([lab, bits, y], r) => {
+    const op = clamp01(s.p - r + 1);
+    if (op <= 0.01) return;
+    o += SV.text(40, y + 8, lab, "lbl bd t1", { opacity: op, "text-anchor": "start", style: "font-size:20px" });
+    [...bits].forEach((b, i) => {
+      const ch = r === 1 || (r === 2 && bits[i] !== F[i]);
+      o += SV.rect(X(i) - 26, y - 28, 52, 52, ch ? "f4" : "f1", { rx: 8, opacity: op }) + bigTxt(X(i), y + 10, b, ch ? "t4" : "", 30, { opacity: op });
+    });
+  });
+  const op3 = clamp01(s.p - 2);
+  if (op3 > 0.01) {
+    PV.forEach((v, i) => { o += SV.text(X(i), 254, minus(v), "lbl bd " + (i === 0 ? "t2" : "t1"), { "text-anchor": "middle", opacity: op3, style: MONO + "font-size:15px" }); });
+    o += SV.text(380, 290, "−128 + 64 + 32 + 8 + 4 = −20", "lbl bd t3", { "text-anchor": "middle", opacity: op3, style: "font-size:18px" });
+  }
+  return o;
+}
+Lib.stepper($("#stB"), { w: 760, h: 310, label: "Writing minus 20 in two's complement", base: { p: 0 }, tween: 700, dwell: 4200, draw: mkChart, steps: [
+  { cap: "Write the <b>positive</b> number in 8 bits: 20 = <b>00010100</b>. Include the leading zeros.", s: { p: 0 } },
+  { cap: "<b>Flip every bit.</b> Every 0 becomes 1 and every 1 becomes 0: <b>11101011</b>.", s: { p: 1 } },
+  { cap: "<b>Add 1.</b> 11101011 + 1 = <b>11101100</b>. The carry runs through the two trailing 1s, so three bits change.", s: { p: 2 } },
+  { cap: "<b>Check</b> with Method A: −128 + 64 + 32 + 8 + 4 = −20. ✓", s: { p: 3 } },
+] });
+
+/* ---------- 3. 45 - 20 ---------- */
+const A45 = bin8(45), M20 = bin8(-20), SUMV = 45 + 236, SUMB = SUMV.toString(2).padStart(9, "0");
+function subChart(s) {
+  const X = (j) => 130 + j * 68;
+  let o = "";
+  const row = (lab, bits, y, op, cls) => {
+    if (op <= 0.01) return "";
+    let r = SV.text(24, y + 8, lab, "lbl bd t1", { "text-anchor": "start", opacity: op, style: "font-size:18px" });
+    [...bits].forEach((b, i) => { r += bigTxt(X(i + (9 - bits.length)), y + 8, b, cls, 28, { opacity: op }); });
+    return r;
+  };
+  o += row("45", A45, 58, clamp01(s.p + 1));
+  o += row("+ (−20)", M20, 112, clamp01(s.p));
+  if (s.p > 0.01) o += SV.line(20, 134, X(8) + 30, 134, "ax", { opacity: clamp01(s.p) });
+  o += row("Total", SUMB, 184, clamp01(s.p - 1), "t3");
+  const d = clamp01(s.p - 2);
+  if (d > 0.01) {
+    o += SV.rect(X(0) - 28, 156, 56, 44, "f2", { rx: 8, opacity: d }) + SV.line(X(0) - 24, 196, X(0) + 24, 160, "c2", { opacity: d });
+    o += SV.text(X(0), 226, "9th bit: discard", "lbl bd t2", { "text-anchor": "middle", opacity: d, style: "font-size:14px" });
+  }
+  const c = clamp01(s.p - 3);
+  if (c > 0.01) o += SV.text(X(4.5), 270, "00011001 = 16 + 8 + 1 = 25  ✓  (45 − 20 = 25)", "lbl bd t3", { "text-anchor": "middle", opacity: c, style: "font-size:18px" });
+  if (s.p < 0.5) o += SV.text(380, 130, "45 − 20 = 45 + (−20)", "lbl bd t2", { "text-anchor": "middle", style: "font-size:24px", opacity: 1 - s.p * 2 });
+  return o;
+}
+Lib.stepper($("#stC"), { w: 760, h: 300, label: "Subtracting by adding a negative", base: { p: 0 }, tween: 700, dwell: 4300, draw: subChart, steps: [
+  { cap: "The computer does not subtract. It turns <b>45 − 20</b> into <b>45 + (−20)</b>. Start with 45 in 8 bits: <b>00101101</b>.", s: { p: 0 } },
+  { cap: "Write <b>−20</b> in two's complement (previous animation): <b>11101100</b>.", s: { p: 1 } },
+  { cap: "<b>Add</b> the two binary numbers as usual. The total needs 9 bits: <b>1 00011001</b>.", s: { p: 2 } },
+  { cap: "A 9th bit cannot be stored in an 8-bit register, so the carry is <b>discarded</b>. This is expected here, not an error.", s: { p: 3 } },
+  { cap: "What is left is <b>00011001 = 25</b>. Check: 45 − 20 = 25. ✓", s: { p: 4 } },
+] });
+
+/* ---------- Lab 1 ---------- */
+(() => {
+  let sl;
+  const upd = () => {
+    if (!sl) return;
+    const n = sl.get(), b = bin8(n);
+    let h = "";
+    const step = (i, t) => `<div class="step"><i>${i}</i><div>${t}</div></div>`;
+    if (n >= 0) {
+      h += step("1", `${n} is zero or positive, so write it as ordinary 8-bit binary:<div class="bitrow">${spans(b)}</div>`);
+      h += step("2", "The leading bit is 0. No flipping and no adding 1.");
+    } else if (n === -128) {
+      h += step("1", "−128 is the special case: +128 does not fit in 8 bits, so flip and add 1 does not work in the usual way.");
+      h += step("2", `It is the smallest number: sign bit 1 and the rest 0.<div class="bitrow">${spans(b)}</div>`);
+    } else {
+      const p = bin8(-n), f = flip(p);
+      h += step("1", `Write ${-n} (the positive size) in 8 bits:<div class="bitrow">${spans(p)}</div>`);
+      h += step("2", `Flip every bit:<div class="bitrow">${spans(f, () => "ch")}</div>`);
+      h += step("3", `Add 1:<div class="bitrow">${spans(b, (i) => (b[i] !== f[i] ? "ch" : ""))}</div>`);
+    }
+    const terms = [...b].map((c, i) => (c === "1" ? minus(PV[i]) : null)).filter(Boolean);
+    h += step("✓", `Check with place values: ${terms.length ? terms.join(" + ").replace(/\+ −/g, "− ").replace(/^−/, "−") : "0"} = <b>${minus(n)}</b>`);
+    $("#work").innerHTML = h;
+    $("#wv").innerHTML = `<b>${minus(n)}</b> in 8-bit two's complement is <b style="font-family:var(--mono)">${b.slice(0, 4)} ${b.slice(4)}</b>`;
+  };
+  sl = Lib.slider($("#a1"), { id: "an", label: "Denary number", min: -128, max: 127, step: 1, value: -45, fmt: (v) => minus(v), onInput: upd });
+  upd();
+})();
+
+/* ---------- Lab 2 ---------- */
+(() => {
+  const row = $("#bitsrow"), bits = [1, 1, 0, 1, 0, 0, 1, 1];
+  const ws = PV.map((p, i) => { const w = document.createElement("div"); w.className = "bit" + (i === 0 ? " sign" : ""); w.innerHTML = `<button type="button" aria-pressed="false" aria-label="Bit ${p}"></button><small>${minus(p)}</small>`; row.appendChild(w); $("button", w).onclick = () => { bits[i] ^= 1; paint(); }; return w; });
+  function paint() {
+    ws.forEach((w, i) => { const b = $("button", w); b.textContent = bits[i]; b.setAttribute("aria-pressed", bits[i] === 1); });
+    const s = bits.join(""), terms = [...s].map((c, i) => (c === "1" ? minus(PV[i]) : null)).filter(Boolean);
+    $("#b1").textContent = terms.length ? terms.join(" + ").replace(/\+ −/g, "− ") : "0";
+    $("#b2").textContent = minus(tcVal(s));
+    $("#b3").textContent = bits[0] ? "1 → negative" : tcVal(s) === 0 ? "0 → zero" : "0 → positive";
+  }
+  const set = (f) => { bits.forEach((_, i) => (bits[i] = f(i))); paint(); };
+  $("#bz").onclick = () => set(() => 0); $("#bo").onclick = () => set(() => 1);
+  $("#br").onclick = () => set(() => (Math.random() < 0.5 ? 1 : 0)); $("#bm").onclick = () => set((i) => (i === 0 ? 1 : 0));
+  paint();
+})();
+
+/* ---------- Lab 3 ---------- */
+(() => {
+  let sl;
+  const upd = () => {
+    if (!sl) return;
+    const n = sl.get(), lo = -(2 ** (n - 1)), hi = 2 ** (n - 1) - 1, loB = "1" + "0".repeat(n - 1), hiB = "0" + "1".repeat(n - 1);
+    $("#r2").textContent = lo.toLocaleString("en-GB").replace("-", "−"); $("#r3").textContent = hi.toLocaleString("en-GB"); $("#r4").textContent = (2 ** n).toLocaleString("en-GB");
+    $("#r5").innerHTML = `<b class="lab">Smallest</b>${spans(loB, (i) => (i === 0 ? "neg" : ""))}<br><b class="lab">Largest</b>${spans(hiB, (i) => (i === 0 ? "neg" : ""))}`.replace("<br>", '<div style="flex-basis:100%"></div>');
+    $("#rv").textContent = `With ${n} bits: smallest = −2^${n - 1}, largest = 2^${n - 1} − 1. The positive side stops one short of the negative side because zero takes a place.`;
+  };
+  sl = Lib.slider($("#r1"), { id: "rn", label: "Number of bits", min: 2, max: 16, step: 1, value: 8, fmt: (v) => v + " bits", onInput: upd });
+  upd();
+})();
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), { prompt: "Drag each wording to the job it asks for.", buckets: [{ label: "Negative denary → binary" }, { label: "Binary → denary" }, { label: "Range or count" }, { label: "Subtraction" }], items: [
+  { text: "Represent −90 in 8-bit two's complement", b: 0 }, { text: "Write −7 as an 8-bit two's complement binary number", b: 0 },
+  { text: "State the denary value of 10011100", b: 1 }, { text: "What denary number does the two's complement 11100001 represent?", b: 1 },
+  { text: "Give the smallest number that can be stored in 8 bits", b: 2 }, { text: "How many different values can an 8-bit two's complement number hold?", b: 2 },
+  { text: "Calculate 50 − 18 using two's complement", b: 3 }, { text: "Show how a computer works out 9 − 14 using addition", b: 3 },
+], done: "Find the job first, then pick the method." });
+
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Sign bit", "The leftmost bit; 1 means negative"], ["Flip the bits", "Change every 0 to 1 and every 1 to 0"], ["Two's complement", "A way of storing negative whole numbers in binary"],
+  ["Range of 8 bits", "−128 to +127"], ["A − B", "A plus the two's complement of B"], ["10000000", "−128"],
+] });
+
+Lib.order($("#o1"), { prompt: "Put the steps for working out 30 − 12 in order.", items: [
+  "Write 30 and 12 as 8-bit binary", "Flip the bits of 12 and add 1 to get −12", "Add 30 and −12 in binary", "Discard any carry beyond the 8th bit", "Check the answer: 00010010 = 18",
+], done: "Make the negative, add, discard, check." });
+
+Lib.calc($("#c1"), { qs: [
+  { q: "State the denary value of the 8-bit two's complement number 11110000.", a: -16, sol: "−128 + 64 + 32 + 16 = −16.", hint: "Left bit is −128. Add the 1s." },
+  { q: "State the denary value of the 8-bit two's complement number 01001101.", a: 77, sol: "Leading 0, so positive: 64 + 8 + 4 + 1 = 77.", hint: "Check the sign bit first." },
+  { q: "State the denary value of the 8-bit two's complement number 10000000.", a: -128, sol: "−128 + 0 = −128. The smallest number." },
+  { q: "State the denary value of the 8-bit two's complement number 11111111.", a: -1, sol: "−128 + 127 = −1." },
+  { q: "Write −5 as an 8-bit two's complement number.", t: ["11111011"], ph: "8 bits", sol: "5 = 00000101. Flip: 11111010. Add 1: 11111011.", hint: "Positive, flip, add 1." },
+  { q: "Write −20 as an 8-bit two's complement number.", t: ["11101100"], ph: "8 bits", sol: "20 = 00010100. Flip: 11101011. Add 1: 11101100." },
+  { q: "Write −100 as an 8-bit two's complement number.", t: ["10011100"], ph: "8 bits", sol: "100 = 01100100. Flip: 10011011. Add 1: 10011100. Check: −128 + 16 + 8 + 4 = −100." },
+  { q: "What is the smallest number that can be stored as a 4-bit two's complement number?", a: -8, sol: "−2³ = −8 (1000)." },
+  { q: "How many different values can be stored in 8-bit two's complement?", a: 256, sol: "2⁸ = 256 (−128 to +127)." },
+  { q: "Calculate 9 − 5 using 8-bit two's complement. Give the 8-bit binary answer.", t: ["00000100"], ph: "8 bits", sol: "9 = 00001001. −5 = 11111011. Sum = 1 00000100. Discard the 9th bit: 00000100 = 4.", hint: "9 + (−5)." },
+  { q: "Calculate 20 − 45 using two's complement. Give the answer in denary.", a: -25, sol: "20 = 00010100. −45 = 11010011. Sum = 11100111, no carry out. −128 + 64 + 32 + 4 + 2 + 1 = −25.", hint: "The result is negative, so there is no ninth bit." },
+] });
+
+(() => {
+  const el = $("#drill"), modes = [["d2t", "negative number → two's complement"], ["t2d", "two's complement → denary"], ["sub", "subtraction (denary answer)"], ["mix", "mixed"]];
+  el.innerHTML = `<label>Practise: <select>${modes.map(([v, t]) => `<option value="${v}">${t}</option>`).join("")}</select></label>
+    <div class="qline" aria-live="polite"></div>
+    <div class="row"><input type="text" autocomplete="off" autocapitalize="off" aria-label="Your answer"><button class="b pri" data-a="c">Check</button><button class="b" data-a="s">Show working</button><button class="b" data-a="n">New question</button><span class="fb" aria-live="polite"></span></div>
+    <p class="note" data-s></p><div class="work" data-w></div>`;
+  const sel = $("select", el), ql = $(".qline", el), inp = $("input", el), fb = $(".fb", el), st = $("[data-s]", el), wk = $("[data-w]", el);
+  const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  let ans = "", work = "", streak = 0, best = 0, solved = false;
+  const norm = (v) => v.replace(/[\s,]/g, "").replace(/−/g, "-").toUpperCase();
+  function gen() {
+    let m = sel.value; solved = false; if (m === "mix") m = ["d2t", "t2d", "sub"][rnd(0, 2)];
+    if (m === "d2t") { const n = rnd(1, 127), p = bin8(n); ql.textContent = `Write −${n} as an 8-bit two's complement number.`; ans = bin8(-n); work = `${n} = ${p}. Flip: ${flip(p)}. Add 1: ${ans}.`; }
+    if (m === "t2d") { const n = rnd(-128, 127), b = bin8(n); ql.textContent = `State the denary value of the 8-bit two's complement number ${b.slice(0, 4)} ${b.slice(4)}.`; ans = String(n); const terms = [...b].map((c, i) => (c === "1" ? minus(PV[i]) : null)).filter(Boolean); work = `${terms.join(" + ").replace(/\+ −/g, "− ") || "0"} = ${minus(n)}.`; }
+    if (m === "sub") { const a = rnd(10, 99), c = rnd(5, 90); ql.textContent = `Calculate ${a} − ${c} using two's complement. Give the answer in denary.`; ans = String(a - c); work = `${a} = ${bin8(a)}. −${c} = ${bin8(-c)}. Add: ${((a + ((-c) & 255))).toString(2).padStart(9, "0")}${a >= c ? ", discard the 9th bit" : ", no carry out"}. Result ${bin8(a - c)} = ${minus(a - c)}.`; }
+    inp.value = ""; fb.textContent = ""; fb.className = "fb"; wk.innerHTML = "";
+  }
+  const check = () => {
+    const good = norm(inp.value) === ans;
+    if (!solved) { streak = good ? streak + 1 : 0; best = Math.max(best, streak); }
+    if (good) solved = true;
+    fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); st.textContent = `Streak ${streak} · best ${best}`;
+  };
+  $("[data-a=c]", el).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && (solved ? gen() : check()));
+  $("[data-a=n]", el).onclick = gen; sel.onchange = () => { streak = 0; st.textContent = ""; gen(); };
+  $("[data-a=s]", el).onclick = () => { streak = 0; solved = true; wk.innerHTML = `<p><b>Working:</b> ${work}</p>`; st.textContent = "Streak 0 · best " + best; };
+  gen();
+})();
+
+Lib.quiz($("#qz1"), { qs: [
+  { q: "In 8-bit two's complement, what is the place value of the leftmost bit?", opts: ["+128", "−128", "−1", "+256"], a: 1, why: "Only the leftmost place value changes: it is −128." },
+  { q: "What is 10000001 in 8-bit two's complement?", opts: ["129", "−1", "−127", "−129"], a: 2, why: "−128 + 1 = −127." },
+  { q: "What is the first step in writing −12 in 8-bit two's complement?", opts: ["Flip the bits of 11", "Write 12 in 8-bit binary", "Put a 1 in front of 12", "Add 1 to 12"], a: 1, why: "Positive size first (00001100), then flip (11110011), then add 1 (11110100)." },
+  { q: "How does a computer work out A − B in two's complement?", opts: ["It subtracts column by column", "It adds the two's complement of B to A", "It flips A and adds B", "It adds A and B and halves the result"], a: 1, why: "A − B = A + (−B), so the same adder is used." },
+  { q: "What is the largest number that can be stored in 8-bit two's complement?", opts: ["128", "127", "255", "256"], a: 1, why: "01111111 = 127. The positive side stops one short of 128." },
+  { q: "The leftmost bit of a two's complement number is 0. What do you know?", opts: ["It is negative", "It is zero or positive", "It has overflowed", "It is odd"], a: 1, why: "The sign bit 0 means zero or positive. Read it as ordinary binary." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Two's complement", "A way of storing negative whole numbers in binary. The leftmost place value is negative (−128 for 8 bits)."],
+  ["Sign bit", "The leftmost bit. 0 means zero or positive, 1 means negative."],
+  ["Flip (invert) the bits", "Change every 0 to 1 and every 1 to 0."],
+  ["Method B", "To make a negative number: positive in binary, flip every bit, add 1."],
+  ["Method A", "To read a two's complement number: add the place values with a 1, using −128 for the left bit."],
+  ["Range (n bits)", "−2ⁿ⁻¹ to 2ⁿ⁻¹ − 1. For 8 bits: −128 to 127."],
+  ["Subtraction", "A − B is worked out as A + (−B). A carry beyond the last bit is discarded."],
+  ["Overflow", "The result is outside the range, so it cannot be stored correctly. Two positives giving a negative shows it."],
+] });
+
+Lib.initTabs();
+</script>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}.site-pill .pill-more{display:none}@media(max-width:700px){body{padding-bottom:64px}.site-pill{right:8px;bottom:8px;opacity:.6;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 16px)}.site-pill>*:not(.pill-more){display:none}.site-pill.open{opacity:.95}.site-pill.open>*:not(.pill-more):not([hidden]){display:inline-block}.site-pill .pill-more{display:block;border:0;border-radius:999px;width:36px;height:36px;padding:0;text-align:center;font-size:18px}.site-pill.open .pill-more{border-left:0}}</style><div class="site-pill"><button type="button" class="pill-more" aria-label="Menu" onclick="this.parentNode.classList.toggle(&#39;open&#39;)">☰</button><a href="../../ig-cs/ch-01/#res">← Chapter 1</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="twos-complement-questions" hidden></button><button data-role-toggle="twos-complement-questions" hidden></button><button data-role-delete="twos-complement-questions" hidden></button><button data-role-restore="twos-complement-questions" hidden></button></div><script src="../../assets/config.js?v=1791168417"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js?v=1791168417"></script><script src="../../assets/gate.js?v=1791168417" data-courses="ig-cs"></script><script>document.addEventListener('click',function(e){var t=e.target.closest('[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script><script>document.addEventListener('click',function(e){var p=document.querySelector('.site-pill.open');if(p&&!p.contains(e.target))p.classList.remove('open')});addEventListener('scroll',function(){var p=document.querySelector('.site-pill.open');if(p)p.classList.remove('open')},{passive:true});</script></body></html>

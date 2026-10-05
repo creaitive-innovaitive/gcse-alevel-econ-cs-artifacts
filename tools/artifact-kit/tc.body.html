@@ -1,0 +1,232 @@
+<style>
+.bits{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.bit{display:flex;flex-direction:column;align-items:center;gap:3px}
+.bit small{font:700 .7rem var(--mono);color:var(--muted)}
+.bit button{width:46px;height:52px;font:700 1.5rem var(--mono);border-radius:9px;border:2px solid var(--accent);background:var(--surface);color:var(--ink);cursor:pointer}
+.bit button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.bit.sign button{border-color:var(--bad)} .bit.sign button[aria-pressed="true"]{background:var(--bad);color:#fff}
+.bitrow{display:flex;gap:4px;font:700 1.2rem var(--mono);margin:4px 0;flex-wrap:wrap;align-items:center}
+.bitrow span{width:32px;height:38px;display:grid;place-items:center;border-radius:7px;background:var(--soft);border:1px solid var(--line)}
+.bitrow span.ch{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.bitrow span.neg{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.bitrow b.lab{font:700 .8rem var(--sans);color:var(--muted);width:92px;flex:none}
+.work{margin:8px 0}
+.work .step{display:flex;gap:10px;align-items:baseline;margin:6px 0}
+.work .step i{font:700 .72rem var(--sans);font-style:normal;background:var(--accent);color:var(--accent-ink);border-radius:99px;padding:1px 8px;flex:none}
+.drill input{font:700 1.1rem var(--mono);padding:8px 12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,280px)}
+.drill .qline{font-size:1.1rem;font-weight:600;margin:8px 0}
+.drill select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+.ex{font-family:var(--mono)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 1 · 1.1 · Exam skills</div>
+  <h1>Two's Complement: Every Question Type</h1>
+  <p class="lead">What the wording means, which method to use, and a model answer for each kind of question. Two's complement is how a computer stores negative whole numbers in binary.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="types">Question types</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The one idea you need</h3>
+    <p>In ordinary 8-bit binary the place values are 128, 64, 32, 16, 8, 4, 2, 1. In <span class="kw">two's complement</span> only one thing changes: the <b>leftmost</b> place value becomes <b>−128</b>.</p>
+    <div class="tw"><table class="t">
+      <tr><th>−128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+    </table></div>
+    <p class="ex">−128 + 64 + 16 + 2 + 1 = <b>−45</b></p>
+    <p>That leftmost bit is the <span class="kw">sign bit</span>. <b>0</b> means the number is zero or positive. <b>1</b> means it is negative.</p>
+  </div>
+
+  <h2>What the question is really asking</h2>
+  <p>Students usually know the method. The trouble is working out which job the wording is asking for. Find your wording here.</p>
+  <div class="tw"><table class="t">
+    <tr><th>If the question says…</th><th>It means</th><th>Do this</th></tr>
+    <tr><td>"Represent −45 in 8-bit two's complement"<br>"Write −45 as a two's complement binary number"</td><td>Negative denary → binary</td><td>Method B: positive, flip, add 1</td></tr>
+    <tr><td>"State the denary value of the two's complement number 11010011"<br>"What is 11010011 as a denary number?"</td><td>Binary → denary</td><td>Method A: add the place values, left one is −128</td></tr>
+    <tr><td>"Represent 45 in two's complement"</td><td>Positive denary → binary</td><td>Normal binary. Leading 0. No flipping.</td></tr>
+    <tr><td>"The largest / smallest number that can be stored"<br>"The range of values"</td><td>Range</td><td>−128 to +127 for 8 bits</td></tr>
+    <tr><td>"How many different values can be stored?"</td><td>Count</td><td>2ⁿ, so 256 for 8 bits</td></tr>
+    <tr><td>"Calculate 45 − 20 using two's complement"</td><td>Subtraction</td><td>Turn it into 45 + (−20), then add</td></tr>
+    <tr><td>"Explain why the computer uses two's complement"</td><td>Reasons</td><td>Negatives, subtraction by addition, one zero</td></tr>
+    <tr><td>"in an 8-bit register" / "using 8 bits"</td><td>Your answer must be exactly 8 bits</td><td>Pad with leading 0s</td></tr>
+  </table></div>
+
+  <h2>The three methods</h2>
+  <div class="grid2">
+    <div class="card"><h3>Method A: place values</h3><p>Use it to <b>read</b> a two's complement number.</p><p>Write −128 64 32 16 8 4 2 1 above the bits. Add the values that have a 1 beneath. Remember the −128.</p><p class="ex">11110000 → −128 + 64 + 32 + 16 = −16</p></div>
+    <div class="card"><h3>Method B: flip and add 1</h3><p>Use it to <b>make</b> a negative number.</p><p>1. Write the positive number in 8-bit binary. 2. Flip every bit. 3. Add 1.</p><p class="ex">−20: 00010100 → 11101011 → 11101100</p></div>
+    <div class="card"><h3>Method B works backwards too</h3><p>To read a negative number another way: flip, add 1, and you get the positive size. Put a minus in front.</p><p class="ex">11101100 → 00010011 → 00010100 = 20 → −20</p></div>
+    <div class="card"><h3>Fast method (optional)</h3><p>Starting from the <b>right</b>, copy every bit up to and including the first 1. Flip all the bits after that.</p><p class="ex">00010100: copy 100, flip 00010 → 11101100</p></div>
+  </div>
+  <div class="warn"><b class="h">Special case</b>10000000 is −128. Flipping and adding 1 gives 10000000 again, because +128 does not fit in 8 bits. Just read it with Method A.</div>
+
+  <h2>The range</h2>
+  <p>With <b>n</b> bits the range is <b>−2ⁿ⁻¹ to +(2ⁿ⁻¹ − 1)</b>. There is one more negative value than positive, because 0 uses up one of the positive-side patterns.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Bits</th><th>Smallest</th><th>Largest</th><th>Different values</th></tr>
+    <tr><td>4</td><td>−8</td><td>7</td><td>16</td></tr>
+    <tr><td>8</td><td>−128</td><td>127</td><td>256</td></tr>
+    <tr><td>16</td><td>−32,768</td><td>32,767</td><td>65,536</td></tr>
+  </table></div>
+
+  <h2>Why computers use it</h2>
+  <ul>
+    <li><b>It stores negative numbers</b> using only 1s and 0s.</li>
+    <li><b>Subtraction becomes addition.</b> A − B is calculated as A + (−B), so the processor needs no separate subtraction circuit.</li>
+    <li><b>There is only one zero.</b> (00000000. No separate "negative zero".)</li>
+  </ul>
+  <p class="note">Spelling: it is <b>complement</b> (completes the number), not compliment.</p>
+</section>
+
+<!-- TYPES -->
+<section id="types" role="tabpanel" hidden>
+  <h2>The question types, with model answers</h2>
+  <p>Open each one. Underlined phrases are mark points; the number shows which mark.</p>
+
+  <details class="eq" open><summary>Type 1 <span class="cmd">Represent</span> <span class="mark">3 marks</span> Write −45 as an 8-bit two's complement binary number.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Positive version first, then flip, then add 1. Always 8 bits. Show each stage: the marks are for the stages.</div>
+    <div class="ans"><span class="mk k" data-t="1">45 = 00101101</span> <span class="mk k" data-t="2">Flip the bits: 11010010</span> <span class="mk k" data-t="3">Add 1: 11010011</span></div>
+    <div class="warn"><b class="h">Common mistakes</b>Flipping but forgetting +1 (gives −46). Starting from the wrong number (flipping 45 as 101101 without the leading zeros). Putting a 1 in front of 00101101 and calling it done.</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 2 <span class="cmd">State</span> <span class="mark">2 marks</span> State the denary value of the 8-bit two's complement number 11010011.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Leading 1, so it is negative. Method A: add the place values, with the left one as −128. Check the sign makes sense.</div>
+    <div class="ans"><span class="mk k" data-t="1">−128 + 64 + 16 + 2 + 1</span> <span class="mk k" data-t="2">= −45</span></div>
+    <p><b>Check with Method B:</b> flip 11010011 → 00101100, add 1 → 00101101 = 45, so the number is −45. ✓</p>
+    <div class="warn"><b class="h">Common mistakes</b>Using +128 for the left bit (gives 211). Dropping the minus sign. Adding the 0 columns.</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 3 <span class="cmd">State</span> <span class="mark">1 mark</span> State the denary value of the 8-bit two's complement number 01001101.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Leading 0, so it is positive. It is the same as ordinary binary. No flipping needed.</div>
+    <div class="ans"><span class="mk k" data-t="1">64 + 8 + 4 + 1 = 77</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Flipping and adding 1 anyway. If the left bit is 0, nothing special happens.</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 4 <span class="cmd">Give</span> <span class="mark">2 marks</span> Give the smallest and largest denary numbers that can be stored as an 8-bit two's complement number.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Smallest: 1 followed by all 0s. Largest: 0 followed by all 1s. Learn the pair −128 and 127.</div>
+    <div class="ans"><span class="mk k" data-t="1">Smallest: 10000000 = −128</span> <span class="mk k" data-t="2">Largest: 01111111 = +127</span></div>
+    <p><b>Other bit lengths:</b> n bits gives −2ⁿ⁻¹ to 2ⁿ⁻¹ − 1. For 4 bits that is −8 to 7. The number of different values is always 2ⁿ (256 for 8 bits).</p>
+    <div class="warn"><b class="h">Common mistake</b>Writing −127 to 128, or −128 to 128. The positive side stops one short.</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 5 <span class="cmd">Show</span> <span class="mark">4 marks</span> Calculate 30 − 12 using 8-bit two's complement. Show your working.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Subtraction is turned into addition: 30 − 12 = 30 + (−12). Make −12, add, throw away any ninth bit.</div>
+    <div class="ans"><span class="mk k" data-t="1">30 = 00011110, 12 = 00001100</span> <span class="mk k" data-t="2">−12: flip 00001100 → 11110011, add 1 → 11110100</span> <span class="mk k" data-t="3">00011110 + 11110100 = 1 00010010</span> <span class="mk k" data-t="4">The carry out of the 8th bit is discarded, giving 00010010 = 18</span></div>
+    <div class="warn"><b class="h">Common mistakes</b>Subtracting the binary numbers column by column. Calling the discarded ninth bit "overflow". Here it is expected and the answer is correct. Check by converting back: 00010010 = 18 ✓</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 6 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Explain why the binary number 11111111 is smaller than 00000001 when stored in two's complement.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Give both values, and name the sign bit.</div>
+    <div class="ans"><span class="mk k" data-t="1">The leftmost bit is the sign bit. In 11111111 it is 1, so the number is negative (−128 + 127 = −1).</span> <span class="mk k" data-t="2">00000001 has a 0 sign bit, so it is positive (+1), and any negative number is smaller than a positive one.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Reading both as ordinary binary (255 and 1), which makes 11111111 the bigger.</div>
+  </div></details>
+
+  <details class="eq"><summary>Type 7 <span class="cmd">Give</span> <span class="mark">2 marks</span> Give two reasons why computers use two's complement to store negative numbers.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Two separate points. Pick from: negatives, subtraction by addition, one zero.</div>
+    <div class="ans"><span class="mk k" data-t="1">It allows negative numbers to be stored using only binary digits.</span> <span class="mk k" data-t="2">Subtraction can be done by adding a negative number, so the processor can use the same addition circuit and needs no separate subtraction circuit.</span></div>
+    <p>Another valid point: there is only one representation of zero.</p>
+  </div></details>
+
+  <details class="eq"><summary>Type 8 (extension) <span class="cmd">Describe</span> <span class="mark">2 marks</span> 01100100 + 00110010 is calculated in 8-bit two's complement. Describe the result.</summary><div class="body">
+    <div class="tip"><b class="h">How to answer</b>Add, then look at the sign bit. Two positives cannot make a negative.</div>
+    <div class="ans"><span class="mk k" data-t="1">The sum is 10010110, which has a 1 as the sign bit, so it reads as −106.</span> <span class="mk k" data-t="2">100 + 50 = 150 is bigger than 127, so the answer does not fit in 8 bits: overflow has occurred and the stored result is wrong.</span></div>
+    <p>Rule of thumb: if two numbers with the same sign give a result with the opposite sign, there has been overflow.</p>
+  </div></details>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · Reading 11010011 (Method A)</h2><div id="stA"></div>
+  <h2>2 · Writing −20 (Method B)</h2><div id="stB"></div>
+  <h2>3 · 45 − 20 as an addition</h2><div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Number to two's complement, with working</h2>
+  <p>Slide to any number from −128 to 127 and follow the working an examiner wants to see.</p>
+  <div class="card"><div id="a1"></div><div class="work" id="work"></div><div class="verdict" id="wv"></div></div>
+
+  <h2>Lab 2 · Click the bits, read the number</h2>
+  <p>Click the bits and watch the sum. The red −128 is the sign bit.</p>
+  <div class="card"><div class="bits" id="bitsrow"></div>
+    <div class="readout"><div><small>Sum</small><strong id="b1" style="font-size:1rem"></strong></div><div><small>Denary</small><strong id="b2"></strong></div><div><small>Sign</small><strong id="b3" style="font-size:1rem"></strong></div></div>
+    <div class="row"><button class="b" id="bz">All 0</button><button class="b" id="bo">All 1</button><button class="b" id="br">Random</button><button class="b" id="bm">Set to −128</button></div></div>
+
+  <h2>Lab 3 · Range for any number of bits</h2>
+  <div class="card"><div id="r1"></div>
+    <div class="readout"><div><small>Smallest</small><strong id="r2"></strong></div><div><small>Largest</small><strong id="r3"></strong></div><div><small>Different values</small><strong id="r4"></strong></div></div>
+    <div class="bitrow" id="r5"></div><div class="verdict" id="rv"></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · What is the question asking?</h2>
+  <p>Sort each piece of wording by the job it asks you to do.</p>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Subtraction steps in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Questions</h2>
+  <p class="note">Type negative numbers with a minus sign. Binary answers: no spaces, exactly 8 bits.</p>
+  <div id="c1"></div>
+
+  <h2>5 · Endless drill</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general.</p>
+  <div class="rw"><h3>Signed integers in programming</h3><p>An 8-bit signed integer type (such as int8 in C-style languages) holds −128 to 127. A 16-bit one holds −32,768 to 32,767, and a 32-bit one about ±2.1 billion. These are all two's complement.</p><div class="use"><b>Exam use:</b> a ready example of a range question: n bits gives −2ⁿ⁻¹ to 2ⁿ⁻¹ − 1.</div></div>
+  <div class="rw"><h3>Digital audio</h3><p>CD-quality sound is stored as 16-bit samples. The wave goes above and below zero, so each sample is a signed number from −32,768 to 32,767.</p><div class="use"><b>Exam use:</b> links to 1.2 sound sampling, and shows why a negative value is needed.</div></div>
+  <div class="rw"><h3>Temperature sensors</h3><p>A weather station storing the temperature in one byte needs to record −20 °C as well as 35 °C, so it uses two's complement.</p><div class="use"><b>Exam use:</b> a context for "why do we need negative numbers in binary?"</div></div>
+  <div class="rw"><h3>Counters that wrap round</h3><p>When a signed counter passes its largest value it wraps to a large negative one. YouTube's view counter hit this limit in 2014, at 2,147,483,647 views, and moved to a 64-bit counter.</p><div class="use"><b>Exam use:</b> shows overflow in two's complement: two positives cannot give a negative.</div></div>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Decide the job first.</b> Making a number (Method B) or reading one (Method A)?</li>
+    <li><b>Check the left bit.</b> 0 means nothing special. 1 means negative.</li>
+    <li><b>The left place value is −128, not +128.</b></li>
+    <li><b>Write all 8 bits</b> including leading zeros. Pad before flipping.</li>
+    <li><b>Flip, then add 1.</b> Both steps, in that order. Show each line for method marks.</li>
+    <li><b>Subtraction is addition.</b> A − B = A + (−B). Discard a ninth bit.</li>
+    <li><b>Check your answer backwards.</b> Read your binary with Method A and see if you get your starting number.</li>
+    <li><b>Range:</b> −128 to 127, 256 values. The positive side is one short.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Give</td><td>The answer only.</td></tr>
+    <tr><td>Represent / Write / Convert</td><td>The number in the other form. Show working when there are marks.</td></tr>
+    <tr><td>Show</td><td>The working that leads to the answer.</td></tr>
+    <tr><td>Explain</td><td>The reason, with because or so.</td></tr>
+    <tr><td>Describe</td><td>What happens, in order.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
