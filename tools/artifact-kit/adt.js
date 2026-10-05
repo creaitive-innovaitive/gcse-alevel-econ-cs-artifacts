@@ -267,11 +267,12 @@ const mkCtl = (ctl, items) => items.forEach(([k, label, cls]) => { if (k === "nu
 })();
 
 /* ====================== practise ====================== */
-Lib.classify($("#cl1"), { prompt: "Drag each statement to the ADT it describes.", buckets: [{ label: "Stack" }, { label: "Queue" }, { label: "Linked list" }, { label: "Binary tree" }], items: [
+Lib.classify($("#cl1"), { prompt: "Drag each statement to the ADT it describes.", buckets: [{ label: "Stack" }, { label: "Queue" }, { label: "Linked list" }, { label: "Binary tree" }, { label: "Graph" }], items: [
+  { text: "Roads between towns, each with a distance", b: 4 }, { text: "Vertices joined by directed or undirected edges, with cycles allowed", b: 4 },
   { text: "The undo button in an editor", b: 0 }, { text: "Documents waiting to be printed", b: 1 }, { text: "The browser's back button", b: 0 }, { text: "Items are added at the rear and removed from the front", b: 1 },
   { text: "Each node holds data and a pointer to the next node", b: 2 }, { text: "Each node has at most two children", b: 3 }, { text: "Storing return addresses during subroutine calls", b: 0 },
   { text: "Insertion only changes pointers, nothing is shifted", b: 2 }, { text: "In-order traversal outputs the data in sorted order", b: 3 }, { text: "Customers waiting at a till", b: 1 },
-], done: "Stack: LIFO. Queue: FIFO. Linked list: pointers. Binary tree: two children per node." });
+], done: "Stack: LIFO. Queue: FIFO. Linked list: pointers. Binary tree: two children per node. Graph: vertices and edges." });
 
 Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
   ["Push", "Add an item to the top of a stack"], ["Dequeue", "Remove the item at the front of a queue"], ["Peek", "Read the top item without removing it"],
@@ -299,6 +300,7 @@ Lib.quiz($("#qz1"), { qs: [
   { q: "A circular queue has MaxSize 8 and Rear = 7. After an enqueue, Rear is…", opts: ["8", "0", "7", "1"], a: 1, why: "(7 + 1) MOD 8 = 0. The pointer wraps to the start of the array." },
   { q: "What is the main advantage of a linked list over an array for inserting in the middle?", opts: ["Direct access to any item", "No pointers are needed", "Only pointers change, so no items are shifted", "It uses less memory"], a: 2, why: "Inserting only changes two pointers. Arrays must shift items along. Linked lists do need extra memory for pointers." },
   { q: "Which traversal of a binary search tree outputs the values in ascending order?", opts: ["Pre-order", "In-order", "Post-order", "Level order"], a: 1, why: "In-order visits left subtree, node, right subtree, which gives sorted order for a BST." },
+  { q: "A graph has many vertices but very few edges. Which storage is usually better?", opts: ["Adjacency matrix", "Adjacency list", "A stack", "A queue"], a: 1, why: "A matrix needs n × n cells whatever the number of edges. A list stores only the edges that exist." },
   { q: "After deleting a node from an array-based linked list, what should happen to the deleted node?", opts: ["Its data is shifted up", "It is added to the free list", "It stays as the start pointer", "Its pointer is set to the root"], a: 1, why: "The node's pointer is set to the old free pointer and the free pointer is set to the node, so it can be reused." },
 ] });
 
@@ -309,5 +311,21 @@ Lib.cards($("#fc1"), { cards: [
   ["Linked list", "A chain of nodes, each holding data and a pointer to the next node."], ["Node", "One element of a linked list or tree, holding data and pointer(s)."],
   ["Null pointer", "A pointer value meaning there is no node to point to; the end of a list."], ["Start pointer", "The pointer to the first node of a linked list."], ["Free list", "A linked chain of unused nodes, ready for new items."],
   ["Binary tree", "A tree where each node has at most two children, left and right."], ["Root / Leaf", "The first node of a tree / a node with no children."],
+  ["Graph", "An ADT of vertices joined by edges, which may be directed or weighted."], ["Adjacency matrix / list", "Two ways to store a graph: a 2D array of edges, or a list of neighbours for each vertex."],
   ["Pre-order", "Traverse node, then left subtree, then right subtree."], ["In-order", "Traverse left subtree, node, right subtree. Sorted output for a binary search tree."], ["Post-order", "Traverse left subtree, right subtree, then the node."],
 ] });
+
+/* ---- Graph additions ---- */
+const GG = { directed: false, weighted: true, nodes: [{ id: "A", x: 45, y: 130 }, { id: "B", x: 140, y: 55 }, { id: "C", x: 140, y: 205 }, { id: "D", x: 245, y: 55 }, { id: "E", x: 320, y: 140 }],
+  edges: [["A", "B", 4], ["A", "C", 2], ["B", "C", 1], ["B", "D", 5], ["C", "D", 8], ["C", "E", 10], ["D", "E", 2]] };
+$("#gLearn").innerHTML = `<div class="grid2"><div class="lab"><svg viewBox="0 0 360 250" role="img" aria-label="A weighted undirected graph">${Lib.graphSvg(GG)}</svg></div><div>${Lib.matrixHtml(GG)}<p class="note">– means no edge. Symmetric, because the graph is undirected.</p></div></div>${Lib.listHtml(GG)}`;
+(() => {
+  const el = $("#lab5"), A = Lib.adjOf(GG);
+  el.innerHTML = `<svg viewBox="0 0 360 250" role="img" aria-label="Graph with a chosen vertex"></svg><div class="pick"><label>Vertex <select>${GG.nodes.map((n) => `<option>${n.id}</option>`).join("")}</select></label></div><div class="msg" aria-live="polite"></div><div data-m></div>`;
+  const svg = $("svg", el), sel = $("select", el), msg = $(".msg", el);
+  const run = () => { const v = sel.value, nb = A.get(v), cls = { [v]: "cur" }, on = new Set(); nb.forEach(([b]) => { cls[b] = "ok"; on.add(v + "-" + b); });
+    svg.innerHTML = Lib.graphSvg(GG, { cls, on }); msg.style.color = "var(--good)";
+    msg.textContent = `${v} has ${nb.length} neighbours: ${nb.map(([b, w]) => `${b} (weight ${w})`).join(", ")}. In the matrix, read row ${v}; in the list, read ${v}'s entry.`;
+    $("[data-m]", el).innerHTML = `<div class="grid2"><div>${Lib.matrixHtml(GG)}</div><div>${Lib.listHtml(GG)}</div></div>`; };
+  sel.onchange = run; run();
+})();

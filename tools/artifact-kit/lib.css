@@ -182,11 +182,16 @@ svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
 svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
 svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
 svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .arr{fill:var(--muted)}
 svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
 .vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
 .vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
 .bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
 .bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+table.mx td,table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+table.mx td.z{color:var(--muted);opacity:.6} table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+table.mx td.ls{text-align:left}
 @media (max-width:640px){.tablist{position:static}}
 @media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

@@ -15,8 +15,8 @@ pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;
 <div class="wrap">
 <header class="top">
   <div class="eyebrow">A Level Computer Science · 9618 · Chapter 19 · 19.1.3</div>
-  <h1>Abstract Data Types: Stacks, Queues, Linked Lists and Binary Trees</h1>
-  <p class="lead">An abstract data type is defined by what you can do with it, not by how it is stored. Watch each ADT work step by step on arrays, operate your own, and practise the trace and pseudocode questions.</p>
+  <h1>Abstract Data Types: Stacks, Queues, Linked Lists, Trees and Graphs</h1>
+  <p class="lead">An abstract data type is defined by what you can do with it, not by how it is stored. Watch each ADT work step by step on arrays (graphs are covered in their own section and a separate explainer), operate your own, and practise the trace and pseudocode questions.</p>
 </header>
 
 <nav class="tablist" role="tablist" aria-label="Sections">
@@ -49,6 +49,9 @@ pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;
     <div class="card"><h3>Binary tree</h3><p>Each node has at most <b>two children</b>: left and right. In a binary search tree, smaller values go left, larger go right.</p>
       <b class="k">Operations</b><p>insert, search, traverse (pre, in, post)</p>
       <b class="k">Pointers</b><p>Root, left and right pointers</p></div>
+    <div class="card"><h3>Graph</h3><p>Vertices joined by <b>edges</b>, with no fixed shape. Edges may be directed or weighted. Models maps and networks.</p>
+      <b class="k">Operations</b><p>add vertex, add edge, find neighbours, shortest path</p>
+      <b class="k">Stored as</b><p>Adjacency matrix or adjacency list</p></div>
   </div>
 
   <h2>Stack</h2>
@@ -84,6 +87,17 @@ pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;
     <tr><td>Post-order</td><td>Left subtree, then right subtree, then node</td><td>Deleting a tree; evaluating expressions (Reverse Polish)</td></tr>
   </table></div>
 
+  <h2>Graph</h2>
+  <p>A <span class="kw">graph</span> is a set of <b>vertices</b> (nodes) joined by <b>edges</b> (arcs). Unlike a tree, it has no root and may contain cycles, so any vertex can connect to any other. Edges can be <b>directed</b> (one-way, drawn as arrows) and <b>weighted</b> (carrying a distance, time or cost). It can be implemented as an <span class="kw">adjacency matrix</span> (a 2D array with a 1 or the weight where an edge exists) or an <span class="kw">adjacency list</span> (a list of neighbours for each vertex).</p>
+  <div class="card"><div id="gLearn"></div></div>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Adjacency matrix</th><th>Adjacency list</th></tr>
+    <tr><td>Memory</td><td>n × n cells always</td><td>Only the edges that exist</td></tr>
+    <tr><td>Check for one edge</td><td>One look-up</td><td>Search the vertex's list</td></tr>
+    <tr><td>Best for</td><td>Dense graphs</td><td>Sparse graphs</td></tr>
+  </table></div>
+  <p class="note">The Graphs explainer in this chapter goes further: Dijkstra's shortest path, A*, how graph questions are phrased and a full set of exam questions.</p>
+
   <h2>Choosing an ADT</h2>
   <div class="tw"><table class="t">
     <tr><th>If you need…</th><th>Use a</th></tr>
@@ -91,6 +105,7 @@ pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;
     <tr><td>Items handled in the order they arrived (print jobs, waiting customers)</td><td>Queue</td></tr>
     <tr><td>A list that grows, shrinks and is often changed in the middle, kept in order by pointers</td><td>Linked list</td></tr>
     <tr><td>Ordered data with quick searching and insertion</td><td>Binary search tree</td></tr>
+    <tr><td>Connections between things, such as roads, friendships or network links, perhaps with distances</td><td>Graph</td></tr>
   </table></div>
   <div class="tip"><b class="h">Array indexes</b>Code here starts arrays at index 0, with a top pointer of −1 for an empty stack. Many CIE questions start arrays at 1 and use 0 for an empty stack. Read the question first.</div>
   <p class="note">For deeper single-topic walkthroughs, see the Linked Lists and Binary Search Tree artifacts in this chapter.</p>
@@ -134,6 +149,10 @@ pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;
   <h2>Lab 4 · Binary search tree builder</h2>
   <p>Add values and see where they land. Pick a traversal and play it to see the output order.</p>
   <div class="card lab" id="lab4"></div>
+
+  <h2>Lab 5 · Graph neighbours</h2>
+  <p>Pick a vertex. Its neighbours light up, and you can see the same facts in the matrix row and in the adjacency list.</p>
+  <div class="card lab" id="lab5"></div>
 </section>
 
 <!-- PRACTISE -->
@@ -164,6 +183,7 @@ pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;
   <div class="rw"><h3>Print queue (queue)</h3><p>Documents are printed in the order they were sent. New jobs join the rear; the printer takes from the front.</p><div class="use"><b>Exam use:</b> the standard FIFO example.</div></div>
   <div class="rw"><h3>Keyboard buffer (circular queue)</h3><p>Keypresses wait in a small fixed buffer until the program reads them in order. A fixed-size buffer that reuses its space is a circular queue.</p><div class="use"><b>Exam use:</b> why a circular queue suits a fixed-size memory area: the pointers wrap round instead of the data moving.</div></div>
   <div class="rw"><h3>A playlist of songs (linked list)</h3><p>Each track knows which track plays next. Adding a track to the middle only changes where two tracks point; nothing else moves.</p><div class="use"><b>Exam use:</b> why a linked list makes insertion and deletion cheap compared with shifting array items.</div></div>
+  <div class="rw"><h3>Maps and social networks (graph)</h3><p>Junctions are vertices and roads are weighted edges, so a satnav can find the shortest route. In a social network, people are vertices and friendships are edges.</p><div class="use"><b>Exam use:</b> say what the vertices, edges and weights represent. A huge sparse graph like this suits an adjacency list.</div></div>
   <div class="rw"><h3>Folders on a computer (tree)</h3><p>A folder contains files and other folders, forming a tree from the root. Searching or listing everything means traversing the tree. (File systems are general trees, not always binary.)</p><div class="use"><b>Exam use:</b> a real hierarchy. Mention that a binary tree restricts each node to two children.</div></div>
   <div class="rw"><h3>Sorted data with fast lookup (binary search tree)</h3><p>A program that keeps names in a binary search tree can find one by comparing with the root and going left or right, discarding about half of the remaining tree each time if the tree is balanced.</p><div class="use"><b>Exam use:</b> an in-order traversal gives the names alphabetically; link back to binary search (19.1.1).</div></div>
 </section>
@@ -242,6 +262,12 @@ pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;
     <p><span class="mk k" data-t="1">Test top = −1.</span> <span class="mk k" data-t="2">Output the message in that case.</span> <span class="mk k" data-t="3">Read the item at the top pointer.</span> <span class="mk k" data-t="4">Subtract 1 from the pointer.</span> <span class="mk k" data-t="5">Return the item.</span></p></div>
     <div class="warn"><b class="h">Common mistake</b>Decrementing the pointer before reading the item, which returns the wrong value.</div>
   </div></details>
+
+  <details class="eq"><summary>Q10 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe what is meant by a graph, and explain how a graph could be stored in a program. (See the Graphs explainer for Dijkstra's algorithm and more.)</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Define it, mention direction and weights, then name two ways to store it.</div>
+    <div class="ans"><span class="mk k" data-t="1">A graph is an abstract data type made up of vertices (nodes) joined by edges (arcs).</span> <span class="mk k" data-t="2">Edges can be directed (one-way) and can have weights, such as a distance.</span> <span class="mk k" data-t="3">It can be stored as an adjacency matrix, a 2D array with a 1 or the weight in row r, column c if there is an edge from r to c.</span> <span class="mk k" data-t="4">Or it can be stored as an adjacency list, where each vertex has a list of the vertices it is joined to.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Confusing a graph with a tree. A tree is a connected graph with no cycles and a root.</div>
+  </div></details>
 </section>
 
 <!-- TIPS -->
@@ -255,6 +281,7 @@ pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;
     <li><b>Circular queues use MOD.</b> (Rear + 1) MOD MaxSize. It can still become full.</li>
     <li><b>Linked lists change pointers, not positions.</b> Insert: new node points on, previous points to new. Delete: previous bypasses. Return the node to the free list.</li>
     <li><b>Mind the free pointer.</b> Forgetting to update it is the commonest lost mark in linked-list tables.</li>
+    <li><b>Graphs: name the vertices, edges and weights.</b> Row is from, column is to in a matrix. Sparse graph, use a list.</li>
     <li><b>Tree traversals have a word order.</b> Pre = node first, in = node in the middle, post = node last. In-order of a binary search tree is sorted.</li>
     <li><b>Check array bounds.</b> This artifact starts at 0 with top = −1 for empty. Many CIE questions start at 1.</li>
   </ul>

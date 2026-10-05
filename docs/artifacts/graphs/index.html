@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="en"><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Graphs: Representation and Shortest Paths</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .arr{fill:var(--muted)}
+svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+table.mx td,table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+table.mx td.z{color:var(--muted);opacity:.6} table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+table.mx td.ls{text-align:left}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<style>
+.pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.pick select,.pick input[type=number]{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.pick input[type=number]{width:80px;font-family:var(--mono)}
+.pick label{font-weight:600;font-size:.92rem}
+.lab .msg{font-weight:700;margin:8px 0;min-height:1.6em}
+.lab svg{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.listrow{font:600 1rem var(--mono);background:var(--soft);border-radius:8px;padding:8px 12px;margin:8px 0;overflow-x:auto}
+pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font:500 .85rem/1.5 var(--mono);overflow-x:auto;margin:8px 0}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;align-items:start}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Computer Science · 9618 · Chapter 19 · 19.1.3 (with 19.2 links)</div>
+  <h1>Graphs: Representation and Shortest Paths</h1>
+  <p class="lead">A graph is a set of vertices joined by edges. It models maps, networks and relationships. Learn the vocabulary, build adjacency matrices and lists, trace Dijkstra's shortest path algorithm, and see exactly how graphs turn up in the exam.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="inexam">In the exam</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A <span class="kw">graph</span> is an abstract data type made of <b>vertices</b> (also called nodes) and <b>edges</b> (also called arcs) that connect pairs of vertices. Unlike a list or a tree, a graph has no fixed shape: any vertex can connect to any other, and loops are allowed. That freedom is why graphs model real networks so well.</p>
+  </div>
+
+  <h2>The vocabulary</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Term</th><th>Meaning</th></tr>
+    <tr><td><span class="kw">Vertex</span> (node)</td><td>A point in the graph, e.g. a town, a person, a web page.</td></tr>
+    <tr><td><span class="kw">Edge</span> (arc)</td><td>A connection between two vertices, e.g. a road, a friendship, a link.</td></tr>
+    <tr><td><span class="kw">Undirected</span> graph</td><td>Edges work both ways. A to B also means B to A.</td></tr>
+    <tr><td><span class="kw">Directed</span> graph (digraph)</td><td>Each edge has a direction, drawn as an arrow. A to B does not mean B to A.</td></tr>
+    <tr><td><span class="kw">Weighted</span> graph</td><td>Each edge has a value (cost): distance, time, price, capacity.</td></tr>
+    <tr><td>Adjacent</td><td>Two vertices joined directly by an edge are neighbours.</td></tr>
+    <tr><td>Path</td><td>A sequence of vertices where each consecutive pair is joined by an edge.</td></tr>
+    <tr><td>Cycle</td><td>A path that starts and ends at the same vertex.</td></tr>
+    <tr><td>Connected graph</td><td>There is a path between every pair of vertices.</td></tr>
+    <tr><td>Degree</td><td>The number of edges at a vertex (undirected graphs).</td></tr>
+  </table></div>
+  <div class="tip"><b class="h">Graph or tree?</b>A tree is a special graph: connected, with no cycles, and with a root. Every tree is a graph, but most graphs are not trees.</div>
+
+  <h2>Storing a graph</h2>
+  <p>A graph is an abstract idea, so it must be implemented with something concrete. The two standard ways are an <b>adjacency matrix</b> and an <b>adjacency list</b>. Both describe the same graph below.</p>
+  <div class="two">
+    <div class="card"><h3>Adjacency matrix</h3>
+      <p>A 2D array with one row and one column per vertex. Cell [row][column] holds 1 (or the weight) if there is an edge from the row vertex to the column vertex, and 0 (or blank) if not.</p>
+      <ul><li>Undirected graph: the matrix is <b>symmetric</b>.</li>
+      <li>Checking for one edge: a single lookup.</li>
+      <li>Always n × n cells, even if there are few edges.</li></ul></div>
+    <div class="card"><h3>Adjacency list</h3>
+      <p>For each vertex, a list of the vertices it connects to (with weights if weighted). Often a dictionary of lists, or an array of linked lists.</p>
+      <ul><li>Uses memory only for edges that exist.</li>
+      <li>Easy to list all neighbours of a vertex.</li>
+      <li>Checking for one edge means searching that vertex's list.</li></ul></div>
+  </div>
+  <div class="card"><h3>The same graph, three ways</h3><div id="learnGraph"></div></div>
+
+  <h2>Matrix or list?</h2>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Adjacency matrix</th><th>Adjacency list</th></tr>
+    <tr><td>Memory</td><td>n × n always</td><td>Proportional to vertices + edges</td></tr>
+    <tr><td>Best for</td><td>Dense graphs (many edges)</td><td>Sparse graphs (few edges)</td></tr>
+    <tr><td>Is there an edge A to B?</td><td>One lookup: Matrix[A][B]</td><td>Search A's list</td></tr>
+    <tr><td>List all neighbours of A</td><td>Scan the whole row</td><td>Read A's list</td></tr>
+    <tr><td>Adding a vertex</td><td>Resize the whole matrix</td><td>Add one new list</td></tr>
+  </table></div>
+
+  <h2>Shortest paths: Dijkstra's algorithm</h2>
+  <p>On a weighted graph, <span class="kw">Dijkstra's algorithm</span> finds the shortest (lowest total weight) path from a start vertex to every other vertex. It keeps a table of the best known distance to each vertex, repeatedly picks the unvisited vertex with the smallest distance, and uses it to improve its neighbours' distances. The edge weights must not be negative. This is in section 19.2, but you cannot trace it without understanding the graph, so it is covered here.</p>
+  <div class="card"><h3>A* in one paragraph</h3><p><span class="kw">A*</span> is Dijkstra with a guide. For each vertex it also uses a <b>heuristic</b> h, an estimate of the remaining distance to the goal (for example the straight-line distance on a map). It picks the vertex with the lowest f = g + h, where g is the distance travelled so far. A good heuristic means A* explores far fewer vertices than Dijkstra, and still finds the shortest path if h never over-estimates.</p></div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · From a picture to an adjacency matrix</h2>
+  <p>Each edge puts a value in the matrix. For an undirected graph, every edge fills two cells.</p>
+  <div id="stMat"></div>
+  <h2>2 · Dijkstra's algorithm: shortest path from A</h2>
+  <p>The table shows the best known distance (Dist), the vertex it came through (Prev) and whether the vertex is finished (Visited). The highlighted line follows each step in the pseudocode and Python.</p>
+  <div id="aDij"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Build a graph, see its matrix and list</h2>
+  <p>Add and remove edges, and switch between directed and weighted. Watch the matrix and list update. Check that an undirected matrix is always symmetric.</p>
+  <div class="card lab" id="lab1"></div>
+
+  <h2>Lab 2 · Find the shortest path</h2>
+  <p>Pick a start and an end vertex. Dijkstra's algorithm runs and shows the route, the final distances and the order the vertices were finished.</p>
+  <div class="card lab" id="lab2"></div>
+
+  <h2>Lab 3 · Dense or sparse?</h2>
+  <p>Drag the slider. The matrix always needs n × n cells. The list only stores edges that exist.</p>
+  <div class="card"><div id="gv1"></div><div id="gv2"></div>
+    <div class="readout"><div><small>Matrix cells</small><strong id="rMat"></strong></div><div><small>List entries (2 per edge)</small><strong id="rLst"></strong></div><div><small>Edges / max possible</small><strong id="rDen"></strong></div></div>
+    <div class="verdict" id="rVer"></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Directed or undirected?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Matrix or list?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>4 · Dijkstra in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>5 · Calculations and traces</h2>
+  <p class="note">Plain numbers only. Questions about the weighted graph refer to the graph below.</p>
+  <div class="card lab" id="refG"></div>
+  <div id="c1"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Use them as examples of ideas, not as exact descriptions of any company's software.</p>
+  <div class="rw"><h3>Satnav and maps (weighted)</h3><p>Junctions are vertices, roads are edges, and the weights are distance or expected travel time. Finding a route is a shortest-path problem. One-way streets make the graph directed.</p><div class="use"><b>Exam use:</b> the classic weighted-graph example. Say what the vertices, edges and weights represent.</div></div>
+  <div class="rw"><h3>Social networks (undirected and directed)</h3><p>People are vertices. A mutual friendship is an undirected edge. "Following" someone is a directed edge, because following back is a separate edge.</p><div class="use"><b>Exam use:</b> the clearest way to explain directed against undirected edges.</div></div>
+  <div class="rw"><h3>Links between web pages (directed)</h3><p>Each page is a vertex and each hyperlink is a directed edge. Search engines analyse this graph to judge how important a page is.</p><div class="use"><b>Exam use:</b> a huge sparse graph, so an adjacency list is more sensible than a matrix.</div></div>
+  <div class="rw"><h3>Network routing (weighted)</h3><p>Routers are vertices and links are edges weighted by cost or delay. Routing protocols use shortest-path ideas like Dijkstra's to choose how packets travel.</p><div class="use"><b>Exam use:</b> links 19.1.3 to the Chapter on networks, and shows why weights matter.</div></div>
+  <div class="rw"><h3>Course or task dependencies (directed)</h3><p>If you must pass course A before course B, draw an edge from A to B. The graph shows a valid order in which to take everything. It must have no cycles.</p><div class="use"><b>Exam use:</b> an example where direction carries meaning and a cycle would be an error.</div></div>
+  <div class="rw"><h3>Games and puzzles</h3><p>Each board position is a vertex, and each legal move is an edge to the next position. A* is widely used to find paths for characters in games, using straight-line distance as the heuristic.</p><div class="use"><b>Exam use:</b> a concrete context for A* and its heuristic.</div></div>
+</section>
+
+<!-- IN THE EXAM -->
+<section id="inexam" role="tabpanel" hidden>
+  <div class="card big"><h3>What you need to know</h3>
+    <p>Check the exact wording against your copy of the syllabus. In outline, graphs sit in section 19.1.3 (abstract data types) and 19.2 (algorithms) of 9618. The checklist below is what students are expected to be able to do.</p></div>
+  <div class="tw"><table class="t">
+    <tr><th>You should be able to…</th><th>Where it appears</th></tr>
+    <tr><td>Describe a graph: vertices (nodes), edges (arcs), directed, undirected, weighted</td><td>Short <i>state</i> or <i>describe</i> questions (2 to 3 marks)</td></tr>
+    <tr><td>Give an example of when a graph is a suitable data structure, and say what the vertices and edges represent</td><td>Scenario questions</td></tr>
+    <tr><td>Draw or read an adjacency matrix and an adjacency list for a small graph</td><td>Complete-the-table questions (3 to 4 marks)</td></tr>
+    <tr><td>Compare matrix and list: memory, speed of checking edges, dense against sparse</td><td><i>Explain</i> or <i>compare</i> questions (3 to 4 marks)</td></tr>
+    <tr><td>Trace Dijkstra's algorithm on a weighted graph and give the shortest path and distance</td><td>Trace-table question (4 to 6 marks)</td></tr>
+    <tr><td>Describe how Dijkstra's algorithm works, and how A* differs (heuristic)</td><td><i>Describe</i> or <i>explain</i> questions (3 to 5 marks)</td></tr>
+    <tr><td>Implement a graph in code, e.g. a dictionary of lists or a 2D array, and write simple operations</td><td>Programming questions (Paper 4 and the pre-release style tasks)</td></tr>
+  </table></div>
+
+  <h2>How questions are usually phrased</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Style</th><th>Typical wording</th><th>What earns marks</th></tr>
+    <tr><td>Definition</td><td>"State what is meant by a graph." "Describe a weighted graph."</td><td>Vertices and edges, plus the extra feature asked about.</td></tr>
+    <tr><td>Draw / complete</td><td>"Complete the adjacency matrix for the graph shown."</td><td>Each correct row or group of cells. Check symmetry for undirected graphs.</td></tr>
+    <tr><td>Application</td><td>"Explain how a graph could be used to store a bus network."</td><td>What the vertices, edges and weights represent, and why a graph fits.</td></tr>
+    <tr><td>Comparison</td><td>"Give one advantage of an adjacency list over a matrix for this data."</td><td>A reason tied to the data: few edges, so less memory.</td></tr>
+    <tr><td>Trace</td><td>"Show the working of Dijkstra's algorithm from A to E."</td><td>A new row per vertex finished, updated distances, final path.</td></tr>
+    <tr><td>Programming</td><td>"Write a function that returns the neighbours of a vertex."</td><td>Correct loops or lookups on the chosen structure.</td></tr>
+  </table></div>
+
+  <h2>Four things examiners reward</h2>
+  <ul class="tips">
+    <li><b>Use the scenario words.</b> "The vertices are bus stops, the edges are routes, the weights are journey times" beats a generic definition.</li>
+    <li><b>Say which way round the matrix reads.</b> Row is the start vertex, column is the end vertex. It matters for directed graphs.</li>
+    <li><b>Show Dijkstra working.</b> A table with a row per step earns method marks even if the final distance is wrong.</li>
+    <li><b>Justify structure choices with size.</b> Sparse graph, so list. Dense graph or many edge checks, so matrix.</li>
+  </ul>
+  <div class="warn"><b class="h">Dijkstra and negative weights</b>Dijkstra's algorithm assumes no negative edge weights. If a question gives a negative weight, say that the algorithm is not suitable.</div>
+</section>
+
+<!-- EXAM QUESTIONS -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each coloured phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">State</span> <span class="mark">2 marks</span> State what is meant by a graph.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two parts: the things, and the connections between them.</div>
+    <div class="ans"><span class="mk k" data-t="1">A graph is an abstract data type made up of a set of vertices (nodes)</span> <span class="mk k" data-t="2">that are connected by edges (arcs); edges may be directed and may have weights.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Describing a bar chart or line graph. In computer science, a graph is the data structure.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe the difference between a directed graph and an undirected graph. Give an example of data that suits each.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>One difference, then two examples.</div>
+    <div class="ans"><span class="mk k" data-t="1">In a directed graph each edge has a direction, so an edge from A to B does not mean there is an edge from B to A; in an undirected graph an edge works in both directions.</span> <span class="mk k" data-t="2">Directed: web page links, or one-way streets.</span> <span class="mk k" data-t="3">Undirected: mutual friendships, or two-way roads.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Giving examples without saying why. Link the example to direction: following someone is one-way.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Complete</span> <span class="mark">3 marks</span> A directed graph has vertices A, B, C and D and edges A→B, A→C, B→C and C→D. Complete the adjacency matrix (1 for an edge, 0 for none; rows are the start vertex).
+<div class="tw"><table class="t mx"><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>A</th><td></td><td></td><td></td><td></td></tr><tr><th>B</th><td></td><td></td><td></td><td></td></tr><tr><th>C</th><td></td><td></td><td></td><td></td></tr><tr><th>D</th><td></td><td></td><td></td><td></td></tr></table></div></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>One 1 per edge only, because the graph is directed. Row is from, column is to.</div>
+    <div class="ans"><div class="tw"><table class="t mx"><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+      <tr><th>A</th><td>0</td><td><span class="mk k" data-t="1">1</span></td><td><span class="mk k" data-t="1">1</span></td><td>0</td></tr>
+      <tr><th>B</th><td>0</td><td>0</td><td><span class="mk k" data-t="2">1</span></td><td>0</td></tr>
+      <tr><th>C</th><td>0</td><td>0</td><td>0</td><td><span class="mk k" data-t="2">1</span></td></tr>
+      <tr><th>D</th><td><span class="mk k" data-t="3">0</span></td><td>0</td><td>0</td><td>0</td></tr></table></div>
+      <p class="note">Marks: row A correct (1), rows B and C correct (1), row D all zeros and no extra 1s (1).</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Making the matrix symmetric. That is only for undirected graphs.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Complete</span> <span class="mark">3 marks</span> Write the adjacency list for the same graph (A→B, A→C, B→C, C→D).</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>For each vertex, list only where its edges lead.</div>
+    <div class="ans"><p>A: <span class="mk k" data-t="1">B, C</span></p><p>B: <span class="mk k" data-t="2">C</span></p><p>C: <span class="mk k" data-t="3">D</span>, and D: nothing (no outgoing edges).</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Adding B to C's list as well. The edge is B→C, not C→B.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Explain</span> <span class="mark">3 marks</span> A graph of 10,000 web pages has about 30,000 links. Explain why an adjacency list is more suitable than an adjacency matrix.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Use the numbers. Compare the memory each one needs.</div>
+    <div class="ans"><span class="mk k" data-t="1">A matrix needs 10,000 × 10,000 = 100 million cells, however few edges there are.</span> <span class="mk k" data-t="2">With only about 30,000 links, nearly all of those cells would be 0, so the graph is sparse and the matrix wastes memory.</span> <span class="mk k" data-t="3">An adjacency list stores only the 30,000 edges that exist, so it needs far less memory.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying lists are "faster" in general. For checking one edge a matrix is faster.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Complete</span> <span class="mark">5 marks</span> Use Dijkstra's algorithm to find the shortest path from A to E in the graph below. Show the distances each time a vertex is finished, then give the path and its total length.
+<div class="listrow">Edges: A–B 4, A–C 2, B–C 1, B–D 5, C–D 8, C–E 10, D–E 2</div></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Finish the unvisited vertex with the smallest distance each time. Only update a neighbour if the new distance is smaller.</div>
+    <div class="ans"><div class="tw"><table class="t"><tr><th>Finished</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+      <tr><td>start</td><td>0</td><td>∞</td><td>∞</td><td>∞</td><td>∞</td></tr>
+      <tr><td>A</td><td>0</td><td><span class="mk k" data-t="1">4</span></td><td><span class="mk k" data-t="1">2</span></td><td>∞</td><td>∞</td></tr>
+      <tr><td>C</td><td>0</td><td><span class="mk k" data-t="2">3</span></td><td>2</td><td>10</td><td>12</td></tr>
+      <tr><td>B</td><td>0</td><td>3</td><td>2</td><td><span class="mk k" data-t="3">8</span></td><td>12</td></tr>
+      <tr><td>D</td><td>0</td><td>3</td><td>2</td><td>8</td><td><span class="mk k" data-t="4">10</span></td></tr></table></div>
+      <p><span class="mk k" data-t="5">Shortest path: A → C → B → D → E, total length 10.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Using A → B directly (4). Going via C costs 2 + 1 = 3, which is shorter.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how Dijkstra's algorithm finds the shortest path from a start vertex to a destination.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Initialise, choose, update, repeat, read the route.</div>
+    <div class="ans"><span class="mk k" data-t="1">The distance to the start vertex is set to 0 and every other vertex to infinity; no vertex is visited.</span> <span class="mk k" data-t="2">The unvisited vertex with the smallest distance is chosen and marked as visited.</span> <span class="mk k" data-t="3">For each unvisited neighbour, the distance through the chosen vertex is calculated; if it is smaller than the stored distance, the distance and the previous vertex are updated.</span> <span class="mk k" data-t="4">This repeats until the destination is visited; the path is found by following the previous vertices back from the destination.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Describing a "greedy" jump to the nearest neighbour only. Distances are stored and can be improved later.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Explain</span> <span class="mark">4 marks</span> A bus company wants to store its network of 40 stops so that the quickest route between any two stops can be found. Explain how a graph could be used.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Say what the vertices, edges and weights stand for, then how it is used and stored.</div>
+    <div class="ans"><span class="mk k" data-t="1">Each bus stop is a vertex.</span> <span class="mk k" data-t="2">Each route between two neighbouring stops is an edge; it is directed if buses only run one way.</span> <span class="mk k" data-t="3">Each edge is weighted with the journey time, so the quickest route is the path with the lowest total weight.</span> <span class="mk k" data-t="4">The graph can be stored as an adjacency list or matrix, and an algorithm such as Dijkstra's can find the quickest route.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Leaving out the weights. Without them there is no way to say which route is quickest.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q9 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain how the A* algorithm differs from Dijkstra's algorithm.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Heuristic, how it chooses the next vertex, and the benefit.</div>
+    <div class="ans"><span class="mk k" data-t="1">A* uses a heuristic, an estimate of the distance from each vertex to the goal.</span> <span class="mk k" data-t="2">It chooses the next vertex using the lowest f = g + h, the distance so far plus the estimate, whereas Dijkstra's only uses the distance so far.</span> <span class="mk k" data-t="3">A good heuristic lets A* head towards the goal and explore fewer vertices, so it is usually faster.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying A* "always finds a different path". It finds the shortest path as long as the heuristic never over-estimates.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q10 <span class="cmd">Write</span> <span class="mark">4 marks</span> A graph is stored as a Python dictionary where each key is a vertex and each value is a list of its neighbours, e.g. <code>{"A": ["B", "C"], "B": ["C"], "C": ["D"], "D": []}</code>. Write a function <code>edge_count(graph)</code> that returns the number of edges in a directed graph.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Each list entry is one directed edge. Loop through the vertices and add up the lengths.</div>
+    <div class="ans"><pre class="plain">def edge_count(graph):
+    total = 0                       # (1) accumulator
+    for vertex in graph:            # (2) loop through vertices
+        total += len(graph[vertex]) # (3) add that vertex's edges
+    return total                    # (4) return the total</pre>
+    <p><span class="mk k" data-t="1">Total initialised to 0.</span> <span class="mk k" data-t="2">Loop through every vertex.</span> <span class="mk k" data-t="3">Add the number of neighbours of each vertex.</span> <span class="mk k" data-t="4">Return the total. (For an undirected graph stored this way, each edge appears twice, so divide by 2.)</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Counting vertices, or forgetting that an undirected edge is stored in two lists.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Know the words.</b> Vertex or node, edge or arc, directed, undirected, weighted. Use the exact terms.</li>
+    <li><b>Row is from, column is to.</b> Write that on your answer. An undirected matrix is symmetric; a directed one need not be.</li>
+    <li><b>Count the 1s.</b> Undirected: 2 per edge. Directed: 1 per edge. It is a quick check.</li>
+    <li><b>Matrix or list? Compare the sizes.</b> n × n cells against the number of edges.</li>
+    <li><b>Dijkstra: one row per vertex finished.</b> Cross out finished vertices, update only if smaller, and follow Prev back for the path.</li>
+    <li><b>Never finish a vertex early.</b> The vertex with the smallest unfinished distance is always the next one.</li>
+    <li><b>A* = Dijkstra + a heuristic.</b> f = g + h. Mention that h must not over-estimate.</li>
+    <li><b>A tree is a graph with no cycles.</b> Do not mix them up in definitions.</li>
+    <li><b>In a scenario, name the vertices, edges and weights.</b> It is the quickest marks.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Describe</td><td>The features, or the steps in order.</td></tr>
+    <tr><td>Explain</td><td>What and why. Use because or so, and use the scenario.</td></tr>
+    <tr><td>Complete</td><td>Fill every blank cell or row. Show the state after each step.</td></tr>
+    <tr><td>Write</td><td>Code that works. Marks for each feature.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.round(s.i)].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+const W = 640, MONO = "font-family:var(--mono);", INF = Infinity;
+const hdr = (t) => SV.text(14, 26, t, "lbl bd", { "text-anchor": "start" });
+/* demo graph (weighted, undirected), drawn in a 360 x 250 box */
+const GD = { directed: false, weighted: true,
+  nodes: [{ id: "A", x: 45, y: 130 }, { id: "B", x: 140, y: 55 }, { id: "C", x: 140, y: 205 }, { id: "D", x: 245, y: 55 }, { id: "E", x: 320, y: 140 }],
+  edges: [["A", "B", 4], ["A", "C", 2], ["B", "C", 1], ["B", "D", 5], ["C", "D", 8], ["C", "E", 10], ["D", "E", 2]] };
+const shifted = (g, dx, dy) => ({ ...g, nodes: g.nodes.map((n) => ({ ...n, x: n.x + dx, y: n.y + dy })) });
+
+function dijkstra(g, s) {
+  const A = Lib.adjOf(g), dist = {}, prev = {}, done = new Set(), order = [];
+  g.nodes.forEach((n) => { dist[n.id] = INF; prev[n.id] = null; }); dist[s] = 0;
+  while (done.size < g.nodes.length) {
+    let cur = null; g.nodes.forEach((n) => { if (!done.has(n.id) && dist[n.id] < INF && (cur === null || dist[n.id] < dist[cur])) cur = n.id; });
+    if (cur === null) break; done.add(cur); order.push(cur);
+    A.get(cur).forEach(([nb, w]) => { if (!done.has(nb) && dist[cur] + w < dist[nb]) { dist[nb] = dist[cur] + w; prev[nb] = cur; } });
+  }
+  return { dist, prev, order };
+}
+const pathTo = (prev, t) => { const p = []; for (let v = t; v; v = prev[v]) p.unshift(v); return p; };
+const fmtD = (d) => (d === INF ? "∞" : d);
+
+/* ---------- Learn: same graph three ways ---------- */
+(() => {
+  const el = $("#learnGraph");
+  el.innerHTML = `<div class="two"><div class="lab"><svg viewBox="0 0 360 250" role="img" aria-label="A weighted undirected graph with five vertices">${Lib.graphSvg(GD)}</svg></div><div>${Lib.matrixHtml(GD)}<p class="note">Weighted matrix: – means no edge. It is symmetric because the graph is undirected.</p></div></div>${Lib.listHtml(GD)}`;
+})();
+
+/* ---------- Watch 1: building the matrix ---------- */
+function matSvg(k) {
+  const g = { ...GD, edges: GD.edges.slice(0, k) }, last = k > 0 ? GD.edges[k - 1] : null, ids = GD.nodes.map((n) => n.id), x0 = 420, y0 = 70, c = 40;
+  let s = hdr(k ? `Edge ${k} of ${GD.edges.length}` : "No edges added yet") + `<g transform="translate(0,16)">` + Lib.graphSvg(g, { on: last ? new Set([last[0] + "-" + last[1]]) : new Set() }) + "</g>";
+  s += SV.text(x0 + (5 * c) / 2, 50, "Adjacency matrix", "lbl bd", { "text-anchor": "middle" });
+  ids.forEach((id, i) => { s += SV.text(x0 + (i + 0.5) * c, y0 - 6, id, "lbl bd", { "text-anchor": "middle" }) + SV.text(x0 - 14, y0 + (i + 0.5) * c + 5, id, "lbl bd", { "text-anchor": "middle" }); });
+  ids.forEach((a, r) => ids.forEach((b, q) => {
+    const e = g.edges.find(([x, y]) => (x === a && y === b) || (x === b && y === a)), hot = last && ((last[0] === a && last[1] === b) || (last[0] === b && last[1] === a));
+    s += SV.rect(x0 + q * c, y0 + r * c, c - 2, c - 2, "cell" + (hot ? " cell-warn" : e ? " cell-cur" : ""), { rx: 5 }) + SV.text(x0 + (q + 0.5) * c - 1, y0 + (r + 0.5) * c + 5, e ? e[2] : "–", "lbl bd", { "text-anchor": "middle", style: MONO + (e ? "" : "opacity:.35") });
+  }));
+  return s;
+}
+Lib.stepper($("#stMat"), { w: W, h: 290, label: "Building an adjacency matrix", base: { k: 0 }, tween: 1, dwell: 2500, draw: (s) => matSvg(Math.round(s.k)), steps: [
+  { cap: "A weighted, undirected graph with 5 vertices. The matrix is empty: no edges yet. – means no edge.", s: { k: 0 } },
+  ...GD.edges.map(([a, b, w], i) => ({ cap: `Edge ${a}–${b} has weight <b>${w}</b>. It is undirected, so it fills <b>two</b> cells: row ${a}, column ${b} and row ${b}, column ${a}.`, s: { k: i + 1 } })),
+  { cap: "All 7 edges added: 14 filled cells, mirrored across the diagonal. An undirected matrix is always <b>symmetric</b>.", s: { k: 7 } },
+] });
+
+/* ---------- Watch 2: Dijkstra ---------- */
+const DJ_PS = ["FOR EACH v IN Vertices", "   Dist[v] ← INFINITY", "   Prev[v] ← NULL", "   Visited[v] ← FALSE", "NEXT v", "Dist[Start] ← 0", "REPEAT", "   Current ← unvisited vertex with smallest Dist", "   Visited[Current] ← TRUE", "   FOR EACH Neighbour OF Current", "      IF Visited[Neighbour] = FALSE THEN", "         NewDist ← Dist[Current] + Weight(Current, Neighbour)", "         IF NewDist < Dist[Neighbour] THEN", "            Dist[Neighbour] ← NewDist", "            Prev[Neighbour] ← Current", "         ENDIF", "      ENDIF", "   NEXT Neighbour", "UNTIL all vertices are visited"];
+const DJ_PY = ["dist = {v: INF for v in graph}", "prev = {v: None for v in graph}", "dist[start] = 0", "visited = set()", "while len(visited) < len(graph):", "    current = min((v for v in graph if v not in visited), key=dist.get)", "    visited.add(current)", "    for neighbour, w in graph[current].items():", "        if neighbour not in visited:", "            new = dist[current] + w", "            if new < dist[neighbour]:", "                dist[neighbour] = new", "                prev[neighbour] = current"];
+function djSvg(S, o = {}) {
+  const cls = {}; S.done.forEach((v) => (cls[v] = "ok")); if (o.cur) cls[o.cur] = "cur"; if (o.nb) cls[o.nb] = "warn";
+  const sub = {}; GD.nodes.forEach((n) => (sub[n.id] = fmtD(S.dist[n.id])));
+  let s = hdr("Dijkstra's algorithm: start at A") + `<g transform="translate(0,18)">` + Lib.graphSvg(GD, { cls, sub, on: new Set(o.on || []) }) + "</g>";
+  const cx = [400, 455, 515, 580], head = ["Vertex", "Dist", "Prev", "Done"];
+  head.forEach((h, i) => (s += SV.text(cx[i], 52, h, "sm bd", { "text-anchor": "middle" })));
+  GD.nodes.forEach((n, r) => {
+    const y = 84 + r * 32, hot = o.changed === n.id, v = n.id;
+    s += SV.rect(cx[0] - 28, y - 21, 236, 28, "cell" + (hot ? " cell-ok" : o.cur === v ? " cell-cur" : ""), { rx: 6 });
+    [v, fmtD(S.dist[v]), S.prev[v] || "–", S.done.has(v) ? "✓" : ""].forEach((t, i) => (s += SV.text(cx[i], y - 1, t, "lbl bd" + (hot && i === 1 ? " t3" : ""), { "text-anchor": "middle", style: MONO })));
+  });
+  if (o.note) s += SV.text(W / 2, 282, o.note, "lbl bd " + (o.nc || ""), { "text-anchor": "middle" });
+  return s;
+}
+function djFrames() {
+  const A = Lib.adjOf(GD), S = { dist: {}, prev: {}, done: new Set() }, F = [];
+  GD.nodes.forEach((n) => { S.dist[n.id] = INF; S.prev[n.id] = null; }); S.dist.A = 0;
+  const snap = () => ({ dist: { ...S.dist }, prev: { ...S.prev }, done: new Set(S.done) });
+  const f = (cap, ps, py, o) => F.push({ cap, ps, py, svg: djSvg(snap(), o) });
+  f("Every distance starts at ∞ and every Prev at nothing. The start vertex A gets distance <b>0</b>. Nothing is visited.", [0, 1, 2, 3, 4, 5], [0, 1, 2, 3]);
+  while (S.done.size < GD.nodes.length) {
+    let cur = null; GD.nodes.forEach((n) => { if (!S.done.has(n.id) && S.dist[n.id] < INF && (cur === null || S.dist[n.id] < S.dist[cur])) cur = n.id; });
+    if (cur === null) break;
+    S.done.add(cur); f(`The unvisited vertex with the smallest distance is <b>${cur}</b> (${S.dist[cur]}). Mark it visited: its distance is now final.`, [7, 8], [5, 6], { cur });
+    A.get(cur).forEach(([nb, w]) => {
+      if (S.done.has(nb)) return;
+      const nd = S.dist[cur] + w, better = nd < S.dist[nb], old = S.dist[nb];
+      if (better) { S.dist[nb] = nd; S.prev[nb] = cur; }
+      f(`${cur} → ${nb}: ${S.dist[cur]} + ${w} = <b>${nd}</b>. ${better ? `That is less than ${fmtD(old)}, so update Dist[${nb}] = ${nd} and Prev[${nb}] = ${cur}.` : `That is not less than ${fmtD(old)}, so no change.`}`, better ? [9, 10, 11, 12, 13, 14] : [9, 10, 11, 12], better ? [7, 8, 9, 10, 11, 12] : [7, 8, 9, 10], { cur, nb, on: [cur + "-" + nb], changed: better ? nb : null });
+    });
+  }
+  const p = pathTo(S.prev, "E"), on = p.slice(1).map((v, i) => p[i] + "-" + v);
+  f(`All vertices are visited. Follow Prev back from E: <b>${p.join(" → ")}</b>, total <b>${S.dist.E}</b>.`, [18], [4], { on, note: `Shortest A to E: ${p.join(" → ")} = ${S.dist.E}`, nc: "t3" });
+  return F;
+}
+Lib.algo($("#aDij"), { w: W, h: 295, label: "Dijkstra's algorithm animation", pseudo: DJ_PS, py: DJ_PY, dwell: 2600, frames: djFrames() });
+
+/* ---------- Lab 1: graph builder ---------- */
+(() => {
+  const el = $("#lab1"), ids = "ABCDEF".split(""), pos = { A: [90, 60], B: [250, 40], C: [410, 60], D: [90, 190], E: [250, 215], F: [410, 190] };
+  const start = () => ({ directed: false, weighted: false, nodes: ids.map((id) => ({ id, x: pos[id][0] + 70, y: pos[id][1] })), edges: [["A", "B", 3], ["A", "D", 7], ["B", "C", 2], ["B", "E", 5], ["D", "E", 1], ["E", "F", 4]] });
+  let g = start();
+  const opt = (sel) => ids.map((i) => `<option${i === sel ? " selected" : ""}>${i}</option>`).join("");
+  el.innerHTML = `<svg viewBox="0 0 ${W} 260" role="img" aria-label="Graph builder"></svg>
+    <div class="pick"><label>From <select data-f>${opt("C")}</select></label><label>To <select data-t>${opt("F")}</select></label><label data-wl hidden>Weight <input type="number" min="1" max="99" value="6" data-w></label><button class="b pri" data-k="add">Add edge</button><button class="b" data-k="rem">Remove edge</button></div>
+    <div class="pick"><label><input type="checkbox" data-dir> Directed</label><label><input type="checkbox" data-wt> Weighted</label><button class="b" data-k="reset">Reset</button><button class="b" data-k="clear">Clear all</button></div>
+    <div class="msg" aria-live="polite"></div><div class="two"><div><h3>Adjacency matrix</h3><div data-m></div></div><div><h3>Adjacency list</h3><div data-l></div></div></div>`;
+  const svg = $("svg", el), msg = $(".msg", el), F = $("[data-f]", el), T = $("[data-t]", el), Wt = $("[data-w]", el), dir = $("[data-dir]", el), wt = $("[data-wt]", el);
+  const find = (a, b) => g.edges.findIndex(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a));
+  const draw = (m, bad, hl) => { svg.innerHTML = Lib.graphSvg(g); $("[data-m]", el).innerHTML = Lib.matrixHtml(g, { hl }); $("[data-l]", el).innerHTML = Lib.listHtml(g); msg.textContent = m || ""; msg.style.color = bad ? "var(--bad)" : "var(--good)"; $("[data-wl]", el).hidden = !g.weighted; };
+  el.onclick = (e) => { const k = e.target.dataset.k; if (!k) return; const a = F.value, b = T.value;
+    if (k === "reset") { g = { ...start(), directed: dir.checked, weighted: wt.checked }; return draw("Reset to the example graph."); }
+    if (k === "clear") { g.edges = []; return draw("All edges removed."); }
+    if (a === b) return draw("An edge needs two different vertices.", true);
+    const i = find(a, b);
+    if (k === "add") { const w = +Wt.value || 1; if (i >= 0) g.edges[i][2] = w; else g.edges.push([a, b, w]); return draw(i >= 0 ? `Edge ${a}–${b} already existed; weight updated.` : `Added ${g.directed ? a + " → " + b : a + " – " + b}${g.weighted ? " (weight " + w + ")" : ""}. ${g.directed ? "One cell changes." : "Two cells change: the matrix stays symmetric."}`, false, [a, b]); }
+    if (i < 0) return draw(`There is no edge ${a}${g.directed ? " → " : "–"}${b} to remove.`, true);
+    g.edges.splice(i, 1); draw(`Removed edge ${a}${g.directed ? " → " : "–"}${b}.`, false, [a, b]); };
+  dir.onchange = () => { g.directed = dir.checked; draw(g.directed ? "Directed: row = from, column = to. A → B is not the same as B → A." : "Undirected: every edge works both ways."); };
+  wt.onchange = () => { g.weighted = wt.checked; draw(g.weighted ? "Weighted: the matrix and list now show each edge's weight." : "Unweighted: 1 means an edge, 0 means none."); };
+  draw("Edges can be added between any two different vertices.");
+})();
+
+/* ---------- Lab 2: shortest path finder ---------- */
+(() => {
+  const el = $("#lab2"), opt = (sel) => "ABCDE".split("").map((i) => `<option${i === sel ? " selected" : ""}>${i}</option>`).join("");
+  el.innerHTML = `<svg viewBox="0 0 ${W} 260" role="img" aria-label="Shortest path finder"></svg><div class="pick"><label>Start <select data-s>${opt("A")}</select></label><label>End <select data-e>${opt("E")}</select></label></div><div class="msg" aria-live="polite"></div><div class="listrow" data-d></div>`;
+  const svg = $("svg", el), S = $("[data-s]", el), E = $("[data-e]", el), msg = $(".msg", el), d = $("[data-d]", el), G = shifted(GD, 140, 5);
+  const run = () => {
+    const r = dijkstra(GD, S.value), p = pathTo(r.prev, E.value), on = new Set(p.slice(1).map((v, i) => p[i] + "-" + v)), cls = {}; p.forEach((v) => (cls[v] = "ok"));
+    const sub = {}; GD.nodes.forEach((n) => (sub[n.id] = r.dist[n.id]));
+    svg.innerHTML = Lib.graphSvg(G, { on, cls, sub });
+    msg.textContent = S.value === E.value ? "Start and end are the same vertex: distance 0." : `Shortest ${S.value} to ${E.value}: ${p.join(" → ")}, total ${r.dist[E.value]}.`;
+    d.textContent = "Finished order: " + r.order.join(", ") + "   ·   distances from " + S.value + ": " + GD.nodes.map((n) => n.id + "=" + r.dist[n.id]).join(", ");
+  };
+  S.onchange = E.onchange = run; run();
+})();
+
+/* ---------- Lab 3: dense or sparse ---------- */
+(() => {
+  const fmt = (n) => n.toLocaleString("en-GB"); let a, b;
+  a = Lib.slider($("#gv1"), { id: "gvn", label: "Vertices (n)", min: 5, max: 500, step: 5, value: 100, fmt, onInput: upd });
+  b = Lib.slider($("#gv2"), { id: "gve", label: "Edges as a share of the maximum possible", min: 1, max: 100, step: 1, value: 3, fmt: (v) => v + "%", onInput: upd });
+  function upd() {
+    if (!a || !b) return;
+    const n = a.get(), max = (n * (n - 1)) / 2, e = Math.max(n - 1, Math.round((max * b.get()) / 100)), cells = n * n, ent = 2 * e;
+    $("#rMat").textContent = fmt(cells); $("#rLst").textContent = fmt(ent); $("#rDen").textContent = `${fmt(e)} / ${fmt(max)}`;
+    $("#rVer").textContent = ent < cells / 3 ? `Sparse: the list stores ${fmt(Math.round(cells / ent))} times fewer entries than the matrix has cells. Use an adjacency list.` : "Dense: the list is almost as big as the matrix, and a matrix gives instant edge look-ups. An adjacency matrix is reasonable.";
+  }
+  upd();
+})();
+
+/* ---------- Practise ---------- */
+$("#refG").innerHTML = `<svg viewBox="0 0 360 250" role="img" aria-label="Weighted graph used in the calculations. Edges: A-B 4, A-C 2, B-C 1, B-D 5, C-D 8, C-E 10, D-E 2">${Lib.graphSvg(GD)}</svg><p class="note">A–B 4, A–C 2, B–C 1, B–D 5, C–D 8, C–E 10, D–E 2</p>`;
+$("#refG svg").style.maxWidth = "420px";
+
+Lib.classify($("#cl1"), { prompt: "Drag each relationship to the type of graph edge it needs.", buckets: [{ label: "Undirected edge" }, { label: "Directed edge" }], items: [
+  { text: "Two people who are friends with each other", b: 0 }, { text: "One account following another", b: 1 }, { text: "A hyperlink from page X to page Y", b: 1 },
+  { text: "A two-way road between two towns", b: 0 }, { text: "A one-way street", b: 1 }, { text: "Two authors who wrote a paper together", b: 0 },
+  { text: "Course A must be passed before course B", b: 1 }, { text: "A cable linking two computers (data flows both ways)", b: 0 },
+], done: "If the relationship works both ways, use an undirected edge. If it has a direction, use a directed one." });
+
+Lib.classify($("#cl2"), { prompt: "Drag each statement to the representation it describes.", buckets: [{ label: "Adjacency matrix" }, { label: "Adjacency list" }], items: [
+  { text: "Checking whether an edge exists is one array look-up", b: 0 }, { text: "Uses less memory when there are few edges", b: 1 }, { text: "Always needs n × n cells", b: 0 },
+  { text: "Easy to read off all the neighbours of a vertex", b: 1 }, { text: "Symmetric when the graph is undirected", b: 0 }, { text: "Best for a sparse graph such as the web", b: 1 }, { text: "Suits a dense graph with many edges", b: 0 },
+], done: "Matrix: fast edge check, n × n memory. List: compact, best for sparse graphs." });
+
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Vertex", "A point in a graph (also called a node)"], ["Edge", "A connection between two vertices (also called an arc)"], ["Weight", "A value on an edge, such as distance or time"],
+  ["Path", "A sequence of vertices joined by edges"], ["Cycle", "A path that starts and ends at the same vertex"], ["Connected graph", "There is a path between every pair of vertices"],
+  ["Heuristic", "An estimate of the distance to the goal, used by A*"],
+] });
+
+Lib.order($("#o1"), { prompt: "Put the steps of Dijkstra's algorithm in the right order.", items: [
+  "Set every distance to infinity, except the start vertex which is 0", "Choose the unvisited vertex with the smallest distance", "Mark that vertex as visited",
+  "For each unvisited neighbour, calculate the distance through the chosen vertex", "If the new distance is smaller, update the distance and the previous vertex", "Repeat until the destination (or every vertex) is visited", "Follow the previous vertices back to read off the path",
+], done: "Choose, mark, update, repeat, then read the path backwards." });
+
+Lib.calc($("#c1"), { qs: [
+  { q: "An undirected graph has 7 edges. How many 1s are in its unweighted adjacency matrix?", a: 14, hint: "Each undirected edge fills two cells.", sol: "7 × 2 = <b>14</b>." },
+  { q: "A graph has 8 vertices. How many cells are in its adjacency matrix?", a: 64, hint: "n × n.", sol: "8 × 8 = <b>64</b>." },
+  { q: "A directed graph has 6 edges. How many 1s are in its adjacency matrix?", a: 6, hint: "One cell per directed edge.", sol: "<b>6</b>." },
+  { q: "In the graph shown, how many edges does vertex C have (its degree)?", a: 4, hint: "C is joined to A, B, D and E.", sol: "C–A, C–B, C–D, C–E: <b>4</b>." },
+  { q: "Using Dijkstra's algorithm, what is the shortest distance from A to D?", a: 8, hint: "Try A → C → B → D.", sol: "A → C (2) → B (1) → D (5) = <b>8</b>." },
+  { q: "What is the shortest distance from A to E?", a: 10, hint: "Go through D: D–E costs 2.", sol: "A → C → B → D → E = 2 + 1 + 5 + 2 = <b>10</b>." },
+  { q: "After vertices A and C are finished, what is Dist[B]?", a: 3, hint: "A–B is 4. But A → C → B?", sol: "2 + 1 = 3, which is less than 4. Dist[B] = <b>3</b>." },
+] });
+
+Lib.quiz($("#qz1"), { qs: [
+  { q: "In a graph, what does an edge represent?", opts: ["A data value stored in a vertex", "A connection between two vertices", "The first vertex in the graph", "The total number of vertices"], a: 1, why: "Vertices hold the items; edges connect pairs of vertices." },
+  { q: "What is true of the adjacency matrix of an undirected graph?", opts: ["It has more rows than columns", "It is symmetric", "It contains only zeros", "It must be weighted"], a: 1, why: "An undirected edge A–B fills both [A][B] and [B][A], so the matrix mirrors across the diagonal." },
+  { q: "A graph has 100,000 vertices but each vertex has only about 5 neighbours. Which representation suits it?", opts: ["Adjacency matrix", "Adjacency list", "Neither can store it", "Both use the same memory"], a: 1, why: "It is sparse. A matrix would need 10 billion cells; a list needs about 500,000 entries." },
+  { q: "Which condition does Dijkstra's algorithm require?", opts: ["The graph is a tree", "No negative edge weights", "The graph is directed", "All weights are equal"], a: 1, why: "Once a vertex is marked finished its distance is final. A negative weight could later reduce it, which breaks that assumption." },
+  { q: "How does A* differ from Dijkstra's algorithm?", opts: ["It ignores edge weights", "It uses a heuristic estimate of the distance to the goal", "It only works on trees", "It always visits every vertex"], a: 1, why: "A* picks the vertex with the lowest g + h, where h is the heuristic estimate to the goal." },
+  { q: "Which statement about a tree is correct?", opts: ["A tree is a connected graph with no cycles", "A tree is a graph where every vertex has a cycle", "A tree can never be a graph", "A tree has no edges"], a: 0, why: "A tree is a special kind of graph: connected, with no cycles." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Graph", "An abstract data type of vertices (nodes) joined by edges (arcs)."], ["Vertex / node", "A point in a graph, such as a town or a person."], ["Edge / arc", "A connection between two vertices."],
+  ["Directed graph", "A graph whose edges have a direction (drawn as arrows)."], ["Undirected graph", "A graph whose edges work in both directions."], ["Weighted graph", "A graph whose edges carry a value such as distance, cost or time."],
+  ["Path", "A sequence of vertices where each consecutive pair is joined by an edge."], ["Cycle", "A path that starts and ends at the same vertex."], ["Degree", "The number of edges at a vertex."],
+  ["Adjacency matrix", "A 2D array with a row and column per vertex; cell [r][c] shows whether (and with what weight) there is an edge from r to c."], ["Adjacency list", "For each vertex, a list of the vertices it is joined to."],
+  ["Dijkstra's algorithm", "Finds the shortest path from a start vertex to every other vertex in a graph with non-negative weights."], ["A* algorithm", "A shortest-path algorithm that uses a heuristic estimate to the goal (f = g + h) to explore fewer vertices."], ["Heuristic", "An estimate of the remaining distance to the goal, used to guide A*."],
+] });
+
+Lib.initTabs();
+</script>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}.site-pill .pill-more{display:none}@media(max-width:700px){body{padding-bottom:64px}.site-pill{right:8px;bottom:8px;opacity:.6;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 16px)}.site-pill>*:not(.pill-more){display:none}.site-pill.open{opacity:.95}.site-pill.open>*:not(.pill-more):not([hidden]){display:inline-block}.site-pill .pill-more{display:block;border:0;border-radius:999px;width:36px;height:36px;padding:0;text-align:center;font-size:18px}.site-pill.open .pill-more{border-left:0}}</style><div class="site-pill"><button type="button" class="pill-more" aria-label="Menu" onclick="this.parentNode.classList.toggle(&#39;open&#39;)">☰</button><a href="../../a-cs/a-level/ch-19/">← Chapter 19</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="graphs" hidden></button><button data-role-toggle="graphs" hidden></button><button data-role-delete="graphs" hidden></button><button data-role-restore="graphs" hidden></button></div><script src="../../assets/config.js?v=1791173439"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js?v=1791173439"></script><script src="../../assets/gate.js?v=1791173439" data-courses="a-cs"></script><script>document.addEventListener('click',function(e){var t=e.target.closest('[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script><script>document.addEventListener('click',function(e){var p=document.querySelector('.site-pill.open');if(p&&!p.contains(e.target))p.classList.remove('open')});addEventListener('scroll',function(){var p=document.querySelector('.site-pill.open');if(p)p.classList.remove('open')},{passive:true});</script></body></html>

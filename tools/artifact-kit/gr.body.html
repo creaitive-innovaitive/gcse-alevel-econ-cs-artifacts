@@ -1,0 +1,292 @@
+<style>
+.pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.pick select,.pick input[type=number]{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.pick input[type=number]{width:80px;font-family:var(--mono)}
+.pick label{font-weight:600;font-size:.92rem}
+.lab .msg{font-weight:700;margin:8px 0;min-height:1.6em}
+.lab svg{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.listrow{font:600 1rem var(--mono);background:var(--soft);border-radius:8px;padding:8px 12px;margin:8px 0;overflow-x:auto}
+pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font:500 .85rem/1.5 var(--mono);overflow-x:auto;margin:8px 0}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;align-items:start}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Computer Science · 9618 · Chapter 19 · 19.1.3 (with 19.2 links)</div>
+  <h1>Graphs: Representation and Shortest Paths</h1>
+  <p class="lead">A graph is a set of vertices joined by edges. It models maps, networks and relationships. Learn the vocabulary, build adjacency matrices and lists, trace Dijkstra's shortest path algorithm, and see exactly how graphs turn up in the exam.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="inexam">In the exam</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A <span class="kw">graph</span> is an abstract data type made of <b>vertices</b> (also called nodes) and <b>edges</b> (also called arcs) that connect pairs of vertices. Unlike a list or a tree, a graph has no fixed shape: any vertex can connect to any other, and loops are allowed. That freedom is why graphs model real networks so well.</p>
+  </div>
+
+  <h2>The vocabulary</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Term</th><th>Meaning</th></tr>
+    <tr><td><span class="kw">Vertex</span> (node)</td><td>A point in the graph, e.g. a town, a person, a web page.</td></tr>
+    <tr><td><span class="kw">Edge</span> (arc)</td><td>A connection between two vertices, e.g. a road, a friendship, a link.</td></tr>
+    <tr><td><span class="kw">Undirected</span> graph</td><td>Edges work both ways. A to B also means B to A.</td></tr>
+    <tr><td><span class="kw">Directed</span> graph (digraph)</td><td>Each edge has a direction, drawn as an arrow. A to B does not mean B to A.</td></tr>
+    <tr><td><span class="kw">Weighted</span> graph</td><td>Each edge has a value (cost): distance, time, price, capacity.</td></tr>
+    <tr><td>Adjacent</td><td>Two vertices joined directly by an edge are neighbours.</td></tr>
+    <tr><td>Path</td><td>A sequence of vertices where each consecutive pair is joined by an edge.</td></tr>
+    <tr><td>Cycle</td><td>A path that starts and ends at the same vertex.</td></tr>
+    <tr><td>Connected graph</td><td>There is a path between every pair of vertices.</td></tr>
+    <tr><td>Degree</td><td>The number of edges at a vertex (undirected graphs).</td></tr>
+  </table></div>
+  <div class="tip"><b class="h">Graph or tree?</b>A tree is a special graph: connected, with no cycles, and with a root. Every tree is a graph, but most graphs are not trees.</div>
+
+  <h2>Storing a graph</h2>
+  <p>A graph is an abstract idea, so it must be implemented with something concrete. The two standard ways are an <b>adjacency matrix</b> and an <b>adjacency list</b>. Both describe the same graph below.</p>
+  <div class="two">
+    <div class="card"><h3>Adjacency matrix</h3>
+      <p>A 2D array with one row and one column per vertex. Cell [row][column] holds 1 (or the weight) if there is an edge from the row vertex to the column vertex, and 0 (or blank) if not.</p>
+      <ul><li>Undirected graph: the matrix is <b>symmetric</b>.</li>
+      <li>Checking for one edge: a single lookup.</li>
+      <li>Always n × n cells, even if there are few edges.</li></ul></div>
+    <div class="card"><h3>Adjacency list</h3>
+      <p>For each vertex, a list of the vertices it connects to (with weights if weighted). Often a dictionary of lists, or an array of linked lists.</p>
+      <ul><li>Uses memory only for edges that exist.</li>
+      <li>Easy to list all neighbours of a vertex.</li>
+      <li>Checking for one edge means searching that vertex's list.</li></ul></div>
+  </div>
+  <div class="card"><h3>The same graph, three ways</h3><div id="learnGraph"></div></div>
+
+  <h2>Matrix or list?</h2>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Adjacency matrix</th><th>Adjacency list</th></tr>
+    <tr><td>Memory</td><td>n × n always</td><td>Proportional to vertices + edges</td></tr>
+    <tr><td>Best for</td><td>Dense graphs (many edges)</td><td>Sparse graphs (few edges)</td></tr>
+    <tr><td>Is there an edge A to B?</td><td>One lookup: Matrix[A][B]</td><td>Search A's list</td></tr>
+    <tr><td>List all neighbours of A</td><td>Scan the whole row</td><td>Read A's list</td></tr>
+    <tr><td>Adding a vertex</td><td>Resize the whole matrix</td><td>Add one new list</td></tr>
+  </table></div>
+
+  <h2>Shortest paths: Dijkstra's algorithm</h2>
+  <p>On a weighted graph, <span class="kw">Dijkstra's algorithm</span> finds the shortest (lowest total weight) path from a start vertex to every other vertex. It keeps a table of the best known distance to each vertex, repeatedly picks the unvisited vertex with the smallest distance, and uses it to improve its neighbours' distances. The edge weights must not be negative. This is in section 19.2, but you cannot trace it without understanding the graph, so it is covered here.</p>
+  <div class="card"><h3>A* in one paragraph</h3><p><span class="kw">A*</span> is Dijkstra with a guide. For each vertex it also uses a <b>heuristic</b> h, an estimate of the remaining distance to the goal (for example the straight-line distance on a map). It picks the vertex with the lowest f = g + h, where g is the distance travelled so far. A good heuristic means A* explores far fewer vertices than Dijkstra, and still finds the shortest path if h never over-estimates.</p></div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · From a picture to an adjacency matrix</h2>
+  <p>Each edge puts a value in the matrix. For an undirected graph, every edge fills two cells.</p>
+  <div id="stMat"></div>
+  <h2>2 · Dijkstra's algorithm: shortest path from A</h2>
+  <p>The table shows the best known distance (Dist), the vertex it came through (Prev) and whether the vertex is finished (Visited). The highlighted line follows each step in the pseudocode and Python.</p>
+  <div id="aDij"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Build a graph, see its matrix and list</h2>
+  <p>Add and remove edges, and switch between directed and weighted. Watch the matrix and list update. Check that an undirected matrix is always symmetric.</p>
+  <div class="card lab" id="lab1"></div>
+
+  <h2>Lab 2 · Find the shortest path</h2>
+  <p>Pick a start and an end vertex. Dijkstra's algorithm runs and shows the route, the final distances and the order the vertices were finished.</p>
+  <div class="card lab" id="lab2"></div>
+
+  <h2>Lab 3 · Dense or sparse?</h2>
+  <p>Drag the slider. The matrix always needs n × n cells. The list only stores edges that exist.</p>
+  <div class="card"><div id="gv1"></div><div id="gv2"></div>
+    <div class="readout"><div><small>Matrix cells</small><strong id="rMat"></strong></div><div><small>List entries (2 per edge)</small><strong id="rLst"></strong></div><div><small>Edges / max possible</small><strong id="rDen"></strong></div></div>
+    <div class="verdict" id="rVer"></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Directed or undirected?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Matrix or list?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>4 · Dijkstra in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>5 · Calculations and traces</h2>
+  <p class="note">Plain numbers only. Questions about the weighted graph refer to the graph below.</p>
+  <div class="card lab" id="refG"></div>
+  <div id="c1"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Use them as examples of ideas, not as exact descriptions of any company's software.</p>
+  <div class="rw"><h3>Satnav and maps (weighted)</h3><p>Junctions are vertices, roads are edges, and the weights are distance or expected travel time. Finding a route is a shortest-path problem. One-way streets make the graph directed.</p><div class="use"><b>Exam use:</b> the classic weighted-graph example. Say what the vertices, edges and weights represent.</div></div>
+  <div class="rw"><h3>Social networks (undirected and directed)</h3><p>People are vertices. A mutual friendship is an undirected edge. "Following" someone is a directed edge, because following back is a separate edge.</p><div class="use"><b>Exam use:</b> the clearest way to explain directed against undirected edges.</div></div>
+  <div class="rw"><h3>Links between web pages (directed)</h3><p>Each page is a vertex and each hyperlink is a directed edge. Search engines analyse this graph to judge how important a page is.</p><div class="use"><b>Exam use:</b> a huge sparse graph, so an adjacency list is more sensible than a matrix.</div></div>
+  <div class="rw"><h3>Network routing (weighted)</h3><p>Routers are vertices and links are edges weighted by cost or delay. Routing protocols use shortest-path ideas like Dijkstra's to choose how packets travel.</p><div class="use"><b>Exam use:</b> links 19.1.3 to the Chapter on networks, and shows why weights matter.</div></div>
+  <div class="rw"><h3>Course or task dependencies (directed)</h3><p>If you must pass course A before course B, draw an edge from A to B. The graph shows a valid order in which to take everything. It must have no cycles.</p><div class="use"><b>Exam use:</b> an example where direction carries meaning and a cycle would be an error.</div></div>
+  <div class="rw"><h3>Games and puzzles</h3><p>Each board position is a vertex, and each legal move is an edge to the next position. A* is widely used to find paths for characters in games, using straight-line distance as the heuristic.</p><div class="use"><b>Exam use:</b> a concrete context for A* and its heuristic.</div></div>
+</section>
+
+<!-- IN THE EXAM -->
+<section id="inexam" role="tabpanel" hidden>
+  <div class="card big"><h3>What you need to know</h3>
+    <p>Check the exact wording against your copy of the syllabus. In outline, graphs sit in section 19.1.3 (abstract data types) and 19.2 (algorithms) of 9618. The checklist below is what students are expected to be able to do.</p></div>
+  <div class="tw"><table class="t">
+    <tr><th>You should be able to…</th><th>Where it appears</th></tr>
+    <tr><td>Describe a graph: vertices (nodes), edges (arcs), directed, undirected, weighted</td><td>Short <i>state</i> or <i>describe</i> questions (2 to 3 marks)</td></tr>
+    <tr><td>Give an example of when a graph is a suitable data structure, and say what the vertices and edges represent</td><td>Scenario questions</td></tr>
+    <tr><td>Draw or read an adjacency matrix and an adjacency list for a small graph</td><td>Complete-the-table questions (3 to 4 marks)</td></tr>
+    <tr><td>Compare matrix and list: memory, speed of checking edges, dense against sparse</td><td><i>Explain</i> or <i>compare</i> questions (3 to 4 marks)</td></tr>
+    <tr><td>Trace Dijkstra's algorithm on a weighted graph and give the shortest path and distance</td><td>Trace-table question (4 to 6 marks)</td></tr>
+    <tr><td>Describe how Dijkstra's algorithm works, and how A* differs (heuristic)</td><td><i>Describe</i> or <i>explain</i> questions (3 to 5 marks)</td></tr>
+    <tr><td>Implement a graph in code, e.g. a dictionary of lists or a 2D array, and write simple operations</td><td>Programming questions (Paper 4 and the pre-release style tasks)</td></tr>
+  </table></div>
+
+  <h2>How questions are usually phrased</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Style</th><th>Typical wording</th><th>What earns marks</th></tr>
+    <tr><td>Definition</td><td>"State what is meant by a graph." "Describe a weighted graph."</td><td>Vertices and edges, plus the extra feature asked about.</td></tr>
+    <tr><td>Draw / complete</td><td>"Complete the adjacency matrix for the graph shown."</td><td>Each correct row or group of cells. Check symmetry for undirected graphs.</td></tr>
+    <tr><td>Application</td><td>"Explain how a graph could be used to store a bus network."</td><td>What the vertices, edges and weights represent, and why a graph fits.</td></tr>
+    <tr><td>Comparison</td><td>"Give one advantage of an adjacency list over a matrix for this data."</td><td>A reason tied to the data: few edges, so less memory.</td></tr>
+    <tr><td>Trace</td><td>"Show the working of Dijkstra's algorithm from A to E."</td><td>A new row per vertex finished, updated distances, final path.</td></tr>
+    <tr><td>Programming</td><td>"Write a function that returns the neighbours of a vertex."</td><td>Correct loops or lookups on the chosen structure.</td></tr>
+  </table></div>
+
+  <h2>Four things examiners reward</h2>
+  <ul class="tips">
+    <li><b>Use the scenario words.</b> "The vertices are bus stops, the edges are routes, the weights are journey times" beats a generic definition.</li>
+    <li><b>Say which way round the matrix reads.</b> Row is the start vertex, column is the end vertex. It matters for directed graphs.</li>
+    <li><b>Show Dijkstra working.</b> A table with a row per step earns method marks even if the final distance is wrong.</li>
+    <li><b>Justify structure choices with size.</b> Sparse graph, so list. Dense graph or many edge checks, so matrix.</li>
+  </ul>
+  <div class="warn"><b class="h">Dijkstra and negative weights</b>Dijkstra's algorithm assumes no negative edge weights. If a question gives a negative weight, say that the algorithm is not suitable.</div>
+</section>
+
+<!-- EXAM QUESTIONS -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each coloured phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">State</span> <span class="mark">2 marks</span> State what is meant by a graph.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two parts: the things, and the connections between them.</div>
+    <div class="ans"><span class="mk k" data-t="1">A graph is an abstract data type made up of a set of vertices (nodes)</span> <span class="mk k" data-t="2">that are connected by edges (arcs); edges may be directed and may have weights.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Describing a bar chart or line graph. In computer science, a graph is the data structure.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe the difference between a directed graph and an undirected graph. Give an example of data that suits each.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>One difference, then two examples.</div>
+    <div class="ans"><span class="mk k" data-t="1">In a directed graph each edge has a direction, so an edge from A to B does not mean there is an edge from B to A; in an undirected graph an edge works in both directions.</span> <span class="mk k" data-t="2">Directed: web page links, or one-way streets.</span> <span class="mk k" data-t="3">Undirected: mutual friendships, or two-way roads.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Giving examples without saying why. Link the example to direction: following someone is one-way.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Complete</span> <span class="mark">3 marks</span> A directed graph has vertices A, B, C and D and edges A→B, A→C, B→C and C→D. Complete the adjacency matrix (1 for an edge, 0 for none; rows are the start vertex).
+<div class="tw"><table class="t mx"><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>A</th><td></td><td></td><td></td><td></td></tr><tr><th>B</th><td></td><td></td><td></td><td></td></tr><tr><th>C</th><td></td><td></td><td></td><td></td></tr><tr><th>D</th><td></td><td></td><td></td><td></td></tr></table></div></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>One 1 per edge only, because the graph is directed. Row is from, column is to.</div>
+    <div class="ans"><div class="tw"><table class="t mx"><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+      <tr><th>A</th><td>0</td><td><span class="mk k" data-t="1">1</span></td><td><span class="mk k" data-t="1">1</span></td><td>0</td></tr>
+      <tr><th>B</th><td>0</td><td>0</td><td><span class="mk k" data-t="2">1</span></td><td>0</td></tr>
+      <tr><th>C</th><td>0</td><td>0</td><td>0</td><td><span class="mk k" data-t="2">1</span></td></tr>
+      <tr><th>D</th><td><span class="mk k" data-t="3">0</span></td><td>0</td><td>0</td><td>0</td></tr></table></div>
+      <p class="note">Marks: row A correct (1), rows B and C correct (1), row D all zeros and no extra 1s (1).</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Making the matrix symmetric. That is only for undirected graphs.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Complete</span> <span class="mark">3 marks</span> Write the adjacency list for the same graph (A→B, A→C, B→C, C→D).</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>For each vertex, list only where its edges lead.</div>
+    <div class="ans"><p>A: <span class="mk k" data-t="1">B, C</span></p><p>B: <span class="mk k" data-t="2">C</span></p><p>C: <span class="mk k" data-t="3">D</span>, and D: nothing (no outgoing edges).</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Adding B to C's list as well. The edge is B→C, not C→B.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Explain</span> <span class="mark">3 marks</span> A graph of 10,000 web pages has about 30,000 links. Explain why an adjacency list is more suitable than an adjacency matrix.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Use the numbers. Compare the memory each one needs.</div>
+    <div class="ans"><span class="mk k" data-t="1">A matrix needs 10,000 × 10,000 = 100 million cells, however few edges there are.</span> <span class="mk k" data-t="2">With only about 30,000 links, nearly all of those cells would be 0, so the graph is sparse and the matrix wastes memory.</span> <span class="mk k" data-t="3">An adjacency list stores only the 30,000 edges that exist, so it needs far less memory.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying lists are "faster" in general. For checking one edge a matrix is faster.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Complete</span> <span class="mark">5 marks</span> Use Dijkstra's algorithm to find the shortest path from A to E in the graph below. Show the distances each time a vertex is finished, then give the path and its total length.
+<div class="listrow">Edges: A–B 4, A–C 2, B–C 1, B–D 5, C–D 8, C–E 10, D–E 2</div></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Finish the unvisited vertex with the smallest distance each time. Only update a neighbour if the new distance is smaller.</div>
+    <div class="ans"><div class="tw"><table class="t"><tr><th>Finished</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+      <tr><td>start</td><td>0</td><td>∞</td><td>∞</td><td>∞</td><td>∞</td></tr>
+      <tr><td>A</td><td>0</td><td><span class="mk k" data-t="1">4</span></td><td><span class="mk k" data-t="1">2</span></td><td>∞</td><td>∞</td></tr>
+      <tr><td>C</td><td>0</td><td><span class="mk k" data-t="2">3</span></td><td>2</td><td>10</td><td>12</td></tr>
+      <tr><td>B</td><td>0</td><td>3</td><td>2</td><td><span class="mk k" data-t="3">8</span></td><td>12</td></tr>
+      <tr><td>D</td><td>0</td><td>3</td><td>2</td><td>8</td><td><span class="mk k" data-t="4">10</span></td></tr></table></div>
+      <p><span class="mk k" data-t="5">Shortest path: A → C → B → D → E, total length 10.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Using A → B directly (4). Going via C costs 2 + 1 = 3, which is shorter.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how Dijkstra's algorithm finds the shortest path from a start vertex to a destination.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Initialise, choose, update, repeat, read the route.</div>
+    <div class="ans"><span class="mk k" data-t="1">The distance to the start vertex is set to 0 and every other vertex to infinity; no vertex is visited.</span> <span class="mk k" data-t="2">The unvisited vertex with the smallest distance is chosen and marked as visited.</span> <span class="mk k" data-t="3">For each unvisited neighbour, the distance through the chosen vertex is calculated; if it is smaller than the stored distance, the distance and the previous vertex are updated.</span> <span class="mk k" data-t="4">This repeats until the destination is visited; the path is found by following the previous vertices back from the destination.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Describing a "greedy" jump to the nearest neighbour only. Distances are stored and can be improved later.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Explain</span> <span class="mark">4 marks</span> A bus company wants to store its network of 40 stops so that the quickest route between any two stops can be found. Explain how a graph could be used.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Say what the vertices, edges and weights stand for, then how it is used and stored.</div>
+    <div class="ans"><span class="mk k" data-t="1">Each bus stop is a vertex.</span> <span class="mk k" data-t="2">Each route between two neighbouring stops is an edge; it is directed if buses only run one way.</span> <span class="mk k" data-t="3">Each edge is weighted with the journey time, so the quickest route is the path with the lowest total weight.</span> <span class="mk k" data-t="4">The graph can be stored as an adjacency list or matrix, and an algorithm such as Dijkstra's can find the quickest route.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Leaving out the weights. Without them there is no way to say which route is quickest.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q9 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain how the A* algorithm differs from Dijkstra's algorithm.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Heuristic, how it chooses the next vertex, and the benefit.</div>
+    <div class="ans"><span class="mk k" data-t="1">A* uses a heuristic, an estimate of the distance from each vertex to the goal.</span> <span class="mk k" data-t="2">It chooses the next vertex using the lowest f = g + h, the distance so far plus the estimate, whereas Dijkstra's only uses the distance so far.</span> <span class="mk k" data-t="3">A good heuristic lets A* head towards the goal and explore fewer vertices, so it is usually faster.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying A* "always finds a different path". It finds the shortest path as long as the heuristic never over-estimates.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q10 <span class="cmd">Write</span> <span class="mark">4 marks</span> A graph is stored as a Python dictionary where each key is a vertex and each value is a list of its neighbours, e.g. <code>{"A": ["B", "C"], "B": ["C"], "C": ["D"], "D": []}</code>. Write a function <code>edge_count(graph)</code> that returns the number of edges in a directed graph.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Each list entry is one directed edge. Loop through the vertices and add up the lengths.</div>
+    <div class="ans"><pre class="plain">def edge_count(graph):
+    total = 0                       # (1) accumulator
+    for vertex in graph:            # (2) loop through vertices
+        total += len(graph[vertex]) # (3) add that vertex's edges
+    return total                    # (4) return the total</pre>
+    <p><span class="mk k" data-t="1">Total initialised to 0.</span> <span class="mk k" data-t="2">Loop through every vertex.</span> <span class="mk k" data-t="3">Add the number of neighbours of each vertex.</span> <span class="mk k" data-t="4">Return the total. (For an undirected graph stored this way, each edge appears twice, so divide by 2.)</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Counting vertices, or forgetting that an undirected edge is stored in two lists.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Know the words.</b> Vertex or node, edge or arc, directed, undirected, weighted. Use the exact terms.</li>
+    <li><b>Row is from, column is to.</b> Write that on your answer. An undirected matrix is symmetric; a directed one need not be.</li>
+    <li><b>Count the 1s.</b> Undirected: 2 per edge. Directed: 1 per edge. It is a quick check.</li>
+    <li><b>Matrix or list? Compare the sizes.</b> n × n cells against the number of edges.</li>
+    <li><b>Dijkstra: one row per vertex finished.</b> Cross out finished vertices, update only if smaller, and follow Prev back for the path.</li>
+    <li><b>Never finish a vertex early.</b> The vertex with the smallest unfinished distance is always the next one.</li>
+    <li><b>A* = Dijkstra + a heuristic.</b> f = g + h. Mention that h must not over-estimate.</li>
+    <li><b>A tree is a graph with no cycles.</b> Do not mix them up in definitions.</li>
+    <li><b>In a scenario, name the vertices, edges and weights.</b> It is the quickest marks.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Describe</td><td>The features, or the steps in order.</td></tr>
+    <tr><td>Explain</td><td>What and why. Use because or so, and use the scenario.</td></tr>
+    <tr><td>Complete</td><td>Fill every blank cell or row. Show the state after each step.</td></tr>
+    <tr><td>Write</td><td>Code that works. Marks for each feature.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
