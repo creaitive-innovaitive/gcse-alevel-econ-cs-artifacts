@@ -254,7 +254,7 @@ ARTIFACTS = [
     {"src": "text-sound-and-images", "role": "review", "at": "1.2", "title": "Text, Sound and Images", "kind": "Interactive",
      "desc": "1.2 ASCII and Unicode, sampling, pixels and colour depth, file size calculations, labs and exam questions.",
      "places": [("ig-cs", "ch-01")]},
-    {"src": "igcse-compression-lab", "title": "IGCSE Compression Lab", "kind": "Interactive",
+    {"src": "igcse-compression-lab", "role": "review", "at": "1.3", "title": "IGCSE Compression Lab", "kind": "Interactive",
      "desc": "Run-length encoding step by step, RLE on a bitmap, encode and decode tasks, lossy sliders and real-world examples.",
      "places": [("ig-cs", "ch-01")]},
     {"src": "ig-cs-software-keyword-workout", "title": "Software: Keyword Workout", "kind": "Worksheet",
