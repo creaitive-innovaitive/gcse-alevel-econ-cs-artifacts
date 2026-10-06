@@ -140,6 +140,15 @@ body.mode-practice #practice{display:block}
 .prompt-card textarea{width:100%; min-height:80px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); font:inherit; font-size:.88rem; padding:9px 11px; resize:vertical}
 .applywrap label{font-size:.72rem; font-family:var(--mono); color:var(--ink-dim); text-transform:uppercase; letter-spacing:.03em}
 a{color:var(--prod)}
+
+/* key-term pop-outs */
+.kw[data-term]{cursor:help; font-family:inherit; line-height:inherit; text-decoration:underline dotted; text-underline-offset:3px; text-decoration-color:var(--ink-dim)}
+.kw[data-term]:hover,.kw[data-term].open{border-color:var(--accent,var(--prod))}
+#kwTip{position:fixed; z-index:200; max-width:min(300px,calc(100vw - 24px)); background:var(--surface); color:var(--ink); border:1px solid var(--line); border-top:3px solid var(--accent,var(--prod)); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.18); padding:10px 13px 11px; font-size:.84rem; line-height:1.45}
+#kwTip[hidden]{display:none!important}
+#kwTip .tt{font-family:var(--serif); font-weight:700; font-size:.92rem; margin-bottom:3px; color:var(--accent,var(--prod))}
+#kwTip .ex{margin-top:5px; color:var(--ink-dim); font-size:.8rem}
+.kw-hint{font-size:.78rem; color:var(--ink-dim); margin:-6px 0 10px}
 </style>
 
 <div class="topbar">
@@ -167,6 +176,7 @@ a{color:var(--prod)}
   <div class="eyebrow">Market structures &amp; firm performance</div>
   <h1>Same costs, different market: how structure decides price, output and profit</h1>
   <p>Perfect competition, monopoly, monopolistic competition and oligopoly, with the short-run and long-run outcomes for each. Every chart below has sliders, so you can push a curve and watch what the firm does in response. Built around Chapter 35 of the CIE A Level coursebook.</p>
+  <p class="kw-hint">Tip: hover over, or tap, any key-term pill for a short definition.</p>
 </div>
 
 <!-- ============ SPECTRUM ============ -->
@@ -656,6 +666,57 @@ PROMPTS.forEach(function(p){
   try{ var sv=localStorage.getItem('mktstruct-'+p.id); if(sv) ta.value=sv; }catch(e){}
   ta.addEventListener('input',function(){ try{ localStorage.setItem('mktstruct-'+p.id,ta.value); }catch(e){} });
 });
+</script>
+
+<script>
+(function(){
+var G={"perfect competition": ["Very many small buyers and sellers, identical products, free entry and exit, and perfect information. Every firm is a price taker.", ""], "imperfect competition": ["Any market that breaks one or more conditions of perfect competition: monopoly, oligopoly and monopolistic competition. Firms have some control over price.", ""], "monopoly": ["A single seller, or one dominant firm, protected by barriers to entry. It faces the whole market demand curve, so it is a price maker.", ""], "monopolistic competition": ["Many firms selling differentiated products, with fairly free entry. Each has some price-setting power, but entry removes supernormal profit in the long run.", "Examples: restaurants, hairdressers, clothing brands."], "oligopoly": ["A market dominated by a few large firms whose decisions are interdependent. Usually has significant barriers to entry.", "Measured with a concentration ratio."], "natural monopoly": ["An industry where long-run average cost keeps falling across the whole range of market demand, so one firm can supply at lowest cost. Usually regulated.", "Examples: water pipes, rail track."], "barriers to entry": ["Anything that stops or deters new firms joining a market: economies of scale, high sunk costs, patents and licences, control of key resources, brand loyalty, predatory pricing.", ""], "price maker":["A firm that faces a downward-sloping demand curve and so can choose its price by choosing its output. Monopolists are price makers; to sell more they must cut price on every unit.",""],"price taker / price maker": ["A price taker must accept the market price and only chooses output (perfect competition). A price maker faces a downward-sloping demand curve and so chooses price by choosing output.", ""], "mc = mr": ["The profit-maximising rule: produce where marginal cost equals marginal revenue, with MC cutting MR from below. Past that output, each extra unit costs more than it earns.", "In perfect competition MR = price, so P = MC."], "supernormal profit": ["Profit above the normal level: total revenue exceeds total costs, including the owner's normal profit. On the diagram, P is above ATC.", "Also called abnormal profit. It attracts entry where barriers are low."], "subnormal profit": ["Profit below the normal level: total revenue does not cover total costs, so P is below ATC.", "Firms can stay open in the short run if P is at least AVC, but leave in the long run."], "shutdown price": ["The price below which a firm closes in the short run: the lowest point of AVC. Below it, revenue does not cover variable costs, so producing nothing loses less (only the fixed costs).", ""], "firm's supply curve": ["In perfect competition, the part of the MC curve above the lowest point of AVC. It shows how much the firm will supply at each market price.", ""], "entry and exit": ["Firms joining or leaving the industry in response to profit. Supernormal profit brings entry, market supply shifts right and price falls. Subnormal profit brings exit, supply shifts left and price rises.", ""], "productive efficiency": ["Producing at the lowest possible average cost, at the lowest point of ATC, so no resources are wasted.", ""], "allocative efficiency": ["Producing where price equals marginal cost (P = MC), so output matches what consumers value: the last unit is worth exactly what it costs to make.", ""], "deadweight loss": ["Welfare lost when output is below the socially best level: units that consumers value more than they cost to make are never produced. On the lab diagram it is the triangle between demand and MC.", ""], "x-inefficiency": ["The gap between a firm's actual costs and the lowest costs it could achieve. It appears when there is little competitive pressure, for example overstaffing or overpaying managers.", ""], "allocative inefficiency": ["Output where P is above MC: consumers would pay more for an extra unit than it costs to produce, but it is not made, so too little of the good is supplied.", ""], "product differentiation": ["Making a product different from rivals' through branding, quality, design, location or service, so buyers do not see it as a perfect substitute.", ""], "brand loyalty": ["Customers' preference for one brand even when similar products are cheaper. It makes demand less elastic, shown as a steeper demand curve in the lab.", ""], "non-price competition": ["Competing on anything other than price: branding, advertising, quality, after-sales service, loyalty schemes and innovation.", ""], "tangency solution": ["The long-run position in monopolistic competition where the demand (AR) curve just touches ATC at the profit-maximising output. P = ATC, so profit is normal.", ""], "excess capacity": ["Producing less than the output at the lowest point of ATC, so plant is under-used and unit costs are higher than they need to be. A feature of monopolistic competition in the long run.", ""], "interdependence": ["Each firm's best decision depends on how rivals respond, so firms must anticipate their reactions on price, output and advertising before acting.", ""], "concentration ratio": ["The share of total market sales held by the largest few firms, for example a five-firm concentration ratio of 80%. A high ratio signals an oligopoly.", ""], "kinked demand curve": ["A model of oligopoly: rivals ignore a price rise, so demand above the current price is elastic, but match a price cut, so demand below it is inelastic. The kink makes a vertical gap in the MR curve.", ""], "price rigidity": ["Prices staying the same for long periods even when costs change. The kinked demand curve is one explanation.", ""], "price war": ["A run of price cuts as rivals undercut each other. It lowers profit for every firm, so oligopolists often prefer non-price competition.", ""], "collusion": ["Firms co-operating to limit competition, for example by fixing price or output, to raise their joint profit. Formal agreements are illegal in many countries.", ""], "cartel": ["A formal (overt) agreement between firms to fix price or output so that they act like a monopolist. It is unstable because each member gains by cheating.", ""], "game theory": ["The study of strategic decisions where each player's payoff depends on what the others choose. Used to model oligopoly behaviour.", ""], "payoff matrix": ["A table showing each firm's profit for every combination of the strategies the two firms could choose.", ""], "dominant strategy": ["A strategy that gives a player the higher payoff whatever the rival does.", ""], "nash equilibrium": ["An outcome where neither player can do better by changing their own strategy, given what the other is doing. It can leave both worse off than if they co-operated.", ""], "tacit collusion": ["Firms moving in step without any formal agreement, for example following a price leader. Harder for regulators to detect and prove than a cartel.", ""], "repeated games": ["The same game played again and again. The threat of punishment in later rounds, such as a price war, can make co-operation rational if the future matters enough.", ""]};
+var tip=document.createElement('div'); tip.id='kwTip'; tip.setAttribute('role','tooltip'); tip.hidden=true; document.body.appendChild(tip);
+var cur=null, pinned=false, canHover=window.matchMedia&&window.matchMedia('(hover:hover)').matches;
+function key(t){ return t.replace(/[\u2018\u2019]/g,"'").trim().toLowerCase(); }
+function place(el){
+  var r=el.getBoundingClientRect(), w=tip.offsetWidth, h=tip.offsetHeight, vw=window.innerWidth, vh=window.innerHeight;
+  var x=Math.max(12,Math.min(r.left,vw-w-12)), y=r.bottom+8;
+  if(y+h>vh-8 && r.top-h-8>8) y=r.top-h-8;
+  tip.style.left=x+'px'; tip.style.top=y+'px';
+}
+function show(el){
+  var g=G[el.dataset.term]; if(!g) return;
+  cur=el;
+  tip.innerHTML='<div class="tt"></div><div class="df"></div>'+(g[1]?'<div class="ex"></div>':'');
+  tip.querySelector('.tt').textContent=el.textContent;
+  tip.querySelector('.df').textContent=g[0];
+  if(g[1]) tip.querySelector('.ex').textContent=g[1];
+  tip.style.setProperty('--accent',getComputedStyle(el).getPropertyValue('--accent')||'');
+  tip.hidden=false; place(el);
+  el.setAttribute('aria-describedby','kwTip');
+}
+function hide(){
+  if(cur){ cur.classList.remove('open'); cur.removeAttribute('aria-describedby'); }
+  cur=null; pinned=false; tip.hidden=true;
+}
+document.querySelectorAll('.kw').forEach(function(el){
+  var k=key(el.textContent); if(!G[k]) return;
+  el.dataset.term=k; el.setAttribute('role','button'); el.tabIndex=0;
+  if(canHover){
+    el.addEventListener('mouseenter',function(){ if(!pinned) show(el); });
+    el.addEventListener('mouseleave',function(){ if(!pinned) hide(); });
+  }
+  el.addEventListener('focus',function(){ if(!pinned) show(el); });
+  el.addEventListener('blur',function(){ if(!pinned) hide(); });
+  el.addEventListener('click',function(e){
+    e.stopPropagation();
+    if(pinned && cur===el){ hide(); return; }
+    if(cur) cur.classList.remove('open');
+    show(el); pinned=true; el.classList.add('open');
+  });
+  el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
+});
+document.addEventListener('click',function(){ if(pinned) hide(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') hide(); });
+window.addEventListener('scroll',function(){ if(cur&&!tip.hidden) place(cur); },{passive:true});
+window.addEventListener('resize',function(){ if(cur&&!tip.hidden) place(cur); });
+})();
 </script>
 
 </body></html>
