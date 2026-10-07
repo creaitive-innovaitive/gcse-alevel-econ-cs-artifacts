@@ -1,0 +1,1406 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A-Level CS 19.2: Recursion</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .arr{fill:var(--muted)}
+svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+table.mx td,table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+table.mx td.z{color:var(--muted);opacity:.6} table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+table.mx td.ls{text-align:left}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<style>
+.pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.pick select{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.pick label{font-weight:600;font-size:.92rem}
+.bars{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;margin:10px 0}
+.bars small{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.bars strong{font:700 1rem var(--mono)}
+.game .msg{font-weight:700;margin:8px 0;min-height:1.6em}
+.gbtn{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.listrow{font:600 1rem var(--mono);background:var(--soft);border-radius:8px;padding:8px 12px;margin:8px 0;overflow-x:auto}
+pre.plain{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font:500 .85rem/1.5 var(--mono);overflow-x:auto;margin:8px 0;white-space:pre}
+.card svg,#windStatic svg,#wlOut svg{display:block;width:100%;height:auto}
+.step4{counter-reset:s;list-style:none;padding:0;margin:8px 0}
+.step4 li{counter-increment:s;display:flex;gap:10px;padding:8px 12px;margin-bottom:6px;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+.step4 li::before{content:counter(s);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+details.eq summary pre{flex-basis:100%;margin:6px 0;font-weight:500}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Computer Science · 9618 · Chapter 19 · 19.2</div>
+  <h1>Recursion</h1>
+  <p class="lead">A subroutine that calls itself, over and over, until it reaches a case it can answer directly. It feels strange at first, so every call and every return is drawn out here, one step at a time: the call stack, the call tree, the winding down and the unwinding back, with the code highlighted alongside.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p><span class="kw">Recursion</span> solves a problem by solving a <b>smaller version of the same problem</b>. A recursive subroutine calls itself with a simpler input, and keeps going until the input is so simple that the answer is obvious. Then the answers travel back up and are combined.</p>
+    <p>Think of Russian dolls. To count the dolls, open one, and ask "how many dolls are inside?" That is the same question on a smaller doll. Eventually you reach the smallest doll with nothing inside. That is where it stops.</p>
+  </div>
+
+  <h2>The three essentials</h2>
+  <div class="grid2">
+    <div class="card"><h3>1 · Base case</h3><p>The input where the answer is known without any further call. It <b>stops</b> the recursion. Also called the terminating condition.</p><pre class="plain">IF n = 0 THEN
+   RETURN 1</pre></div>
+    <div class="card"><h3>2 · General case</h3><p>The subroutine calls <b>itself</b> with a smaller or simpler value, so every call moves closer to the base case.</p><pre class="plain">RETURN n * Fact(n - 1)</pre></div>
+    <div class="card"><h3>3 · Unwinding</h3><p>Once the base case returns, each waiting call receives its answer, finishes its calculation and returns. Anything written <b>after</b> the recursive call runs now.</p><pre class="plain">Fact(0) → 1
+Fact(1) → 1 × 1
+Fact(2) → 2 × 1 ...</pre></div>
+  </div>
+  <div class="warn"><b class="h">Two ways it goes wrong</b>No base case, or a base case that is never reached (for example counting up when it should count down): the calls never stop and the stack overflows. A base case that returns the wrong value (Fact returning 0) runs fine but gives a wrong answer.</div>
+
+  <h2>Winding and unwinding</h2>
+  <p>Take <code>Fact(3)</code>. It cannot finish 3 × Fact(2) until Fact(2) answers, and so on. The calls <b>wind</b> down to the base case. Nothing has been multiplied yet. Then the answers <b>unwind</b> back up and the multiplications happen on the way.</p>
+  <div id="windStatic"></div>
+
+  <h2>How the computer does it: the call stack</h2>
+  <p>A <span class="kw">stack</span> is a last in, first out structure. Every time a subroutine is called, the computer pushes a <span class="kw">stack frame</span> on it. The frame holds the <b>parameters</b>, the <b>local variables</b> and the <b>return address</b> (where to carry on when the call finishes). The top frame is the call being run. When a call returns, its frame is popped and the one beneath becomes the top again.</p>
+  <div id="frameStatic"></div>
+  <p>A recursive call is just an ordinary call that happens to be to the same subroutine. Each call gets its <b>own</b> frame with its own copy of <code>n</code>, which is why Fact(3) and Fact(2) do not interfere with each other. That is also why recursion uses a lot of memory: n calls means n frames.</p>
+  <div class="tip"><b class="h">Exam link</b>This is the standard "how does a compiler implement recursion" answer: calls push frames (return address, parameters, locals) on the stack; the base case returns; frames are popped in reverse order as each call returns. Name the stack, the frame contents and LIFO.</div>
+
+  <h2>How to trace a recursive function in an exam</h2>
+  <ol class="step4">
+    <li><span><b>Write each call on its own row</b> going down, with the value of the parameter. Keep going until you reach the base case.</span></li>
+    <li><span><b>Mark the base case row</b> and write what it returns.</span></li>
+    <li><span><b>Work upwards.</b> On each row below it, substitute the returned value into the waiting expression and write the result.</span></li>
+    <li><span><b>Take the answer from the top row</b>, the first call. Check any OUTPUT lines: those before the call print going down, those after it print going up.</span></li>
+  </ol>
+  <div class="tw"><table class="t">
+    <tr><th>Call</th><th>n</th><th>Base case?</th><th>Waiting expression</th><th>Returns</th></tr>
+    <tr><td>Fact(3)</td><td>3</td><td>No</td><td>3 × Fact(2)</td><td>3 × 2 = <b>6</b></td></tr>
+    <tr><td>Fact(2)</td><td>2</td><td>No</td><td>2 × Fact(1)</td><td>2 × 1 = <b>2</b></td></tr>
+    <tr><td>Fact(1)</td><td>1</td><td>No</td><td>1 × Fact(0)</td><td>1 × 1 = <b>1</b></td></tr>
+    <tr><td>Fact(0)</td><td>0</td><td><b>Yes</b></td><td>none</td><td><b>1</b></td></tr>
+  </table></div>
+
+  <h2>Types of recursion you will meet</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Pattern</th><th>Example</th><th>Notes</th></tr>
+    <tr><td>One recursive call</td><td>Fact, Sum, Power, Reverse</td><td>A chain of frames. Depth = n.</td></tr>
+    <tr><td>Two recursive calls</td><td>Fibonacci, tree traversal, Hanoi</td><td>Call tree branches. Fibonacci repeats work.</td></tr>
+    <tr><td>Divide and conquer</td><td>Binary search, merge sort</td><td>Each call handles a smaller part. Answer is passed back or combined.</td></tr>
+    <tr><td>Work after the call</td><td>Show (the "Up" line), in-order traversal</td><td>Runs during unwinding, in reverse order of the calls.</td></tr>
+    <tr><td>Indirect</td><td>A calls B, B calls A</td><td>Same stack idea; less common.</td></tr>
+  </table></div>
+
+  <h2>Recursion or iteration?</h2>
+  <div class="grid2">
+    <div class="card"><h3>Benefits of recursion</h3><ul><li>Short, clear code that mirrors the problem (trees, divide and conquer).</li><li>Often easier to write and to prove correct.</li><li>Natural for data that contains smaller copies of itself.</li></ul></div>
+    <div class="card"><h3>Drawbacks of recursion</h3><ul><li>Each call needs a stack frame, so it uses more memory.</li><li>Pushing and popping frames makes it slower than a loop.</li><li>Too deep, or no base case: <b>stack overflow</b>.</li><li>Harder to trace and debug.</li></ul></div>
+  </div>
+  <p>Any recursive routine can be rewritten with a loop (and sometimes a stack of your own). The two versions below give the same answers.</p>
+  <div class="grid2">
+    <div class="card"><h3>Recursive</h3><pre class="plain">FUNCTION Fact(n) RETURNS INTEGER
+   IF n = 0 THEN
+      RETURN 1
+   ELSE
+      RETURN n * Fact(n - 1)
+   ENDIF
+ENDFUNCTION</pre><pre class="plain">def fact(n):
+    if n == 0:
+        return 1
+    return n * fact(n - 1)</pre></div>
+    <div class="card"><h3>Iterative</h3><pre class="plain">FUNCTION Fact(n) RETURNS INTEGER
+   Result ← 1
+   FOR i ← 2 TO n
+      Result ← Result * i
+   NEXT i
+   RETURN Result
+ENDFUNCTION</pre><pre class="plain">def fact(n):
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    return result</pre></div>
+  </div>
+
+  <h2>19.2 checklist</h2>
+  <div class="card"><ul>
+    <li>I can state the essential features of recursion: base case, general case, calling itself.</li>
+    <li>I can explain winding and unwinding and say when code before and after the call runs.</li>
+    <li>I can describe how a stack, with frames holding parameters, local variables and return addresses, makes recursion work.</li>
+    <li>I can trace a recursive function or procedure and show every call and return.</li>
+    <li>I can write a recursive function in pseudocode with a correct base case.</li>
+    <li>I can give benefits and drawbacks of recursion and say when iteration is better.</li>
+    <li>I can rewrite a recursive routine as an iterative one.</li>
+  </ul></div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered dots to jump to a step. The left side is the <b>call stack</b>: each box is one call (top box = running now). The right side is the <b>call tree</b>: amber circles are calls waiting, blue is running, green has returned (the number is its answer). The highlighted code line follows each step; switch between Pseudocode and Python.</p>
+
+  <h2>1 · Show(3): what runs on the way down and on the way up</h2>
+  <p>The best first example, because nothing is calculated: you just see <i>when</i> each line runs. A line before the call prints going down; a line after it prints coming back up.</p>
+  <div id="aShow"></div>
+  <div class="tip"><b class="h">Remember</b>Output going down is 3, 2, 1. Output coming back up is 1, 2, 3. Unwinding reverses the order, because the stack is last in, first out.</div>
+
+  <h2>2 · Fact(4): winding to the base case, then unwinding with answers</h2>
+  <p>Watch the status line in each frame. Every frame says "waiting" until the base case returns. The multiplications only start once the answers come back.</p>
+  <div id="aFact"></div>
+
+  <h2>3 · Reverse("CODE"): recursion on a string</h2>
+  <p>Each call peels off the first letter and trusts the next call to reverse the rest. The saved letter is added to the end during unwinding.</p>
+  <div id="aRev"></div>
+
+  <h2>4 · Fib(4): two recursive calls and a branching tree</h2>
+  <p>With two calls per frame the call tree branches. The left call is made and finished first, then the right one. Notice the stack never gets deeper than 4 even though 9 calls are made: finished calls are popped.</p>
+  <div id="aFib"></div>
+
+  <h2>5 · Recursive binary search: halving the problem</h2>
+  <p>This is the binary search from 19.1.1 written recursively. Each call searches a smaller section of the array. The answer is passed straight back up unchanged.</p>
+  <div id="aBin"></div>
+
+  <h2>6 · Towers of Hanoi: the code is tiny, the work is large</h2>
+  <p>Move all discs from A to C, one at a time, never putting a larger disc on a smaller one. The two recursive calls with an OUTPUT in between solve it for any number of discs.</p>
+  <div id="aHan"></div>
+
+  <h2>7 · What a missing base case looks like</h2>
+  <p>No IF, no base case. Press Play and watch the stack fill.</p>
+  <div id="aBad"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Wind and unwind any Fact(n)</h2>
+  <p>Drag the slider and watch the diagram. The blue arrows are the calls going down, the green arrows are the answers coming back.</p>
+  <div class="card"><div id="wlS"></div><div id="wlOut"></div></div>
+
+  <h2>Lab 2 · Recursion explorer</h2>
+  <p>Choose a function and a value of n. See the result, how many calls were made, how deep the stack went, and what a loop would have needed. Try Fibonacci with n = 16.</p>
+  <div class="card">
+    <div class="pick"><label for="exFn">Function</label><select id="exFn"><option value="fact">Fact(n)</option><option value="sum">Sum(n)</option><option value="fib">Fib(n)</option><option value="han">Hanoi(n)</option></select></div>
+    <div id="exS"></div><div id="exOut"></div>
+  </div>
+
+  <h2>Lab 3 · Push or pop?</h2>
+  <p>You are the call stack for Fact(3). For each event, decide whether a frame is pushed or popped.</p>
+  <div class="card game" id="pp"></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which part of recursion?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Predict the output</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Order the events</h2>
+  <div id="o2" class="card"></div>
+
+  <h2>5 · What will happen?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>6 · Traces and calculations</h2>
+  <p class="note">Plain numbers only. Use Hint, then Show working.</p>
+  <div id="c1"></div>
+
+  <h2>7 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Use them as examples of ideas, not as exact descriptions of any company's software.</p>
+  <div class="rw"><h3>Searching folders on a computer</h3><p>A folder holds files and other folders. To list everything, list the files, then repeat the same process inside each sub-folder. The base case is a folder with no sub-folders.</p><div class="use"><b>Exam use:</b> a clear example of data that contains smaller copies of itself, so recursion is more natural than a loop.</div></div>
+  <div class="rw"><h3>Traversing a binary tree</h3><p>In-order traversal: visit the left subtree, output the node, visit the right subtree. Each subtree is a smaller tree. The base case is an empty subtree (a null pointer).</p><div class="use"><b>Exam use:</b> links 19.2 to 19.1.3. Work after the first call runs during unwinding, so the nodes come out in order.</div></div>
+  <div class="rw"><h3>Binary search and merge sort</h3><p>Divide and conquer: halve the problem, solve the halves the same way, combine. Binary search needs one recursive call per level; merge sort needs two.</p><div class="use"><b>Exam use:</b> explains why recursion suits algorithms that split the data into smaller copies.</div></div>
+  <div class="rw"><h3>Fractals and graphics</h3><p>A snowflake or fern is drawn by drawing a shape that contains smaller copies of itself. The base case is "too small to draw".</p><div class="use"><b>Exam use:</b> shows that the base case controls how deep the recursion goes.</div></div>
+  <div class="rw"><h3>Compilers checking brackets and maths</h3><p>An expression like (2 + (3 × 4)) contains smaller expressions inside the brackets. Parsers handle this by calling themselves for each inner bracket.</p><div class="use"><b>Exam use:</b> a real use of the call stack: each unfinished bracket waits, like a frame waiting for its inner call.</div></div>
+  <div class="rw"><h3>Route and maze solving</h3><p>Try a path; at each junction call the same routine for each direction; if stuck, return and try another. Going back is the unwinding.</p><div class="use"><b>Exam use:</b> depth-first search is naturally recursive and the call stack remembers where to back up to.</div></div>
+  <div class="rw"><h3>Calculating Fibonacci naively</h3><p>Fib(40) written with two recursive calls takes noticeably long because it re-solves the same sub-problems billions of times. A loop does it in 40 steps.</p><div class="use"><b>Exam use:</b> the standard example of a drawback: elegant but inefficient. Say "repeated calculation".</div></div>
+  <div class="rw"><h3>Infinite "Droste" effect</h3><p>A picture that contains a smaller copy of itself, which contains a smaller copy, and so on. Without a smallest picture it never ends.</p><div class="use"><b>Exam use:</b> a memorable way to explain why the base case is essential.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Written in the style of 9618 Paper 1 and Paper 4 questions. Open each for reminders, a model answer and common mistakes. Each coloured phrase earns one mark; the number shows which mark point it is. Code uses CIE-style pseudocode.</p>
+  <div class="key"><span class="k"><i></i> mark-scheme point</span></div>
+
+  <h3>Recall and explain</h3>
+  <details class="eq"><summary>Q1 <span class="cmd">State</span> <span class="mark">2 marks</span> State two features of a recursive subroutine.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>"State" needs short points, no explanation. The two essentials: a base case and a call to itself.</div>
+    <div class="ans"><span class="mk k" data-t="1">It calls itself (from within its own definition).</span> <span class="mk k" data-t="2">It has a base case / stopping condition, where it returns without calling itself again.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "it uses a loop" or "it repeats". Iteration repeats too; recursion is defined by the self-call.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain why every recursive subroutine needs a base case.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>What the base case does, what happens without it, and the consequence for the stack.</div>
+    <div class="ans"><span class="mk k" data-t="1">The base case is the condition where the subroutine returns an answer without calling itself.</span> <span class="mk k" data-t="2">Without it the subroutine would keep calling itself forever (infinite recursion).</span> <span class="mk k" data-t="3">Each call adds a stack frame, so the stack would run out of memory and cause a stack overflow error.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "the program would crash" without linking it to the stack. Name the stack and the frames.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a stack is used when a recursive function is executed.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The four ideas: frame pushed on each call, what is stored in it, base case, popping in reverse order.</div>
+    <div class="ans"><span class="mk k" data-t="1">Each time the function is called, a stack frame is pushed onto the call stack.</span> <span class="mk k" data-t="2">The frame stores the parameter values, local variables and the return address.</span> <span class="mk k" data-t="3">Calls keep being pushed until the base case is reached, which returns without a further call.</span> <span class="mk k" data-t="4">As each call finishes, its frame is popped (most recent first), the returned value is passed back and execution continues from the return address.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Forgetting the return address, or describing a queue. It is last in, first out.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain what is meant by a stack overflow and how it can be caused by a recursive function.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Define it, give the cause (base case), say why each call matters.</div>
+    <div class="ans"><span class="mk k" data-t="1">A stack overflow is an error when the call stack runs out of memory for more frames.</span> <span class="mk k" data-t="2">It occurs if the base case is missing or can never be reached (e.g. the parameter moves away from the base value).</span> <span class="mk k" data-t="3">Every recursive call pushes a new frame and none are popped, so the stack fills. (Very deep, but finite, recursion can also do this.)</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Confusing it with "overflow" of a number (integer too large).</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Give</span> <span class="mark">4 marks</span> Give two benefits and two drawbacks of using recursion instead of iteration.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two of each. Use the words memory, stack, readable, tree.</div>
+    <div class="ans"><b>Benefits:</b> <span class="mk k" data-t="1">The code is shorter and easier to read/write for problems that are naturally recursive (trees, divide and conquer).</span> <span class="mk k" data-t="2">It is easier to see that the solution is correct, because it mirrors the definition of the problem.</span><br><b>Drawbacks:</b> <span class="mk n" data-t="3">Each call uses stack memory, so it needs more memory than a loop and may cause a stack overflow.</span> <span class="mk n" data-t="4">It is usually slower because of the overhead of pushing and popping frames (and is harder to trace/debug).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "recursion is faster". It is almost never faster than the equivalent loop.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Describe</span> <span class="mark">3 marks</span> A recursive function has just reached its base case. Describe what happens next as the program unwinds.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Return value, frame popped, caller resumes and completes its calculation.</div>
+    <div class="ans"><span class="mk k" data-t="1">The base case returns its value and its stack frame is removed (popped).</span> <span class="mk k" data-t="2">Control passes back to the previous call, using the return address, which receives the value.</span> <span class="mk k" data-t="3">That call completes its waiting calculation and returns in turn, so the calls finish in the reverse order that they were made.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the calls "restart". They resume exactly where they paused.</div>
+  </div></details>
+
+  <h3>Reading and tracing</h3>
+  <details class="eq"><summary>Q7 <span class="cmd">Identify</span> <span class="mark">2 marks</span> Identify the base case and the general case in this function.
+<pre class="plain">FUNCTION Sum(n : INTEGER) RETURNS INTEGER
+   IF n = 0 THEN
+      RETURN 0
+   ELSE
+      RETURN n + Sum(n - 1)
+   ENDIF
+ENDFUNCTION</pre></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Quote the line, not just "the IF".</div>
+    <div class="ans"><span class="mk k" data-t="1">Base case: IF n = 0 THEN RETURN 0</span><br><span class="mk k" data-t="2">General case: RETURN n + Sum(n - 1) (the recursive call)</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Swapping them, or quoting only the condition without the RETURN 0.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Trace</span> <span class="mark">4 marks</span> Using the function in Q7, complete a trace for Sum(3). Show each call, its parameter and what it returns.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Calls go down to the base case; values are filled in going back up.</div>
+    <div class="ans"><div class="tw"><table class="t"><tr><th>Call</th><th>n</th><th>Returns</th></tr>
+      <tr><td>Sum(3)</td><td>3</td><td><span class="mk k" data-t="4">3 + 3 = 6</span></td></tr>
+      <tr><td>Sum(2)</td><td>2</td><td><span class="mk k" data-t="3">2 + 1 = 3</span></td></tr>
+      <tr><td>Sum(1)</td><td>1</td><td><span class="mk k" data-t="2">1 + 0 = 1</span></td></tr>
+      <tr><td>Sum(0)</td><td>0</td><td><span class="mk k" data-t="1">0 (base case)</span></td></tr></table></div></div>
+    <div class="warn"><b class="h">Common mistake</b>Starting the table at Sum(2), or leaving out the base case call Sum(0).</div>
+  </div></details>
+
+  <details class="eq"><summary>Q9 <span class="cmd">Trace</span> <span class="mark">3 marks</span> What is output when Show(3) is called?
+<pre class="plain">PROCEDURE Show(n : INTEGER)
+   IF n = 0 THEN
+      OUTPUT "Done"
+   ELSE
+      OUTPUT "Down ", n
+      CALL Show(n - 1)
+      OUTPUT "Up ", n
+   ENDIF
+ENDPROCEDURE</pre></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Lines before the CALL run in order going down; lines after it run in reverse going up.</div>
+    <div class="ans"><span class="mk k" data-t="1">Down 3, Down 2, Down 1</span><br><span class="mk k" data-t="2">Done</span><br><span class="mk k" data-t="3">Up 1, Up 2, Up 3</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Printing "Up 3, Up 2, Up 1". The last call made is the first to finish.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q10 <span class="cmd">Trace</span> <span class="mark">4 marks</span> What value is returned by Gcd(48, 18)? Show each call.
+<pre class="plain">FUNCTION Gcd(a, b : INTEGER) RETURNS INTEGER
+   IF b = 0 THEN
+      RETURN a
+   ELSE
+      RETURN Gcd(b, a MOD b)
+   ENDIF
+ENDFUNCTION</pre></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Evaluate a MOD b for each call to get the next parameters. The answer is passed back unchanged.</div>
+    <div class="ans"><span class="mk k" data-t="1">Gcd(48, 18): 48 MOD 18 = 12, so call Gcd(18, 12)</span><br><span class="mk k" data-t="2">Gcd(18, 12): 18 MOD 12 = 6, so call Gcd(12, 6)</span><br><span class="mk k" data-t="3">Gcd(12, 6): 12 MOD 6 = 0, so call Gcd(6, 0), where b = 0 returns 6</span><br><span class="mk k" data-t="4">Each earlier call returns 6 unchanged: the value returned is 6.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Using a DIV b by mistake, or stopping at Gcd(12, 6) without reaching b = 0.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q11 <span class="cmd">Trace</span> <span class="mark">3 marks</span> A function is shown. State the value returned by Mystery(472).
+<pre class="plain">FUNCTION Mystery(n : INTEGER) RETURNS INTEGER
+   IF n = 0 THEN
+      RETURN 0
+   ELSE
+      RETURN (n MOD 10) + Mystery(n DIV 10)
+   ENDIF
+ENDFUNCTION</pre></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>MOD 10 gives the last digit; DIV 10 removes it.</div>
+    <div class="ans"><span class="mk k" data-t="1">Mystery(472) = 2 + Mystery(47)</span>; <span class="mk k" data-t="2">Mystery(47) = 7 + Mystery(4), and Mystery(4) = 4 + Mystery(0) = 4 + 0</span>; <span class="mk k" data-t="3">so the value returned is 2 + 7 + 4 = 13 (the sum of the digits).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Giving 472 MOD 10 only. Follow the call all the way to Mystery(0).</div>
+  </div></details>
+
+  <details class="eq"><summary>Q12 <span class="cmd">Calculate</span> <span class="mark">3 marks</span> A recursive function Fib(n) returns n if n ≤ 1, otherwise Fib(n − 1) + Fib(n − 2). Calculate the total number of calls to Fib made when Fib(5) is called, counting the first call.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>calls(n) = 1 + calls(n − 1) + calls(n − 2). Start with calls(0) = calls(1) = 1.</div>
+    <div class="ans"><span class="mk k" data-t="1">calls(0) = calls(1) = 1</span>, so <span class="mk k" data-t="2">calls(2) = 3, calls(3) = 5, calls(4) = 9</span>, and <span class="mk k" data-t="3">calls(5) = 1 + 9 + 5 = 15 calls.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Counting only the answer (5) or forgetting the base case calls.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q13 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Explain why the recursive Fib function in Q12 is inefficient for large values of n.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Say what is repeated, and what happens to the amount of work.</div>
+    <div class="ans"><span class="mk k" data-t="1">The same values (e.g. Fib(2), Fib(1)) are calculated again and again in different branches of the call tree.</span> <span class="mk k" data-t="2">The number of calls roughly doubles as n increases, so it becomes very slow (exponential growth) and uses a lot of stack.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "because it is recursive". Recursion alone is not the problem; the repeated calculation is.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q14 <span class="cmd">Trace</span> <span class="mark">4 marks</span> The binary tree below has root 8, left child 4 (with children 2 and 6) and right child 12. The procedure is called with InOrder(Root). State the output and explain how the order is produced.
+<pre class="plain">PROCEDURE InOrder(Node)
+   IF Node &lt;&gt; NULL THEN
+      CALL InOrder(Node.Left)
+      OUTPUT Node.Value
+      CALL InOrder(Node.Right)
+   ENDIF
+ENDPROCEDURE</pre></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The base case is a NULL node, which does nothing. The OUTPUT sits between the two calls.</div>
+    <div class="ans"><span class="mk k" data-t="1">Output: 2, 4, 6, 8, 12</span>. <span class="mk k" data-t="2">The left subtree is fully visited (recursively) before the node itself is output.</span> <span class="mk k" data-t="3">Then the node's value is output, then the right subtree is visited.</span> <span class="mk k" data-t="4">The base case (Node = NULL) ends each branch; as calls return, the nodes appear in ascending order for a binary search tree.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Outputting 8 first (that is pre-order). Where the OUTPUT line sits decides the order.</div>
+  </div></details>
+
+  <h3>Writing and completing code</h3>
+  <details class="eq"><summary>Q15 <span class="cmd">Complete</span> <span class="mark">3 marks</span> Complete this recursive function, which returns b raised to the power e (e ≥ 0).
+<pre class="plain">FUNCTION Power(b, e : INTEGER) RETURNS INTEGER
+   IF e = ......(A)...... THEN
+      RETURN ......(B)......
+   ELSE
+      RETURN ......(C)......
+   ENDIF
+ENDFUNCTION</pre></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Anything to the power 0 is 1. Otherwise b × b^(e−1).</div>
+    <div class="ans"><span class="mk k" data-t="1">(A) 0</span><br><span class="mk k" data-t="2">(B) 1</span><br><span class="mk k" data-t="3">(C) b * Power(b, e - 1)</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Returning 0 in the base case, which makes every answer 0. Or calling Power(b, e) without reducing e.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q16 <span class="cmd">Write</span> <span class="mark">5 marks</span> Write a recursive function Total(n) that returns the sum 1 + 2 + … + n for n ≥ 0, in pseudocode.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Header with RETURNS, a base case, a recursive call on n − 1 inside a RETURN, and ENDFUNCTION.</div>
+    <div class="ans"><pre class="plain">FUNCTION Total(n : INTEGER) RETURNS INTEGER
+   IF n = 0 THEN
+      RETURN 0
+   ELSE
+      RETURN n + Total(n - 1)
+   ENDIF
+ENDFUNCTION</pre>
+    <span class="mk k" data-t="1">Correct function header with parameter and RETURNS INTEGER, and ENDFUNCTION</span>; <span class="mk k" data-t="2">test for the base case (n = 0, or n ≤ 1)</span>; <span class="mk k" data-t="3">base case returns the correct value (0, or 1 if the test is n = 1)</span>; <span class="mk k" data-t="4">recursive call to Total with a smaller argument (n − 1)</span>; <span class="mk k" data-t="5">the result combined correctly (n + Total(n − 1)) and returned.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Using a loop. A recursive answer must call the function itself. Also forgetting RETURN in front of the call.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q17 <span class="cmd">Write</span> <span class="mark">5 marks</span> Write a recursive function IsPalindrome(s) that returns TRUE if the string s reads the same forwards and backwards, otherwise FALSE. You may use LENGTH, MID(s, start, length), LEFT(s, n) and RIGHT(s, n).</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Base case: length 0 or 1 is a palindrome. Otherwise compare first and last letters, then test the middle.</div>
+    <div class="ans"><pre class="plain">FUNCTION IsPalindrome(s : STRING) RETURNS BOOLEAN
+   IF LENGTH(s) &lt;= 1 THEN
+      RETURN TRUE
+   ELSE
+      IF LEFT(s, 1) &lt;&gt; RIGHT(s, 1) THEN
+         RETURN FALSE
+      ELSE
+         RETURN IsPalindrome(MID(s, 2, LENGTH(s) - 2))
+      ENDIF
+   ENDIF
+ENDFUNCTION</pre>
+    <span class="mk k" data-t="1">Function header, parameter and RETURNS BOOLEAN</span>; <span class="mk k" data-t="2">base case: length ≤ 1 returns TRUE</span>; <span class="mk k" data-t="3">compares first and last characters</span>; <span class="mk k" data-t="4">returns FALSE if they differ</span>; <span class="mk k" data-t="5">recursive call on the middle section (first and last removed) and its result returned.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Not shrinking the string by two. Removing only one letter compares the wrong characters.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q18 <span class="cmd">Complete</span> <span class="mark">5 marks</span> A recursive binary search is shown. Complete the missing parts.
+<pre class="plain">FUNCTION BinSearch(Data, Low, High, Target) RETURNS INTEGER
+   IF Low ......(A)...... High THEN
+      RETURN -1
+   ENDIF
+   Mid ← ......(B)......
+   IF Data[Mid] = Target THEN
+      RETURN ......(C)......
+   ELSE
+      IF Data[Mid] < Target THEN
+         RETURN BinSearch(Data, ......(D)......, High, Target)
+      ELSE
+         RETURN BinSearch(Data, Low, ......(E)......, Target)
+      ENDIF
+   ENDIF
+ENDFUNCTION</pre></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two base cases: nothing left to search, or found. Move past Mid, never include it again.</div>
+    <div class="ans"><span class="mk k" data-t="1">(A) &gt;</span><br><span class="mk k" data-t="2">(B) (Low + High) DIV 2</span><br><span class="mk k" data-t="3">(C) Mid</span><br><span class="mk k" data-t="4">(D) Mid + 1</span><br><span class="mk k" data-t="5">(E) Mid - 1</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Using Mid instead of Mid ± 1, which can loop forever on the same range.</div>
+  </div></details>
+
+  <h3>Converting and evaluating</h3>
+  <details class="eq"><summary>Q19 <span class="cmd">Write</span> <span class="mark">4 marks</span> Rewrite the function in Q16 as an iterative function (using a loop).</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Replace the recursive call with a loop and an accumulator variable.</div>
+    <div class="ans"><pre class="plain">FUNCTION Total(n : INTEGER) RETURNS INTEGER
+   Sum ← 0
+   FOR i ← 1 TO n
+      Sum ← Sum + i
+   NEXT i
+   RETURN Sum
+ENDFUNCTION</pre>
+    <span class="mk k" data-t="1">Correct header and RETURNS</span>; <span class="mk k" data-t="2">accumulator initialised to 0</span>; <span class="mk k" data-t="3">loop from 1 to n adding the loop variable to the accumulator</span>; <span class="mk k" data-t="4">accumulator returned after the loop.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Still calling Total inside the loop, or initialising the accumulator inside the loop.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q20 <span class="cmd">Discuss</span> <span class="mark">6 marks</span> A program must list every file in a folder and in all of its sub-folders, to any depth. A programmer writes it recursively; a colleague says a loop would be better. Discuss which approach is more suitable.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two sides plus a judgement tied to the scenario. Use the words stack, base case, memory, depth.</div>
+    <div class="ans"><span class="mk k" data-t="1">Folders contain smaller folders of the same type, so the problem is naturally recursive.</span> <span class="mk k" data-t="2">A recursive routine lists the files, then calls itself for each sub-folder; the base case is a folder with no sub-folders.</span> <span class="mk k" data-t="3">The code is short and easy to read and to check.</span> <span class="mk n" data-t="4">A loop would need its own stack or queue of folders still to visit, making the code longer and harder to follow.</span> <span class="mk n" data-t="5">However, each recursive call uses stack memory; a very deeply nested folder structure could cause a stack overflow, where a loop would not.</span> <span class="mk e" data-t="6">Judgement: folder depth is normally small, so recursion is more suitable here as clarity outweighs the small memory cost.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Listing generic pros and cons without using the folder scenario, or not reaching a conclusion.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Find the base case first.</b> In any recursion question, locate the IF that stops the calls and say what it returns.</li>
+    <li><b>Trace downwards, then upwards.</b> Write all the calls to the base case before calculating anything. Then fill in the return values from the bottom up.</li>
+    <li><b>Before the call = going down; after the call = coming up.</b> Show(n) prints in opposite orders either side of the CALL.</li>
+    <li><b>Count the base case call.</b> Fact(3) is four calls and four frames, not three.</li>
+    <li><b>Each call has its own parameters.</b> Fact(3) and Fact(2) each hold their own n. Draw them separately.</li>
+    <li><b>The argument must move toward the base case.</b> n − 1, DIV 10, a shorter string, a smaller range. If not, stack overflow.</li>
+    <li><b>Write RETURN before the recursive call</b> in a function. A call without RETURN loses the answer.</li>
+    <li><b>Stack answers need four words:</b> frame, return address, push/pop, last in first out.</li>
+    <li><b>Drawbacks: say memory and stack.</b> "Slower" alone earns nothing.</li>
+    <li><b>Check Fibonacci-style code for repeated work.</b> Two calls per frame means a branching tree and repeated calculations.</li>
+    <li><b>When writing code, copy the structure:</b> header, base case, general case, ENDIF, ENDFUNCTION. Marks go to each part.</li>
+    <li><b>For converting to a loop:</b> an accumulator replaces the waiting multiplication or addition.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Identify</td><td>A short fact or the line of code. No explanation.</td></tr>
+    <tr><td>Describe</td><td>The steps in order, or how something works.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+    <tr><td>Trace</td><td>Show each call and return, or each output, in order.</td></tr>
+    <tr><td>Complete</td><td>Fill every gap, with exact pseudocode.</td></tr>
+    <tr><td>Write</td><td>Produce full pseudocode with header, structure and end statements.</td></tr>
+    <tr><td>Discuss</td><td>Both sides, applied to the scenario, with a judgement.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.max(0, Math.min(fr.length - 1, Math.round(s.i)))].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+/* ===== 19.2 Recursion: trace engine ===== */
+const RW = 720, RH = 372;
+
+/* Records every call/return of a recursive function as snapshots, then draws stack + call tree. */
+function Trace(o = {}) {
+  const nodes = [], stack = [], snaps = [], out = [];
+  let phase = "down", pdata = null, alert = null;
+  const clonePanel = () => (pdata ? JSON.parse(JSON.stringify(pdata)) : null);
+  const snap = (cap, ps, py) => snaps.push({
+    cap, ps, py, phase, alert, out: [...out], n: nodes.length, panel: clonePanel(),
+    ns: nodes.map((n) => [n.st, n.val]),
+    stack: stack.map((f) => ({ label: f.label, ra: f.ra, status: f.status, st: f.st })),
+  });
+  const T = {
+    nodes, out, o,
+    setPanel(d) { pdata = d; },
+    print(t) { out.push(t); },
+    setStatus(nd, s) { nd.fr.status = s; },
+    call(label, short, parent, ra, cap, ps, py, status = "", st = "run") {
+      if (parent) { parent.st = "wait"; parent.fr.st = "wait"; }
+      const nd = { label, short, parent, kids: [], st: "act", val: null };
+      nodes.push(nd); parent && parent.kids.push(nd);
+      nd.fr = { label, ra, status, st }; stack.push(nd.fr);
+      phase = "down"; snap(cap, ps, py); return nd;
+    },
+    note(nd, status, cap, ps, py, st = "run") { nd.fr.status = status; nd.fr.st = st; nd.st = "act"; snap(cap, ps, py); },
+    ret(nd, val, cap, ps, py, outLine, status) {
+      nd.fr.status = status || (val === undefined || val === null ? "finished" : "returns " + val); nd.fr.st = "ret"; nd.st = "done"; nd.val = val ?? "";
+      if (outLine) out.push(outLine);
+      phase = "up"; snap(cap, ps, py); stack.pop();
+    },
+    finish(cap, ps, py, al) { alert = al || null; snap(cap, ps, py); },
+    alertNow(a) { alert = a; },
+  };
+  T.build = () => {
+    layout(nodes);
+    return snaps.map((s) => ({ cap: s.cap, ps: s.ps, py: s.py, svg: drawSnap(s, nodes, o) }));
+  };
+  T.maxDepth = () => 0;
+  return T;
+}
+
+/* tree layout: leaves spaced evenly, parents centred over children */
+function layout(nodes) {
+  if (!nodes.length) return;
+  let leaf = 0; const depthOf = (n) => (n.parent ? depthOf(n.parent) + 1 : 0);
+  const go = (n) => { if (!n.kids.length) n.lx = leaf++; else { n.kids.forEach(go); n.lx = (n.kids[0].lx + n.kids[n.kids.length - 1].lx) / 2; } };
+  go(nodes[0]); nodes.forEach((n) => (n.d = depthOf(n)));
+  nodes.leaves = leaf; nodes.depth = Math.max(...nodes.map((n) => n.d)) + 1;
+}
+
+function maxStack(snaps) { return Math.max(1, ...snaps.map((s) => s.stack.length)); }
+
+function drawSnap(s, nodes, o) {
+  const maxD = o.maxDepth || 5, fh = Math.max(34, Math.min(50, Math.floor(272 / maxD) - 5)), gap = 5, X = 14, FW = 340, base = 322;
+  let g = "";
+  // left: call stack
+  g += SV.text(X, 22, "CALL STACK", "sm bd", { "text-anchor": "start", style: "letter-spacing:.1em" });
+  g += SV.text(X + FW, 22, s.phase === "down" ? "▼ WINDING (calls)" : "▲ UNWINDING (returns)", "lbl bd " + (s.phase === "down" ? "t1" : "t3"), { "text-anchor": "end" });
+  g += SV.line(X - 4, base + 3, X + FW + 4, base + 3, "ax");
+  g += SV.text(X, base + 20, "bottom of stack: main program", "sm", { "text-anchor": "start" });
+  s.stack.forEach((f, i) => {
+    const y = base - fh - i * (fh + gap), c = { run: "cell-cur", wait: "", ret: "cell-ok", base: "cell-warn" }[f.st];
+    g += SV.rect(X, y, FW, fh, "cell " + c, { rx: 8 });
+    g += SV.text(X + 10, y + (fh > 40 ? 20 : 15), esc(f.label), "lbl bd", { "text-anchor": "start", style: "font-family:var(--mono);font-size:14px" });
+    g += SV.text(X + FW - 10, y + (fh > 40 ? 20 : 15), "return to: " + esc(f.ra), "sm", { "text-anchor": "end" });
+    if (f.status) g += SV.text(X + 10, y + fh - (fh > 40 ? 10 : 6), esc(f.status), "lbl", { "text-anchor": "start", style: "font-size:12.5px" });
+  });
+  if (!s.stack.length) g += SV.text(X + FW / 2, base - 40, "stack is empty", "lbl", { "text-anchor": "middle", style: "font-style:italic;fill:var(--muted)" });
+  // right: call tree
+  const RX = 388, RWd = RW - RX - 10;
+  g += SV.text(RX, 22, "CALL TREE  " + (o.treeName || ""), "sm bd", { "text-anchor": "start", style: "letter-spacing:.1em" });
+  const lv = nodes.depth || 1, lvs = nodes.leaves || 1, r = nodes.length > 12 ? 14 : 17, dy = Math.min(52, 190 / Math.max(1, lv - 1 || 1)), sp = lvs > 1 ? Math.min(54, (RWd - 2 * r) / (lvs - 1)) : 0;
+  const tw = (lvs - 1) * sp, ox = RX + RWd / 2 - tw / 2, oy = 52;
+  const px = (n) => ox + n.lx * sp, py = (n) => oy + n.d * dy;
+  nodes.forEach((n, i) => { if (n.parent) { const live = i < s.n; g += SV.line(px(n.parent), py(n.parent), px(n), py(n), live ? "edge" : "edge", { opacity: live ? 1 : 0.18 }); } });
+  nodes.forEach((n, i) => {
+    const live = i < s.n, st = live ? s.ns[i][0] : "new", val = live ? s.ns[i][1] : null;
+    const cls = { new: "nd", wait: "nd", act: "nd nd-cur", done: "nd nd-ok" }[st];
+    g += `<g opacity="${live ? 1 : 0.22}">` + SV.circle(px(n), py(n), r, cls, st === "wait" ? { style: "stroke:var(--warn);stroke-width:3.5;fill:var(--warn-soft)" } : {}) + SV.text(px(n), py(n) + 5, esc(n.short), "lbl bd", { "text-anchor": "middle", style: "font-size:" + (r < 16 ? 11 : 13) + "px" });
+    if (st === "done" && val !== "" && val !== null) g += SV.text(px(n) + r + 3, py(n) + 4, esc(val), "sm bd t3", { "text-anchor": "start", style: "font-family:var(--mono);font-size:11.5px" });
+    g += "</g>";
+  });
+  // bottom right: output / returned values / custom panel
+  const BY = 268;
+  g += SV.rect(RX, BY, RWd, 90, "cell", { rx: 8 });
+  if (s.panel && o.panelFn) g += o.panelFn(s.panel, RX, BY, RWd);
+  else {
+    g += SV.text(RX + 10, BY + 16, (o.outTitle || "OUTPUT").toUpperCase(), "sm bd", { "text-anchor": "start", style: "letter-spacing:.1em" });
+    s.out.forEach((t, i) => { const col = i < 5 ? 0 : 1, row = i % 5; g += SV.text(RX + 10 + col * (RWd / 2), BY + 33 + row * 13.5, esc(t), "lbl", { "text-anchor": "start", style: "font-family:var(--mono);font-size:12px" }); });
+  }
+  if (s.alert) { g += SV.rect(RX, BY, RWd, 90, "cell cell-no", { rx: 8 }) + SV.text(RX + RWd / 2, BY + 52, esc(s.alert), "lbl bd t2", { "text-anchor": "middle", style: "font-size:17px" }); }
+  return g;
+}
+
+/* helper: run a simulation and hand the frames to Lib.algo */
+function showAlgo(sel, T, code, label, dwell = 2600) {
+  const frames = T.build();
+  Lib.algo($(sel), { w: RW, h: RH, label, pseudo: code.ps, py: code.py, dwell, frames });
+}
+const fix = (T, snapsCount) => T;
+
+/* ===== A. Show(3): output on the way down and on the way back ===== */
+const SHOW = {
+  ps: ["PROCEDURE Show(n : INTEGER)", "   IF n = 0 THEN", "      OUTPUT \"Done\"", "   ELSE", "      OUTPUT \"Down \", n", "      CALL Show(n - 1)", "      OUTPUT \"Up \", n", "   ENDIF", "ENDPROCEDURE"],
+  py: ["def show(n):", "    if n == 0:", "        print('Done')", "    else:", "        print('Down', n)", "        show(n - 1)", "        print('Up', n)"],
+};
+(() => {
+  const T = Trace({ treeName: "Show(n)", outTitle: "Output so far", maxDepth: 4 });
+  function show(n, parent, ra) {
+    const nd = T.call(`Show(${n})`, n, parent, ra, `<b>Show(${n}) is called.</b> A new stack frame is pushed. It stores n = ${n} and the return address.`, [0], [0]);
+    if (n === 0) {
+      T.print("Done");
+      T.note(nd, "n = 0: BASE CASE", `Is n = 0? <b>Yes.</b> This is the <b>base case</b>: no more calls. It outputs "Done" and the calls stop going deeper.`, [1, 2], [1, 2], "base");
+      T.ret(nd, null, `Show(0) reaches the end of the procedure, so its frame is popped. <b>Unwinding begins:</b> control goes back to the line after the call in Show(1).`, [8], [2], null, "finished");
+      return nd;
+    }
+    T.note(nd, "n ≠ 0: general case", `Is n = 0? No (n = ${n}). This is the <b>general case</b>, so the procedure will call itself with a smaller value.`, [1, 3], [1, 3]);
+    T.print("Down " + n);
+    T.note(nd, `printed "Down ${n}"`, `<b>OUTPUT "Down ${n}".</b> This line comes <i>before</i> the recursive call, so it runs on the way down.`, [4], [4]);
+    T.setStatus(nd, `paused: waiting for Show(${n - 1})`);
+    const ch = show(n - 1, nd, `Show line 6`);
+    T.print("Up " + n);
+    T.note(nd, `printed "Up ${n}"`, `Show(${n - 1}) has finished. Show(${n}) <b>resumes</b> at the line after its call and runs <b>OUTPUT "Up ${n}"</b>. This line comes <i>after</i> the call, so it runs on the way back up.`, [6], [6]);
+    T.ret(nd, null, `Show(${n}) reaches ENDPROCEDURE and its frame is popped.`, [8], [6], null, "finished");
+    return nd;
+  }
+  show(3, null, "main program");
+  T.finish("The stack is empty. The output shows the pattern: everything <i>before</i> the call is printed going down (3, 2, 1), everything <i>after</i> it is printed coming back up (1, 2, 3), in the reverse order.", [], []);
+  showAlgo("#aShow", T, SHOW, "Animated trace of Show(3)", 2800);
+})();
+
+/* ===== B. Fact(4) ===== */
+const FACT = {
+  ps: ["FUNCTION Fact(n : INTEGER) RETURNS INTEGER", "   IF n = 0 THEN", "      RETURN 1", "   ELSE", "      RETURN n * Fact(n - 1)", "   ENDIF", "ENDFUNCTION"],
+  py: ["def fact(n):", "    if n == 0:", "        return 1", "    else:", "        return n * fact(n - 1)"],
+};
+(() => {
+  const T = Trace({ treeName: "Fact(n)", outTitle: "Values returned", maxDepth: 5 });
+  function fact(n, parent, ra) {
+    const nd = T.call(`Fact(${n})`, n, parent, ra, `<b>Fact(${n}) is called.</b> New frame pushed: n = ${n}, plus the return address (where to carry on once it finishes).`, [0], [0]);
+    if (n === 0) {
+      T.note(nd, "n = 0: BASE CASE", `Is n = 0? <b>Yes: base case.</b> The answer is known without another call: <b>RETURN 1</b>.`, [1, 2], [1, 2], "base");
+      T.ret(nd, 1, `Fact(0) returns <b>1</b> and its frame is popped. <b>Unwinding starts.</b> The value 1 goes back to the caller, Fact(1).`, [2], [2], "Fact(0) = 1");
+      return 1;
+    }
+    T.note(nd, "n ≠ 0: general case", `Is n = 0? No. <b>General case:</b> Fact(${n}) = ${n} × Fact(${n - 1}). It cannot finish until Fact(${n - 1}) gives an answer, so it calls it.`, [1, 3, 4], [1, 3, 4]);
+    T.setStatus(nd, `waiting: ${n} × Fact(${n - 1})`);
+    const r = fact(n - 1, nd, "Fact line 5");
+    nd.fr.status = `${n} × ${r} = ?`;
+    T.note(nd, `${n} × ${r} = ${n * r}`, `Fact(${n - 1}) returned <b>${r}</b>. Fact(${n}) resumes and finishes the sum it left unfinished: ${n} × ${r} = <b>${n * r}</b>.`, [4], [4]);
+    T.ret(nd, n * r, `Fact(${n}) returns <b>${n * r}</b> and its frame is popped.`, [4], [4], `Fact(${n}) = ${n * r}`);
+    return n * r;
+  }
+  fact(4, null, "main program");
+  T.finish("The stack is empty and the answer, <b>Fact(4) = 24</b>, was passed back to the main program. The multiplications were all done on the way back up, as each frame was popped.", [], []);
+  showAlgo("#aFact", T, FACT, "Animated trace of Fact(4)", 2800);
+})();
+
+/* ===== C. Fib(4): two recursive calls ===== */
+const FIB = {
+  ps: ["FUNCTION Fib(n : INTEGER) RETURNS INTEGER", "   IF n <= 1 THEN", "      RETURN n", "   ELSE", "      RETURN Fib(n - 1) + Fib(n - 2)", "   ENDIF", "ENDFUNCTION"],
+  py: ["def fib(n):", "    if n <= 1:", "        return n", "    else:", "        return fib(n - 1) + fib(n - 2)"],
+};
+(() => {
+  const T = Trace({ treeName: "Fib(n)", outTitle: "Values returned", maxDepth: 4 });
+  function fib(n, parent, ra, which) {
+    if (n <= 1) {
+      const nd = T.call(`Fib(${n})`, n, parent, ra, `<b>Fib(${n}) is called.</b> Is n ≤ 1? <b>Yes: base case.</b> It can answer straight away.`, [0, 1, 2], [0, 1, 2], "BASE CASE", "base");
+      T.ret(nd, n, `Fib(${n}) returns <b>${n}</b>. Its frame is popped and the value goes to the caller.`, [2], [2], `Fib(${n}) = ${n}`);
+      return n;
+    }
+    const nd = T.call(`Fib(${n})`, n, parent, ra, `<b>Fib(${n}) is called.</b> Is n ≤ 1? No: general case. The answer is Fib(${n - 1}) + Fib(${n - 2}), so <b>two</b> calls are needed. It makes the first one now.`, [0, 1, 3, 4], [0, 1, 3, 4], `needs Fib(${n - 1}) + Fib(${n - 2})`);
+    const a = fib(n - 1, nd, "Fib line 5, first call");
+    T.note(nd, `${a} + Fib(${n - 2}) ...`, `Fib(${n - 1}) returned <b>${a}</b>. Fib(${n}) resumes, remembers ${a}, and now makes its <b>second</b> call, Fib(${n - 2}).`, [4], [4]);
+    const b = fib(n - 2, nd, "Fib line 5, second call");
+    T.note(nd, `${a} + ${b} = ${a + b}`, `Both calls are done: ${a} + ${b} = <b>${a + b}</b>.`, [4], [4]);
+    T.ret(nd, a + b, `Fib(${n}) returns <b>${a + b}</b>. Its frame is popped.`, [4], [4], `Fib(${n}) = ${a + b}`);
+    return a + b;
+  }
+  fib(4, null, "main program");
+  T.finish("Fib(4) = 3. Look at the call tree: <b>Fib(2) was worked out twice</b> and Fib(1) three times. Double recursion repeats work, which is why recursive Fibonacci is slow for large n.", [], []);
+  showAlgo("#aFib", T, FIB, "Animated trace of Fib(4) with its call tree", 2600);
+})();
+
+/* ===== D. Reverse a string ===== */
+const REV = {
+  ps: ["FUNCTION Reverse(s : STRING) RETURNS STRING", "   IF LENGTH(s) <= 1 THEN", "      RETURN s", "   ELSE", "      RETURN Reverse(MID(s, 2, LENGTH(s) - 1)) & LEFT(s, 1)", "   ENDIF", "ENDFUNCTION"],
+  py: ["def reverse(s):", "    if len(s) <= 1:", "        return s", "    else:", "        return reverse(s[1:]) + s[0]"],
+};
+(() => {
+  const T = Trace({ treeName: "Reverse(s)", outTitle: "Values returned", maxDepth: 4 });
+  function rev(s, parent, ra) {
+    const nd = T.call(`Reverse("${s}")`, s, parent, ra, `<b>Reverse("${s}") is called.</b> New frame pushed holding s = "${s}".`, [0], [0]);
+    if (s.length <= 1) {
+      T.note(nd, "length ≤ 1: BASE CASE", `LENGTH("${s}") ≤ 1? <b>Yes: base case.</b> A string of one character is already its own reverse.`, [1, 2], [1, 2], "base");
+      T.ret(nd, `"${s}"`, `Returns "${s}" and the frame is popped. <b>Unwinding starts.</b>`, [2], [2], `"${s}"`);
+      return s;
+    }
+    T.note(nd, "length > 1: general case", `Longer than 1 character, so <b>general case</b>: reverse everything except the first letter ("${s.slice(1)}"), then add "${s[0]}" on the end.`, [1, 3, 4], [1, 3, 4]);
+    T.setStatus(nd, `waiting: Reverse("${s.slice(1)}") & "${s[0]}"`);
+    const r = rev(s.slice(1), nd, "Reverse line 5");
+    T.note(nd, `"${r}" & "${s[0]}"`, `Reverse("${s.slice(1)}") returned "${r}". Add the first letter on the end: "${r}" &amp; "${s[0]}" = <b>"${r + s[0]}"</b>.`, [4], [4]);
+    T.ret(nd, `"${r + s[0]}"`, `Returns "${r + s[0]}" and the frame is popped.`, [4], [4], `"${r + s[0]}"`);
+    return r + s[0];
+  }
+  rev("CODE", null, "main program");
+  T.finish('Reverse("CODE") = "EDOC". Each frame held one letter safely until the rest of the string came back.', [], []);
+  showAlgo("#aRev", T, REV, 'Animated trace of Reverse("CODE")', 2600);
+})();
+
+/* ===== E. Recursive binary search ===== */
+const BIN = {
+  ps: ["FUNCTION BinSearch(Data, Low, High, Target) RETURNS INTEGER", "   IF Low > High THEN", "      RETURN -1", "   ENDIF", "   Mid ← (Low + High) DIV 2", "   IF Data[Mid] = Target THEN", "      RETURN Mid", "   ELSE", "      IF Data[Mid] < Target THEN", "         RETURN BinSearch(Data, Mid + 1, High, Target)", "      ELSE", "         RETURN BinSearch(Data, Low, Mid - 1, Target)", "      ENDIF", "   ENDIF", "ENDFUNCTION"],
+  py: ["def bin_search(data, low, high, target):", "    if low > high:", "        return -1", "", "    mid = (low + high) // 2", "    if data[mid] == target:", "        return mid", "    elif data[mid] < target:", "        return bin_search(data, mid + 1, high, target)", "    else:", "        return bin_search(data, low, mid - 1, target)"],
+};
+(() => {
+  const D = [3, 8, 12, 20, 27, 35, 41, 50], TG = 41;
+  const T = Trace({
+    treeName: "BinSearch", outTitle: "Values returned", maxDepth: 4,
+    panelFn: (p, x, y, w) => {
+      const cw = 34, gp = 4, x0 = x + (w - (8 * cw + 7 * gp)) / 2;
+      let s = SV.text(x + 10, y + 16, `DATA   target = ${TG}`, "sm bd", { "text-anchor": "start", style: "letter-spacing:.1em" });
+      D.forEach((v, i) => {
+        const inr = p.lo !== undefined && i >= p.lo && i <= p.hi, cl = p.mid === i ? "cell-warn" : inr ? "cell-cur" : "";
+        s += `<g opacity="${inr || p.mid === i ? 1 : 0.3}">` + SV.rect(x0 + i * (cw + gp), y + 28, cw, 30, "cell " + cl, { rx: 6 }) + SV.text(x0 + i * (cw + gp) + cw / 2, y + 48, v, "lbl bd", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" }) + SV.text(x0 + i * (cw + gp) + cw / 2, y + 72, i, "sm", { "text-anchor": "middle" }) + "</g>";
+      });
+      s += SV.text(x + w - 10, y + 16, p.mid !== undefined ? `Low=${p.lo} High=${p.hi} Mid=${p.mid}` : "", "sm bd t4", { "text-anchor": "end" });
+      return s;
+    },
+  });
+  function bs(lo, hi, parent, ra) {
+    const nd = T.call(`BinSearch(${lo}, ${hi})`, `${lo}-${hi}`, parent, ra, `<b>BinSearch(Low=${lo}, High=${hi}) is called.</b> The cells in blue are the part of the array still being searched.`, [0], [0]);
+    T.setPanel({ lo, hi });
+    if (lo > hi) { T.ret(nd, -1, "Low > High: not found.", [1, 2], [1, 2]); return -1; }
+    const mid = Math.floor((lo + hi) / 2); T.setPanel({ lo, hi, mid });
+    T.note(nd, `Mid = ${mid}, Data[${mid}] = ${D[mid]}`, `Low ≤ High, so carry on. Mid = (${lo} + ${hi}) DIV 2 = <b>${mid}</b>. Data[${mid}] is <b>${D[mid]}</b>.`, [1, 4, 5], [1, 4, 5]);
+    if (D[mid] === TG) {
+      nd.fr.st = "base";
+      T.ret(nd, mid, `${D[mid]} = ${TG}: <b>found</b>. This is a <b>base case</b>. RETURN Mid = ${mid}. Unwinding starts.`, [5, 6], [5, 6], `BinSearch = ${mid}`);
+      return mid;
+    }
+    const right = D[mid] < TG;
+    T.setStatus(nd, `waiting: search ${right ? "right half" : "left half"}`);
+    const r = bs(right ? mid + 1 : lo, right ? hi : mid - 1, nd, "BinSearch line " + (right ? 10 : 12));
+    T.setPanel({ lo, hi, mid });
+    T.note(nd, `passes ${r} back up`, `The call below returned <b>${r}</b>. Nothing more to do here except pass it back.`, right ? [9] : [11], right ? [8] : [10]);
+    T.ret(nd, r, `Returns ${r} and the frame is popped.`, right ? [9] : [11], right ? [8] : [10], `BinSearch = ${r}`);
+    return r;
+  }
+  bs(0, 7, null, "main program");
+  T.setPanel({ lo: 6, hi: 7, mid: 6 });
+  T.finish(`${TG} is at index 6. Each call halved the search area (8 → 4 → 2 items). Recursion suits <b>divide and conquer</b> because each call is the same problem on a smaller part. The answer is simply passed back unchanged.`, [], []);
+  showAlgo("#aBin", T, BIN, "Animated trace of a recursive binary search", 2800);
+})();
+
+/* ===== F. Towers of Hanoi ===== */
+const HAN = {
+  ps: ["PROCEDURE Hanoi(n, From, To, Via)", "   IF n = 1 THEN", "      OUTPUT \"Move disc from \", From, \" to \", To", "   ELSE", "      CALL Hanoi(n - 1, From, Via, To)", "      OUTPUT \"Move disc from \", From, \" to \", To", "      CALL Hanoi(n - 1, Via, To, From)", "   ENDIF", "ENDPROCEDURE"],
+  py: ["def hanoi(n, src, dst, via):", "    if n == 1:", "        print('Move disc from', src, 'to', dst)", "    else:", "        hanoi(n - 1, src, via, dst)", "        print('Move disc from', src, 'to', dst)", "        hanoi(n - 1, via, dst, src)"],
+};
+(() => {
+  const pegs = { A: [3, 2, 1], B: [], C: [] }, moves = [];
+  const T = Trace({
+    treeName: "Hanoi(n)", outTitle: "Moves", maxDepth: 3,
+    panelFn: (p, x, y, w) => {
+      let s = SV.text(x + 10, y + 16, "PEGS (moves so far: " + p.m + ")", "sm bd", { "text-anchor": "start", style: "letter-spacing:.1em" });
+      ["A", "B", "C"].forEach((k, i) => {
+        const cx = x + w * (i + 0.5) / 3; s += SV.rect(cx - 2, y + 26, 4, 50, "f1") + SV.rect(cx - 36, y + 76, 72, 3, "f1") + SV.text(cx, y + 88, k, "sm bd", { "text-anchor": "middle" });
+        p[k].forEach((d, j) => { const dw = 14 + d * 12; s += SV.rect(cx - dw / 2, y + 66 - j * 11, dw, 10, "cell cell-cur", { rx: 3 }); });
+      });
+      return s;
+    },
+  });
+  const sync = () => T.setPanel({ A: [...pegs.A], B: [...pegs.B], C: [...pegs.C], m: moves.length });
+  const mv = (f, t) => { pegs[t].push(pegs[f].pop()); moves.push(f + t); sync(); };
+  function han(n, f, t, v, parent, ra) {
+    const lbl = `Hanoi(${n},${f},${t},${v})`;
+    if (n === 1) {
+      const nd = T.call(lbl, n, parent, ra, `<b>${lbl} is called.</b> n = 1: <b>base case</b>. Just move the one disc from ${f} to ${t}.`, [0, 1, 2], [0, 1, 2], "BASE CASE", "base");
+      T.print(`${f} → ${t}`); mv(f, t);
+      T.ret(nd, null, `Moved a disc ${f} → ${t}. Frame popped.`, [2], [2], null, "moved " + f + " → " + t);
+      return nd;
+    }
+    const nd = T.call(lbl, n, parent, ra, `<b>${lbl} is called.</b> n = ${n}: general case. Plan: move ${n - 1} discs out of the way to ${v}, move the biggest disc to ${t}, then move the ${n - 1} discs on top of it. First step: a recursive call.`, [0, 1, 3, 4], [0, 1, 3, 4], "step 1: clear the way");
+    han(n - 1, f, v, t, nd, "Hanoi line 5");
+    T.print(`${f} → ${t}`); mv(f, t);
+    T.note(nd, `step 2: moved ${f} → ${t}`, `The smaller discs are out of the way. <b>Move the big disc ${f} → ${t}.</b> This line runs <i>between</i> the two recursive calls.`, [5], [5]);
+    T.setStatus(nd, "step 3: rebuild on top");
+    han(n - 1, v, t, f, nd, "Hanoi line 7");
+    T.ret(nd, null, `${lbl} is complete. Frame popped.`, [8], [6], null, "complete");
+    return nd;
+  }
+  sync(); han(3, "A", "C", "B", null, "main program"); sync();
+  T.finish("Tower moved in <b>7 moves</b> (2³ − 1). The recursive solution is only a few lines; working out the same moves by hand is much harder. Each extra disc doubles the number of moves plus one.", [], []);
+  showAlgo("#aHan", T, HAN, "Animated trace of Towers of Hanoi with three discs", 2700);
+})();
+
+/* ===== G. Missing base case: stack overflow ===== */
+const BAD = {
+  ps: ["FUNCTION Bad(n : INTEGER) RETURNS INTEGER", "   RETURN n * Bad(n - 1)", "ENDFUNCTION"],
+  py: ["def bad(n):", "    return n * bad(n - 1)"],
+};
+(() => {
+  const T = Trace({ treeName: "Bad(n)", outTitle: "Values returned", maxDepth: 6 });
+  let nd = null;
+  for (let n = 3; n >= -2; n--) {
+    nd = T.call(`Bad(${n})`, n, nd, n === 3 ? "main program" : "Bad line 2", `<b>Bad(${n}) is called.</b> There is no IF test, so there is no base case. It immediately calls Bad(${n - 1}).`, [0, 1], [0, 1], `waiting: ${n} × Bad(${n - 1})`);
+  }
+  T.finish("The stack has run out of room. Every call pushed a frame and none ever returned, because nothing stops the calls. The program crashes with a <b>stack overflow</b>. (A real stack holds thousands of frames, but infinite recursion fills any stack.)", [], [], "STACK OVERFLOW");
+  showAlgo("#aBad", T, BAD, "Animated stack overflow from a missing base case", 2200);
+})();
+
+/* ---------- static diagram: winding and unwinding (also used by lab 1) ---------- */
+function windSvg(n) {
+  const k = n + 1, W = 720, gap = 10, bw = Math.min(110, (W - 40 - (k - 1) * gap) / k), x0 = (W - (k * bw + (k - 1) * gap)) / 2, y = 92, bh = 44;
+  const vals = []; let v = 1; vals[0] = 1; for (let i = 1; i <= n; i++) { v *= i; vals[i] = v; }
+  let s = SV.text(14, 22, "WINDING: each call waits for the next", "lbl bd t1", { "text-anchor": "start" });
+  s += SV.text(W - 14, 214, "UNWINDING: answers come back and are used", "lbl bd t3", { "text-anchor": "end" });
+  for (let i = 0; i < k; i++) {
+    const m = n - i, x = x0 + i * (bw + gap), base = m === 0;
+    s += SV.rect(x, y, bw, bh, "cell " + (base ? "cell-warn" : "cell-cur"), { rx: 8 }) + SV.text(x + bw / 2, y + 27, `Fact(${m})`, "lbl bd", { "text-anchor": "middle", style: "font-family:var(--mono);font-size:" + (bw < 70 ? 11 : 14) + "px" });
+    s += SV.text(x + bw / 2, y - 30, base ? "base case" : `${m} × Fact(${m - 1})`, "sm bd " + (base ? "t4" : ""), { "text-anchor": "middle" });
+    if (i < k - 1) { const ax = x + bw + 1, bx = x + bw + gap - 1; s += SV.line(ax - 6, y + 12, bx + 4, y + 12, "c1", { style: "stroke-width:2.5" }) + SV.arrowHead(bx + 6, y + 12, "r", "dot1"); }
+    const rv = vals[base ? 0 : m]; // value Fact(m)
+    s += SV.text(x + bw / 2, y + bh + 40, `= ${rv}`, "lbl bd t3", { "text-anchor": "middle", style: "font-family:var(--mono);font-size:" + (bw < 70 ? 12 : 15) + "px" });
+    s += SV.text(x + bw / 2, y + bh + 58, base ? "known: 1" : `${m} × ${vals[m - 1]}`, "sm", { "text-anchor": "middle" });
+    if (i > 0) { const ax = x - gap + 1, bx = x - 1; s += SV.line(bx - 2, y + bh + 14, ax + 8, y + bh + 14, "c3", { style: "stroke-width:2.5" }) + SV.arrowHead(ax + 2, y + bh + 14, "l", "dot3"); }
+  }
+  s += SV.text(W / 2, 252, `Fact(${n}) = ${vals[n]}`, "lbl bd", { "text-anchor": "middle", style: "font-size:18px;font-family:var(--mono)" });
+  return `<svg viewBox="0 0 ${W} 270" role="img" aria-label="Winding and unwinding for Fact(${n})">${s}</svg>`;
+}
+$("#windStatic").innerHTML = `<div class="card">${windSvg(3)}<p class="note" style="margin:6px 0 0">Blue arrows: calls going down until the base case. Green arrows: values returning, each used to finish the calculation that was waiting.</p></div>`;
+
+/* ---------- static diagram: what is in a stack frame ---------- */
+(() => {
+  const W = 720, fw = 300, fx = 20; let s = "";
+  const fr = [["Fact(3)", "n = 3", "main program", "cell-ok"], ["Fact(2)", "n = 2", "Fact, line 5", "cell-cur"], ["Fact(1)", "n = 1", "Fact, line 5", "cell-warn"]];
+  fr.forEach((f, i) => {
+    const y = 20 + (2 - i) * 70; // first call at bottom
+    s += SV.rect(fx, y, fw, 62, "cell " + f[3], { rx: 8 }) + SV.text(fx + 12, y + 20, f[0], "lbl bd", { "text-anchor": "start", style: "font-family:var(--mono);font-size:14px" });
+    s += SV.text(fx + 12, y + 40, "parameter: " + f[1], "lbl", { "text-anchor": "start", style: "font-size:12.5px" });
+    s += SV.text(fx + 12, y + 56, "return address: " + f[2], "lbl", { "text-anchor": "start", style: "font-size:12.5px" });
+  });
+  s += SV.line(fx - 4, 232, fx + fw + 4, 232, "ax") + SV.text(fx, 250, "bottom of stack", "sm", { "text-anchor": "start" });
+  s += SV.arrowHead(fx + fw + 24, 24, "u", "dot1") + SV.line(fx + fw + 24, 24, fx + fw + 24, 60, "c1") + SV.text(fx + fw + 36, 40, "push on call", "lbl bd t1", { "text-anchor": "start" });
+  s += SV.arrowHead(fx + fw + 24, 228, "d", "dot3") + SV.line(fx + fw + 24, 190, fx + fw + 24, 228, "c3") + SV.text(fx + fw + 36, 214, "pop on return", "lbl bd t3", { "text-anchor": "start" });
+  const tx = 420;
+  s += SV.text(tx, 90, "Each frame holds:", "lbl bd", { "text-anchor": "start" });
+  ["the parameter values (n)", "any local variables", "the return address: which line to resume at", "(and the partly worked-out expression)"].forEach((t, i) => (s += SV.text(tx, 114 + i * 22, "• " + t, "lbl", { "text-anchor": "start", style: "font-size:13px" })));
+  s += SV.text(tx, 220, "The top frame is the one running.", "lbl bd t1", { "text-anchor": "start" });
+  $("#frameStatic").innerHTML = `<div class="card"><svg viewBox="0 0 ${W} 262" role="img" aria-label="Stack frames for Fact(3), Fact(2) and Fact(1)">${s}</svg></div>`;
+})();
+
+/* ---------- Explore lab 1: wind/unwind for any n ---------- */
+(() => {
+  const out = $("#wlOut");
+  Lib.slider($("#wlS"), { id: "wl", label: "Value of n in Fact(n)", min: 0, max: 8, value: 4, onInput: (n) => {
+    let f = 1; for (let i = 2; i <= n; i++) f *= i;
+    out.innerHTML = windSvg(n) + `<div class="readout"><div><small>Calls made</small><strong>${n + 1}</strong></div><div><small>Max frames on stack</small><strong>${n + 1}</strong></div><div><small>Returns made</small><strong>${n + 1}</strong></div><div><small>Result</small><strong>${f}</strong></div></div><div class="verdict">${n === 0 ? "Fact(0) is the base case: one call, answer straight away." : `Fact(${n}) makes ${n + 1} calls (n, n − 1, … 0). All ${n + 1} frames exist on the stack at the same time at the deepest point, then they pop one by one.`}</div>`;
+  } });
+})();
+
+/* ---------- Explore lab 2: recursion explorer ---------- */
+(() => {
+  const sel = $("#exFn"), el = $("#exOut"), sl = $("#exS");
+  const defs = {
+    fact: { name: "Fact(n) = n × Fact(n − 1)", min: 0, max: 10, val: 5, it: (n) => Math.max(n, 1) },
+    sum: { name: "Sum(n) = n + Sum(n − 1)", min: 0, max: 20, val: 6, it: (n) => Math.max(n, 1) },
+    fib: { name: "Fib(n) = Fib(n − 1) + Fib(n − 2)", min: 0, max: 18, val: 6, it: (n) => Math.max(n - 1, 1) },
+    han: { name: "Hanoi(n) moves", min: 1, max: 10, val: 3, it: (n) => Math.pow(2, n) - 1 },
+  };
+  function run(k, n) {
+    let calls = 0, depth = 0, maxd = 0; const log = [];
+    const L = (t, d) => { if (log.length < 40) log.push("  ".repeat(Math.min(d, 12)) + t); else if (log.length === 40) log.push("… (log cut off)"); };
+    const f = {
+      fact: (n, d) => { calls++; maxd = Math.max(maxd, d + 1); L(`Fact(${n})`, d); if (n === 0) return 1; return n * f.fact(n - 1, d + 1); },
+      sum: (n, d) => { calls++; maxd = Math.max(maxd, d + 1); L(`Sum(${n})`, d); if (n === 0) return 0; return n + f.sum(n - 1, d + 1); },
+      fib: (n, d) => { calls++; maxd = Math.max(maxd, d + 1); L(`Fib(${n})`, d); if (n <= 1) return n; return f.fib(n - 1, d + 1) + f.fib(n - 2, d + 1); },
+      han: (n, d) => { calls++; maxd = Math.max(maxd, d + 1); L(`Hanoi(${n})`, d); if (n === 1) return 1; return f.han(n - 1, d + 1) + 1 + f.han(n - 1, d + 1); },
+    };
+    const res = f[k](n, 0); return { res, calls, maxd, log };
+  }
+  let S;
+  const draw = () => {
+    const k = sel.value, d = defs[k], n = S.get(), r = run(k, n), it = d.it(n);
+    el.innerHTML = `<div class="readout"><div><small>Result</small><strong>${r.res.toLocaleString()}</strong></div><div><small>Total calls</small><strong>${r.calls.toLocaleString()}</strong></div><div><small>Deepest stack (frames)</small><strong>${r.maxd}</strong></div><div><small>Loop passes (iterative)</small><strong>${it.toLocaleString()}</strong></div></div>
+    <div class="bars"><small>Recursive calls</small><div><div class="bar b2" style="width:${Math.max(1, Math.min(100, (r.calls / Math.max(r.calls, it)) * 100))}%"></div></div><strong>${r.calls.toLocaleString()}</strong><small>Loop passes</small><div><div class="bar b3" style="width:${Math.max(1, Math.min(100, (it / Math.max(r.calls, it)) * 100))}%"></div></div><strong>${it.toLocaleString()}</strong></div>
+    <div class="verdict">${k === "fib" ? (n >= 12 ? `Fib(${n}) makes ${r.calls.toLocaleString()} calls but a loop needs only about ${it}. Double recursion repeats the same sub-problems, so the work grows exponentially.` : "Fibonacci calls itself twice, so the number of calls grows very quickly. Try n = 16.") : k === "han" ? `Hanoi(${n}) makes ${r.calls.toLocaleString()} calls and ${(Math.pow(2, n) - 1).toLocaleString()} moves: every extra disc roughly doubles the work.` : `One call per value, so ${r.calls} calls and a stack ${r.maxd} frames deep. Recursion costs memory for the frames; a loop does not.`}</div>
+    <p class="note" style="margin:6px 0 2px">Call log (indent = depth on the stack):</p><pre class="plain">${esc(r.log.join("\n"))}</pre>`;
+  };
+  const setup = () => { const d = defs[sel.value]; S = Lib.slider(sl, { id: "ex", label: "Value of n", min: d.min, max: d.max, value: d.val, onInput: () => S && draw() }); draw(); };
+  sel.onchange = setup; setup();
+})();
+
+/* ---------- Explore lab 3: push or pop ---------- */
+(() => {
+  const el = $("#pp"); let ev, i, st, score, msg, ok;
+  const gen = () => {
+    ev = []; const g = (n) => { ev.push({ t: "push", x: `Fact(${n})` , txt: `<b>Fact(${n})</b> is called` + (n === 3 ? " from the main program." : ` by Fact(${n + 1}).`) }); if (n > 0) g(n - 1); const v = [1, 1, 2, 6][n]; ev.push({ t: "pop", x: `Fact(${n})`, txt: n === 0 ? `<b>Fact(0)</b> hits the base case and returns 1.` : `<b>Fact(${n})</b> has received Fact(${n - 1}) and returns ${v}.` }); };
+    g(3); i = 0; st = []; score = 0; msg = "Is each event a push or a pop?"; ok = true;
+  };
+  function draw() {
+    const frames = st.length ? [...st].reverse().map((s, k) => `<div class="listrow" style="margin:3px 0;${k === 0 ? "border:2px solid var(--accent)" : ""}">${s}${k === 0 ? "  ← top" : ""}</div>`).join("") : `<div class="note">(stack is empty)</div>`;
+    el.innerHTML = `<div class="grid2"><div><b>Stack</b><div style="min-height:180px;display:flex;flex-direction:column;justify-content:flex-end">${frames}</div></div><div>${i < ev.length ? `<p><b>Event ${i + 1} of ${ev.length}:</b> ${ev[i].txt}</p><div class="gbtn"><button class="b pri" data-g="push">Push a frame</button><button class="b" data-g="pop">Pop a frame</button></div>` : `<p><b>Finished.</b> Score ${score} / ${ev.length}. Calls push frames while winding; returns pop them while unwinding. The last frame pushed is always the first popped (LIFO).</p>`}<div class="msg" style="color:var(--${ok ? "good" : "bad"})" aria-live="polite">${msg}</div><div class="gbtn"><button class="b" data-g="again">Restart</button></div></div></div>`;
+    $$("[data-g]", el).forEach((b) => (b.onclick = () => act(b.dataset.g)));
+  }
+  function act(k) {
+    if (k === "again") { gen(); return draw(); }
+    const e = ev[i]; if (!e) return;
+    if (k !== e.t) { ok = false; msg = e.t === "push" ? "Not quite. A new call needs a new frame, so that is a push." : "Not quite. A function that returns has finished, so its frame is popped."; return draw(); }
+    ok = true; score++; msg = "Correct."; if (e.t === "push") st.push(e.x); else st.pop(); i++; draw();
+  }
+  gen(); draw();
+})();
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), { prompt: "Drag each line of code to the part of recursion it plays.", buckets: [{ label: "Base case (stops the calls)" }, { label: "General case (calls itself)" }, { label: "Runs while unwinding" }], items: [
+  { text: "IF n = 0 THEN RETURN 1", b: 0 }, { text: "RETURN n * Fact(n - 1)", b: 1 }, { text: "IF Low > High THEN RETURN -1", b: 0 }, { text: "CALL Hanoi(n - 1, From, Via, To)", b: 1 },
+  { text: "OUTPUT \"Up \", n  (written after CALL Show(n - 1))", b: 2 }, { text: "IF LENGTH(s) <= 1 THEN RETURN s", b: 0 }, { text: "Multiplying n by the value that Fact(n - 1) handed back", b: 2 },
+  { text: "RETURN Fib(n - 1) + Fib(n - 2)", b: 1 }, { text: "OUTPUT \"Down \", n  (written before CALL Show(n - 1))", b: 1 }, { text: "RETURN a   (in Gcd, when b = 0)", b: 0 },
+], done: "Base case stops it, general case calls with a smaller problem, and anything after the call waits until unwinding." });
+
+Lib.classify($("#cl2"), { prompt: "What happens when each function is called with the input shown?", buckets: [{ label: "Works correctly" }, { label: "Stack overflow (never stops)" }, { label: "Runs but gives a wrong answer" }], items: [
+  { text: "Fact(n) with base case n = 0 returning 1, called as Fact(5)", b: 0 }, { text: "Fact(n) with base case n = 0, called as Fact(-3)", b: 1 }, { text: "Fact with base case n = 0 returning 0 (not 1), called as Fact(4)", b: 2 },
+  { text: "Sum(n): no IF test at all, just RETURN n + Sum(n - 1)", b: 1 }, { text: "Sum(n) with base case n = 0 returning 0, called as Sum(10)", b: 0 }, { text: "Count(n) calls Count(n + 1) with base case n = 0, called as Count(3)", b: 1 },
+  { text: "Power(b, e) with base case e = 0 returning 0, called as Power(2, 3)", b: 2 }, { text: "Gcd(a, b) with base case b = 0 returning a, called as Gcd(48, 18)", b: 0 },
+], done: "Missing or unreachable base cases overflow the stack; a wrong base value gives a wrong answer." });
+
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Recursion", "A subroutine that is defined in terms of itself and calls itself"], ["Base case", "The condition where the answer is known and no further call is made"], ["General case", "The part that calls the subroutine again with a smaller or simpler problem"],
+  ["Winding", "The phase where calls are made and frames are pushed"], ["Unwinding", "The phase after the base case where values return and frames are popped"], ["Stack frame", "Holds parameters, local variables and the return address for one call"],
+  ["Return address", "Where execution resumes in the caller once the call finishes"], ["Stack overflow", "Error when the call stack runs out of memory, often from a missing base case"],
+] });
+
+Lib.order($("#o1"), { prompt: "Show(2) is called. Put the output in the order it appears on screen.", items: ["Down 2", "Down 1", "Done", "Up 1", "Up 2"], done: "Down on the way in, Done at the base, then Up in reverse order." });
+Lib.order($("#o2"), { prompt: "Put these events in the order they happen for Fact(2).", items: ["Fact(2) called: frame pushed", "Fact(1) called: frame pushed", "Fact(0) called: frame pushed, base case reached", "Fact(0) returns 1 and its frame is popped", "Fact(1) works out 1 × 1 = 1 and returns", "Fact(2) works out 2 × 1 = 2 and returns"], done: "Calls wind down to the base case, then each return unwinds in reverse." });
+
+Lib.calc($("#c1"), { qs: [
+  { q: "Fact(n) returns 1 when n = 0, otherwise n × Fact(n − 1). What does Fact(5) return?", a: 120, hint: "5 × 4 × 3 × 2 × 1 × Fact(0).", sol: "Fact(0) = 1, Fact(1) = 1, Fact(2) = 2, Fact(3) = 6, Fact(4) = 24, Fact(5) = <b>120</b>." },
+  { q: "How many calls to Fact are made in total when Fact(5) is called (include the base case call)?", a: 6, hint: "One call for each of n = 5, 4, 3, 2, 1, 0.", sol: "Fact(5), 4, 3, 2, 1 and 0: <b>6</b> calls." },
+  { q: "At the deepest point of Fact(5), how many stack frames exist at the same time?", a: 6, hint: "No frame has been popped until the base case returns.", sol: "Every call is still waiting when Fact(0) runs, so <b>6</b> frames." },
+  { q: "Sum(n) returns 0 when n = 0, otherwise n + Sum(n − 1). What does Sum(6) return?", a: 21, hint: "6 + 5 + 4 + 3 + 2 + 1 + 0.", sol: "Sum(6) = 6 + 5 + 4 + 3 + 2 + 1 + 0 = <b>21</b>." },
+  { q: "Power(b, e) returns 1 when e = 0, otherwise b × Power(b, e − 1). What does Power(2, 5) return?", a: 32, hint: "2 × 2 × 2 × 2 × 2.", sol: "<b>32</b>. Five multiplications happen on the way back up." },
+  { q: "Fib(n) returns n when n ≤ 1, otherwise Fib(n − 1) + Fib(n − 2). What does Fib(6) return?", a: 8, hint: "0, 1, 1, 2, 3, 5, 8.", sol: "Fib(2) = 1, Fib(3) = 2, Fib(4) = 3, Fib(5) = 5, Fib(6) = <b>8</b>." },
+  { q: "How many calls are made in total when Fib(4) is called?", a: 9, hint: "Count the nodes of the call tree: calls(n) = 1 + calls(n − 1) + calls(n − 2), with calls(0) = calls(1) = 1.", sol: "calls(2) = 3, calls(3) = 5, calls(4) = 1 + 5 + 3 = <b>9</b>." },
+  { q: "Gcd(a, b) returns a when b = 0, otherwise Gcd(b, a MOD b). What does Gcd(48, 18) return?", a: 6, hint: "(48, 18) → (18, 12) → (12, 6) → (6, 0).", sol: "48 MOD 18 = 12, 18 MOD 12 = 6, 12 MOD 6 = 0, so the base case gives a = <b>6</b>." },
+  { q: "DigitSum(n) returns 0 when n = 0, otherwise (n MOD 10) + DigitSum(n DIV 10). What does DigitSum(472) return?", a: 13, hint: "472 MOD 10 = 2, then 47 MOD 10 = 7, then 4.", sol: "2 + 7 + 4 + 0 = <b>13</b>." },
+  { q: "How many moves does a Towers of Hanoi solution need for 5 discs? (2ⁿ − 1)", a: 31, hint: "2⁵ = 32.", sol: "2⁵ − 1 = <b>31</b> moves." },
+  { q: "M(n) returns 0 when n ≤ 0, otherwise 2 + M(n − 1). What does M(4) return?", a: 8, hint: "Four calls each add 2, then the base case adds 0.", sol: "M(0) = 0, M(1) = 2, M(2) = 4, M(3) = 6, M(4) = <b>8</b>." },
+  { q: "R(n) outputs n then calls R(n − 1) only if n > 1. R(3) is called. How many numbers are printed in total?", a: 3, hint: "3, then 2, then 1, then stop.", sol: "Prints 3, 2, 1: <b>3</b> values." },
+] });
+
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Which two features must every correct recursive subroutine have?", opts: ["A loop and a counter", "A base case and a call to itself", "An array and an index", "Two parameters"], a: 1, why: "A base case stops the recursion and the general case calls the subroutine again with a simpler problem." },
+  { q: "What causes a stack overflow in a recursive function?", opts: ["Too many local variables in main", "The base case is never reached", "Using an integer parameter", "Returning a value"], a: 1, why: "If the base case is missing or unreachable the calls never stop, frames keep being pushed and the stack runs out of space." },
+  { q: "What is stored in a stack frame for a recursive call?", opts: ["Only the return value", "Parameters, local variables and the return address", "The whole program", "Only the base case"], a: 1, why: "Each call needs its own copy of the parameters and local variables, and the return address so it knows where to resume." },
+  { q: "In Show(n), OUTPUT \"Up\", n is placed after CALL Show(n − 1). When does it run?", opts: ["Before the call, going down", "During unwinding, after the call returns", "Never", "Only in the base case"], a: 1, why: "Anything after the recursive call waits until that call finishes, so it runs while unwinding." },
+  { q: "Fact(3) is called. What is the largest number of Fact frames on the stack at once (base case n = 0)?", opts: ["3", "4", "6", "1"], a: 1, why: "Fact(3), Fact(2), Fact(1) and Fact(0) are all on the stack together." },
+  { q: "Which data structure does the computer use to manage recursive calls?", opts: ["Queue", "Stack", "Binary tree", "Linked list"], a: 1, why: "Last in, first out: the most recent call must finish first, so a stack is used." },
+  { q: "What is the main advantage of recursion over iteration for tree traversal?", opts: ["It is always faster", "The code is shorter and mirrors the structure of the problem", "It uses less memory", "It needs no base case"], a: 1, why: "Recursive code often matches the definition (left subtree, node, right subtree) and is easier to write correctly. It is not faster and it uses more memory." },
+  { q: "Which is a drawback of recursion?", opts: ["It cannot return a value", "Each call uses stack memory, so deep recursion can overflow", "It cannot be traced", "It cannot use parameters"], a: 1, why: "Every call adds a frame to the stack. Iteration with a loop needs no such frames." },
+  { q: "Why is a recursive Fibonacci function inefficient for large n?", opts: ["It has no base case", "It repeats the same calculations many times", "It uses a loop", "It uses global variables"], a: 1, why: "Fib(n − 1) and Fib(n − 2) overlap, so the same values are recomputed again and again." },
+  { q: "A function Count(n) has base case n = 0 and calls Count(n + 1). It is called with n = 5. What happens?", opts: ["Counts down to 0", "Stack overflow", "Returns 0", "Syntax error"], a: 1, why: "n moves away from the base case, so it is never reached." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Recursion", "A technique where a subroutine is defined in terms of itself and calls itself, each time with a simpler problem."], ["Base case", "The condition for which the answer is known and no further recursive call is made. It stops the recursion."],
+  ["General case", "The part of the definition that calls the subroutine again with a smaller or simpler value."], ["Winding", "The phase where recursive calls are made and stack frames are pushed, down to the base case."],
+  ["Unwinding", "The phase after the base case where each call returns, frames are popped and waiting calculations are completed."], ["Stack frame", "The block of memory for one call, holding parameters, local variables and the return address."],
+  ["Return address", "The address of the instruction to carry on from when a call finishes."], ["Call stack", "The LIFO structure that stores the frames of active subroutine calls."],
+  ["Stack overflow", "A run-time error when the call stack has no space left, usually from infinite recursion."], ["Iteration", "Repeating code with a loop (FOR, WHILE, REPEAT) instead of calling a subroutine again."],
+  ["Direct recursion", "A subroutine that calls itself."], ["Indirect recursion", "A subroutine calls another one which then calls the first again."],
+  ["Divide and conquer", "Solving a problem by splitting it into smaller copies of the same problem, e.g. binary search."], ["Terminating condition", "Another name for the base case."],
+] });
+
+Lib.initTabs();
+</script>
+</body></html>
