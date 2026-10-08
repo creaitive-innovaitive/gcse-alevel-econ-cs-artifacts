@@ -16,9 +16,11 @@
   }
 
   function filterNav(me) {
-    if (!me || me.is_admin) return;
+    const admin = !!(me && me.is_admin);
+    document.querySelectorAll("[data-admin]").forEach((a) => { a.hidden = !admin; });
+    if (admin) return;
     document.querySelectorAll("[data-course]").forEach((a) => {
-      if (!me.subjects.includes(a.dataset.course)) a.hidden = true;
+      if (!me || !me.subjects.includes(a.dataset.course)) a.hidden = true;
     });
   }
 
@@ -29,6 +31,7 @@
     clearTimeout(timer);
     filterNav(me);
     if (!courses.length) return reveal();
+    if (courses.includes("admin")) return me && me.is_admin ? reveal() : deny("Page not available", "This page is not open to your account.", "Go to Profile");
     if (!me) {
       try { sessionStorage.setItem("site.next", location.href); } catch (e) {}
       return deny("Sign in to open this lesson", "Lessons are for registered students. Sign in with your school email.", "Sign in");

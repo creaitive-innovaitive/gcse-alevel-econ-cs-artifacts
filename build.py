@@ -54,7 +54,7 @@ def rel_root(path):
 def layout(title, body, path, active, crumbs=None, accent=None, auth=False, extra=""):
     root = rel_root(path)
     nav = "".join(
-        f'<a href="{root}{href}"{" class=on aria-current=page" if key == active else ""}{f" data-course={key}" if key in COURSES else ""}>{label}</a>'
+        f'<a href="{root}{href}"{" class=on aria-current=page" if key == active else ""}{f" data-course={key}" if key in COURSES else ""}{" data-admin hidden" if key == "investing" else ""}>{label}</a>'
         for key, label, href in NAV
     )
     crumb_html = ""
@@ -64,7 +64,7 @@ def layout(title, body, path, active, crumbs=None, accent=None, auth=False, extr
             parts.append(f'<a href="{root}{href}">{esc(label)}</a>' if href is not None else f"<span>{esc(label)}</span>")
         crumb_html = f'<nav class="crumbs" aria-label="Breadcrumb">{"<i>/</i>".join(parts)}</nav>'
     acc = f' data-accent="{accent}"' if accent else ""
-    gate = [active] if active in COURSES else []
+    gate = [active] if active in COURSES else (["admin"] if active == "investing" else [])
     full_title = SITE_TITLE if title == SITE_TITLE else f"{title} · {SITE_TITLE}"
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
@@ -310,7 +310,7 @@ def build_home():
             f'<p class="lead">{esc(SITE_TAGLINE)}</p><p class="stat">{total} activities and counting</p></section>'
             f'<div class="grid two">{"".join(cards)}</div>'
             '<div class="grid two more">'
-            f'<a class="card slim" href="investing/" data-accent="{INVESTING["accent"]}"><span class="t">Investing</span><span class="sub">{esc(INVESTING["blurb"])}</span></a>'
+            f'<a class="card slim" href="investing/" data-admin hidden data-accent="{INVESTING["accent"]}"><span class="t">Investing</span><span class="sub">{esc(INVESTING["blurb"])}</span></a>'
             '<a class="card slim" href="other/"><span class="t">Other</span><span class="sub">Study tips, extra-curricular activities and side projects.</span></a>'
             '<a class="card slim" href="profile/"><span class="t">Profile</span><span class="sub">Student accounts, progress and scores. Coming soon.</span></a>'
             '</div>')
