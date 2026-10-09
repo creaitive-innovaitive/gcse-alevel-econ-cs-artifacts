@@ -283,6 +283,9 @@ ARTIFACTS = [
     {"src": "macro-aims-explorer", "role": "review", "title": "The Four + Two Aims", "kind": "Interactive",
      "desc": "The macroeconomic aims of government and why hitting one often means missing another.",
      "places": [("ig-econ", "ch-25")]},
+    {"src": "ig-fiscal-policy", "role": "review", "title": "Fiscal Policy", "kind": "Interactive",
+     "desc": "The budget, government spending and taxes, who bears a tax, the multiplier and expansionary versus contractionary policy, with animated diagrams, labs and exam practice.",
+     "places": [("ig-econ", "ch-26")]},
 
     # A-Level Computer Science
     {"src": "searching-algorithms", "role": "review", "at": "19.1.1", "title": "Searching: Linear and Binary Search", "kind": "Interactive",

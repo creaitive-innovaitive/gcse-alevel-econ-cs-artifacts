@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="en"><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fiscal Policy</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .arr{fill:var(--muted)}
+svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+table.mx td,table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+table.mx td.z{color:var(--muted);opacity:.6} table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+table.mx td.ls{text-align:left}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Economics · 0455 · Chapter 26</div>
+  <h1>Fiscal Policy</h1>
+  <p class="lead">The budget, why governments spend and tax, the types and qualities of taxes, who really pays them, and how changes in spending and taxation shift aggregate demand and affect the macroeconomic aims.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p><span class="kw">Fiscal policy</span> is a government's decisions on <b>spending and taxation</b>, used to influence <b>aggregate demand</b> (total spending) in the economy. Spend more or tax less and AD is likely to rise; spend less or tax more and it is likely to fall. Every change shows up in the <b>budget</b>. For each question ask: <b>what does the government spend or raise, who pays, and what happens to AD, output, jobs, prices and the budget?</b></p>
+  </div>
+
+  <h2>26.1 · The budget</h2>
+  <p>A government publishes a <span class="kw">budget</span>: how much it plans to spend and how much it expects to raise. The result is one of three positions.</p>
+  <div class="grid2">
+    <div class="card"><h3>Budget deficit</h3><p>Spending is <b>higher</b> than revenue. The government has to borrow the gap.</p></div>
+    <div class="card"><h3>Budget surplus</h3><p>Revenue is <b>higher</b> than spending. The extra can repay debt or be saved.</p></div>
+    <div class="card"><h3>Balanced budget</h3><p>Spending and revenue are <b>equal</b>. This happens less often.</p></div>
+  </div>
+  <div class="formula">Budget balance = government revenue − government spending</div>
+  <p>A negative answer is a deficit. It can be shown in dollars or as a percentage of GDP. The <span class="kw">national debt</span> is different: it is the <b>total</b> the government has borrowed over time. Deficits add to it each year.</p>
+
+  <h2>26.2 · Reasons for government spending</h2>
+  <ul>
+    <li><b>To influence economic activity.</b> More spending raises AD, which can stimulate output and growth.</li>
+    <li><b>To reduce market failure.</b> Public goods that the private sector will not provide, merit goods that would be under-provided, and regulation of externalities and abuse of market power.</li>
+    <li><b>To promote equity.</b> Benefits and services for vulnerable groups: pensions, housing support, free schooling, unemployment benefit.</li>
+    <li><b>To pay interest on the national debt</b> that earlier borrowing created.</li>
+  </ul>
+  <p>Spending is a powerful tool because of the <span class="kw">multiplier effect</span>: the final rise in AD is bigger than the first injection. If $20m of new spending is passed on in rounds (people spend $16m, then $12.8m and so on), total income and output could rise by $100m, five times the first change. <b>The multiplier = 1 ÷ (1 − share of extra income spent).</b></p>
+
+  <h2>26.3 · Reasons for taxation</h2>
+  <div class="grid2">
+    <div class="card"><h3>Aims of taxes</h3><ul><li><b>Raise revenue</b> to pay for spending (the main one).</li><li><b>Redistribute income</b> from rich to poor.</li><li><b>Discourage demerit goods</b> such as cigarettes and alcohol.</li><li><b>Raise firms' costs</b> where they cause pollution or other external costs.</li><li><b>Discourage imports</b> with tariffs to protect domestic industries.</li><li><b>Influence AD</b>: cut taxes in a slump, raise them to cool a boom.</li></ul></div>
+    <div class="card"><h3>Link to market failure</h3><p>A tax on a demerit good or a polluter pushes the price towards the full social cost, so it can correct a market failure while also raising money. A tariff does the same for protection.</p><p class="note">Exam link: one policy often has more than one aim. Say which one the question is about.</p></div>
+  </div>
+
+  <h2>26.4 · Categories of tax</h2>
+  <p><span class="kw">Direct taxes</span> are on income and wealth; the person or firm that pays bears the burden. <span class="kw">Indirect taxes</span> are on spending; the seller pays the government but can pass some of the burden on to buyers.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Direct</th><th>What it taxes</th><th>Indirect</th><th>What it taxes</th></tr>
+    <tr><td><b>Income tax</b></td><td>Earnings and investment income above an allowance</td><td><b>Sales tax (VAT, GST)</b></td><td>Products when sold</td></tr>
+    <tr><td><b>Corporation tax</b></td><td>Firms' profits</td><td><b>Excise duties</b></td><td>Alcohol, petrol, tobacco (on top of VAT)</td></tr>
+    <tr><td><b>Capital gains tax</b></td><td>Profit on selling an asset for more than it cost</td><td><b>Customs duties</b></td><td>Imports (tariffs)</td></tr>
+    <tr><td><b>Inheritance tax</b></td><td>Wealth passed on after death, above a limit</td><td><b>Licences</b></td><td>Right to own a TV or car</td></tr>
+  </table></div>
+  <p><b>Local taxes</b> pay for local services such as roads, schools and fire services: <b>business rates</b> (on firms' property) and <b>council tax</b> (on household property value), and sometimes a local sales tax.</p>
+
+  <h3>Progressive, proportional, regressive</h3>
+  <div class="tw"><table class="t">
+    <tr><th>Type</th><th>As income rises, the % taken…</th><th>Example</th><th>Effect</th></tr>
+    <tr><td><b>Progressive</b></td><td>rises</td><td>Income tax with higher bands</td><td>Redistributes towards the poor</td></tr>
+    <tr><td><b>Proportional</b></td><td>stays the same</td><td>A flat 25% on everyone</td><td>Neutral</td></tr>
+    <tr><td><b>Regressive</b></td><td>falls</td><td>Excise duty per litre of petrol</td><td>Hits low incomes harder</td></tr>
+  </table></div>
+  <p class="note">In all three, the <b>total</b> paid usually rises with income. The difference is the <b>percentage</b>. Direct taxes tend to be progressive and indirect taxes tend to be regressive.</p>
+
+  <h2>26.5 · Principles of taxation: a "good tax"</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Quality</th><th>Meaning</th></tr>
+    <tr><td><b>Equity</b></td><td>Fair: based on ability to pay</td></tr>
+    <tr><td><b>Certainty</b></td><td>Easy to understand and calculate</td></tr>
+    <tr><td><b>Convenience</b></td><td>Easy to pay</td></tr>
+    <tr><td><b>Economy</b></td><td>Costs of collecting are well below the revenue raised</td></tr>
+    <tr><td><b>Flexibility</b></td><td>Can be changed, or changes itself, with the economy (income tax and sales tax revenue rise in a boom)</td></tr>
+    <tr><td><b>Efficiency</b></td><td>Improves markets or at least does not damage them (a pollution tax, a windfall tax; rates not so high that they discourage effort)</td></tr>
+  </table></div>
+  <p>No tax is perfect. Income tax scores well on equity and flexibility, but its certainty falls if there are many allowances.</p>
+
+  <h2>26.6 · The impact of taxes</h2>
+  <div class="grid2">
+    <div class="card"><h3>Tax base and burden</h3><p>The <span class="kw">tax base</span> is what is taxed. A wide base can allow low rates; very high rates, especially on firms, can shrink the base if firms leave. The <span class="kw">tax burden</span> is the tax paid, often as a % of GDP.</p></div>
+    <div class="card"><h3>Incidence of an indirect tax</h3><p>If demand is <b>inelastic</b> consumers bear most of it (firms can pass it on). If demand is <b>elastic</b> producers bear most. Supply works the opposite way: the more inelastic supply is, the more suppliers bear.</p></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Direct taxes: for and against</h3><ul><li><b>For:</b> redistribute income and wealth, act as automatic stabilisers, raise a lot where jobs are formal and incomes are high.</li><li><b>Against:</b> may discourage effort, enterprise and saving; high rates may push workers and firms away.</li></ul><p class="note">Higher tax is not always a disincentive: workers with fixed commitments such as mortgages may work harder.</p></div>
+    <div class="card"><h3>Indirect taxes: for and against</h3><ul><li><b>For:</b> cheap and easy to collect, harder to evade, less of a disincentive to effort, can target a good, people can choose not to buy, useful with a large informal economy.</li><li><b>Against:</b> tend to be regressive, raise prices and may feed inflation.</li></ul></div>
+  </div>
+  <p><span class="kw">Automatic stabilisers</span> are spending and taxes that reduce swings in activity with no change in policy: in a boom tax revenue rises and benefit spending falls, in a slump the reverse. <span class="kw">Flat taxes</span> (a single rate) are simple and reduce the incentive to evade, but critics worry they are regressive; in practice flat taxes usually have a tax-free allowance.</p>
+
+  <h2>26.7 · Fiscal policy and the budget</h2>
+  <p>Fiscal policy directly changes the budget balance. If a balanced budget is followed by higher spending or a tax cut, a deficit appears in the short run. The long run can differ: more spending on education may raise productivity and output and so, in time, tax revenue; a cut in corporation tax may attract firms and raise revenue.</p>
+
+  <h2>26.8 · Fiscal policy and the government's macroeconomic aims</h2>
+  <div class="grid2">
+    <div class="card"><h3>Expansionary</h3><p><b>Higher spending and/or lower taxes</b> to raise AD. Likely effects: higher <b>economic growth</b>, more <b>employment</b>, but a bigger <b>deficit</b> and a risk of <b>inflation</b> and a worse trade balance (higher spending includes imports).</p></div>
+    <div class="card"><h3>Contractionary</h3><p><b>Lower spending and/or higher taxes</b> to reduce AD. Likely effects: <b>lower inflationary pressure</b> and less spending on imports, a smaller deficit, but slower growth and a risk of <b>unemployment</b>.</p></div>
+  </div>
+  <div class="tip"><b class="h">Evaluation reminders</b>Time lags before spending reaches the economy. The size of the multiplier depends on how much is spent, saved or spent on imports. Spare capacity matters: with little spare capacity, extra AD mostly raises prices. Borrowing to fund a deficit has an opportunity cost (interest payments). Conflicts between aims: growth and jobs against inflation and the budget.</div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · Budget deficit, surplus and national debt</h2><div id="stB"></div>
+  <h2>2 · The multiplier effect</h2><div id="stM"></div>
+  <h2>3 · Progressive, proportional and regressive taxes</h2><div id="stR"></div>
+  <h2>4 · Who pays an indirect tax?</h2><div id="stT"></div>
+  <h2>5 · Fiscal policy and aggregate demand</h2><div id="stA"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Budget and automatic stabilisers</h2>
+  <p>Based on New Zealand's 2016 budget (NZ$bn). Move the first slider to put the economy in a boom or a slump and watch the budget change with <b>no policy change</b>. Then use the other two sliders to make policy changes.</p>
+  <div class="card"><div class="grid2"><div><div id="g1"></div><div id="g2"></div><div id="g3"></div></div>
+    <div><div class="readout"><div><small>Total spending</small><strong id="ba1"></strong></div><div><small>Total revenue</small><strong id="ba2"></strong></div><div><small>Budget balance</small><strong id="ba3"></strong></div><div><small>Income tax share of revenue</small><strong id="ba4"></strong></div></div><div class="verdict" id="bav"></div></div></div>
+    <svg id="labA" viewBox="0 0 760 420" role="img" aria-label="Government revenue and spending stacked bars"></svg>
+    <p class="note">Illustrative model: in a boom income tax revenue rises by 1.5 times the change in income, corporation tax by 2 times, sales taxes by 1 times, and benefit spending falls by 2 times.</p>
+  </div>
+
+  <h2>Lab 2 · The multiplier</h2>
+  <p>Change the size of the injection and how much of any extra income people spend. Eight rounds are shown.</p>
+  <div class="card"><div class="grid2"><div><div id="g4"></div><div id="g5"></div></div>
+    <div><div class="readout"><div><small>Multiplier</small><strong id="ma1"></strong></div><div><small>Total rise in income</small><strong id="ma2"></strong></div><div><small>Extra on top of first injection</small><strong id="ma3"></strong></div></div><div class="verdict" id="mav"></div></div></div>
+    <svg id="labM" viewBox="0 0 760 400" role="img" aria-label="Multiplier rounds bar chart"></svg>
+  </div>
+
+  <h2>Lab 3 · Three tax systems</h2>
+  <p>Slide income up and down. Only one of the three takes a rising percentage.</p>
+  <div class="card"><div class="grid2"><div><div id="g6"></div></div>
+    <div><div class="readout"><div><small>Progressive income tax</small><strong id="r1"></strong></div><div><small>Proportional (25%)</small><strong id="r2"></strong></div><div><small>Regressive fuel duty</small><strong id="r3"></strong></div></div><div class="verdict" id="rv"></div></div></div>
+    <svg id="labR" viewBox="0 0 760 380" role="img" aria-label="Average tax rate against income for three tax systems"></svg>
+    <p class="note">Progressive here: 10% on the first $200, 30% on $200 to $600, 50% above $600. Regressive: fuel duty of $2 a litre, with higher earners buying a few more litres but not in proportion to income.</p>
+  </div>
+
+  <h2>Lab 4 · Fiscal policy simulator</h2>
+  <p>Change government spending and taxes and see AD shift. The faint line is the original AD. Some of a tax change is saved or spent on imports, so $10bn of tax cuts moves AD by less than $10bn of extra spending (here, 70% as much).</p>
+  <div class="card"><div class="grid2"><div><div id="g7"></div><div id="g8"></div></div>
+    <div><div class="readout"><div><small>Real GDP (start 50)</small><strong id="fa1"></strong></div><div><small>Price level (start 50)</small><strong id="fa2"></strong></div><div><small>First effect on budget</small><strong id="fa3"></strong></div><div><small>Stance</small><strong id="fa4"></strong></div></div><div class="verdict" id="fv"></div></div></div>
+    <svg id="labF" viewBox="0 0 760 400" role="img" aria-label="Aggregate demand and supply diagram"></svg>
+    <p class="note">Illustrative model with spare capacity at low output and an AS curve that steepens as the economy nears full capacity.</p>
+  </div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Direct or indirect?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Progressive, proportional or regressive?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Expansionary or contractionary?</h2>
+  <div id="cl3" class="card"></div>
+
+  <h2>4 · Principles of a good tax</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>5 · Match the term</h2>
+  <div id="m2" class="card"></div>
+
+  <h2>6 · Order the multiplier</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>7 · Order the chain of analysis</h2>
+  <div id="o2" class="card"></div>
+
+  <h2>8 · Calculations</h2>
+  <div id="c1"></div>
+
+  <h2>9 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are described in general terms so they stay accurate. Check current details before quoting figures.</p>
+  <div class="rw"><h3>Tourism and the Maldives budget</h3><p>The Maldives gets government revenue from taxes and from leasing islands for resorts, fisheries and agriculture, and a big share of spending goes on public sector wages. When tourism falls, revenue falls while wage bills do not, so the deficit widens.</p><div class="use"><b>Exam use:</b> a budget-position question. Calculate spending as revenue plus the deficit, then explain how a fall in tourist numbers cuts tax and leasing income.</div></div>
+  <div class="rw"><h3>Taxes on plastic bags</h3><p>Ireland, the UK and several other countries tax plastic carrier bags, while others have banned them. The main aim is to cut litter, with revenue as a by-product.</p><div class="use"><b>Exam use:</b> an indirect tax used to correct an externality. Draw supply shifting left, and note a second reason: it can raise revenue.</div></div>
+  <div class="rw"><h3>Tax on sugary drinks and tobacco</h3><p>Many governments add excise duties to tobacco and alcohol, and some to sugary drinks, to discourage demerit goods. Demand for addictive goods is often inelastic, so consumers bear most of the tax and the fall in consumption may be small, but revenue is high.</p><div class="use"><b>Exam use:</b> link inelastic demand to incidence, and evaluate: the tax is regressive because poorer households spend a larger share of income on it.</div></div>
+  <div class="rw"><h3>Moving from income tax towards VAT</h3><p>Some governments, such as France in the 2010s according to coursebook figures, collect more revenue from VAT than from income tax. VAT is easier to collect and harder to evade, but makes the tax system less progressive.</p><div class="use"><b>Exam use:</b> a "more or less progressive" question. Shifting towards indirect taxes tends to make the system less progressive.</div></div>
+  <div class="rw"><h3>Flat taxes in Eastern Europe</h3><p>A number of East European countries replaced several income and corporate tax rates with one lower rate to simplify the system and cut evasion. Critics noted the regressive risk, though in practice a tax-free allowance softens it.</p><div class="use"><b>Exam use:</b> arguments for and against a flat tax in a discuss question; mention the allowance as a point of evaluation.</div></div>
+  <div class="rw"><h3>Recessions and automatic stabilisers</h3><p>When the economy slumps, firms lay off workers. Income tax revenue falls and spending on unemployment benefit rises automatically, so the deficit widens without any new policy and support for spending is maintained.</p><div class="use"><b>Exam use:</b> a clean example of automatic stabilisers. Explain the mechanism, then evaluate: it limits the damage but does not remove the recession.</div></div>
+  <div class="rw"><h3>Stimulus after a crisis</h3><p>After the 2008 financial crisis and during the COVID-19 pandemic, many governments raised spending (support payments, wage subsidies, infrastructure) and some cut taxes temporarily such as lowering VAT rates. Deficits and national debt rose sharply as a result.</p><div class="use"><b>Exam use:</b> expansionary fiscal policy in action. Cover AD, growth and jobs, then the cost: bigger deficit, higher debt and interest payments.</div></div>
+  <div class="rw"><h3>Austerity and the cost of tightening</h3><p>Some countries with large deficits raised taxes and cut spending to reduce borrowing. Public finances improved, but critics argued the cuts slowed growth and raised unemployment, which cut tax revenue.</p><div class="use"><b>Exam use:</b> contractionary fiscal policy, and a standard evaluation point: reducing the deficit may take longer or cost more output than hoped.</div></div>
+  <div class="rw"><h3>Windfall taxes</h3><p>Governments have sometimes imposed one-off taxes on very high profits, for example in banking or energy during price spikes. The aim is revenue and fairness, and it may lead firms to cut charges.</p><div class="use"><b>Exam use:</b> an example for the "efficiency" and "equity" qualities, with the risk that it discourages investment if firms fear more of them.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for the reminders, a model answer and common mistakes. Answers are colour-coded to the mark scheme.</p>
+  <div class="key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Define</span> <span class="mark">2 marks</span> What is meant by a progressive tax?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two marks, two ideas. Say what is taken, and that the percentage <b>rises</b> with income. Do not just say "the rich pay more": that is also true of a flat tax.</div>
+    <div class="ans"><span class="mk k" data-t="K">A progressive tax is one that takes a larger percentage of the income (or wealth) of the rich</span> <span class="mk k" data-t="K">than of the poor, so the rate rises as income or wealth rises.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "the rich pay more tax". In every type of tax the rich usually pay more dollars; progressive is about the <b>percentage</b>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate</span> <span class="mark">4 marks</span> Using the table (New Zealand, 2016, NZ$bn), calculate (a) the budget position and (b) the percentage of revenue from income tax.</summary><div class="body">
+    <div class="tw"><table class="t"><tr><th>Spending</th><th>NZ$bn</th><th>Revenue</th><th>NZ$bn</th></tr>
+    <tr><td>Healthcare</td><td>16.2</td><td>Income tax</td><td>32.5</td></tr><tr><td>Education</td><td>13.5</td><td>GST</td><td>19.1</td></tr><tr><td>Pensions</td><td>12.9</td><td>Other indirect tax</td><td>6.5</td></tr><tr><td>Unemployment &amp; other benefits</td><td>12.3</td><td>Corporate tax</td><td>11.6</td></tr><tr><td>Law and order</td><td>3.8</td><td>Other revenue</td><td>8.8</td></tr><tr><td>Other</td><td>18.8</td><td></td><td></td></tr></table></div>
+    <div class="tip"><b class="h">Reminder</b>Add each column first. Show working and give units. Budget position = revenue − spending: say whether it is a deficit or surplus.</div>
+    <div class="ans"><span class="mk a" data-t="A">(a) Revenue = 32.5 + 19.1 + 6.5 + 11.6 + 8.8 = NZ$78.5bn. Spending = 16.2 + 13.5 + 12.9 + 12.3 + 3.8 + 18.8 = NZ$77.5bn.</span> <span class="mk a" data-t="A">Budget position = 78.5 − 77.5 = NZ$1.0bn surplus.</span> <span class="mk a" data-t="A">(b) 32.5 ÷ 78.5 × 100 = </span><span class="mk a" data-t="A">41.4%.</span></div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Explain the difference between a direct tax and an indirect tax, giving an example of each.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>"Difference" means a comparison: use words such as "whereas". Two marks for the difference, one for each example, and name the base (income or spending).</div>
+    <div class="ans"><span class="mk k" data-t="K">A direct tax is a tax on income or wealth, such as income tax, paid directly to the government by the person or firm that bears the burden.</span> <span class="mk n" data-t="N">Whereas an indirect tax is a tax on expenditure, such as VAT, which firms collect and pay to the government but can pass on, at least partly, to consumers through higher prices.</span> <span class="mk a" data-t="A">For example, a worker pays income tax out of pay, but the same worker pays VAT in the price of goods in a shop.</span></div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Analyse</span> <span class="mark">6 marks</span> Analyse the reasons why governments impose taxes.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Pick two or three reasons and develop each with a chain: reason → how the tax achieves it → effect. A list of six undeveloped reasons scores far less than three developed ones.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">Governments impose taxes to raise revenue to pay for spending.</span> <span class="mk n" data-t="N">Tax revenue is the main source of government income in many countries, and it can fund public goods and merit goods such as defence, schools and healthcare that the private sector may not supply sufficiently.</span> <span class="mk n" data-t="N">Without it, the government could need to borrow more, which increases the national debt and interest payments.</span></p>
+    <p><span class="mk k" data-t="K">Governments also tax to discourage the consumption of demerit goods.</span> <span class="mk a" data-t="A">An excise duty on cigarettes raises their price,</span> <span class="mk n" data-t="N">which may reduce quantity demanded and so cut the harm to health that consumers may not fully recognise.</span></p>
+    <p><span class="mk k" data-t="K">A third reason is to redistribute income.</span> <span class="mk n" data-t="N">A progressive income tax takes a larger share from higher earners and the revenue may pay benefits to lower income groups, which could reduce inequality.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Analyse</span> <span class="mark">6 marks</span> Analyse how an expansionary fiscal policy could affect economic growth and employment.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Draw AD shifting right on an AD/AS diagram, label Y and Y₁, then explain in words. Say <b>how</b> AD rises (which of C, I or G changes), then growth, then employment. Hedged wording scores: "could", "is likely to".</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">An expansionary fiscal policy is a rise in government spending and/or a cut in taxation designed to increase aggregate demand.</span> <span class="mk a" data-t="A">If a government cuts income tax rates, households keep more of their pay.</span> <span class="mk n" data-t="N">Higher disposable income is likely to raise consumption, and higher consumption could also encourage firms to invest.</span> <span class="mk n" data-t="N">Extra government spending, for example on roads, adds to G directly and could create a multiplier effect, so the rise in AD may be bigger than the initial change.</span></p>
+    <p><span class="mk n" data-t="N">The AD curve shifts to the right, from AD to AD₁, so real GDP rises from Y to Y₁: economic growth.</span> <span class="mk n" data-t="N">To produce more output firms are likely to need more workers, so employment could rise and unemployment fall.</span> <span class="mk n" data-t="N">The extra demand could also raise the price level, and the budget deficit may widen in the short run.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Using a demand and supply diagram, explain why consumers may bear most of the burden of a tax on cigarettes.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>The diagram earns marks: S₁ shifting <b>left</b> by the amount of the tax to S₂, a steep (inelastic) D, the new price P₁ above the old P, and the tax per unit marked. Then say <b>why</b>: inelastic demand.</div>
+    <div class="ans"><span class="mk k" data-t="K">A tax on cigarettes raises the costs of sellers, so supply shifts to the left by the amount of the tax.</span> <span class="mk a" data-t="A">Cigarette demand is likely to be price inelastic because many smokers are addicted and have few substitutes.</span> <span class="mk n" data-t="N">Because quantity demanded would fall by relatively little, sellers could pass most of the tax on to buyers by raising the price,</span> <span class="mk n" data-t="N">so the price paid by consumers may rise by most of the tax and consumers could bear the greater share of the burden.</span></div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Discuss</span> <span class="mark">8 marks</span> Discuss whether or not an increase in income tax rates will improve economic performance.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>"Whether or not" means two sides and a judgement. Define economic performance in your own words (growth, employment, inflation, equity, the budget) so the answer is about the right thing. Finish with "it depends on…".</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">Economic performance is judged by how well the government meets aims such as economic growth, low unemployment, stable prices and a fair distribution of income, and income tax is a direct tax on earnings.</span></p>
+    <p><span class="mk n" data-t="N">An increase in income tax rates could improve economic performance if the extra revenue is spent well.</span> <span class="mk n" data-t="N">The revenue could fund education, healthcare or infrastructure that may raise productivity and long-run growth, and a progressive income tax may reduce inequality.</span> <span class="mk n" data-t="N">If the economy is overheating, higher taxes could also cut disposable income and consumption, which may ease inflationary pressure.</span> <span class="mk e" data-t="E">However, these gains depend on how the money is used and on how long the benefits take to arrive.</span></p>
+    <p><span class="mk n" data-t="N">On the other hand, higher rates could reduce performance.</span> <span class="mk n" data-t="N">Lower disposable income is likely to reduce consumption and aggregate demand, which may slow growth and raise unemployment.</span> <span class="mk n" data-t="N">Workers may be discouraged from overtime or promotion and entrepreneurs from expanding, and some highly skilled people might move abroad or work in the informal economy, which could shrink the tax base.</span> <span class="mk e" data-t="E">This effect may be weaker for workers who cannot choose their hours, or who have fixed commitments such as a mortgage and may work more.</span></p>
+    <p><span class="mk e" data-t="E">Overall, the effect is likely to depend on the size of the increase, the state of the economy (a boom or a recession), and how the revenue is spent. A modest rise on higher earners during a boom, used to fund productive spending, is more likely to improve performance than a large rise during a recession.</span></p></div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Progressive is about the percentage.</b> The rich pay more dollars under every tax. Compare the % of income.</li>
+    <li><b>Budget balance = revenue − spending.</b> Negative means deficit. Deficit is per year; national debt is the running total.</li>
+    <li><b>Direct = income and wealth. Indirect = spending.</b> Give an example of each whenever asked.</li>
+    <li><b>Tax shifts supply left by the tax amount.</b> Draw S₁ to S₂, label the new price and quantity, and mark who bears what.</li>
+    <li><b>Incidence follows elasticity.</b> Inelastic demand: consumers bear most. Elastic demand: producers bear most.</li>
+    <li><b>Say whether policy is expansionary or contractionary,</b> then follow the chain: AD, output, jobs, prices, budget.</li>
+    <li><b>Use the multiplier formula.</b> 1 ÷ (1 − share spent), then multiply by the injection.</li>
+    <li><b>Evaluate every policy.</b> Time lags, spare capacity, size of the multiplier, the deficit, opportunity cost, conflict between aims.</li>
+    <li><b>Use specific context.</b> Cigarettes, petrol, income tax bands, VAT, recession and boom.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Define</td><td>A precise meaning, in a sentence.</td></tr>
+    <tr><td>Calculate</td><td>Working, answer, units. Say if a negative is a deficit.</td></tr>
+    <tr><td>Explain</td><td>Reasons with a developed link.</td></tr>
+    <tr><td>Analyse</td><td>A chain of cause and effect, applied to the context.</td></tr>
+    <tr><td>Discuss</td><td>Both sides, then a justified judgement.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.max(0, Math.min(fr.length - 1, Math.round(s.i)))].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+/* IGCSE Economics Chapter 26: Fiscal policy */
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const QX = (q) => 80 + 6 * q, PY = (p) => 360 - 2.7 * p;
+function seg(m, c) { // clip P = mQ + c to 0<=Q<=100, 0<=P<=120
+  let lo = 0, hi = 100;
+  if (m !== 0) { const a = (0 - c) / m, z = (120 - c) / m; lo = Math.max(lo, Math.min(a, z)); hi = Math.min(hi, Math.max(a, z)); }
+  return [lo, m * lo + c, hi, m * hi + c];
+}
+function curve(m, c, cls, label, o = {}) {
+  const [q1, p1, q2, p2] = seg(m, c);
+  if (q2 <= q1) return "";
+  let s = SV.line(QX(q1), PY(p1), QX(q2), PY(p2), cls, o.attrs);
+  if (label) { const a = { "text-anchor": "start" }; if (o.attrs && o.attrs.opacity !== undefined) a.opacity = o.attrs.opacity; s += SV.text(QX(q2) + (o.dx ?? 6), PY(p2) + (o.dy ?? 4), label, "lbl bd " + (o.t || "t1"), a); }
+  return s;
+}
+function axes(yl = "Price", xl = "Quantity") {
+  return SV.line(QX(0), PY(120), QX(0), PY(0)) + SV.line(QX(0), PY(0), QX(104), PY(0)) +
+    SV.text(QX(0) + 6, PY(120) + 6, yl, "sm") + SV.text(QX(104), PY(0) + 22, xl, "sm", { "text-anchor": "end" });
+}
+const hline = (p, c = "gr", x2 = 100) => SV.line(QX(0), PY(p), QX(x2), PY(p), c);
+const vline = (q, p, c = "gr") => SV.line(QX(q), PY(p), QX(q), PY(0), c);
+const ylab = (p, t, c = "sm") => SV.text(QX(0) - 8, PY(p) + 4, t, c, { "text-anchor": "end" });
+const xlab = (q, t, c = "sm") => SV.text(QX(q), PY(0) + 18, t, c, { "text-anchor": "middle" });
+const D = (b) => [-b, 50 + 50 * b], S = (d, shift = 0) => [d, 50 - 50 * d + shift];
+const fmtSteep = (v) => (v < 0.8 ? "flat (elastic)" : v > 1.4 ? "steep (inelastic)" : "medium");
+const money = (v, d = 1) => Lib.fmtN(v, d);
+
+/* ---------- 1. budget bars ---------- */
+function budgetChart(s) {
+  const base = 340, k = 1.75, r = s.rev, sp = s.spend, d = r - sp;
+  let o = SV.line(70, base, 570, base);
+  o += SV.rect(120, base - r * k, 150, r * k, "", { style: "fill:var(--accent)", opacity: 0.85 });
+  o += SV.rect(330, base - sp * k, 150, sp * k, "", { style: "fill:var(--warn)", opacity: 0.85 });
+  if (d < -0.5) o += SV.rect(120, base - sp * k, 150, -d * k, "", { style: "fill:none;stroke:var(--bad);stroke-width:2.5;stroke-dasharray:6 4" }) + SV.text(195, base - sp * k + (-d * k) / 2 + 5, "Gap " + money(-d, 0), "lbl bd t2", { "text-anchor": "middle" });
+  if (d > 0.5) o += SV.rect(330, base - r * k, 150, d * k, "", { style: "fill:none;stroke:var(--good);stroke-width:2.5;stroke-dasharray:6 4" }) + SV.text(405, base - r * k + (d * k) / 2 + 5, "Spare " + money(d, 0), "lbl bd t3", { "text-anchor": "middle" });
+  const inbar = { "text-anchor": "middle", style: "font-size:15px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" };
+  o += SV.text(195, base - r * k + 24, "$" + money(r, 0) + "bn", "lbl bd", inbar) + SV.text(405, base - sp * k + 24, "$" + money(sp, 0) + "bn", "lbl bd", inbar);
+  o += SV.text(195, base + 22, "Government revenue", "lbl", { "text-anchor": "middle" }) + SV.text(405, base + 22, "Government spending", "lbl", { "text-anchor": "middle" });
+  const verdict = Math.abs(d) < 0.5 ? "Balanced budget: revenue = spending" : d < 0 ? "Budget deficit of $" + money(-d, 0) + "bn: the government must borrow" : "Budget surplus of $" + money(d, 0) + "bn: revenue exceeds spending";
+  o += SV.text(300, 52, verdict, "lbl bd " + (Math.abs(d) < 0.5 ? "" : d < 0 ? "t2" : "t3"), { "text-anchor": "middle", style: "font-size:16px" });
+  o += SV.rect(620, base - s.debt * k, 90, s.debt * k, "", { style: "fill:var(--bad)", opacity: 0.6 });
+  o += SV.text(665, base - s.debt * k - 8, "$" + money(s.debt, 0) + "bn", "lbl bd t2", { "text-anchor": "middle" }) + SV.text(665, base + 22, "National debt", "lbl", { "text-anchor": "middle" });
+  return o;
+}
+Lib.stepper($("#stB"), { w: 760, h: 400, label: "Budget deficit, surplus and national debt", base: { rev: 100, spend: 100, debt: 60 }, draw: budgetChart, steps: [
+  { cap: "A government's <b>budget</b> compares what it raises (revenue, mostly tax) with what it spends. Here both are <b>$100bn</b>: a <b>balanced budget</b>, which is less common than the other two. Past borrowing has built up a <b>national debt</b> of $60bn.", s: { rev: 100, spend: 100, debt: 60 } },
+  { cap: "The government raises spending to <b>$120bn</b> but revenue stays at $100bn. Spending is higher than revenue: a <b>budget deficit</b> of $20bn.", s: { spend: 120 } },
+  { cap: "To pay for the gap the government has to <b>borrow</b> $20bn. The <b>national debt</b>, the total borrowed over time, rises from $60bn to $80bn. A deficit adds to the debt; the debt is the running total.", s: { spend: 120, debt: 80 } },
+  { cap: "Now the government raises tax revenue to <b>$125bn</b> and brings spending back to $100bn. Revenue is higher than spending: a <b>budget surplus</b> of $25bn.", s: { rev: 125, spend: 100, debt: 80 } },
+  { cap: "A surplus can be used to <b>repay debt</b>, which also cuts the interest the government has to pay. The debt falls to $55bn. <b>Budget deficit or surplus = revenue − spending</b> (a negative answer is a deficit).", s: { rev: 125, spend: 100, debt: 55 } },
+] });
+
+/* ---------- 2. multiplier ---------- */
+const MPC0 = 0.8;
+function multChart(s) {
+  const inj = s.inj ?? 20, mpc = s.mpc ?? MPC0, base = 330, k = 205 / inj, n = s.n;
+  let o = SV.line(30, base, 740, base), tot = 0;
+  for (let i = 0; i < 8; i++) {
+    const v = clamp(n - i, 0, 1), a = inj * Math.pow(mpc, i);
+    if (v <= 0) continue;
+    const h = a * k * v, x = 40 + i * 85;
+    tot += a * v;
+    o += SV.rect(x, base - h, 64, h, "", { style: "fill:var(" + (i ? "--accent" : "--warn") + ")", opacity: 0.85 });
+    if (v > 0.6) o += SV.text(x + 32, base - h - 8, "$" + money(a, a % 1 === 0 ? 0 : 1) + "m", "lbl bd", { "text-anchor": "middle" }) + SV.text(x + 32, base + 20, i ? "Round " + (i + 1) : "Injection", "sm", { "text-anchor": "middle" });
+  }
+  if (n > 7.5) o += SV.text(730, base - 8, "…", "lbl bd", { "text-anchor": "end", style: "font-size:24px" });
+  o += SV.text(40, 40, "Extra income created so far: $" + money(tot, 1) + "m", "lbl bd", { style: "font-size:17px" });
+  if (s.fin > 0.5) o += SV.text(40, 70, "Final rise = $" + money(inj, 0) + "m ÷ (1 − " + mpc + ") = $" + money(inj / (1 - mpc), 0) + "m: " + money(1 / (1 - mpc), 1) + " times the original", "lbl bd t3", { style: "font-size:15px" });
+  return o;
+}
+Lib.stepper($("#stM"), { w: 760, h: 400, label: "The multiplier effect", base: { n: 0, fin: 0 }, draw: multChart, steps: [
+  { cap: "The government spends an extra <b>$20m</b> (for example building a road). That money becomes income for construction firms and workers.", s: { n: 1, fin: 0 } },
+  { cap: "Those who receive the $20m spend <b>$16m</b> of it (80%) and save $4m. The $16m is now income for shops, suppliers and their workers.", s: { n: 2, fin: 0 } },
+  { cap: "They in turn spend 80% of $16m, about <b>$12.8m</b>. Each round is smaller because some is <b>saved</b> (and some leaks out to imports and tax) each time.", s: { n: 3, fin: 0 } },
+  { cap: "The rounds keep going: $10.2m, $8.2m, $6.6m, $5.2m, $4.2m… The rises get smaller but they add up.", s: { n: 8, fin: 0 } },
+  { cap: "The total rise in income, spending and output is <b>$100m</b>, five times the original $20m. That bigger-than-initial effect is the <b>multiplier effect</b>. The more people spend of extra income, the bigger it is.", s: { n: 8, fin: 1 } },
+] });
+
+/* ---------- 3. progressive, proportional, regressive ---------- */
+const RX = (inc) => 70 + inc * 0.55, RY = (r) => 330 - r * 5.4;
+const SERIES = {
+  pr: { name: "Progressive", c: "c1", t: "t1", pts: [[100, 10, 10], [500, 20, 100], [1000, 40, 400]] },
+  pp: { name: "Proportional", c: "c3", t: "t3", pts: [[100, 25, 25], [500, 25, 125], [1000, 25, 250]] },
+  rg: { name: "Regressive", c: "c2", t: "t2", pts: [[100, 40, 40], [500, 30, 150], [1000, 20, 200]] },
+};
+function ratesChart(s) {
+  let o = SV.line(RX(0), RY(55), RX(0), RY(0)) + SV.line(RX(0), RY(0), RX(1060), RY(0));
+  [10, 20, 30, 40, 50].forEach((r) => (o += SV.line(RX(0), RY(r), RX(1000), RY(r), "gr") + SV.text(RX(0) - 8, RY(r) + 4, r + "%", "sm", { "text-anchor": "end" })));
+  [100, 500, 1000].forEach((i) => (o += SV.text(RX(i), RY(0) + 18, "$" + i, "sm", { "text-anchor": "middle" })));
+  o += SV.text(RX(0) + 6, RY(55) + 4, "Tax paid as % of income", "sm") + SV.text(RX(1060), RY(0) + 38, "Income", "sm", { "text-anchor": "end" });
+  Object.keys(SERIES).forEach((key) => {
+    const sr = SERIES[key], v = s[key];
+    if (v <= 0.02) return;
+    let g = SV.path(ptsPath(sr.pts.map((p) => [RX(p[0]), RY(p[1])])), sr.c);
+    sr.pts.forEach((p) => (g += SV.circle(RX(p[0]), RY(p[1]), 5, "dot" + sr.c.slice(1)) + SV.text(RX(p[0]) + 9, RY(p[1]) + (key === "pr" ? 20 : -9), "$" + p[2] + " tax", "sm bd", { "text-anchor": "start", style: "paint-order:stroke;stroke:var(--surface);stroke-width:4px" })));
+    g += SV.text(RX(1000) + 16, RY(sr.pts[2][1]) + 4, sr.name, "lbl bd " + sr.t);
+    o += `<g opacity="${v}">${g}</g>`;
+  });
+  return o;
+}
+Lib.stepper($("#stR"), { w: 760, h: 380, label: "Progressive, proportional and regressive taxes", base: { pr: 0, pp: 0, rg: 0 }, draw: ratesChart, steps: [
+  { cap: "<b>Progressive:</b> as income rises from $100 to $500 to $1,000 the <b>percentage</b> paid rises from 10% to 20% to 40%. Income tax usually works like this. The rich pay more dollars and a bigger share.", s: { pr: 1, pp: 0, rg: 0 } },
+  { cap: "<b>Proportional:</b> the percentage stays at <b>25%</b> whatever the income. The dollar amount still rises ($25, $125, $250) but the share does not.", s: { pr: 1, pp: 1, rg: 0 } },
+  { cap: "<b>Regressive:</b> the percentage <b>falls</b> as income rises, from 40% to 30% to 20%. The poor pay a bigger share of their income. A fixed charge per litre of petrol is an example: the rich buy more litres but not in proportion to their income.", s: { pr: 1, pp: 1, rg: 1 } },
+  { cap: "In all three the <b>total tax paid</b> usually rises with income. What differs is the <b>percentage</b>. Only a progressive tax redistributes from rich to poor.", s: { pr: 1, pp: 1, rg: 1 } },
+] });
+
+/* ---------- 4. incidence ---------- */
+function taxChart(s) {
+  const b = s.b, d = s.d, t = s.t, q1 = 50 - t / (b + d), pc = 50 + (b * t) / (b + d), pp = pc - t;
+  let o = axes();
+  if (t > 0.01) {
+    o += SV.rect(QX(0), PY(pc), QX(q1) - QX(0), PY(50) - PY(pc), "f2");
+    o += SV.rect(QX(0), PY(50), QX(q1) - QX(0), PY(pp) - PY(50), "f4");
+    if (s.inc > 0.5) {
+      o += SV.text(QX(q1 / 2), (PY(pc) + PY(50)) / 2 + 4, "Consumers' share: " + money(pc - 50), "lbl bd t2", { "text-anchor": "middle", style: "paint-order:stroke;stroke:var(--surface);stroke-width:4px" });
+      o += SV.text(QX(q1 / 2), (PY(50) + PY(pp)) / 2 + 4, "Producers' share: " + money(50 - pp), "lbl bd t4", { "text-anchor": "middle", style: "paint-order:stroke;stroke:var(--surface);stroke-width:4px" });
+      o += SV.text(QX(q1 / 2), PY(pp) + 22, "Tax revenue = " + money(t * q1, 0), "lbl bd", { "text-anchor": "middle", style: "paint-order:stroke;stroke:var(--surface);stroke-width:4px" });
+    }
+  }
+  const [dm, dc] = D(b), [sm, sc] = S(d), [tm, tc] = S(d, t);
+  o += curve(dm, dc, "c1", "D", { t: "t1" }) + curve(sm, sc, "c3", "S₁", { t: "t3", attrs: { opacity: t > 0.01 ? 0.55 : 1 } });
+  if (t > 0.01) o += curve(tm, tc, "c2", "S₂", { t: "t2" });
+  o += hline(50) + vline(50, 50) + ylab(50, "P = 50") + xlab(50, "Q = 50");
+  o += SV.circle(QX(50), PY(50), 6, "dot1", { opacity: t > 0.01 ? 0.5 : 1 });
+  if (t > 0.01) { o += hline(pc, "gr", q1) + vline(q1, pc) + SV.circle(QX(q1), PY(pc), 6, "dot2") + ylab(pc, "P₁ = " + money(pc)) + ylab(pp, "Pp = " + money(pp)) + hline(pp, "gr", q1) + SV.text(QX(q1), PY(0) + (Math.abs(q1 - 50) < 9 ? 34 : 18), "Q₁ = " + money(q1), "sm", { "text-anchor": "middle" }); }
+  return o;
+}
+Lib.stepper($("#stT"), { w: 760, h: 400, label: "Incidence of an indirect tax", base: { b: 1, d: 1, t: 0, inc: 0 }, draw: taxChart, steps: [
+  { cap: "A market for a good in equilibrium at <b>price 50, quantity 50</b>. Demand D and supply S₁.", s: { b: 1, d: 1, t: 0, inc: 0 } },
+  { cap: "The government puts an <b>indirect tax of 20 per unit</b> on the good. Firms' costs rise by 20 at every quantity, so supply shifts <b>to the left</b> (up) by the amount of the tax, to S₂.", s: { t: 20, inc: 0 } },
+  { cap: "The new equilibrium: consumers pay a <b>higher price (60)</b> and buy <b>less (40)</b>. Producers hand 20 to the government, so they keep 60 − 20 = <b>40</b>.", s: { t: 20, inc: 0 } },
+  { cap: "<b>Incidence</b> is who bears the burden. Consumers bear the rise in price (10), producers bear the rest (10). <b>Tax revenue</b> = 20 × 40 = 800.", s: { t: 20, inc: 1 } },
+  { cap: "Make demand <b>steeper (inelastic)</b>. Buyers have few alternatives, so producers can pass on most of the tax: <b>consumers bear most of it</b>. Cigarettes and petrol are examples.", s: { t: 20, inc: 1, b: 3 } },
+  { cap: "Make demand <b>flatter (elastic)</b>. Buyers would switch away, so firms cannot raise the price much and <b>producers bear most of the tax</b>.", s: { t: 20, inc: 1, b: 0.3 } },
+] });
+
+/* ---------- 5. fiscal policy on AD / AS ---------- */
+const asP = (y) => (y <= 60 ? 30 + 0.4 * y : 54 + 2.2 * (y - 60));
+function solveAD(sh) {
+  const c = 90 + 0.8 * sh; let y = (c - 30) / 1.2;
+  if (y > 60) y = (c + 78) / 3;
+  return [y, asP(y), c];
+}
+function adLine(c, cls, label, o = {}) {
+  const lo = Math.max(0, (c - 108) / 0.8), hi = Math.min(100, (c - 8) / 0.8);
+  let r = SV.line(QX(lo), PY(c - 0.8 * lo), QX(hi), PY(c - 0.8 * hi), cls, o.attrs);
+  if (label) r += SV.text(QX(hi) + 6, PY(c - 0.8 * hi) + (o.dy ?? 4), label, "lbl bd " + (o.t || "t1"), o.attrs && o.attrs.opacity !== undefined ? { opacity: o.attrs.opacity } : {});
+  return r;
+}
+function adChart(s) {
+  const sh = s.sh, [y1, p1, c] = solveAD(sh), moved = Math.abs(sh) >= 1;
+  let o = axes("Price level", "Real GDP");
+  o += SV.path(ptsPath([[QX(0), PY(30)], [QX(60), PY(54)], [QX(87.7), PY(115)]]), "c3") + SV.text(QX(87.7) + 6, PY(115) + 4, "AS", "lbl bd t3");
+  o += adLine(90, "c1", "AD", { t: "t1", attrs: { opacity: moved ? 0.4 : 1 } });
+  if (moved) o += adLine(c, sh > 0 ? "c2" : "c4", sh > 0 ? "AD₁" : "AD₂", { t: sh > 0 ? "t2" : "t4" });
+  o += hline(50) + vline(50, 50) + ylab(50, "P") + xlab(50, "Y") + SV.circle(QX(50), PY(50), 6, "dot1", { opacity: moved ? 0.45 : 1 });
+  if (moved) o += hline(p1, "gr", y1) + vline(y1, p1) + SV.circle(QX(y1), PY(p1), 6, sh > 0 ? "dot2" : "dot4") + ylab(p1, "P₁", "sm bd") + xlab(y1, "Y₁", "sm bd");
+  return o;
+}
+Lib.stepper($("#stA"), { w: 760, h: 400, label: "Fiscal policy shifting aggregate demand", base: { sh: 0 }, draw: adChart, steps: [
+  { cap: "The economy starts at <b>Y</b> (real GDP) and <b>P</b> (price level) where AD meets AS. <b>AD = C + I + G + (X − M)</b>. Government spending (G) is part of AD, and taxes change how much households (C) and firms (I) have to spend.", s: { sh: 0 } },
+  { cap: "<b>Expansionary fiscal policy</b>: the government raises spending and/or cuts taxes. AD shifts <b>right</b> to AD₁. Real GDP rises (<b>economic growth</b>), firms need more workers (<b>employment is likely to rise</b>) and the price level edges up.", s: { sh: 15 } },
+  { cap: "<b>Evaluate:</b> push too hard when the economy is close to full capacity and AS is steep. The rise in output is small and most of the effect is a <b>higher price level</b>: inflation. It also leaves a bigger budget deficit.", s: { sh: 40 } },
+  { cap: "<b>Contractionary fiscal policy</b>: cut spending and/or raise taxes. AD shifts <b>left</b> to AD₂. Price pressure eases, which helps against inflation, and spending on imports falls, but output and jobs are likely to fall too.", s: { sh: -15 } },
+] });
+
+/* ================= LABS ================= */
+/* Lab 1: budget, with automatic stabilisers (New Zealand 2016 table, NZ$bn) */
+const SPEND = [["Healthcare", 16.2, "--accent"], ["Education", 13.5, "--good"], ["Pensions", 12.9, "--n"], ["Unemployment and other benefits", 12.3, "--bad"], ["Law and order", 3.8, "--warn"], ["Other", 18.8, "--muted"]];
+const REV = [["Income tax", 32.5, "--accent"], ["GST", 19.1, "--good"], ["Other indirect tax", 6.5, "--n"], ["Corporate tax", 11.6, "--warn"], ["Other revenue", 8.8, "--muted"]];
+function stack(items, x, base, k, w) {
+  let y = base, o = "";
+  items.forEach(([name, v, col]) => {
+    const h = v * k;
+    y -= h;
+    o += SV.rect(x, y, w, h, "", { style: `fill:var(${col});stroke:var(--surface);stroke-width:2`, opacity: 0.85 });
+    if (h > 17) o += SV.text(x + w / 2, y + h / 2 + 4, name + " " + money(v, 1), "sm bd", { "text-anchor": "middle", style: "font-size:11px;paint-order:stroke;stroke:var(--surface);stroke-width:3px" });
+  });
+  return o;
+}
+function labA() {
+  if (!$("#ba") || !$("#bb") || !$("#bc")) return;
+  const act = +$("#ba").value, dH = +$("#bb").value, dT = +$("#bc").value;
+  const rev = [["Income tax", 32.5 * (1 + (1.5 * act) / 100) + dT, "--accent"], ["GST", 19.1 * (1 + act / 100), "--good"], ["Other indirect tax", 6.5 * (1 + act / 100), "--n"], ["Corporate tax", 11.6 * (1 + (2 * act) / 100), "--warn"], ["Other revenue", 8.8, "--muted"]];
+  const sp = [["Healthcare", 16.2 + dH, "--accent"], ["Education", 13.5, "--good"], ["Pensions", 12.9, "--n"], ["Unemployment and other benefits", 12.3 * (1 - (2 * act) / 100), "--bad"], ["Law and order", 3.8, "--warn"], ["Other", 18.8, "--muted"]];
+  const tr = rev.reduce((a, x) => a + x[1], 0), ts = sp.reduce((a, x) => a + x[1], 0), bal = tr - ts;
+  $("#ba1").textContent = "$" + money(ts) + "bn"; $("#ba2").textContent = "$" + money(tr) + "bn";
+  $("#ba3").textContent = (bal >= 0 ? "+" : "−") + "$" + money(Math.abs(bal)) + "bn"; $("#ba4").textContent = money((rev[0][1] / tr) * 100, 1) + "%";
+  $("#bav").textContent = Math.abs(bal) < 0.05 ? "A balanced budget." : bal > 0 ? `Revenue is higher than spending: a budget surplus of $${money(bal)}bn.` : `Spending is higher than revenue: a budget deficit of $${money(-bal)}bn, which has to be borrowed.`;
+  const note = act !== 0 && dH === 0 && dT === 0 ? (act < 0 ? " In a slump tax revenue falls and benefit spending rises automatically, so the budget moves towards deficit with no change in policy: that is an automatic stabiliser." : " In a boom tax revenue rises and benefit spending falls automatically, which moves the budget towards surplus and helps cool demand.") : "";
+  $("#bav").textContent += note;
+  const k = 3.1, base = 372;
+  $("#labA").innerHTML = SV.line(60, base, 700, base) + stack(rev, 90, base, k, 230) + stack(sp, 420, base, k, 230) +
+    SV.text(205, base + 22, "Revenue: $" + money(tr), "lbl bd", { "text-anchor": "middle" }) + SV.text(535, base + 22, "Spending: $" + money(ts), "lbl bd", { "text-anchor": "middle" });
+}
+Lib.slider($("#g1"), { id: "ba", label: "State of the economy (change in national income)", min: -10, max: 10, step: 1, value: 0, fmt: (v) => (v > 0 ? "+" : "") + v + "%" + (v < 0 ? " slump" : v > 0 ? " boom" : ""), onInput: labA });
+Lib.slider($("#g2"), { id: "bb", label: "Policy: change in healthcare spending", min: -5, max: 10, step: 0.5, value: 0, fmt: (v) => (v > 0 ? "+$" : v < 0 ? "−$" : "$") + Math.abs(v) + "bn", onInput: labA });
+Lib.slider($("#g3"), { id: "bc", label: "Policy: change in income tax revenue (rate change)", min: -10, max: 10, step: 0.5, value: 0, fmt: (v) => (v > 0 ? "+$" : v < 0 ? "−$" : "$") + Math.abs(v) + "bn", onInput: labA });
+
+/* Lab 2: multiplier */
+function labM() {
+  if (!$("#ma") || !$("#mb")) return;
+  const inj = +$("#ma").value, mpc = +$("#mb").value, k = 1 / (1 - mpc), tot = inj * k;
+  $("#ma1").textContent = money(k, 2); $("#ma2").textContent = "$" + money(tot, 0) + "m"; $("#ma3").textContent = "$" + money(tot - inj, 0) + "m";
+  $("#mav").textContent = `For every $1 of extra income people spend $${money(mpc, 2)} and save or lose the rest, so the total rise is ${money(k, 2)} times the injection. Raise the share spent and the multiplier grows.`;
+  $("#labM").innerHTML = multChart({ n: 8, fin: 1, inj, mpc });
+}
+Lib.slider($("#g4"), { id: "ma", label: "Extra government spending", min: 5, max: 50, step: 5, value: 20, fmt: (v) => "$" + v + "m", onInput: labM });
+Lib.slider($("#g5"), { id: "mb", label: "Share of extra income spent", min: 0.1, max: 0.9, step: 0.05, value: 0.8, fmt: (v) => Math.round(v * 100) + "%", onInput: labM });
+
+/* Lab 3: tax systems. Progressive: 10% to 200, 30% 200-600, 50% above. Regressive: fuel duty 16 + 0.02 * income. */
+const taxProg = (y) => 0.1 * Math.min(y, 200) + 0.3 * clamp(y - 200, 0, 400) + 0.5 * Math.max(0, y - 600);
+const taxProp = (y) => 0.25 * y;
+const taxReg = (y) => 16 + 0.02 * y;
+const LX = (i) => 70 + i * 0.28, LY = (r) => 330 - r * 6;
+function labR() {
+  if (!$("#ra")) return;
+  const y = +$("#ra").value, rows = [["Progressive", taxProg, "t1", "c1"], ["Proportional", taxProp, "t3", "c3"], ["Regressive", taxReg, "t2", "c2"]];
+  rows.forEach((r, i) => { $("#r" + (i + 1)).textContent = "$" + money(r[1](y), 0) + " (" + money((r[1](y) / y) * 100, 1) + "%)"; });
+  $("#rv").textContent = `At an income of $${y} the progressive tax takes ${money((taxProg(y) / y) * 100, 1)}%, the proportional tax 25% and the regressive tax ${money((taxReg(y) / y) * 100, 1)}%. Slide the income up: the progressive rate climbs, the proportional rate stays put and the regressive rate falls. (The regressive example is fuel duty at $2 a litre; at this income a household buys about ${money(8 + 0.01 * y, 0)} litres.)`;
+  let o = SV.line(LX(0), LY(60), LX(0), LY(0)) + SV.line(LX(0), LY(0), LX(2050), LY(0));
+  [10, 20, 30, 40, 50].forEach((r) => (o += SV.line(LX(0), LY(r), LX(2000), LY(r), "gr") + SV.text(LX(0) - 8, LY(r) + 4, r + "%", "sm", { "text-anchor": "end" })));
+  [500, 1000, 1500, 2000].forEach((i) => (o += SV.text(LX(i), LY(0) + 18, "$" + i, "sm", { "text-anchor": "middle" })));
+  o += SV.text(LX(0) + 6, LY(60) + 4, "Tax paid as % of income", "sm") + SV.text(LX(2050), LY(0) + 38, "Income", "sm", { "text-anchor": "end" });
+  rows.forEach((r) => {
+    const pts = []; for (let i = 60; i <= 2000; i += 20) pts.push([LX(i), LY(Math.min(55, (r[1](i) / i) * 100))]);
+    o += SV.path(ptsPath(pts), r[3]) + SV.text(LX(2000) + 6, LY((r[1](2000) / 2000) * 100) + 4, r[0], "lbl bd " + r[2]);
+  });
+  o += SV.line(LX(y), LY(0), LX(y), LY(55), "dash", { style: "stroke:var(--muted);stroke-width:1.5" });
+  rows.forEach((r) => (o += SV.circle(LX(y), LY(Math.min(55, (r[1](y) / y) * 100)), 6, "dot" + r[3].slice(1))));
+  $("#labR").innerHTML = o;
+}
+Lib.slider($("#g6"), { id: "ra", label: "Income", min: 60, max: 2000, step: 20, value: 500, fmt: (v) => "$" + v, onInput: labR });
+
+/* Lab 4: fiscal policy simulator. Shift in AD = change in G minus 0.7 x change in taxes (some of a tax change is saved). */
+function labF() {
+  if (!$("#fa") || !$("#fb")) return;
+  const dG = +$("#fa").value, dT = +$("#fb").value, sh = dG - 0.7 * dT, [y, p] = solveAD(sh), bud = dT - dG;
+  $("#fa1").textContent = money(y, 1) + (y > 50.5 ? " ▲" : y < 49.5 ? " ▼" : ""); $("#fa2").textContent = money(p, 1) + (p > 50.5 ? " ▲" : p < 49.5 ? " ▼" : "");
+  $("#fa3").textContent = (bud >= 0 ? "+" : "−") + "$" + money(Math.abs(bud), 0) + "bn"; $("#fa4").textContent = sh > 1 ? "Expansionary" : sh < -1 ? "Contractionary" : "Neutral";
+  let v;
+  if (Math.abs(sh) < 1) v = "Spending and tax changes roughly cancel out, so aggregate demand hardly moves.";
+  else if (sh > 0) v = `Aggregate demand shifts right. Real GDP rises by ${money(y - 50, 1)} and the price level by ${money(p - 50, 1)}. ${y > 61 ? "The economy is near full capacity, so a large share of the extra demand shows up as higher prices." : "Output rises by more than prices, so growth and employment are likely to benefit."} The initial effect on the budget is ${bud < 0 ? "a larger deficit" : "a smaller deficit"}.`;
+  else v = `Aggregate demand shifts left. Real GDP falls by ${money(50 - y, 1)} and the price level by ${money(50 - p, 1)}. Inflationary pressure eases but jobs are at risk. The initial effect on the budget is ${bud > 0 ? "a smaller deficit" : "a larger deficit"}.`;
+  $("#fv").textContent = v;
+  $("#labF").innerHTML = adChart({ sh });
+}
+Lib.slider($("#g7"), { id: "fa", label: "Change in government spending", min: -20, max: 20, step: 1, value: 10, fmt: (v) => (v > 0 ? "+$" : v < 0 ? "−$" : "$") + Math.abs(v) + "bn", onInput: labF });
+Lib.slider($("#g8"), { id: "fb", label: "Change in taxes (positive = tax rise)", min: -20, max: 20, step: 1, value: 0, fmt: (v) => (v > 0 ? "+$" : v < 0 ? "−$" : "$") + Math.abs(v) + "bn", onInput: labF });
+
+/* ================= PRACTISE ================= */
+Lib.classify($("#cl1"), { prompt: "Is each tax <b>direct</b> (on income or wealth) or <b>indirect</b> (on spending)?", buckets: [{ label: "Direct tax" }, { label: "Indirect tax" }], items: [
+  { text: "Income tax", b: 0 }, { text: "Corporation tax", b: 0 }, { text: "Capital gains tax", b: 0 }, { text: "Inheritance tax", b: 0 },
+  { text: "VAT / GST (sales tax)", b: 1 }, { text: "Excise duty on petrol", b: 1 }, { text: "Customs duty (tariff)", b: 1 }, { text: "Licence to own a car", b: 1 },
+], done: "Direct taxes hit income and wealth; indirect taxes hit what you buy." });
+Lib.classify($("#cl2"), { prompt: "Progressive, proportional or regressive?", buckets: [{ label: "Progressive" }, { label: "Proportional" }, { label: "Regressive" }], items: [
+  { text: "Tax rate rises from 10% to 20% to 40% as income rises", b: 0 }, { text: "Inheritance tax on large estates, higher rates on larger sums", b: 0 },
+  { text: "Everyone pays 25% of their income", b: 1 }, { text: "A flat 15% corporation tax on all firms' profits", b: 1 },
+  { text: "A $20 annual licence fee that everyone pays", b: 2 }, { text: "Excise duty per litre of petrol: richer people pay a smaller share of income", b: 2 },
+  { text: "Tax takes 40% of a $100 income but 20% of a $1,000 income", b: 2 }, { text: "Egypt's income tax rate rising from 10% to 15% to 20% to 22.5%", b: 0 },
+], done: "Compare the percentage taken, not the dollars." });
+Lib.classify($("#cl3"), { prompt: "Which would be <b>expansionary</b> and which <b>contractionary</b> fiscal policy?", buckets: [{ label: "Expansionary" }, { label: "Contractionary" }], items: [
+  { text: "Cut income tax rates", b: 0 }, { text: "Raise spending on roads and rail", b: 0 }, { text: "Raise the tax-free allowance", b: 0 }, { text: "Increase benefits for the unemployed", b: 0 },
+  { text: "Cut government spending on education", b: 1 }, { text: "Raise VAT", b: 1 }, { text: "Raise corporation tax", b: 1 }, { text: "Freeze public sector pay and cut projects", b: 1 },
+], done: "Expansionary raises AD; contractionary reduces it." });
+Lib.match($("#m1"), { prompt: "Match each principle of a good tax to what it means.", pairs: [
+  ["Equity", "Tax is based on ability to pay: fair"],
+  ["Certainty", "Taxpayers can understand and calculate what they owe"],
+  ["Convenience", "The tax is easy to pay"],
+  ["Economy", "Costs of collecting are much less than the revenue raised"],
+  ["Flexibility", "Can be changed, or changes automatically, as the economy changes"],
+  ["Efficiency", "Improves, or does not damage, the way markets work"],
+], done: "Six qualities, six marks of vocabulary." });
+Lib.match($("#m2"), { prompt: "Match the term to its definition.", pairs: [
+  ["Budget deficit", "Government spending is higher than revenue"],
+  ["Budget surplus", "Government revenue is higher than spending"],
+  ["National debt", "Total amount the government has borrowed over time"],
+  ["Multiplier effect", "Final change in AD is larger than the initial change"],
+  ["Automatic stabilisers", "Spending and taxes that cushion booms and slumps with no policy change"],
+  ["Tax incidence", "How the burden of an indirect tax is shared between consumers and producers"],
+  ["Fiscal policy", "Government spending and taxation decisions to influence AD"],
+], done: "Good vocabulary scores marks." });
+Lib.order($("#o1"), { prompt: "Put the steps of the <b>multiplier</b> in order.", items: [
+  "The government raises its spending by $20m",
+  "Firms and workers receive $20m of extra income",
+  "They spend part of it (say $16m) and save the rest",
+  "That spending becomes income for other people, who spend part of it again",
+  "The rounds continue, each smaller than the last",
+  "Total rise in spending, income and output is larger than the original $20m",
+], done: "That is the multiplier effect." });
+Lib.order($("#o2"), { prompt: "Put the chain for <b>expansionary fiscal policy</b> in order.", items: [
+  "The government cuts income tax rates",
+  "Households' disposable income rises",
+  "Consumption rises (and investment may follow)",
+  "Aggregate demand shifts to the right",
+  "Real GDP rises and firms take on more workers",
+  "The price level may rise and the budget deficit may widen",
+], done: "A full analysis chain." });
+Lib.calc($("#c1"), { qs: [
+  { q: "The Maldives forecast a budget deficit of $200m and government revenue of $1.4bn ($1,400m). How much did it plan to spend ($m)?", a: 1600, hint: "Deficit = spending − revenue.", sol: "Spending = revenue + deficit = 1,400 + 200 = <b>$1,600m</b> ($1.6bn)." },
+  { q: "A government has revenue of $85bn and spending of $92bn. What is its budget balance ($bn)? Use a minus sign for a deficit.", a: -7, hint: "Budget balance = revenue − spending.", sol: "85 − 92 = <b>−$7bn</b>, a budget deficit of $7bn." },
+  { q: "New Zealand 2016: revenue was NZ$78.5bn and spending NZ$77.5bn. What is the budget position (NZ$bn; positive for a surplus)?", a: 1, sol: "78.5 − 77.5 = <b>+NZ$1.0bn</b>, a small budget surplus." },
+  { q: "Income tax was NZ$32.5bn out of total revenue of NZ$78.5bn. What percentage of revenue came from income tax? (1 d.p.)", a: 41.4, tol: 0.1, sol: "32.5 ÷ 78.5 × 100 = <b>41.4%</b>." },
+  { q: "An economy has a budget deficit of $5bn and GDP of $100bn. What is the deficit as a percentage of GDP?", a: 5, sol: "5 ÷ 100 × 100 = <b>5%</b>." },
+  { q: "A worker earns $30,000. The tax allowance is $10,000 and the income tax rate on taxable income is 20%. How much tax does she pay ($)?", a: 4000, hint: "Only income above the allowance is taxed.", sol: "Taxable income = 30,000 − 10,000 = 20,000. Tax = 20% × 20,000 = <b>$4,000</b>." },
+  { q: "Government spending rises by $40m. People spend 75% of any extra income. Using multiplier = 1 ÷ (1 − share spent), calculate the total rise in income ($m).", a: 160, hint: "Multiplier = 1 ÷ 0.25.", sol: "Multiplier = 1 ÷ (1 − 0.75) = 4. Total rise = 4 × 40 = <b>$160m</b>." },
+  { q: "A tax of $4 per unit raises the price consumers pay from $10 to $13. What percentage of the tax do consumers bear?", a: 75, sol: "Consumers pay $3 of the $4: 3 ÷ 4 × 100 = <b>75%</b> (so producers bear 25%)." },
+] });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "What is meant by a regressive tax?", opts: ["A tax that falls in line with inflation", "A tax that reduces government revenue over time", "A tax that places a greater burden on the poor than the rich", "A tax that is replaced by one which generates more income"], a: 2, why: "A regressive tax takes a larger percentage of income from lower earners." },
+  { q: "A government wants to redistribute income from the rich to the poor. Which tax changes would help?", opts: ["Cut corporation tax, raise sales tax", "Cut VAT, raise income tax", "Cut capital gains tax and inheritance tax", "Raise customs duties and excise duties"], a: 1, why: "Cutting an indirect (regressive) tax and raising a progressive direct tax moves the burden towards the rich." },
+  { q: "In which situation will consumers bear the greatest share of an indirect tax?", opts: ["Elastic demand, inelastic supply", "Inelastic demand, inelastic supply", "Inelastic demand, elastic supply", "Elastic demand, elastic supply"], a: 2, why: "When demand is inelastic buyers keep buying, and when supply is elastic firms cut output rather than absorb the tax: so the price rises by most of the tax." },
+  { q: "Which is an example of a direct tax?", opts: ["VAT", "Excise duty on alcohol", "Customs duty", "Capital gains tax"], a: 3, why: "Capital gains tax is a tax on the profit from selling an asset: a tax on wealth/income." },
+  { q: "Which is a likely effect of expansionary fiscal policy?", opts: ["AD shifts left", "Real GDP and employment are likely to rise", "The budget moves towards surplus", "The price level is certain to fall"], a: 1, why: "Higher spending or lower taxes raise AD, which tends to raise output and employment." },
+  { q: "Tax revenue from income tax rises in a boom with no change in tax rates. This is an example of:", opts: ["An automatic stabiliser", "A flat tax", "A windfall tax", "A regressive tax"], a: 0, why: "Revenue rising automatically in a boom (and falling in a slump) cushions swings in demand." },
+  { q: "Which is an advantage of indirect taxes?", opts: ["They are always progressive", "They are relatively cheap and easy to collect", "They cannot raise prices", "They redistribute income to the poor"], a: 1, why: "Firms do much of the collecting, and they are harder to evade, but they tend to be regressive." },
+  { q: "Which is a reason for government spending?", opts: ["To pay interest on the national debt", "To discourage demerit goods", "To protect domestic firms by taxing imports", "To raise the costs of polluters"], a: 0, why: "The other three are aims of taxation, not of spending." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Budget", "The relationship between government revenue and government spending."],
+  ["Budget deficit", "Government spending is higher than government revenue. Budget balance = revenue − spending is negative."],
+  ["Budget surplus", "Government revenue is higher than government spending."],
+  ["Balanced budget", "Government spending and revenue are equal."],
+  ["National debt", "The total amount the government has borrowed over time."],
+  ["Multiplier effect", "The final impact on aggregate demand is greater than the initial change."],
+  ["Direct tax", "A tax on income and wealth, such as income tax and corporation tax."],
+  ["Indirect tax", "A tax on expenditure, such as VAT, excise duties and customs duties."],
+  ["Progressive tax", "Takes a larger percentage of the income or wealth of the rich."],
+  ["Proportional tax", "Takes the same percentage of income or wealth from all taxpayers."],
+  ["Regressive tax", "Takes a larger percentage of the income or wealth of the poor."],
+  ["Income tax", "A tax on income from employment and investments, above a tax allowance."],
+  ["Corporation tax", "A tax on the profits of firms."],
+  ["Capital gains tax", "A tax on profit made when an asset is sold for more than it cost."],
+  ["Inheritance tax", "A tax on wealth above a certain amount passed on when someone dies."],
+  ["Excise duty", "An indirect tax on certain goods such as alcohol, petrol and tobacco."],
+  ["Customs duty", "A tax on imports, also called a tariff."],
+  ["Tax allowance", "An amount of income that can be earned free of tax."],
+  ["Tax base", "The source of tax revenue: what is taxed."],
+  ["Tax burden", "The amount of tax paid, often shown as a percentage of GDP."],
+  ["Incidence of tax", "How the burden of an indirect tax is shared between consumers and producers."],
+  ["Automatic stabilisers", "Government spending and taxation that reduce fluctuations in economic activity with no change in policy."],
+  ["Flat tax", "A tax system with a single rate."],
+  ["Windfall tax", "An extra one-off tax on very high profits."],
+  ["Informal economy", "The part of the economy not regulated, protected or taxed by the government."],
+  ["Fiscal policy", "Decisions on government spending and taxation designed to influence aggregate demand."],
+  ["Expansionary fiscal policy", "Rises in government spending and/or cuts in taxation designed to increase AD."],
+  ["Contractionary fiscal policy", "Cuts in government spending and/or rises in taxation designed to reduce AD."],
+] });
+labA(); labM(); labR(); labF();
+
+Lib.initTabs();
+</script>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}.site-pill .pill-more{display:none}@media(max-width:700px){body{padding-bottom:64px}.site-pill{right:8px;bottom:8px;opacity:.6;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 16px)}.site-pill>*:not(.pill-more){display:none}.site-pill.open{opacity:.95}.site-pill.open>*:not(.pill-more):not([hidden]){display:inline-block}.site-pill .pill-more{display:block;border:0;border-radius:999px;width:36px;height:36px;padding:0;text-align:center;font-size:18px}.site-pill.open .pill-more{border-left:0}}</style><div class="site-pill"><button type="button" class="pill-more" aria-label="Menu" onclick="this.parentNode.classList.toggle(&#39;open&#39;)">☰</button><a href="../../ig-econ/section-4/ch-26/">← Chapter 26</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="ig-fiscal-policy" hidden></button><button data-role-toggle="ig-fiscal-policy" hidden></button><button data-role-delete="ig-fiscal-policy" hidden></button><button data-role-restore="ig-fiscal-policy" hidden></button></div><script src="../../assets/config.js?v=1791527221"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js?v=1791527221"></script><script src="../../assets/gate.js?v=1791527221" data-courses="ig-econ"></script><script>document.addEventListener('click',function(e){var t=e.target.closest('[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script><script>document.addEventListener('click',function(e){var p=document.querySelector('.site-pill.open');if(p&&!p.contains(e.target))p.classList.remove('open')});addEventListener('scroll',function(){var p=document.querySelector('.site-pill.open');if(p)p.classList.remove('open')},{passive:true});</script></body></html>
