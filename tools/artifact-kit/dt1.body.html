@@ -1,0 +1,250 @@
+<style>
+.txin{font:600 1.05rem var(--mono);padding:9px 12px;border-radius:9px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,420px)}
+.drill select,.sel{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .qline{font-size:1.08rem;font-weight:600;margin:8px 0}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+.flag{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--bad-soft);color:var(--bad)}
+.okf{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--good-soft);color:var(--good)}
+.pk{display:flex;gap:0;margin:8px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;font:600 .8rem var(--mono);background:var(--surface)}
+.pk>div{padding:8px 10px;border-right:1px solid var(--line)}.pk>div:last-child{border-right:0}
+.pk .h{background:var(--accent-soft);color:var(--accent)}.pk .p{flex:1;background:var(--soft)}.pk .t{background:var(--warn-soft);color:var(--warn)}
+.pk small{display:block;font:700 .62rem var(--sans);letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.pk.bad{border-color:var(--bad)}.pk.bad .p{background:var(--bad-soft)}
+.netbtn{cursor:pointer}
+.ptbl td{font-family:var(--mono);font-size:.85rem}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 2 · 2.1</div>
+  <h1>Types and Methods of Data Transmission</h1>
+  <p class="lead">How data is split into packets and routed across a network, the five transmission modes (serial, parallel, simplex, half-duplex, full-duplex), and how USB moves data between a device and a computer.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>Data is rarely sent as one long stream. Over a network it is cut into small <span class="kw">data packets</span>, each sent independently and put back together at the other end (<span class="kw">packet switching</span>). Between two devices, the data can travel <b>one bit at a time</b> (serial) or <b>several bits at once</b> (parallel), and in <b>one direction</b> or <b>both</b>.</p>
+  </div>
+
+  <h2>2.1.1 Data packets</h2>
+  <p>A <span class="kw">data packet</span> is a small part of a message, typically about 64 KiB. Splitting data this way means each packet can take a different route, so a busy or broken line can be avoided. The only real drawback is that the packets must be reassembled at the destination.</p>
+  <h3>Packet structure</h3>
+  <div class="pk" aria-label="Packet structure"><div class="h"><small>Header</small>sender IP · receiver IP · sequence number · packet size</div><div class="p"><small>Payload</small>the actual data (about 64 KiB)</div><div class="t"><small>Trailer</small>end marker · error check (CRC)</div></div>
+  <div class="grid2">
+    <div class="card"><h3>Header</h3><p>The IP address of the <b>sender</b> and of the <b>receiver</b>, the <b>sequence number</b> (so packets can be put back in order) and the <b>packet size</b> (so the receiver can check each one arrived intact).</p></div>
+    <div class="card"><h3>Payload</h3><p>The <b>actual data</b> being carried by this packet.</p></div>
+    <div class="card"><h3>Trailer</h3><p>A way of <b>identifying the end</b> of the packet, and an <b>error check</b>: a <span class="kw">cyclic redundancy check (CRC)</span>.</p></div>
+  </div>
+  <div class="card"><h3>Cyclic redundancy check (CRC), as the course describes it</h3>
+    <ol><li>The sender adds up all the <b>1-bits</b> in the payload and stores the total, as a hex value, in the trailer.</li>
+    <li>When the packet arrives, the receiver <b>recalculates</b> the number of 1-bits in the payload.</li>
+    <li>It compares the new value with the one in the trailer.</li>
+    <li><b>Match</b>: no transmission error. <b>No match</b>: the packet is re-sent.</li></ol>
+    <p class="note">Real CRCs use a more advanced calculation. Use the 1-bit counting description in the exam.</p></div>
+
+  <h3>Packet switching</h3>
+  <p><span class="kw">Packet switching</span> breaks a message into packets, and each packet is sent <b>independently</b> from start to finish. At each stage of the journey is a <span class="kw">node</span> containing a <span class="kw">router</span>. The router reads the <b>destination IP address</b> in the header and decides where to send the packet next.</p>
+  <ul>
+    <li>Each packet follows <b>its own path</b>, chosen by the routers.</li>
+    <li>The route depends partly on how many packets are already waiting at each node.</li>
+    <li>Packets can arrive in a <b>different order</b> from the one they were sent in. The receiver uses the <b>sequence numbers</b> to reassemble them.</li>
+  </ul>
+  <div class="grid2">
+    <div class="card"><h3>Benefits</h3><ul><li>No need to tie up a single communication line</li><li>Failed, busy or faulty lines can be avoided by re-routing packets</li><li>Easy to expand</li><li>A high data transmission rate is possible</li></ul></div>
+    <div class="card"><h3>Drawbacks</h3><ul><li>Packets can be lost and need to be re-sent</li><li>More prone to problems with <b>real-time streaming</b>, such as a live sports match</li><li>A delay at the destination while packets are reordered</li></ul></div>
+  </div>
+  <div class="tip"><b class="h">Beyond the syllabus, but useful</b>To stop lost packets bouncing around forever, each header can carry a <span class="kw">hop number</span> that goes down by 1 at every router. At 0 the packet is deleted, and the receiver asks for it to be re-sent. The course book says hopping is not on the syllabus.</div>
+
+  <h2>2.1.2 Transmission modes</h2>
+  <p>Three things matter when sending data: the <b>direction</b> it travels, the <b>method</b> (how many bits at once), and how it is <b>synchronised</b> (kept in order).</p>
+  <h3>Direction</h3>
+  <div class="tw"><table class="t">
+    <tr><th>Mode</th><th>Direction</th><th>Example</th></tr>
+    <tr><td><b>Simplex</b></td><td>One direction <b>only</b></td><td>Computer to printer</td></tr>
+    <tr><td><b>Half-duplex</b></td><td>Both directions, but <b>not at the same time</b></td><td>Walkie-talkie</td></tr>
+    <tr><td><b>Full-duplex</b></td><td>Both directions <b>at the same time</b></td><td>Broadband internet connection</td></tr>
+  </table></div>
+  <h3>Method</h3>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Serial</th><th>Parallel</th></tr>
+    <tr><td>How it works</td><td>One bit at a time down a <b>single</b> wire or channel</td><td>Several bits (usually a byte) at the same time down <b>several</b> wires</td></tr>
+    <tr><td>Speed</td><td>Slower</td><td>Faster</td></tr>
+    <tr><td>Distance</td><td>Works well over <b>long</b> distances</td><td>Works well over <b>short</b> distances</td></tr>
+    <tr><td>Synchronisation</td><td>Bits arrive in the correct order</td><td>Bits can become <span class="kw">skewed</span> (arrive out of sync), especially over about 20 m or more</td></tr>
+    <tr><td>Interference</td><td>Less risk (fewer wires)</td><td>More risk</td></tr>
+    <tr><td>Cost</td><td>Cheaper, less hardware</td><td>More expensive, more hardware</td></tr>
+    <tr><td>Example</td><td>USB, telephone lines</td><td>Internal pathways on a circuit board</td></tr>
+  </table></div>
+  <div class="warn"><b class="h">Two separate questions</b>Serial/parallel is about <i>how many bits at once</i>. Simplex/half/full is about <i>direction</i>. Any serial or parallel link can also be simplex, half-duplex or full-duplex. Answers such as "serial, half-duplex" combine one from each.</div>
+
+  <h2>2.1.3 Universal Serial Bus (USB)</h2>
+  <p>USB is a form of <b>serial</b> data transmission and the most common type of input/output port. It is a standard way to connect devices to a computer, and it supports both <b>half-duplex and full-duplex</b>.</p>
+  <ul>
+    <li>The cable has <b>four wires</b>: two for power (red +5 V and black ground) and two for data (white and green), plus a shield.</li>
+    <li>The computer <b>detects</b> a new device automatically (a small change in voltage on the data wires).</li>
+    <li>The device is recognised and its <b>device driver</b> is loaded. If the driver is missing, the user is prompted to download it.</li>
+    <li><b>USB-C</b> is a newer 24-pin connector that fits <b>either way round</b>, is smaller, can carry power for charging, and supports fast data rates.</li>
+  </ul>
+  <div class="grid2">
+    <div class="card"><h3>Benefits of USB</h3><ul><li>Devices are detected automatically and drivers load automatically</li><li>Connector fits only one way (standard type), so it cannot be plugged in wrongly</li><li>Industry standard, so wide support</li><li>Supports different transmission rates</li><li>Cable supplies +5 V, so no extra power supply is needed</li><li>The USB protocol asks for data to be re-sent if an error is found, so transfers are error-free</li><li>Easy to add more ports with a hub</li><li>Backward compatible</li></ul></div>
+    <div class="card"><h3>Drawbacks of USB</h3><ul><li>Standard cables support a maximum of about <b>5 m</b>; longer needs hubs</li><li>Very early versions may not be supported by the newest computers</li><li>Data rates are slow compared with, for example, Ethernet</li></ul></div>
+  </div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · A photo travels by packet switching</h2><div id="stA"></div>
+  <h2>2 · Serial versus parallel</h2><div id="stB"></div>
+  <h2>3 · Simplex, half-duplex and full-duplex</h2><div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Packet builder with CRC</h2>
+  <p>Type a message and choose how many characters go in each packet. Each packet gets a header and a trailer. The trailer holds the number of 1-bits in the payload (the course's version of a CRC). Corrupt a packet and see the receiver catch it.</p>
+  <div class="card"><input class="txin" id="pmsg" type="text" value="HELLO FROM DANANG" maxlength="40" aria-label="Message to send"><div id="plen"></div>
+    <div id="pks"></div>
+    <div class="row"><button class="b pri" id="pshuf">Send: arrive in a random order</button><button class="b" id="pasm">Reassemble</button><button class="b" id="prst">Reset</button></div>
+    <div class="verdict" id="pv" aria-live="polite"></div></div>
+
+  <h2>Lab 2 · Packet switching network</h2>
+  <p>Click a router to make it busy or broken (it turns red). Then send six packets. Each takes a random working route, so they arrive in different orders. Break a whole row of routers and see what happens.</p>
+  <div class="card"><svg id="net" viewBox="0 0 760 300" role="img" aria-label="A network with routers between computer A and computer B"></svg>
+    <div class="row"><button class="b pri" id="nsend">Send 6 packets</button><button class="b" id="nclr">Repair all routers</button></div>
+    <div class="tw"><table class="t ptbl" id="ntab"></table></div>
+    <div class="verdict" id="nv" aria-live="polite"></div></div>
+
+  <h2>Lab 3 · Serial or parallel?</h2>
+  <p>Eight wires carry one byte at a time in parallel. Make the cable longer and the bits arrive at slightly different times (skew). Serial sends the same data on one wire, so it never skews, but needs eight times as many clock ticks.</p>
+  <div class="card"><div class="grid2"><div><div id="s1"></div><div id="s2"></div>
+    <div class="readout"><div><small>Serial: ticks</small><strong id="sa"></strong></div><div><small>Parallel: ticks</small><strong id="sb"></strong></div><div><small>Skew risk</small><strong id="sc"></strong></div></div>
+    <div class="verdict" id="sv"></div></div>
+    <div><svg id="par" viewBox="0 0 560 300" role="img" aria-label="Eight parallel wires with bits arriving at slightly different times"></svg></div></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Serial or parallel?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the mode</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Packet switching in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Benefit or drawback?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>5 · Calculations</h2>
+  <p class="note">Plain numbers only. For hex, type the letters and numbers with no spaces.</p>
+  <div id="c1"></div>
+
+  <h2>6 · Name that mode (endless)</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>7 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Check current figures before quoting numbers.</p>
+  <div class="rw"><h3>Loading a web page</h3><p>A large web page is not sent as one lump. The server splits it into packets, routers send each one along the quickest working route, and your device puts them back in order using the sequence numbers.</p><div class="use"><b>Exam use:</b> the standard example for "explain how packet switching could be used to download a large web page".</div></div>
+  <div class="rw"><h3>Video calls and live sport</h3><p>When packets are delayed, lost or reordered, a video call can freeze, blur or lose sound. This is more noticeable for real-time streaming because there is no time to wait for lost packets to be re-sent.</p><div class="use"><b>Exam use:</b> a drawback of packet switching: it can cause problems with real-time streaming.</div></div>
+  <div class="rw"><h3>A road network for data</h3><p>Think of drivers who each take their own route to the same stadium. If one road is closed, others carry on. The drivers arrive in a different order from the one they left in, and the match cannot be reconstructed until all have arrived.</p><div class="use"><b>Exam use:</b> an analogy for re-routing around busy or faulty lines, and for packets arriving out of order.</div></div>
+  <div class="rw"><h3>Walkie-talkies and phone calls</h3><p>A walkie-talkie is half-duplex: you press to talk and release to listen. A normal phone call, or a broadband connection, is full-duplex: both sides can talk and be heard at the same time. Sending a document from a computer to a printer is simplex: data only goes one way.</p><div class="use"><b>Exam use:</b> the three standard examples for the three directions of transmission.</div></div>
+  <div class="rw"><h3>USB sticks, keyboards and phone chargers</h3><p>Plugging in a USB device makes the computer detect it, load the right driver and often power it from the cable. USB-C is now common on laptops and phones because the plug works either way round and can carry enough power to charge a laptop.</p><div class="use"><b>Exam use:</b> benefits of USB: automatic detection, standard connector, power from the cable, cannot be plugged in the wrong way.</div></div>
+  <div class="rw"><h3>Inside the computer</h3><p>Components on the motherboard are very close together, so parallel pathways can move many bits at once with little risk of skew. Over a long cable the bits would drift out of step, so long-distance links such as telephone lines use serial.</p><div class="use"><b>Exam use:</b> why parallel suits short distances and serial suits long ones.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each underlined phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe the contents of the header of a data packet.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Name each item and, where you can, say what it is for.</div>
+    <div class="ans"><span class="mk k" data-t="1">The header contains the IP address of the sender and the IP address of the receiver.</span> <span class="mk k" data-t="2">It contains the sequence (packet) number, so the packets can be reassembled in the correct order.</span> <span class="mk k" data-t="3">It contains the size of the packet, so the receiver can check whether the packet arrived intact.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Putting the CRC in the header. The error check is in the <b>trailer</b>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Explain how packet switching could be used to download a large web page from a website.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Follow the journey: split, route, arrive, reassemble. Mention routers and sequence numbers.</div>
+    <div class="ans"><span class="mk k" data-t="1">The web page data is split into data packets, each with a header containing the destination IP address and a sequence number.</span> <span class="mk k" data-t="2">Each packet is sent independently, and can take a different route.</span> <span class="mk k" data-t="3">Routers along the way read the destination address and decide where to send each packet next.</span> <span class="mk k" data-t="4">At the destination the packets may arrive out of order, so they are reassembled using the sequence numbers to display the page.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "the packets all go the same way". The point of packet switching is that they <b>do not</b> have to.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Give</span> <span class="mark">4 marks</span> Give two benefits and two drawbacks of packet switching.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two of each. Keep them short and distinct.</div>
+    <div class="ans"><span class="mk k" data-t="1">Benefit: it does not tie up a single communication line.</span> <span class="mk k" data-t="2">Benefit: packets can be re-routed around failed, busy or faulty lines.</span> <span class="mk e" data-t="3">Drawback: packets can be lost, and need to be re-sent.</span> <span class="mk e" data-t="4">Drawback: there is a delay at the destination while packets are reordered (and it can be less suitable for real-time streaming).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "it is faster" and "it is slower" with no reason. Say <i>why</i>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a cyclic redundancy check (CRC) is used to check a data packet.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Sender calculates, stores in the trailer, receiver recalculates, compare, decide.</div>
+    <div class="ans"><span class="mk k" data-t="1">The sending computer adds up the 1-bits in the payload and stores the total (as a hex value) in the trailer.</span> <span class="mk k" data-t="2">The packet is sent to the receiving computer.</span> <span class="mk k" data-t="3">The receiving computer recalculates the number of 1-bits in the payload and compares it with the value in the trailer.</span> <span class="mk k" data-t="4">If the values match, no transmission error has occurred; if they differ, the packet is re-sent.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Forgetting that the receiver does its <b>own</b> calculation. Comparing needs two values.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">State</span> <span class="mark">3 marks</span> A computer sends data to a printer. Another sends a message to a colleague on a video call. A user speaks on a walkie-talkie. State the transmission mode for each.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Direction only: one way, both ways in turn, or both ways together.</div>
+    <div class="ans"><span class="mk k" data-t="1">Computer to printer: simplex (one direction only).</span> <span class="mk k" data-t="2">Video call: full-duplex (both directions at the same time).</span> <span class="mk k" data-t="3">Walkie-talkie: half-duplex (both directions, but not at the same time).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Mixing up half- and full-duplex. Half = take turns. Full = simultaneously.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Explain</span> <span class="mark">4 marks</span> A school sends data between two computers in the same room using a short cable, and between two schools over a long distance. Explain why parallel is better for one and serial for the other.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Use "skew" and "faster/slower". One reason per mode, linked to distance.</div>
+    <div class="ans"><span class="mk k" data-t="1">Parallel sends several bits at the same time down several wires, so it is faster.</span> <span class="mk k" data-t="2">Over a short distance the bits are unlikely to arrive out of sync, so parallel is suitable.</span> <span class="mk k" data-t="3">Over a long distance parallel data can become skewed (bits arrive out of order).</span> <span class="mk k" data-t="4">Serial sends one bit at a time on a single wire, so the bits arrive in order and it is more reliable over long distances.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying parallel is "better" without conditions. The honest answer is that each suits a different distance.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe what happens when a USB device is plugged into a computer for the first time.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Detect, recognise and load the driver, or prompt for it.</div>
+    <div class="ans"><span class="mk k" data-t="1">The computer automatically detects that a device has been connected (a change in voltage on the data wires).</span> <span class="mk k" data-t="2">The device is recognised, and the computer looks for the matching device driver.</span> <span class="mk k" data-t="3">If the driver is already installed it is loaded; if not, the user is prompted to download it.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "it works automatically" and stopping. Name the driver.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Give</span> <span class="mark">4 marks</span> Give two benefits and two drawbacks of using USB to connect devices.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Pick distinct points. Cable length and speed are the usual drawbacks.</div>
+    <div class="ans"><span class="mk k" data-t="1">Benefit: devices are detected automatically and drivers are loaded automatically.</span> <span class="mk k" data-t="2">Benefit: the cable supplies +5 V, so many devices need no separate power supply.</span> <span class="mk e" data-t="3">Drawback: standard USB cables are limited to about 5 m.</span> <span class="mk e" data-t="4">Drawback: the data transfer rate is slower than some other connections, such as Ethernet.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Quoting a "benefit" that is not specific to USB, such as "it is fast".</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Header, payload, trailer.</b> Addresses and sequence number in the header, data in the payload, end marker and CRC in the trailer.</li>
+    <li><b>Packet switching answers need the chain:</b> split, independent routes, routers read the destination address, arrive out of order, reassembled by sequence number.</li>
+    <li><b>Say who calculates the CRC.</b> Sender stores it, receiver recalculates, then they compare.</li>
+    <li><b>Direction and method are separate.</b> Simplex, half, full describe direction. Serial, parallel describe how many bits at once.</li>
+    <li><b>Half-duplex = take turns. Full-duplex = same time.</b> Use walkie-talkie and phone call or broadband to remember.</li>
+    <li><b>Parallel is faster but skews over distance.</b> Serial is slower but reliable over distance.</li>
+    <li><b>USB is serial.</b> Four wires: two power, two data. Detects devices, loads drivers, about 5 m limit.</li>
+    <li><b>Benefit and drawback questions:</b> give a different point for each mark, and make it specific.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Give</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Describe</td><td>What happens, step by step, or the main features.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>

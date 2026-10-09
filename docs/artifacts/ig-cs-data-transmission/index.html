@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="en"><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Types and Methods of Data Transmission</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .arr{fill:var(--muted)}
+svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+table.mx td,table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+table.mx td.z{color:var(--muted);opacity:.6} table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+table.mx td.ls{text-align:left}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<style>
+.txin{font:600 1.05rem var(--mono);padding:9px 12px;border-radius:9px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,420px)}
+.drill select,.sel{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .qline{font-size:1.08rem;font-weight:600;margin:8px 0}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+.flag{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--bad-soft);color:var(--bad)}
+.okf{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--good-soft);color:var(--good)}
+.pk{display:flex;gap:0;margin:8px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;font:600 .8rem var(--mono);background:var(--surface)}
+.pk>div{padding:8px 10px;border-right:1px solid var(--line)}.pk>div:last-child{border-right:0}
+.pk .h{background:var(--accent-soft);color:var(--accent)}.pk .p{flex:1;background:var(--soft)}.pk .t{background:var(--warn-soft);color:var(--warn)}
+.pk small{display:block;font:700 .62rem var(--sans);letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.pk.bad{border-color:var(--bad)}.pk.bad .p{background:var(--bad-soft)}
+.netbtn{cursor:pointer}
+.ptbl td{font-family:var(--mono);font-size:.85rem}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 2 · 2.1</div>
+  <h1>Types and Methods of Data Transmission</h1>
+  <p class="lead">How data is split into packets and routed across a network, the five transmission modes (serial, parallel, simplex, half-duplex, full-duplex), and how USB moves data between a device and a computer.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>Data is rarely sent as one long stream. Over a network it is cut into small <span class="kw">data packets</span>, each sent independently and put back together at the other end (<span class="kw">packet switching</span>). Between two devices, the data can travel <b>one bit at a time</b> (serial) or <b>several bits at once</b> (parallel), and in <b>one direction</b> or <b>both</b>.</p>
+  </div>
+
+  <h2>2.1.1 Data packets</h2>
+  <p>A <span class="kw">data packet</span> is a small part of a message, typically about 64 KiB. Splitting data this way means each packet can take a different route, so a busy or broken line can be avoided. The only real drawback is that the packets must be reassembled at the destination.</p>
+  <h3>Packet structure</h3>
+  <div class="pk" aria-label="Packet structure"><div class="h"><small>Header</small>sender IP · receiver IP · sequence number · packet size</div><div class="p"><small>Payload</small>the actual data (about 64 KiB)</div><div class="t"><small>Trailer</small>end marker · error check (CRC)</div></div>
+  <div class="grid2">
+    <div class="card"><h3>Header</h3><p>The IP address of the <b>sender</b> and of the <b>receiver</b>, the <b>sequence number</b> (so packets can be put back in order) and the <b>packet size</b> (so the receiver can check each one arrived intact).</p></div>
+    <div class="card"><h3>Payload</h3><p>The <b>actual data</b> being carried by this packet.</p></div>
+    <div class="card"><h3>Trailer</h3><p>A way of <b>identifying the end</b> of the packet, and an <b>error check</b>: a <span class="kw">cyclic redundancy check (CRC)</span>.</p></div>
+  </div>
+  <div class="card"><h3>Cyclic redundancy check (CRC), as the course describes it</h3>
+    <ol><li>The sender adds up all the <b>1-bits</b> in the payload and stores the total, as a hex value, in the trailer.</li>
+    <li>When the packet arrives, the receiver <b>recalculates</b> the number of 1-bits in the payload.</li>
+    <li>It compares the new value with the one in the trailer.</li>
+    <li><b>Match</b>: no transmission error. <b>No match</b>: the packet is re-sent.</li></ol>
+    <p class="note">Real CRCs use a more advanced calculation. Use the 1-bit counting description in the exam.</p></div>
+
+  <h3>Packet switching</h3>
+  <p><span class="kw">Packet switching</span> breaks a message into packets, and each packet is sent <b>independently</b> from start to finish. At each stage of the journey is a <span class="kw">node</span> containing a <span class="kw">router</span>. The router reads the <b>destination IP address</b> in the header and decides where to send the packet next.</p>
+  <ul>
+    <li>Each packet follows <b>its own path</b>, chosen by the routers.</li>
+    <li>The route depends partly on how many packets are already waiting at each node.</li>
+    <li>Packets can arrive in a <b>different order</b> from the one they were sent in. The receiver uses the <b>sequence numbers</b> to reassemble them.</li>
+  </ul>
+  <div class="grid2">
+    <div class="card"><h3>Benefits</h3><ul><li>No need to tie up a single communication line</li><li>Failed, busy or faulty lines can be avoided by re-routing packets</li><li>Easy to expand</li><li>A high data transmission rate is possible</li></ul></div>
+    <div class="card"><h3>Drawbacks</h3><ul><li>Packets can be lost and need to be re-sent</li><li>More prone to problems with <b>real-time streaming</b>, such as a live sports match</li><li>A delay at the destination while packets are reordered</li></ul></div>
+  </div>
+  <div class="tip"><b class="h">Beyond the syllabus, but useful</b>To stop lost packets bouncing around forever, each header can carry a <span class="kw">hop number</span> that goes down by 1 at every router. At 0 the packet is deleted, and the receiver asks for it to be re-sent. The course book says hopping is not on the syllabus.</div>
+
+  <h2>2.1.2 Transmission modes</h2>
+  <p>Three things matter when sending data: the <b>direction</b> it travels, the <b>method</b> (how many bits at once), and how it is <b>synchronised</b> (kept in order).</p>
+  <h3>Direction</h3>
+  <div class="tw"><table class="t">
+    <tr><th>Mode</th><th>Direction</th><th>Example</th></tr>
+    <tr><td><b>Simplex</b></td><td>One direction <b>only</b></td><td>Computer to printer</td></tr>
+    <tr><td><b>Half-duplex</b></td><td>Both directions, but <b>not at the same time</b></td><td>Walkie-talkie</td></tr>
+    <tr><td><b>Full-duplex</b></td><td>Both directions <b>at the same time</b></td><td>Broadband internet connection</td></tr>
+  </table></div>
+  <h3>Method</h3>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Serial</th><th>Parallel</th></tr>
+    <tr><td>How it works</td><td>One bit at a time down a <b>single</b> wire or channel</td><td>Several bits (usually a byte) at the same time down <b>several</b> wires</td></tr>
+    <tr><td>Speed</td><td>Slower</td><td>Faster</td></tr>
+    <tr><td>Distance</td><td>Works well over <b>long</b> distances</td><td>Works well over <b>short</b> distances</td></tr>
+    <tr><td>Synchronisation</td><td>Bits arrive in the correct order</td><td>Bits can become <span class="kw">skewed</span> (arrive out of sync), especially over about 20 m or more</td></tr>
+    <tr><td>Interference</td><td>Less risk (fewer wires)</td><td>More risk</td></tr>
+    <tr><td>Cost</td><td>Cheaper, less hardware</td><td>More expensive, more hardware</td></tr>
+    <tr><td>Example</td><td>USB, telephone lines</td><td>Internal pathways on a circuit board</td></tr>
+  </table></div>
+  <div class="warn"><b class="h">Two separate questions</b>Serial/parallel is about <i>how many bits at once</i>. Simplex/half/full is about <i>direction</i>. Any serial or parallel link can also be simplex, half-duplex or full-duplex. Answers such as "serial, half-duplex" combine one from each.</div>
+
+  <h2>2.1.3 Universal Serial Bus (USB)</h2>
+  <p>USB is a form of <b>serial</b> data transmission and the most common type of input/output port. It is a standard way to connect devices to a computer, and it supports both <b>half-duplex and full-duplex</b>.</p>
+  <ul>
+    <li>The cable has <b>four wires</b>: two for power (red +5 V and black ground) and two for data (white and green), plus a shield.</li>
+    <li>The computer <b>detects</b> a new device automatically (a small change in voltage on the data wires).</li>
+    <li>The device is recognised and its <b>device driver</b> is loaded. If the driver is missing, the user is prompted to download it.</li>
+    <li><b>USB-C</b> is a newer 24-pin connector that fits <b>either way round</b>, is smaller, can carry power for charging, and supports fast data rates.</li>
+  </ul>
+  <div class="grid2">
+    <div class="card"><h3>Benefits of USB</h3><ul><li>Devices are detected automatically and drivers load automatically</li><li>Connector fits only one way (standard type), so it cannot be plugged in wrongly</li><li>Industry standard, so wide support</li><li>Supports different transmission rates</li><li>Cable supplies +5 V, so no extra power supply is needed</li><li>The USB protocol asks for data to be re-sent if an error is found, so transfers are error-free</li><li>Easy to add more ports with a hub</li><li>Backward compatible</li></ul></div>
+    <div class="card"><h3>Drawbacks of USB</h3><ul><li>Standard cables support a maximum of about <b>5 m</b>; longer needs hubs</li><li>Very early versions may not be supported by the newest computers</li><li>Data rates are slow compared with, for example, Ethernet</li></ul></div>
+  </div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · A photo travels by packet switching</h2><div id="stA"></div>
+  <h2>2 · Serial versus parallel</h2><div id="stB"></div>
+  <h2>3 · Simplex, half-duplex and full-duplex</h2><div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Packet builder with CRC</h2>
+  <p>Type a message and choose how many characters go in each packet. Each packet gets a header and a trailer. The trailer holds the number of 1-bits in the payload (the course's version of a CRC). Corrupt a packet and see the receiver catch it.</p>
+  <div class="card"><input class="txin" id="pmsg" type="text" value="HELLO FROM DANANG" maxlength="40" aria-label="Message to send"><div id="plen"></div>
+    <div id="pks"></div>
+    <div class="row"><button class="b pri" id="pshuf">Send: arrive in a random order</button><button class="b" id="pasm">Reassemble</button><button class="b" id="prst">Reset</button></div>
+    <div class="verdict" id="pv" aria-live="polite"></div></div>
+
+  <h2>Lab 2 · Packet switching network</h2>
+  <p>Click a router to make it busy or broken (it turns red). Then send six packets. Each takes a random working route, so they arrive in different orders. Break a whole row of routers and see what happens.</p>
+  <div class="card"><svg id="net" viewBox="0 0 760 300" role="img" aria-label="A network with routers between computer A and computer B"></svg>
+    <div class="row"><button class="b pri" id="nsend">Send 6 packets</button><button class="b" id="nclr">Repair all routers</button></div>
+    <div class="tw"><table class="t ptbl" id="ntab"></table></div>
+    <div class="verdict" id="nv" aria-live="polite"></div></div>
+
+  <h2>Lab 3 · Serial or parallel?</h2>
+  <p>Eight wires carry one byte at a time in parallel. Make the cable longer and the bits arrive at slightly different times (skew). Serial sends the same data on one wire, so it never skews, but needs eight times as many clock ticks.</p>
+  <div class="card"><div class="grid2"><div><div id="s1"></div><div id="s2"></div>
+    <div class="readout"><div><small>Serial: ticks</small><strong id="sa"></strong></div><div><small>Parallel: ticks</small><strong id="sb"></strong></div><div><small>Skew risk</small><strong id="sc"></strong></div></div>
+    <div class="verdict" id="sv"></div></div>
+    <div><svg id="par" viewBox="0 0 560 300" role="img" aria-label="Eight parallel wires with bits arriving at slightly different times"></svg></div></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Serial or parallel?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the mode</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Packet switching in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Benefit or drawback?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>5 · Calculations</h2>
+  <p class="note">Plain numbers only. For hex, type the letters and numbers with no spaces.</p>
+  <div id="c1"></div>
+
+  <h2>6 · Name that mode (endless)</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>7 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Check current figures before quoting numbers.</p>
+  <div class="rw"><h3>Loading a web page</h3><p>A large web page is not sent as one lump. The server splits it into packets, routers send each one along the quickest working route, and your device puts them back in order using the sequence numbers.</p><div class="use"><b>Exam use:</b> the standard example for "explain how packet switching could be used to download a large web page".</div></div>
+  <div class="rw"><h3>Video calls and live sport</h3><p>When packets are delayed, lost or reordered, a video call can freeze, blur or lose sound. This is more noticeable for real-time streaming because there is no time to wait for lost packets to be re-sent.</p><div class="use"><b>Exam use:</b> a drawback of packet switching: it can cause problems with real-time streaming.</div></div>
+  <div class="rw"><h3>A road network for data</h3><p>Think of drivers who each take their own route to the same stadium. If one road is closed, others carry on. The drivers arrive in a different order from the one they left in, and the match cannot be reconstructed until all have arrived.</p><div class="use"><b>Exam use:</b> an analogy for re-routing around busy or faulty lines, and for packets arriving out of order.</div></div>
+  <div class="rw"><h3>Walkie-talkies and phone calls</h3><p>A walkie-talkie is half-duplex: you press to talk and release to listen. A normal phone call, or a broadband connection, is full-duplex: both sides can talk and be heard at the same time. Sending a document from a computer to a printer is simplex: data only goes one way.</p><div class="use"><b>Exam use:</b> the three standard examples for the three directions of transmission.</div></div>
+  <div class="rw"><h3>USB sticks, keyboards and phone chargers</h3><p>Plugging in a USB device makes the computer detect it, load the right driver and often power it from the cable. USB-C is now common on laptops and phones because the plug works either way round and can carry enough power to charge a laptop.</p><div class="use"><b>Exam use:</b> benefits of USB: automatic detection, standard connector, power from the cable, cannot be plugged in the wrong way.</div></div>
+  <div class="rw"><h3>Inside the computer</h3><p>Components on the motherboard are very close together, so parallel pathways can move many bits at once with little risk of skew. Over a long cable the bits would drift out of step, so long-distance links such as telephone lines use serial.</p><div class="use"><b>Exam use:</b> why parallel suits short distances and serial suits long ones.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each underlined phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe the contents of the header of a data packet.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Name each item and, where you can, say what it is for.</div>
+    <div class="ans"><span class="mk k" data-t="1">The header contains the IP address of the sender and the IP address of the receiver.</span> <span class="mk k" data-t="2">It contains the sequence (packet) number, so the packets can be reassembled in the correct order.</span> <span class="mk k" data-t="3">It contains the size of the packet, so the receiver can check whether the packet arrived intact.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Putting the CRC in the header. The error check is in the <b>trailer</b>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Explain how packet switching could be used to download a large web page from a website.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Follow the journey: split, route, arrive, reassemble. Mention routers and sequence numbers.</div>
+    <div class="ans"><span class="mk k" data-t="1">The web page data is split into data packets, each with a header containing the destination IP address and a sequence number.</span> <span class="mk k" data-t="2">Each packet is sent independently, and can take a different route.</span> <span class="mk k" data-t="3">Routers along the way read the destination address and decide where to send each packet next.</span> <span class="mk k" data-t="4">At the destination the packets may arrive out of order, so they are reassembled using the sequence numbers to display the page.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "the packets all go the same way". The point of packet switching is that they <b>do not</b> have to.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Give</span> <span class="mark">4 marks</span> Give two benefits and two drawbacks of packet switching.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two of each. Keep them short and distinct.</div>
+    <div class="ans"><span class="mk k" data-t="1">Benefit: it does not tie up a single communication line.</span> <span class="mk k" data-t="2">Benefit: packets can be re-routed around failed, busy or faulty lines.</span> <span class="mk e" data-t="3">Drawback: packets can be lost, and need to be re-sent.</span> <span class="mk e" data-t="4">Drawback: there is a delay at the destination while packets are reordered (and it can be less suitable for real-time streaming).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "it is faster" and "it is slower" with no reason. Say <i>why</i>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a cyclic redundancy check (CRC) is used to check a data packet.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Sender calculates, stores in the trailer, receiver recalculates, compare, decide.</div>
+    <div class="ans"><span class="mk k" data-t="1">The sending computer adds up the 1-bits in the payload and stores the total (as a hex value) in the trailer.</span> <span class="mk k" data-t="2">The packet is sent to the receiving computer.</span> <span class="mk k" data-t="3">The receiving computer recalculates the number of 1-bits in the payload and compares it with the value in the trailer.</span> <span class="mk k" data-t="4">If the values match, no transmission error has occurred; if they differ, the packet is re-sent.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Forgetting that the receiver does its <b>own</b> calculation. Comparing needs two values.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">State</span> <span class="mark">3 marks</span> A computer sends data to a printer. Another sends a message to a colleague on a video call. A user speaks on a walkie-talkie. State the transmission mode for each.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Direction only: one way, both ways in turn, or both ways together.</div>
+    <div class="ans"><span class="mk k" data-t="1">Computer to printer: simplex (one direction only).</span> <span class="mk k" data-t="2">Video call: full-duplex (both directions at the same time).</span> <span class="mk k" data-t="3">Walkie-talkie: half-duplex (both directions, but not at the same time).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Mixing up half- and full-duplex. Half = take turns. Full = simultaneously.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Explain</span> <span class="mark">4 marks</span> A school sends data between two computers in the same room using a short cable, and between two schools over a long distance. Explain why parallel is better for one and serial for the other.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Use "skew" and "faster/slower". One reason per mode, linked to distance.</div>
+    <div class="ans"><span class="mk k" data-t="1">Parallel sends several bits at the same time down several wires, so it is faster.</span> <span class="mk k" data-t="2">Over a short distance the bits are unlikely to arrive out of sync, so parallel is suitable.</span> <span class="mk k" data-t="3">Over a long distance parallel data can become skewed (bits arrive out of order).</span> <span class="mk k" data-t="4">Serial sends one bit at a time on a single wire, so the bits arrive in order and it is more reliable over long distances.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying parallel is "better" without conditions. The honest answer is that each suits a different distance.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe what happens when a USB device is plugged into a computer for the first time.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Detect, recognise and load the driver, or prompt for it.</div>
+    <div class="ans"><span class="mk k" data-t="1">The computer automatically detects that a device has been connected (a change in voltage on the data wires).</span> <span class="mk k" data-t="2">The device is recognised, and the computer looks for the matching device driver.</span> <span class="mk k" data-t="3">If the driver is already installed it is loaded; if not, the user is prompted to download it.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "it works automatically" and stopping. Name the driver.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Give</span> <span class="mark">4 marks</span> Give two benefits and two drawbacks of using USB to connect devices.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Pick distinct points. Cable length and speed are the usual drawbacks.</div>
+    <div class="ans"><span class="mk k" data-t="1">Benefit: devices are detected automatically and drivers are loaded automatically.</span> <span class="mk k" data-t="2">Benefit: the cable supplies +5 V, so many devices need no separate power supply.</span> <span class="mk e" data-t="3">Drawback: standard USB cables are limited to about 5 m.</span> <span class="mk e" data-t="4">Drawback: the data transfer rate is slower than some other connections, such as Ethernet.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Quoting a "benefit" that is not specific to USB, such as "it is fast".</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Header, payload, trailer.</b> Addresses and sequence number in the header, data in the payload, end marker and CRC in the trailer.</li>
+    <li><b>Packet switching answers need the chain:</b> split, independent routes, routers read the destination address, arrive out of order, reassembled by sequence number.</li>
+    <li><b>Say who calculates the CRC.</b> Sender stores it, receiver recalculates, then they compare.</li>
+    <li><b>Direction and method are separate.</b> Simplex, half, full describe direction. Serial, parallel describe how many bits at once.</li>
+    <li><b>Half-duplex = take turns. Full-duplex = same time.</b> Use walkie-talkie and phone call or broadband to remember.</li>
+    <li><b>Parallel is faster but skews over distance.</b> Serial is slower but reliable over distance.</li>
+    <li><b>USB is serial.</b> Four wires: two power, two data. Detects devices, loads drivers, about 5 m limit.</li>
+    <li><b>Benefit and drawback questions:</b> give a different point for each mark, and make it specific.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Give</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Describe</td><td>What happens, step by step, or the main features.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.max(0, Math.min(fr.length - 1, Math.round(s.i)))].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+const MONO = "font-family:ui-monospace,Menlo,Consolas,monospace;";
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+const ones = (s) => [...s].reduce((n, c) => n + c.charCodeAt(0).toString(2).split("1").length - 1, 0);
+
+/* ---------- shared network layout (computer A, three layers of routers, computer B) ---------- */
+const NODES = { A: [50, 150], R1: [190, 50], R2: [190, 150], R3: [190, 250], R4: [360, 100], R5: [360, 200], R6: [530, 100], R7: [530, 200], B: [710, 150] };
+const EDGES = [["A", "R1"], ["A", "R2"], ["A", "R3"], ["R1", "R4"], ["R2", "R4"], ["R2", "R5"], ["R3", "R5"], ["R4", "R6"], ["R4", "R7"], ["R5", "R6"], ["R5", "R7"], ["R6", "B"], ["R7", "B"]];
+const ADJ = {}; EDGES.forEach(([a, b]) => { (ADJ[a] = ADJ[a] || []).push(b); (ADJ[b] = ADJ[b] || []).push(a); });
+const PCOL = ["var(--accent)", "var(--bad)", "var(--good)", "var(--warn)", "var(--n)", "var(--k)"];
+function paths(failed) {
+  const out = [];
+  (function dfs(n, seen) {
+    if (n === "B") return out.push(seen);
+    ADJ[n].forEach((m) => { if (!seen.includes(m) && !failed.has(m) && !(n !== "A" && m === "A")) dfs(m, [...seen, m]); });
+  })("A", ["A"]);
+  return out.filter((p) => p.every((n, i) => i === 0 || NODES[n][0] > NODES[p[i - 1]][0]));
+}
+function netBase(failed, click, mid = "") {
+  let o = "";
+  EDGES.forEach(([a, b]) => { o += SV.line(NODES[a][0], NODES[a][1], NODES[b][0], NODES[b][1], "edge"); });
+  o += mid;
+  Object.entries(NODES).forEach(([id, [x, y]]) => {
+    const isR = id[0] === "R", bad = failed && failed.has(id);
+    o += `<g class="${isR && click ? "netbtn" : ""}" data-n="${id}">` + (isR ? SV.circle(x, y, 19, "nd" + (bad ? " nd-no" : ""), { "data-n": id }) : SV.rect(x - 28, y - 22, 56, 44, "f1", { rx: 10 }) + SV.rect(x - 28, y - 22, 56, 44, "ax", { rx: 10 })) + SV.text(x, y + 5, id, "lbl bd", { "text-anchor": "middle", "pointer-events": "none" }) + `</g>`;
+  });
+  return o;
+}
+function along(pts, u) {
+  const segs = []; let tot = 0;
+  for (let i = 1; i < pts.length; i++) { const l = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); segs.push(l); tot += l; }
+  let d = u * tot;
+  for (let i = 0; i < segs.length; i++) { if (d <= segs[i] || i === segs.length - 1) { const t = clamp(d / segs[i]); return [pts[i][0] + (pts[i + 1][0] - pts[i][0]) * t, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * t]; } d -= segs[i]; }
+}
+const pkt = (x, y, n, col, op = 1) => SV.rect(x - 14, y - 11, 28, 22, "", { rx: 5, style: `fill:${col}`, opacity: op }) + SV.text(x, y + 5, n, "lbl bd", { "text-anchor": "middle", style: "fill:#fff", opacity: op });
+
+/* ---------- 1. packet switching ---------- */
+const WR = [["A", "R1", "R4", "R6", "B"], ["A", "R2", "R4", "R7", "B"], ["A", "R3", "R5", "R7", "B"], ["A", "R2", "R5", "R6", "B"], ["A", "R1", "R4", "R7", "B"]].map((r) => r.map((n) => NODES[n]));
+const SPEED = [0.85, 1.0, 0.6, 0.75, 0.7];
+const ARRIVE = [1, 0, 4, 2, 3]; // packet index -> arrival slot (P2,P1,P4,P5,P3)
+function psChart(s) {
+  let m = "";
+  if (s.spl > 0.02) WR.forEach((r, i) => { if (s.p > 0.02) m += SV.path(ptsPath(r.map(([x, y]) => [x, y + (i - 2) * 3])), "", { style: `stroke:${PCOL[i]};stroke-width:3;fill:none`, opacity: 0.35 }); });
+  let o = netBase(null, false, m);
+  if (s.spl < 0.98) o += SV.rect(8, 58, 84, 42, "f4", { rx: 8, opacity: 1 - s.spl }) + SV.text(50, 85, "Photo", "lbl bd t4", { "text-anchor": "middle", opacity: 1 - s.spl });
+  if (s.spl > 0.02) WR.forEach((r, i) => {
+    const u = clamp(s.p * SPEED[i]), [x, y] = along(r, u), sx = 50, sy = 100 + i * 25;
+    if (u >= 0.999) return;
+    o += pkt(sx + (x - sx) * clamp(u * 12), sy + (y - sy) * clamp(u * 12), i + 1, PCOL[i], s.spl);
+  });
+  o += SV.text(380, 300, "Packets as they arrive at B", "sm", { "text-anchor": "middle" });
+  WR.forEach((r, i) => {
+    const arrived = clamp(s.p * SPEED[i]) >= 0.999; if (!arrived) return;
+    const slot = (1 - s.asm) * ARRIVE[i] + s.asm * i;
+    o += pkt(260 + slot * 60, 322, i + 1, PCOL[i]);
+  });
+  if (s.asm > 0.9) o += SV.text(380, 354, "Sequence numbers 1 to 5: the photo is rebuilt", "lbl bd t3", { "text-anchor": "middle" });
+  return o;
+}
+Lib.stepper($("#stA"), { w: 760, h: 365, label: "A photo split into five packets and routed across a network", base: { spl: 0, p: 0, asm: 0 }, tween: 900, dwell: 4800, draw: psChart, steps: [
+  { cap: "Computer A wants to send a <b>photograph</b> to computer B. In between is a network of routers (R1 to R7).", s: { spl: 0, p: 0, asm: 0 } },
+  { cap: "The photo is <b>split into five packets</b>. Each has a header (addresses and sequence number 1 to 5), a payload and a trailer.", s: { spl: 1, p: 0, asm: 0 } },
+  { cap: "Each packet is sent <b>independently</b>. At every router, the destination address in the header decides which way it goes next, so the packets take <b>different routes</b>.", s: { spl: 1, p: 0.55, asm: 0 } },
+  { cap: "The packets reach B in a <b>different order</b> from the one they were sent in: here 2, 1, 4, 5, 3.", s: { spl: 1, p: 1.7, asm: 0 } },
+  { cap: "B uses the <b>sequence numbers</b> in the headers to put the packets back in order and rebuild the photo.", s: { spl: 1, p: 1.7, asm: 1 } },
+] });
+
+/* ---------- 2. serial versus parallel ---------- */
+const BYTE = "10011011", OFF = [0, 0.8, 0.3, 1.0, 0.5, 0.9, 0.2, 0.6];
+const bitC = (x, y, b, op = 1) => SV.circle(x, y, 13, "", { style: `fill:${b === "1" ? "var(--accent)" : "var(--soft)"};stroke:var(--accent);stroke-width:2`, opacity: op }) + SV.text(x, y + 5, b, "lbl bd", { "text-anchor": "middle", style: MONO + (b === "1" ? "fill:#fff" : ""), opacity: op });
+function spChart(s) {
+  const D = 3, X0 = 170, X1 = 590;
+  let o = SV.rect(30, 20, 120, 260, "f1", { rx: 10 }) + SV.rect(610, 20, 120, 260, "f3", { rx: 10 }) + SV.text(90, 14, "Sender", "lbl bd", { "text-anchor": "middle" }) + SV.text(670, 14, "Receiver", "lbl bd", { "text-anchor": "middle" });
+  if (s.mode < 0.5) {
+    o += SV.line(X0, 150, X1, 150, "ax") + SV.text(380, 190, "one wire", "sm", { "text-anchor": "middle" });
+    let sent = "", got = "";
+    [...BYTE].forEach((b, i) => {
+      const f = clamp((s.t - i) / D);
+      if (f <= 0) sent += b; else if (f >= 1) got += b; else o += bitC(X0 + f * (X1 - X0), 150, b);
+    });
+    o += SV.text(90, 155, sent || "·", "lbl bd", { "text-anchor": "middle", style: MONO + "font-size:20px;letter-spacing:2px" }) + SV.text(670, 155, got || "·", "lbl bd t3", { "text-anchor": "middle", style: MONO + "font-size:20px;letter-spacing:2px" });
+    o += SV.text(380, 250, `Clock tick ${Math.min(8, Math.floor(s.t))} of 8: bits delivered in order`, "sm bd", { "text-anchor": "middle" });
+  } else {
+    [...BYTE].forEach((b, i) => {
+      const y = 48 + i * 29, f = clamp((s.t - s.sk * OFF[i] * 1.5) / D);
+      o += SV.line(X0, y, X1, y, "ax", { style: "stroke-width:1.5" });
+      if (f <= 0) o += bitC(90, y, b, 1); else if (f >= 1) o += bitC(670, y, b); else o += bitC(X0 + f * (X1 - X0), y, b);
+    });
+    o += SV.text(380, 292, s.sk > 0.5 ? "Long cable: bits drift out of step (skew)" : "Short cable: all 8 bits arrive together, in one clock tick", "sm bd", { "text-anchor": "middle" });
+  }
+  return o;
+}
+Lib.stepper($("#stB"), { w: 760, h: 300, label: "Serial and parallel transmission of one byte", base: { mode: 0, t: 0, sk: 0 }, tween: 700, dwell: 4200, draw: spChart, steps: [
+  { cap: "<b>Serial</b>: the byte 10011011 waits at the sender. There is only <b>one wire</b>, so only one bit can travel at a time.", s: { mode: 0, t: 0, sk: 0 } },
+  { cap: "The bits leave <b>one after the other</b>, in a single stream. Some have arrived, some are on the wire, some are still waiting.", s: { mode: 0, t: 5, sk: 0 } },
+  { cap: "After <b>8 clock ticks</b> the whole byte has arrived, and in the right order. Serial is slower but reliable, even over long distances.", s: { mode: 0, t: 11, sk: 0 } },
+  { cap: "<b>Parallel</b>: the same byte, but now with <b>8 wires</b>, one for each bit.", s: { mode: 1, t: 0, sk: 0 } },
+  { cap: "Over a short distance all 8 bits arrive <b>at the same time</b>, in just one clock tick. Parallel is faster.", s: { mode: 1, t: 3.5, sk: 0 } },
+  { cap: "Over a long cable the bits may arrive at slightly different times. This is <b>skew</b>. The byte can be corrupted, so parallel suits short distances.", s: { mode: 1, t: 2.6, sk: 1 } },
+] });
+
+/* ---------- 3. duplex modes ---------- */
+function dupChart(s) {
+  let o = SV.rect(40, 70, 140, 120, "f1", { rx: 12 }) + SV.rect(580, 70, 140, 120, "f3", { rx: 12 }) + SV.text(110, 138, s.m < 0.5 ? "Computer" : "A", "lbl bd", { "text-anchor": "middle", style: "font-size:18px" }) + SV.text(650, 138, s.m < 0.5 ? "Printer" : "B", "lbl bd", { "text-anchor": "middle", style: "font-size:18px" });
+  const arrow = (y, dir, op) => op > 0.02 ? SV.line(210, y, 550, y, "c1", { opacity: op, style: "stroke-width:6" }) + (dir ? SV.arrowHead(560, y, "r", "dot1").replace("/>", ` opacity="${op}"/>`) : SV.arrowHead(200, y, "l", "dot1").replace("/>", ` opacity="${op}"/>`)) : "";
+  o += arrow(s.m > 0.5 && s.b > 0.5 && s.a > 0.5 ? 110 : 130, 1, s.a) + arrow(s.m > 0.5 && s.b > 0.5 && s.a > 0.5 ? 160 : 130, 0, s.b);
+  return o;
+}
+Lib.stepper($("#stC"), { w: 760, h: 260, label: "Simplex, half-duplex and full-duplex transmission", base: { m: 0, a: 0, b: 0 }, tween: 500, dwell: 4200, draw: dupChart, steps: [
+  { cap: "<b>Simplex</b>: data travels in <b>one direction only</b>. A computer sends a document to a printer, and the printer never sends data back along this link.", s: { m: 0, a: 1, b: 0 } },
+  { cap: "<b>Half-duplex</b>: data can go both ways, but <b>not at the same time</b>. First A sends while B listens, like a walkie-talkie.", s: { m: 1, a: 1, b: 0 } },
+  { cap: "Then they swap: B sends while A listens. Only one direction is in use at any moment.", s: { m: 1, a: 0, b: 1 } },
+  { cap: "<b>Full-duplex</b>: data goes both ways <b>at the same time</b>, like a phone call or a broadband connection.", s: { m: 1, a: 1, b: 1 } },
+] });
+
+/* ---------- Lab 1: packet builder ---------- */
+(() => {
+  const inp = $("#pmsg"), box = $("#pks"), v = $("#pv"), SRC = "192.168.1.20", DST = "203.0.113.9";
+  const show = (c) => { const n = c.charCodeAt(0); return n < 32 || n > 126 ? "▯" : c; };
+  let size = 5, P = [], order = [], asm = false, kind = "one";
+  const sel = document.createElement("div");
+  sel.innerHTML = `<label class="note">When I corrupt a packet: <select class="sel" id="pk">
+    <option value="one">flip 1 bit</option><option value="two">swap two bits (one 1→0, one 0→1)</option></select></label>`;
+  const sl = Lib.slider($("#plen"), { id: "pl", label: "Characters per packet", min: 2, max: 10, value: 5, onInput: (x) => { size = x; build(); } });
+  $("#plen").appendChild(sel);
+  $("#pk").onchange = (e) => (kind = e.target.value);
+  function build() {
+    const t = inp.value.toUpperCase() || " ", n = Math.ceil(t.length / size);
+    P = Array.from({ length: n }, (_, i) => { const s = t.slice(i * size, (i + 1) * size); return { seq: i + 1, text: s, rx: s, bad: false, ones: ones(s) }; });
+    order = P.map((p, i) => i); asm = false; draw();
+    v.textContent = `${t.length} characters at ${size} per packet = ${n} packets. Trailer value = number of 1-bits in the payload.`;
+  }
+  function corrupt(p) {
+    const c = p.text.charCodeAt(0); let m = c;
+    if (kind === "one") m = c ^ 1; else { let s = [0, 1, 2, 3, 4, 5, 6].find((b) => c & (1 << b)), u = [0, 1, 2, 3, 4, 5, 6].find((b) => !(c & (1 << b))); m = c ^ (1 << s) ^ (1 << u); }
+    p.rx = String.fromCharCode(m) + p.text.slice(1);
+  }
+  function draw() {
+    box.innerHTML = order.map((i) => {
+      const p = P[i], got = ones(p.rx), ok = got === p.ones;
+      return `<div class="pk${p.bad ? " bad" : ""}" data-i="${i}"><div class="h"><small>Header</small>${SRC} → ${DST}<br>seq ${p.seq} of ${P.length} · ${p.text.length} B</div>
+        <div class="p"><small>Payload</small>${[...p.rx].map((c, k) => `<span style="${c !== p.text[k] ? "color:var(--bad);text-decoration:underline" : ""}">${esc(show(c)) === " " ? "␣" : esc(show(c))}</span>`).join("")}</div>
+        <div class="t"><small>Trailer · CRC sent</small>${p.ones} = 0x${p.ones.toString(16).toUpperCase()}</div>
+        <div><small class="note" style="display:block;font:700 .62rem var(--sans);letter-spacing:.08em;text-transform:uppercase">Receiver counts</small>${got} ${p.bad ? (ok ? '<span class="flag">not caught!</span>' : '<span class="flag">mismatch</span>') : '<span class="okf">match</span>'}<br><button class="b" data-c="${i}" style="margin-top:4px;padding:3px 9px">${p.bad ? "Re-send" : "Corrupt"}</button></div></div>`;
+    }).join("");
+    $$("[data-c]", box).forEach((b) => (b.onclick = () => {
+      const p = P[+b.dataset.c]; p.bad = !p.bad; p.rx = p.text; if (p.bad) corrupt(p); draw();
+      const caught = ones(p.rx) !== p.ones;
+      v.innerHTML = p.bad ? (caught ? `Packet ${p.seq}: the receiver counts ${ones(p.rx)} one-bits but the trailer says ${p.ones}. <b>Mismatch, so the packet is re-sent.</b>` : `Packet ${p.seq} is corrupted, but the count of 1-bits is still ${p.ones}, so this simple check <b>misses it</b>. Real CRCs use a stronger calculation, which would catch this.`) : `Packet ${p.seq} re-sent and received correctly.`;
+    }));
+  }
+  $("#pshuf").onclick = () => { let o; do { o = shuffle(P.map((p, i) => i)); } while (P.length > 1 && o.every((x, i) => x === i)); order = o; asm = false; draw(); v.textContent = `Packets arrived in this order: ${order.map((i) => P[i].seq).join(", ")}. They are out of sequence.`; };
+  $("#pasm").onclick = () => {
+    order = P.map((p, i) => i); draw();
+    const failed = P.filter((p) => ones(p.rx) !== p.ones).map((p) => p.seq);
+    v.innerHTML = failed.length ? `Reassembled using the sequence numbers, but packet${failed.length > 1 ? "s" : ""} ${failed.join(", ")} failed the CRC check and must be re-sent first.` : `Reassembled using the sequence numbers: <b>${esc(P.map((p) => p.rx).join("").replace(/ /g, "␣"))}</b>`;
+  };
+  $("#prst").onclick = build;
+  inp.addEventListener("input", build);
+  build();
+})();
+
+/* ---------- Lab 2: packet switching network ---------- */
+(() => {
+  const svg = $("#net"), tab = $("#ntab"), v = $("#nv"), failed = new Set();
+  let run = null;
+  function draw() {
+    let m = "";
+    if (run) run.forEach((r, i) => { m += SV.path(ptsPath(r.route.map((n) => [NODES[n][0], NODES[n][1] + (i - 2.5) * 3.2])), "", { style: `stroke:${PCOL[i]};stroke-width:3;fill:none`, opacity: 0.7 }); });
+    svg.innerHTML = netBase(failed, true, m) + SV.text(380, 292, "Click a router R1 to R7 to break it or repair it", "sm", { "text-anchor": "middle" });
+  }
+  svg.addEventListener("click", (e) => { const n = e.target.closest("[data-n]"); if (!n || n.dataset.n[0] !== "R") return; const id = n.dataset.n; failed.has(id) ? failed.delete(id) : failed.add(id); run = null; tab.innerHTML = ""; v.textContent = failed.size ? `Broken or busy: ${[...failed].join(", ")}.` : ""; draw(); });
+  $("#nclr").onclick = () => { failed.clear(); run = null; tab.innerHTML = ""; v.textContent = "All routers working."; draw(); };
+  $("#nsend").onclick = () => {
+    const ps = paths(failed);
+    if (!ps.length) { run = null; tab.innerHTML = ""; v.innerHTML = `<b>No working route.</b> Every path from A to B passes through a broken router, so the packets cannot be delivered.`; draw(); return; }
+    run = Array.from({ length: 6 }, (_, i) => { const route = pick(ps), delays = route.slice(1).map(() => 1 + Math.floor(Math.random() * 4)); return { seq: i + 1, route, time: delays.reduce((a, b) => a + b, 0) }; });
+    const arr = [...run].sort((a, b) => a.time - b.time || a.seq - b.seq);
+    tab.innerHTML = `<tr><th>Packet</th><th>Route taken</th><th>Time</th><th>Arrives</th></tr>` + run.map((r) => `<tr><td><b style="color:${PCOL[r.seq - 1]}">${r.seq}</b></td><td>${r.route.join(" → ")}</td><td>${r.time}</td><td>${arr.indexOf(r) + 1}</td></tr>`).join("");
+    const same = arr.every((r, i) => r.seq === i + 1);
+    v.innerHTML = `Arrival order: <b>${arr.map((r) => r.seq).join(", ")}</b>. ` + (same ? "This time they happened to arrive in order. Send again and they probably will not." : "The packets arrived out of sequence, so B reassembles them using the sequence numbers in the headers.") + (failed.size ? " The packets were re-routed around the broken routers." : "");
+    draw();
+  };
+  draw();
+})();
+
+/* ---------- Lab 3: serial or parallel ---------- */
+(() => {
+  const svg = $("#par"); let ls, ds;
+  function upd() {
+    if (!ls || !ds) return;
+    const L = ls.get(), N = ds.get(), risk = L <= 5 ? "Low" : L <= 20 ? "Medium" : "High";
+    $("#sa").textContent = N * 8; $("#sb").textContent = N; $("#sc").textContent = risk;
+    $("#sv").textContent = risk === "High" ? `At ${L} m, parallel bits may arrive out of step and the data could be corrupted. Serial is slower (${N * 8} ticks) but the bits stay in order, so it is the safer choice.` : risk === "Medium" ? `At ${L} m skew starts to matter. Parallel is still 8 times faster, but the risk is growing.` : `At ${L} m, parallel sends ${N} byte${N > 1 ? "s" : ""} in ${N} ticks against ${N * 8} for serial, and the bits stay in step.`;
+    let o = SV.text(60, 20, "Sender", "lbl bd") + SV.text(500, 20, "Receiver", "lbl bd", { "text-anchor": "end" });
+    o += SV.line(480, 30, 480, 270, "gr");
+    OFF.forEach((f, i) => {
+      const y = 45 + i * 29, dx = (f - 0.5) * (L / 50) * 120;
+      o += SV.line(60, y, 500, y, "ax", { style: "stroke-width:1.5" }) + bitC(480 + dx, y, BYTE[i]) ;
+    });
+    o += SV.text(280, 290, "Where each bit of one byte lands on the receiving end", "sm", { "text-anchor": "middle" });
+    svg.innerHTML = o;
+  }
+  ls = Lib.slider($("#s1"), { id: "sl1", label: "Cable length", min: 1, max: 50, value: 3, fmt: (x) => x + " m", onInput: upd });
+  ds = Lib.slider($("#s2"), { id: "sl2", label: "Data to send", min: 1, max: 100, value: 10, fmt: (x) => x + (x === 1 ? " byte" : " bytes"), onInput: upd });
+  upd();
+})();
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), { prompt: "Drag each statement to the transmission method it describes.", buckets: [{ label: "Serial" }, { label: "Parallel" }], items: [
+  { text: "One bit at a time", b: 0 }, { text: "A single wire or channel", b: 0 }, { text: "Works well over long distances", b: 0 }, { text: "Bits always arrive in the correct order", b: 0 }, { text: "Cheaper: fewer wires needed", b: 0 }, { text: "Used by USB", b: 0 },
+  { text: "Several bits (a byte) at once", b: 1 }, { text: "Several wires or channels", b: 1 }, { text: "Faster transmission rate", b: 1 }, { text: "Bits can become skewed", b: 1 }, { text: "Used inside the computer between components", b: 1 }, { text: "Best for short distances", b: 1 },
+], done: "Serial for distance and reliability, parallel for speed over short distances." });
+
+Lib.match($("#m1"), { prompt: "Match each description to its transmission mode.", pairs: [
+  ["Simplex", "One direction only, such as computer to printer"], ["Half-duplex", "Both directions, but not at the same time, such as a walkie-talkie"], ["Full-duplex", "Both directions at the same time, such as a broadband connection"],
+  ["Serial", "One bit at a time down a single wire"], ["Parallel", "A byte at a time down several wires"], ["Skew", "Bits arriving out of step with each other"],
+] });
+
+Lib.order($("#o1"), { prompt: "Put the steps of packet switching in the right order.", items: [
+  "The message is split into data packets", "Each packet gets a header with the sender and receiver IP addresses and a sequence number", "Each router reads the destination address and chooses the next route for each packet", "The packets travel independently and may arrive out of order", "The receiving computer uses the sequence numbers to put the packets back in order",
+], done: "Split, label, route, arrive, reassemble." });
+
+Lib.classify($("#cl2"), { prompt: "Is each statement a benefit or a drawback of the system named in its bucket?", buckets: [{ label: "Benefit of packet switching" }, { label: "Drawback of packet switching" }, { label: "Benefit of USB" }, { label: "Drawback of USB" }], items: [
+  { text: "Faulty lines can be avoided by re-routing", b: 0 }, { text: "No single line is tied up", b: 0 },
+  { text: "Packets can be lost and re-sent", b: 1 }, { text: "Delay while packets are put in order", b: 1 },
+  { text: "Devices detected automatically", b: 2 }, { text: "Supplies +5 V power through the cable", b: 2 },
+  { text: "Standard cables limited to about 5 m", b: 3 }, { text: "Slower than Ethernet", b: 3 },
+], done: "Always give a point that belongs to the system in the question." });
+
+Lib.calc($("#c1"), { qs: [
+  { q: "A file of 1,024 KiB is sent in packets whose payload is 64 KiB each. How many packets are needed?", a: 16, sol: "1,024 ÷ 64 = 16 packets.", hint: "Divide the file size by the payload size." },
+  { q: "A file of 300 KiB is split into packets of 64 KiB payload. How many packets are needed (the last one may be partly full)?", a: 5, sol: "300 ÷ 64 = 4.69, so 4 full packets and a fifth part-full one = 5 packets.", hint: "Round up: a partly full packet is still a packet." },
+  { q: "A payload is: 11110000 10000011 00110011 00111111 11111110 11100011. How many 1-bits does it contain (the CRC value sent in the trailer)?", a: 29, sol: "4 + 3 + 4 + 6 + 7 + 5 = 29.", hint: "Count each byte's 1-bits, then add." },
+  { q: "Write that total, 29, as a hex value.", t: ["1D"], ph: "hex", sol: "29 = 16 + 13 = 1D in hex (D = 13).", hint: "16 goes into 29 once, remainder 13." },
+  { q: "5 bytes are sent serially, one bit per clock tick. How many clock ticks are needed?", a: 40, sol: "5 bytes × 8 bits = 40 ticks.", hint: "A byte is 8 bits." },
+  { q: "The same 5 bytes are sent in parallel over 8 wires, one byte per clock tick. How many ticks?", a: 5, sol: "One byte per tick, so 5 ticks." },
+  { q: "A standard USB cable has four wires. How many of them carry data?", a: 2, sol: "Two carry data (white and green); the other two supply power (red and black)." },
+  { q: "A packet is given a hop number of 10. It passes through 4 routers. What is its hop number now?", a: 6, sol: "The number goes down by 1 at each router: 10 − 4 = 6." },
+] });
+
+(() => {
+  const el = $("#drill");
+  el.innerHTML = `<div class="qline" aria-live="polite"></div>
+    <div class="row"><select class="sel" data-m aria-label="Method"><option value="">Method…</option><option value="Serial">Serial</option><option value="Parallel">Parallel</option></select>
+    <select class="sel" data-d aria-label="Direction"><option value="">Direction…</option><option value="Simplex">Simplex</option><option value="Half-duplex">Half-duplex</option><option value="Full-duplex">Full-duplex</option></select>
+    <button class="b pri" data-a="c">Check</button><button class="b" data-a="n">New question</button><span class="fb" aria-live="polite"></span></div><p class="note" data-s></p>`;
+  const ql = $(".qline", el), sm = $("[data-m]", el), sd = $("[data-d]", el), fb = $(".fb", el), st = $("[data-s]", el);
+  const D = [["Simplex", "in one direction only"], ["Half-duplex", "in both directions, but only one way at a time"], ["Full-duplex", "in both directions at the same time"]];
+  let ans = [], streak = 0, best = 0, solved = false;
+  function gen() {
+    const n = pick([1, 1, 8, 16]), d = pick(D); ans = [n === 1 ? "Serial" : "Parallel", d[0]]; solved = false;
+    ql.textContent = `Data is sent ${n} bit${n > 1 ? "s" : ""} at a time, ${d[1]}. Name the transmission type.`;
+    sm.value = sd.value = ""; fb.textContent = ""; fb.className = "fb";
+  }
+  $("[data-a=c]", el).onclick = () => {
+    const good = sm.value === ans[0] && sd.value === ans[1];
+    if (!solved) { streak = good ? streak + 1 : 0; best = Math.max(best, streak); }
+    if (good) solved = true;
+    fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); st.textContent = `Streak ${streak} · best ${best}`;
+  };
+  $("[data-a=n]", el).onclick = gen; gen();
+})();
+
+Lib.quiz($("#qz1"), { qs: [
+  { q: "What is stored in the trailer of a data packet?", opts: ["The IP addresses of sender and receiver", "The actual data", "An end marker and an error check", "The sequence number"], a: 2, why: "The trailer identifies the end of the packet and holds the CRC error check." },
+  { q: "Which statement about packet switching is correct?", opts: ["All packets must follow the same route", "Packets always arrive in the order sent", "Routers choose the next step using the destination address", "A single line is tied up for the whole message"], a: 2, why: "Each router reads the destination IP address in the header and decides where to send the packet next." },
+  { q: "Data can travel in both directions, but not at the same time. What is this called?", opts: ["Simplex", "Half-duplex", "Full-duplex", "Parallel"], a: 1, why: "Half-duplex: both directions, taking turns." },
+  { q: "Why is parallel transmission not used over long distances?", opts: ["It is too slow", "It uses only one wire", "The bits can become skewed", "It cannot carry bytes"], a: 2, why: "Over long distances the bits on different wires can arrive out of step." },
+  { q: "How many wires in a USB cable are used for data?", opts: ["1", "2", "4", "8"], a: 1, why: "Two data wires (white and green) and two power wires (red and black)." },
+  { q: "Which of these is a benefit of USB?", opts: ["Maximum cable length of 5 m", "Devices are detected automatically", "Slower than Ethernet", "Cannot supply power"], a: 1, why: "The other options are drawbacks or false." },
+  { q: "Which part of a packet allows the packets to be put back in order?", opts: ["Payload", "Trailer", "Sequence number in the header", "CRC"], a: 2, why: "The sequence number in the header." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Data packet", "A small part of a message sent over a network. Packets are reassembled at the destination."], ["Packet header", "The part of a packet holding the sender and receiver IP addresses, the sequence number and the packet size."], ["Payload", "The actual data carried in a packet."],
+  ["Packet trailer", "The part of a packet that marks the end and holds the CRC error check."], ["Cyclic redundancy check (CRC)", "An error check where the 1-bits in the payload are counted and stored in the trailer. The receiver repeats the count and compares."],
+  ["Packet switching", "Sending a message as packets which travel independently by different routes and are reassembled at the destination."], ["Router", "A device that moves data packets between networks, choosing the next step using the destination address."], ["Node", "A stage in a network that can receive and send packets. Routers are nodes."],
+  ["Simplex", "Data can be sent in one direction only."], ["Half-duplex", "Data can be sent in both directions, but not at the same time."], ["Full-duplex", "Data can be sent in both directions at the same time."],
+  ["Serial transmission", "Sending data one bit at a time down a single wire or channel."], ["Parallel transmission", "Sending several bits (usually a byte) at the same time down several wires."], ["Skew", "Bits arriving out of step with each other, so the data is no longer synchronised."],
+  ["USB", "Universal Serial Bus: a type of serial transmission that has become the industry standard for connecting devices."], ["Hop number", "A number in a packet header, reduced by 1 at each router, that stops lost packets circulating forever."],
+] });
+
+Lib.initTabs();
+</script>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}.site-pill .pill-more{display:none}@media(max-width:700px){body{padding-bottom:64px}.site-pill{right:8px;bottom:8px;opacity:.6;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 16px)}.site-pill>*:not(.pill-more){display:none}.site-pill.open{opacity:.95}.site-pill.open>*:not(.pill-more):not([hidden]){display:inline-block}.site-pill .pill-more{display:block;border:0;border-radius:999px;width:36px;height:36px;padding:0;text-align:center;font-size:18px}.site-pill.open .pill-more{border-left:0}}</style><div class="site-pill"><button type="button" class="pill-more" aria-label="Menu" onclick="this.parentNode.classList.toggle(&#39;open&#39;)">☰</button><a href="../../ig-cs/ch-02/">← Chapter 2</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="ig-cs-data-transmission" hidden></button><button data-role-toggle="ig-cs-data-transmission" hidden></button><button data-role-delete="ig-cs-data-transmission" hidden></button><button data-role-restore="ig-cs-data-transmission" hidden></button></div><script src="../../assets/config.js?v=1791528995"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js?v=1791528995"></script><script src="../../assets/gate.js?v=1791528995" data-courses="ig-cs"></script><script>document.addEventListener('click',function(e){var t=e.target.closest('[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script><script>document.addEventListener('click',function(e){var p=document.querySelector('.site-pill.open');if(p&&!p.contains(e.target))p.classList.remove('open')});addEventListener('scroll',function(){var p=document.querySelector('.site-pill.open');if(p)p.classList.remove('open')},{passive:true});</script></body></html>

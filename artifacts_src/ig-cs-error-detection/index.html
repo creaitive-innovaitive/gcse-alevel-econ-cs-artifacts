@@ -1,0 +1,1076 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Methods of Error Detection</title>
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .arr{fill:var(--muted)}
+svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+table.mx td,table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+table.mx td.z{color:var(--muted);opacity:.6} table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+table.mx td.ls{text-align:left}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<style>
+.txin{font:600 1.05rem var(--mono);padding:9px 12px;border-radius:9px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,420px)}
+.drill select,.sel{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .qline{font-size:1.1rem;font-weight:600;margin:8px 0;font-family:var(--mono)}
+.drill input{font:700 1.1rem var(--mono);padding:8px 12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,200px)}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+.flag{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--bad-soft);color:var(--bad)}
+.okf{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--good-soft);color:var(--good)}
+.bits{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.bitb{width:40px;height:44px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font:700 1.1rem var(--mono);cursor:pointer;padding:0}
+.bitb.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.bitb.par{border-style:dashed;border-color:var(--warn);color:var(--warn);background:var(--warn-soft);cursor:default}
+.bitb.fl{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.bitb.fix{outline:3px solid var(--good)}
+.bitb:disabled{opacity:1}
+.lab{font:700 .7rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 0}
+table.pb{border-collapse:separate;border-spacing:4px;margin:8px 0}
+table.pb td{padding:0;text-align:center}
+table.pb .bitb{width:34px;height:34px;font-size:.95rem}
+table.pb th{font:700 .66rem var(--sans);color:var(--muted);padding:0 4px}
+table.pb td.mk2{font:700 .9rem var(--sans);width:42px}
+table.pb td.mk2.bad{color:var(--bad)}table.pb td.mk2.ok{color:var(--good)}
+.stepw td{font-family:var(--mono);font-size:.9rem}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 2 · 2.2</div>
+  <h1>Methods of Error Detection</h1>
+  <p class="lead">Why data can be corrupted in transmission, and how parity checks, checksums, echo checks, check digits and automatic repeat requests find the errors.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>When data is transmitted it can be <b>corrupted, lost or even gained</b>. The receiver cannot see the original, so the sender and receiver agree a check. The sender adds something extra (a parity bit, a checksum, a check digit) or the receiver replies (echo, acknowledgement). If the check does not work out, the data is flagged as wrong and usually re-sent.</p>
+  </div>
+
+  <h2>2.2.1 Why errors happen</h2>
+  <ul>
+    <li><b>Interference</b>: every type of cable can suffer electrical interference, which can corrupt or lose data.</li>
+    <li><b>Packet switching problems</b>: packets can be lost, or data can even be gained.</li>
+    <li><b>Skew</b>: in parallel transmission, bits arriving out of step can corrupt the data.</li>
+  </ul>
+  <p>Corrupted data matters because a computer cannot guess what was meant. A person can read "Can you raed tihs?", but a computer would not recognise the word.</p>
+  <p>The methods below <b>detect</b> errors after transmission. Most then ask for the data to be sent again.</p>
+
+  <h2>2.2.2 Parity checks</h2>
+  <p>A <span class="kw">parity check</span> uses the number of <b>1-bits</b> in a byte. Sender and receiver agree beforehand whether they use <b>even parity</b> (an even number of 1-bits) or <b>odd parity</b> (an odd number of 1-bits).</p>
+  <p>One bit of the byte, usually the <b>most significant (left-most) bit</b>, is reserved as the <span class="kw">parity bit</span>. It is set to 0 or 1 so that the whole byte has the agreed parity.</p>
+  <div class="card"><h3>Worked example: 7 data bits 1101100</h3>
+    <div class="tw"><table class="t"><tr><th>Parity</th><th>1-bits in the data</th><th>Parity bit</th><th>Byte sent</th></tr>
+    <tr><td>Even</td><td>4 (even already)</td><td>0</td><td style="font-family:var(--mono)">0 1101100</td></tr>
+    <tr><td>Odd</td><td>4 (needs one more)</td><td>1</td><td style="font-family:var(--mono)">1 1101100</td></tr></table></div></div>
+  <p>The receiver recounts the 1-bits. If the byte no longer has the agreed parity, an <b>error</b> is flagged.</p>
+  <div class="warn"><b class="h">Two weaknesses</b>1. If <b>two bits</b> change, the count of 1-bits can still have the right parity, so the error is <b>missed</b>. 2. Even when an error is flagged, you cannot tell <b>which bit</b> changed.</div>
+
+  <h3>Parity blocks: finding the bad bit</h3>
+  <p>To locate an error, a block of bytes is checked in <b>both directions</b>. Each byte has its own parity bit (the row check), and an extra byte, the <span class="kw">parity byte</span>, is sent at the end of the block, made of the parity bits for each <b>column</b> (the vertical check). It also marks the end of the block.</p>
+  <p>If one bit flips, one <b>row</b> and one <b>column</b> now have the wrong parity. The bad bit is where they <b>cross</b>. It can be corrected automatically, or the block can be sent again.</p>
+
+  <h3>Checksum</h3>
+  <p>Data is sent in <b>blocks</b>, with an extra value, the <span class="kw">checksum</span>, sent at the end.</p>
+  <ol>
+    <li>The sender calculates the checksum from the block using an <b>agreed algorithm</b>.</li>
+    <li>The checksum is sent with the block.</li>
+    <li>The receiver recalculates the checksum from the block it received.</li>
+    <li><b>Same</b>: no error. <b>Different</b>: a request is made to re-send the block.</li>
+  </ol>
+
+  <h3>Echo check</h3>
+  <p>The receiver sends a <b>copy of the data back</b> to the sender, who compares it with the original. If they are the same, the data was sent correctly. If they differ, there was an error.</p>
+  <p class="note"><b>Weakness:</b> if the two copies differ, you cannot tell whether the error happened on the way there or on the way back. It is not very reliable.</p>
+
+  <h2>2.2.3 Check digits</h2>
+  <p>A <span class="kw">check digit</span> is the <b>final digit</b> of a code, calculated from all the other digits. It is used on barcodes, <b>ISBNs</b> and vehicle identification numbers (VINs). It is a <b>data entry</b> check, not a transmission check. It finds mistakes made by typing a number in or scanning a barcode wrongly.</p>
+  <div class="grid2">
+    <div class="card"><h3>Errors a check digit can usually detect</h3><ul><li><b>Incorrect digit</b>: 5327 instead of 5307</li><li><b>Transposition</b> (two digits swapped): 5037 instead of 5307</li><li><b>Omitted or extra digit</b>: 537 or 53107 instead of 5307</li><li><b>Phonetic error</b>: 13 (thirteen) instead of 30 (thirty)</li></ul></div>
+    <div class="card"><h3>Remember</h3><p>The check digit is calculated when the code is created, and re-calculated every time the code is entered. A mismatch means the number was mistyped or mis-scanned.</p><p class="note">The exam gives you the steps of the algorithm. You need to be able to <b>follow</b> them, not remember them.</p></div>
+  </div>
+  <div class="card"><h3>ISBN-13: generate the check digit from 12 digits</h3>
+    <ol><li>Add the digits in <b>odd</b> positions (1st, 3rd, 5th … 11th).</li><li>Add the digits in <b>even</b> positions (2nd … 12th) and <b>multiply by 3</b>.</li><li>Add the two results and divide by 10.</li><li>Take the remainder. If it is 0, the check digit is 0. Otherwise the check digit is <b>10 − remainder</b>.</li></ol>
+    <p>Example: 9 7 8 0 3 4 0 9 8 3 8 2. Odd: 9+8+3+0+8+8 = 36. Even: 3 × (7+0+4+9+3+2) = 75. 36 + 75 = 111; 111 ÷ 10 leaves remainder 1; check digit = 10 − 1 = <b>9</b>.</p>
+    <p><b>Verify</b> the full 13 digits: do the same, but include the check digit in the odd-position sum. The number is correct if the remainder is <b>0</b>. (Example: 45 + 75 = 120, remainder 0 ✓.)</p></div>
+  <div class="card"><h3>Modulo-11: generate the check digit from 7 digits</h3>
+    <ol><li>Give each digit a <b>weighting</b> from the left: 8, 7, 6, 5, 4, 3, 2.</li><li>Multiply each digit by its weighting and add the results.</li><li>Divide the total by 11.</li><li>Subtract the remainder from 11 to get the check digit (10 is written as X).</li></ol>
+    <p>Example: 4 1 5 6 7 1 0. 32 + 7 + 30 + 30 + 28 + 3 + 0 = 130. 130 ÷ 11 = 11 remainder 9. 11 − 9 = <b>2</b>. The number is 4 1 5 6 7 1 0 2.</p>
+    <p><b>Verify</b> the 8 digits with weightings 8, 7, 6, 5, 4, 3, 2, <b>1</b> (the check digit has weighting 1). Total 132 ÷ 11 = 12 remainder <b>0</b>, so the number is correct.</p></div>
+
+  <h2>2.2.4 Automatic repeat request (ARQ)</h2>
+  <p>ARQ uses <b>acknowledgements</b> and a <b>timeout</b>.</p>
+  <ol>
+    <li>The data arrives with an error-detection code, typically a CRC.</li>
+    <li>No error found: the receiver sends a <b>positive acknowledgement</b> back to the sender.</li>
+    <li>Error found: the receiver sends a <b>negative acknowledgement</b> and asks for the data to be re-sent.</li>
+    <li>The sender waits a set time, the <span class="kw">timeout</span>. If no acknowledgement of either kind arrives in that time, it <b>automatically re-sends</b> the data.</li>
+    <li>This repeats until a positive acknowledgement arrives, or a set number of re-transmissions has been reached.</li>
+  </ol>
+  <p>ARQ is often used by mobile phone networks to make sure data arrives intact.</p>
+
+  <h2>Comparing the methods</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Method</th><th>What is added or done</th><th>Can it find the bad bit?</th><th>Weakness</th></tr>
+    <tr><td><b>Parity check</b></td><td>Parity bit in each byte</td><td>No</td><td>Misses an even number of changed bits</td></tr>
+    <tr><td><b>Parity block</b></td><td>Parity bit per byte plus a parity byte</td><td>Yes (row and column)</td><td>More data to send</td></tr>
+    <tr><td><b>Checksum</b></td><td>Calculated value sent after a block</td><td>No</td><td>Block must be re-sent</td></tr>
+    <tr><td><b>Echo check</b></td><td>Receiver sends a copy back</td><td>No</td><td>Cannot tell which journey had the error</td></tr>
+    <tr><td><b>ARQ</b></td><td>Acknowledgements and a timeout</td><td>No (re-sends everything)</td><td>Waiting time, repeated sends</td></tr>
+    <tr><td><b>Check digit</b></td><td>Calculated final digit of a code</td><td>No</td><td>Data entry only; not every error is caught</td></tr>
+  </table></div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · Parity bit: what it catches and what it misses</h2><div id="stA"></div>
+  <h2>2 · A parity block pinpoints the error</h2><div id="stB"></div>
+  <h2>3 · ARQ: acknowledgements and timeout</h2><div id="stC"></div>
+  <h2>4 · Echo check</h2><div id="stD"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Parity lab</h2>
+  <p>Choose even or odd parity and set 7 data bits. The parity bit is worked out for you. Then flip bits "in transit" and see what the receiver does. Try flipping two bits.</p>
+  <div class="card">
+    <div class="row"><label><input type="radio" name="par" value="even" checked> Even parity</label><label><input type="radio" name="par" value="odd"> Odd parity</label></div>
+    <p class="lab">Sender · click the 7 data bits to change them</p><div class="bits" id="pS"></div>
+    <p class="lab">In transit · click a bit to flip it (interference)</p><div class="bits" id="pR"></div>
+    <div class="readout"><div><small>1-bits sent</small><strong id="pa"></strong></div><div><small>1-bits received</small><strong id="pb"></strong></div><div><small>Bits flipped</small><strong id="pc"></strong></div></div>
+    <div class="verdict" id="pv" aria-live="polite"></div></div>
+
+  <h2>Lab 2 · Parity block lab</h2>
+  <p>Even parity is used in both directions. Click any bit to flip it, as interference would. Red marks show the rows and columns whose parity is now wrong. One flipped bit is located exactly. Two flipped bits are harder.</p>
+  <div class="card"><div class="tw"><table class="pb" id="blk"></table></div>
+    <div class="row"><button class="b pri" id="bfix">Correct the bit</button><button class="b" id="bnew">New block</button></div>
+    <div class="verdict" id="bv" aria-live="polite"></div></div>
+
+  <h2>Lab 3 · Check digit workshop</h2>
+  <p>Pick a method, type the digits, and see the working. Then try the error buttons on a correct number and see whether the check digit catches the mistake.</p>
+  <div class="card">
+    <div class="row"><label>Method <select class="sel" id="ckm"><option value="isbn">ISBN-13 (12 digits in)</option><option value="m11">Modulo-11 (any length, weights count down)</option></select></label>
+    <input class="txin" id="ckd" type="text" inputmode="numeric" autocomplete="off" value="978034098382" maxlength="14" aria-label="Digits"></div>
+    <div class="tw"><table class="t stepw" id="ckt"></table></div>
+    <div class="verdict" id="ckv" aria-live="polite"></div>
+    <p class="lab">Make a mistake in the finished number</p>
+    <div class="row"><button class="b" data-e="chg">Change one digit</button><button class="b" data-e="swp">Swap two neighbours</button><button class="b" data-e="drp">Drop a digit</button><button class="b" data-e="add">Add a digit</button><button class="b" data-e="rst">Reset</button></div>
+    <div class="verdict" id="cke" aria-live="polite"></div></div>
+
+  <h2>Lab 4 · ARQ simulator</h2>
+  <p>Ten packets are sent. Each attempt may be corrupted or lost. Whenever there is a negative acknowledgement or a timeout, the sender tries again, up to the limit.</p>
+  <div class="card"><div class="grid2"><div><div id="a1"></div><div id="a2"></div><div class="row"><button class="b pri" id="arun">Send 10 packets</button></div></div>
+    <div><div class="readout"><div><small>Delivered</small><strong id="ad"></strong></div><div><small>Gave up</small><strong id="ag"></strong></div><div><small>Transmissions</small><strong id="at"></strong></div></div></div></div>
+    <div class="tw"><table class="t stepw" id="atab"></table></div>
+    <div class="verdict" id="av" aria-live="polite"></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which method?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Transmission check or data entry check?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>4 · ARQ in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>5 · Calculations</h2>
+  <p class="note">Plain numbers or single digits only. Type X for a check digit of 10.</p>
+  <div id="c1"></div>
+
+  <h2>6 · Parity drill (endless)</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>7 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Check current figures before quoting numbers.</p>
+  <div class="rw"><h3>Barcodes and ISBNs</h3><p>Every book carries a 13-digit ISBN whose last digit is a check digit. Scan it at a till and the system re-calculates the check digit. A mis-scan will not match, so the till asks you to scan again rather than selling you the wrong item.</p><div class="use"><b>Exam use:</b> the standard example of a check digit. Say it detects data entry errors, such as a mis-scanned barcode.</div></div>
+  <div class="rw"><h3>Mobile phone networks</h3><p>Radio signals suffer interference, so phone networks use automatic repeat requests. If a block of data arrives damaged, a negative acknowledgement is sent and the block is repeated.</p><div class="use"><b>Exam use:</b> a real example of ARQ. Describe acknowledgements, timeout and re-sending.</div></div>
+  <div class="rw"><h3>Memory and storage</h3><p>Data stored in memory or on disks can be checked with parity bits and checksums too. A checksum for a downloaded file lets you check that the copy on your computer matches the original.</p><div class="use"><b>Exam use:</b> shows a checksum is worked out from a whole block of data, then compared.</div></div>
+  <div class="rw"><h3>Vehicle identification numbers</h3><p>A car's VIN includes a check digit, so a mistyped VIN on a registration form or in a parts database can be flagged immediately.</p><div class="use"><b>Exam use:</b> a second example of where check digits are used.</div></div>
+  <div class="rw"><h3>"Repeat that, please?"</h3><p>On a poor phone line you might say "Did you say fifty or fifteen?" and the other person repeats it. That is the idea behind an echo check: send it back so it can be compared.</p><div class="use"><b>Exam use:</b> an analogy for echo check, and for why it is not very reliable if the two versions differ.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each underlined phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Give</span> <span class="mark">2 marks</span> Give two ways in which data can become corrupted during transmission.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Choose two from interference, packet switching problems and skew.</div>
+    <div class="ans"><span class="mk k" data-t="1">Interference (electrical) on the cable can change or lose bits.</span> <span class="mk k" data-t="2">Skew in parallel transmission, where bits arrive out of step; (or) problems during packet switching, such as packets being lost.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Answering with the checking method. The question asks for the <b>cause</b> of the errors.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate</span> <span class="mark">2 marks</span> (a) Even parity is used. The 7 data bits are 1011011. What is the parity bit? (b) Odd parity is used. The 7 data bits are 1100110. What is the parity bit?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Count the 1-bits first. Then decide whether the parity bit must be 0 or 1 to make the total match the parity.</div>
+    <div class="ans"><span class="mk k" data-t="1">(a) 1011011 has five 1-bits (odd), so the parity bit is 1, to make six.</span> <span class="mk k" data-t="2">(b) 1100110 has four 1-bits (even), so the parity bit is 1, to make five (odd).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Using the wrong parity for the part. Underline "even" or "odd" in the question first.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Even parity is used. The byte 01101101 is received. Has an error been detected?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Count the 1-bits in what was received, compare with the agreed parity.</div>
+    <div class="ans"><span class="mk k" data-t="1">The byte contains five 1-bits, which is an odd number.</span> <span class="mk k" data-t="2">Even parity was agreed, so an error has been detected.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Counting 0-bits. Parity is about the number of <b>1-bits</b>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Explain why a parity check might not detect an error in a transmitted byte.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>It is about two bits changing.</div>
+    <div class="ans"><span class="mk k" data-t="1">If two bits change (for example, one 1 becomes 0 and one 0 becomes 1, or two bits flip in the same direction), the byte is corrupted.</span> <span class="mk k" data-t="2">But the number of 1-bits still has the same parity, so the receiver sees no error.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>"Parity is unreliable". Say <b>why</b>: the count still looks right.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a checksum is used to check for errors in a block of data.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Calculate, send with the block, recalculate, compare. Mention the agreed algorithm.</div>
+    <div class="ans"><span class="mk k" data-t="1">The sender calculates the checksum from the block of data, using an agreed algorithm.</span> <span class="mk k" data-t="2">The checksum is sent with (after) the block of data.</span> <span class="mk k" data-t="3">The receiver recalculates the checksum from the block it received, using the same algorithm, and compares it with the one sent.</span> <span class="mk k" data-t="4">If they match there is no error; if they differ, the receiver asks for the block to be re-sent.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Forgetting the receiver calculates its own. Without that, there is nothing to compare.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe how an echo check works, and give one weakness.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Send, return, compare. Then the weakness.</div>
+    <div class="ans"><span class="mk k" data-t="1">The data is sent to the receiver, who sends a copy of it back to the sender.</span> <span class="mk k" data-t="2">The sender compares the returned data with the original; if they are different, an error has occurred.</span> <span class="mk e" data-t="3">Weakness: if they differ, the sender cannot tell whether the error happened on the way to the receiver or on the way back.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the receiver compares the data. It is the <b>sender</b> who compares.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how an automatic repeat request (ARQ) is used to check for errors in data transmission.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Error check, positive and negative acknowledgement, timeout, re-send.</div>
+    <div class="ans"><span class="mk k" data-t="1">The receiver checks the data using an error-detection code (such as a CRC) that was sent with it.</span> <span class="mk k" data-t="2">If no error is found, a positive acknowledgement is sent back to the sender; if an error is found, a negative acknowledgement is sent and the data is re-sent.</span> <span class="mk k" data-t="3">The sender waits for a set time (the timeout); if no acknowledgement arrives in that time, it automatically re-sends the data.</span> <span class="mk k" data-t="4">This repeats until a positive acknowledgement is received, or a set number of re-transmissions has been made.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Forgetting the timeout, which covers the case where no reply arrives at all.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Describe</span> <span class="mark">3 marks</span> A block of bytes is sent using even parity in both directions, with a parity byte at the end. It arrives as shown. Find the error and give the correct value of the byte affected.
+    <table class="pb" style="margin:6px 0;font-family:var(--mono);font-size:.85rem;border-spacing:2px"><tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr><tr><th>Byte 1</th><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr><tr><th>Byte 2</th><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr><tr><th>Byte 3</th><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><th>Byte 4</th><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td></tr><tr><th>Parity byte</th><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr></table></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Check every row, then every column. The wrong row and wrong column cross at the error.</div>
+    <div class="ans"><span class="mk k" data-t="1">Byte 3 has five 1-bits (odd), so its row has the wrong parity.</span> <span class="mk k" data-t="2">Column 6 has three 1-bits in the data bytes plus the parity byte (odd), so its column has the wrong parity; the error is the bit where they cross: byte 3, bit 6.</span> <span class="mk k" data-t="3">That bit should be 0, so byte 3 should be 11110000.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Finding the wrong row but not the column. You need both to locate the bit.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q9 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe three differences between a checksum and a check digit.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Think purpose, size/position, and when it is used.</div>
+    <div class="ans"><span class="mk k" data-t="1">A checksum checks data after transmission; a check digit checks data entry (typing or scanning).</span> <span class="mk k" data-t="2">A checksum is calculated from a whole block of data; a check digit is calculated from the other digits of one number or code.</span> <span class="mk k" data-t="3">A checksum is a value sent after the block of data; a check digit is a single digit at the end of a code (such as an ISBN).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "they both check for errors". The question asks for differences.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q10 <span class="cmd">Calculate</span> <span class="mark">4 marks</span> The ISBN-13 check digit is found like this: add the digits in odd positions; add the digits in even positions and multiply by 3; add the two results and find the remainder when divided by 10; if the remainder is 0 the check digit is 0, otherwise subtract it from 10. Find the check digit for 978030640615.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Show each stage. Method marks are available even if the last step slips.</div>
+    <div class="ans"><span class="mk k" data-t="1">Odd positions: 9 + 8 + 3 + 6 + 0 + 1 = 27</span> <span class="mk k" data-t="2">Even positions: 3 × (7 + 0 + 0 + 4 + 6 + 5) = 3 × 22 = 66</span> <span class="mk k" data-t="3">27 + 66 = 93; 93 ÷ 10 leaves a remainder of 3</span> <span class="mk k" data-t="4">Check digit = 10 − 3 = 7</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Multiplying the wrong group by 3. It is the <b>even</b> positions.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q11 <span class="cmd">Describe</span> <span class="mark">3 marks</span> A check digit can detect certain errors when a number is typed in. Describe three types of error it can detect.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Give a short example with each type.</div>
+    <div class="ans"><span class="mk k" data-t="1">An incorrect digit, for example 5327 typed instead of 5307.</span> <span class="mk k" data-t="2">A transposition error, where two digits swap places, for example 5037 instead of 5307.</span> <span class="mk k" data-t="3">An omitted or extra digit, for example 537 or 53107 instead of 5307. (Also acceptable: a phonetic error, 13 for 30.)</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Listing errors the check digit cannot help with, such as "the wrong product was chosen".</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Count the 1-bits</b> for parity, never the 0-bits. Underline "even" or "odd" in the question.</li>
+    <li><b>The parity bit goes in the left-most (most significant) position</b> unless the question says otherwise.</li>
+    <li><b>Parity does not find which bit.</b> A parity block does, using the row and the column.</li>
+    <li><b>Parity can miss errors</b> when an even number of bits change.</li>
+    <li><b>Checksum: two calculations.</b> Sender and receiver both calculate, then compare.</li>
+    <li><b>Echo check: the sender compares.</b> Weakness: cannot tell which journey had the error.</li>
+    <li><b>ARQ needs a timeout</b> as well as the positive and negative acknowledgements.</li>
+    <li><b>Check digit = data entry.</b> Checksum, parity and echo = transmission.</li>
+    <li><b>Show every step</b> in check digit calculations. You can earn method marks.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Give</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Calculate</td><td>Working and a final answer.</td></tr>
+    <tr><td>Describe</td><td>What happens, step by step, or the main features.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.max(0, Math.min(fr.length - 1, Math.round(s.i)))].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+const MONO = "font-family:ui-monospace,Menlo,Consolas,monospace;";
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+const cnt = (s) => [...s].filter((c) => c === "1").length;
+const rbits = (n) => Array.from({ length: n }, () => (Math.random() < 0.5 ? "0" : "1")).join("");
+const pbit = (d, par) => ((cnt(d) % 2 === 0) === (par === "even") ? "0" : "1");
+
+/* ---------- svg: a row of bit cells ---------- */
+function bitRow(bits, x0, y, o = {}) {
+  const w = o.w || 44, gap = o.gap ?? 6, cls = o.cls || {};
+  let s = "";
+  [...bits].forEach((b, i) => {
+    const x = x0 + i * (w + gap);
+    s += SV.rect(x, y, w, w, "cell" + (cls[i] ? " cell-" + cls[i] : ""), { rx: 8 }) + SV.text(x + w / 2, y + w / 2 + 7, b, "lbl bd", { "text-anchor": "middle", style: MONO + "font-size:22px" });
+    if (o.top && o.top[i]) s += SV.text(x + w / 2, y - 8, o.top[i], "sm bd", { "text-anchor": "middle" });
+  });
+  return s;
+}
+
+/* ---------- 1. parity ---------- */
+const D7 = "1101100", SENT = "0" + D7;
+function parChart(s) {
+  const k = Math.round(s.k), X = 160;
+  let o = SV.text(24, 76, "Sender", "lbl bd", { "text-anchor": "start" }) + SV.text(24, 200, "Receiver", "lbl bd", { "text-anchor": "start" });
+  const top = { 0: "parity" };
+  if (k < 2) {
+    o += bitRow("?" + D7, X, 56, { top, cls: k === 1 ? { 1: "cur", 2: "cur", 4: "cur", 5: "cur", 0: "warn" } : {} });
+    o += SV.text(X, 130, k === 0 ? "Agreed: EVEN parity (an even number of 1-bits in every byte)" : "Four 1-bits (highlighted). Already even, so the parity bit is 0.", "lbl bd t1", { "text-anchor": "start" });
+  } else {
+    o += bitRow(SENT, X, 56, { top, cls: { 0: "ok" } });
+    o += SV.text(X, 130, "Byte sent: 0 1101100 → four 1-bits (even)", "lbl bd t3", { "text-anchor": "start" });
+  }
+  if (k >= 3) {
+    const rx = k === 5 ? "00101110" : "01100100", fl = k === 5 ? { 1: "no", 6: "no" } : { 4: "no" };
+    o += bitRow(rx, X, 180, { cls: fl });
+    const n = cnt(rx);
+    o += SV.text(X, 250, k === 3 ? "Interference flips one bit on the way (shown in red)." : k === 4 ? `Receiver counts ${n} 1-bits: odd. Even parity was agreed, so an ERROR is flagged.` : `Two bits flipped, but the count is ${n}: even. NO error is flagged, yet the byte is wrong.`, "lbl bd " + (k === 5 ? "t2" : k === 4 ? "t3" : "t4"), { "text-anchor": "start" });
+    if (k === 3) o += SV.text(X, 272, "01101100 → 01100100", "sm", { "text-anchor": "start", style: MONO });
+  }
+  return o;
+}
+Lib.stepper($("#stA"), { w: 760, h: 290, label: "A parity bit catching one error and missing two", base: { k: 0 }, tween: 1, dwell: 4300, draw: parChart, steps: [
+  { cap: "Sender and receiver agree to use <b>even parity</b>. The data is 7 bits: 1101100. The first cell is reserved for the <b>parity bit</b>.", s: { k: 0 } },
+  { cap: "The sender counts the <b>1-bits</b>: there are four, which is already even. So the parity bit is <b>0</b>.", s: { k: 1 } },
+  { cap: "The full byte <b>01101100</b> is sent. It has an even number of 1-bits, as agreed.", s: { k: 2 } },
+  { cap: "On the way, interference flips <b>one bit</b>. The receiver gets 01100100.", s: { k: 3 } },
+  { cap: "The receiver counts the 1-bits: <b>three</b>. That is odd, but even parity was agreed, so it knows there is an error and asks for the byte again. It cannot tell which bit changed.", s: { k: 4 } },
+  { cap: "Now <b>two bits</b> flip. The count of 1-bits is four again, so the receiver sees <b>nothing wrong</b>. This is the weakness of a parity check.", s: { k: 5 } },
+] });
+
+/* ---------- 2. parity block ---------- */
+const BD = ["1011001", "0110101", "1110000", "0001110"];
+const BR = BD.map((d) => pbit(d, "even") + d);
+const PB = Array.from({ length: 8 }, (_, c) => (BR.reduce((n, r) => n + +r[c], 0) % 2 ? "1" : "0")).join("");
+function blkChart(s) {
+  const k = Math.round(s.k), C = 40, G = 4, X0 = 190, Y0 = 36, rows = [...BR, PB];
+  let o = "";
+  const flip = (r, c) => k >= 1 && r === 2 && c === 5;
+  rows.forEach((row, r) => {
+    o += SV.text(X0 - 12, Y0 + r * (C + G) + 26, r < 4 ? "Byte " + (r + 1) : "Parity byte", "sm bd", { "text-anchor": "end" });
+    [...row].forEach((b, c) => {
+      const v = flip(r, c) ? (b === "1" ? "0" : "1") : b, hot = k === 4 && flip(r, c);
+      const cls = hot ? "warn" : flip(r, c) ? "no" : k >= 2 && ((k >= 2 && r === 2) || (k >= 3 && c === 5)) ? "cur" : r === 4 ? "sorted" : c === 0 ? "ok" : "";
+      o += SV.rect(X0 + c * (C + G), Y0 + r * (C + G), C, C, "cell" + (cls ? " cell-" + cls : ""), { rx: 7 }) + SV.text(X0 + c * (C + G) + C / 2, Y0 + r * (C + G) + 27, v, "lbl bd", { "text-anchor": "middle", style: MONO + "font-size:19px" });
+    });
+    if (k >= 2) { const rowOnes = [...row].reduce((n, b, c) => n + +(flip(r, c) ? (b === "1" ? 0 : 1) : b), 0), bad = rowOnes % 2 === 1; o += SV.text(X0 + 8 * (C + G) + 10, Y0 + r * (C + G) + 27, bad ? "✗ odd" : "✓", "lbl bd " + (bad ? "t2" : "t3"), { "text-anchor": "start" }); }
+  });
+  if (k >= 3) for (let c = 0; c < 8; c++) { const n = rows.reduce((t, row, r) => t + +(flip(r, c) ? (row[c] === "1" ? 0 : 1) : row[c]), 0), bad = n % 2 === 1; o += SV.text(X0 + c * (C + G) + C / 2, Y0 + 5 * (C + G) + 18, bad ? "✗" : "✓", "lbl bd " + (bad ? "t2" : "t3"), { "text-anchor": "middle" }); }
+  o += SV.text(380, 14, "Even parity in rows and columns", "sm bd", { "text-anchor": "middle" });
+  return o;
+}
+Lib.stepper($("#stB"), { w: 760, h: 300, label: "A parity block locating a single changed bit", base: { k: 0 }, tween: 1, dwell: 4600, draw: blkChart, steps: [
+  { cap: "Four bytes are sent, each with its own parity bit in the first column. The last row is the <b>parity byte</b>: the parity bit for each column. All rows and columns have an even number of 1-bits.", s: { k: 0 } },
+  { cap: "During transmission, <b>one bit flips</b> (byte 3, bit 6, shown in red).", s: { k: 1 } },
+  { cap: "The receiver checks every <b>row</b>. Byte 3 now has five 1-bits: the wrong parity.", s: { k: 2 } },
+  { cap: "Then every <b>column</b>. Column 6 has the wrong parity too.", s: { k: 3 } },
+  { cap: "The bad row and bad column <b>cross at one bit</b>. That bit must be the error: byte 3 should be 11110000. It can be corrected, or the block re-sent.", s: { k: 4 } },
+] });
+
+/* ---------- 3. ARQ and 4. echo (sequence diagrams) ---------- */
+function seqBase(title1, title2, h) {
+  return SV.rect(60, 20, 150, 40, "f1", { rx: 10 }) + SV.rect(550, 20, 150, 40, "f3", { rx: 10 }) + SV.text(135, 46, title1, "lbl bd", { "text-anchor": "middle" }) + SV.text(625, 46, title2, "lbl bd", { "text-anchor": "middle" }) + SV.line(135, 60, 135, h, "gr") + SV.line(625, 60, 625, h, "gr");
+}
+function arrow(y, dir, f, label, col, o = {}) {
+  if (f <= 0.01) return "";
+  const x1 = dir ? 135 : 625, x2 = dir ? 625 : 135, xe = x1 + (x2 - x1) * clamp(f) * (o.stop || 1);
+  let s = SV.line(x1, y, xe, y, "", { style: `stroke:${col};stroke-width:3.5` });
+  if (f >= 0.99 && !o.stop) s += SV.arrowHead(xe, y, dir ? "r" : "l", "").replace('class=""', `style="fill:${col}"`);
+  if (f >= 0.99 && o.stop) s += SV.text(xe + 4, y + 8, "✗", "lbl bd t2", { "text-anchor": "middle", style: "font-size:24px" });
+  s += SV.text(380, y - 9, label, "lbl bd", { "text-anchor": "middle", opacity: clamp(f * 2) });
+  return s;
+}
+const gA = "var(--accent)", gB = "var(--bad)", gG = "var(--good)", gW = "var(--warn)";
+function arqChart(s) {
+  const k = s.k;
+  let o = seqBase("Sender", "Receiver", 330);
+  o += arrow(92, 1, clamp(k), "Data + error-check code (attempt 1)", gA);
+  if (k > 0.9) o += SV.text(660, 112, "✗ error found", "lbl bd t2", { "text-anchor": "start", opacity: clamp((k - 0.9) * 4) });
+  o += arrow(140, 0, clamp(k - 1), "Negative acknowledgement", gB);
+  o += arrow(190, 1, clamp(k - 2), "Data re-sent (attempt 2) — lost", gA, { stop: 0.55 });
+  if (k > 3) { const f = clamp(k - 3); o += SV.rect(40, 200, 190, 36, "f4", { rx: 8, opacity: f }) + SV.text(135, 224, "⏱ Timeout: no reply", "lbl bd t4", { "text-anchor": "middle", opacity: f }); }
+  o += arrow(262, 1, clamp(k - 4), "Data re-sent (attempt 3)", gA);
+  o += arrow(310, 0, clamp(k - 5), "Positive acknowledgement", gG);
+  if (k > 5.9) o += SV.text(380, 340, "Data delivered. The sender stops.", "lbl bd t3", { "text-anchor": "middle" });
+  return o;
+}
+Lib.stepper($("#stC"), { w: 760, h: 350, label: "ARQ with a negative acknowledgement and a timeout", base: { k: 0 }, tween: 900, dwell: 3800, draw: arqChart, steps: [
+  { cap: "The sender wants to send data. Each block carries an <b>error-detection code</b>, usually a CRC. The sender waits for an acknowledgement.", s: { k: 0 } },
+  { cap: "Data (attempt 1) arrives, but the receiver finds an <b>error</b>.", s: { k: 1 } },
+  { cap: "The receiver sends a <b>negative acknowledgement</b> and requests the data again.", s: { k: 2 } },
+  { cap: "The sender re-sends. This time the data is <b>lost</b> on the way, so no acknowledgement comes back.", s: { k: 3 } },
+  { cap: "The sender waits for the <b>timeout</b>. Nothing arrives, so it re-sends <b>automatically</b>.", s: { k: 4 } },
+  { cap: "Attempt 3 arrives intact.", s: { k: 5 } },
+  { cap: "The receiver sends a <b>positive acknowledgement</b>. The sender knows the data arrived and stops. (It would also stop after a set maximum number of tries.)", s: { k: 6 } },
+] });
+
+function echoChart(s) {
+  const k = s.k, bad = s.sc > 0.5;
+  let o = seqBase("Sender", "Receiver", 300);
+  o += arrow(100, 1, clamp(k), "Data sent: HELLO", gA);
+  o += arrow(170, 0, clamp(k - 1), bad ? "Copy sent back: HELL0" : "Copy sent back: HELLO", bad ? gB : gA);
+  if (k > 2.5) {
+    const f = clamp((k - 2.5) * 2);
+    o += SV.rect(50, 200, 170, 80, bad ? "f2" : "f3", { rx: 10, opacity: f }) + SV.text(135, 232, "Sender compares", "lbl bd", { "text-anchor": "middle", opacity: f }) + SV.text(135, 258, bad ? "HELLO ≠ HELL0  ✗" : "HELLO = HELLO  ✓", "lbl bd " + (bad ? "t2" : "t3"), { "text-anchor": "middle", opacity: f, style: MONO });
+    if (bad) o += SV.text(260, 226, "Was the error on the way there or on the way back?", "lbl bd t4", { "text-anchor": "start", opacity: f }) + SV.text(260, 250, "The sender cannot tell.", "lbl", { "text-anchor": "start", opacity: f });
+    else o += SV.text(260, 238, "No difference: the data was sent without error.", "lbl bd t3", { "text-anchor": "start", opacity: f });
+  }
+  return o;
+}
+Lib.stepper($("#stD"), { w: 760, h: 310, label: "An echo check", base: { k: 0, sc: 0 }, tween: 800, dwell: 3800, draw: echoChart, steps: [
+  { cap: "In an <b>echo check</b> the receiver sends the data straight back to the sender.", s: { k: 0, sc: 0 } },
+  { cap: "The sender transmits <b>HELLO</b> to the receiver.", s: { k: 1, sc: 0 } },
+  { cap: "The receiver sends a <b>copy back</b>.", s: { k: 2, sc: 0 } },
+  { cap: "The sender <b>compares</b> the copy with the original. They match, so the data was sent correctly.", s: { k: 3, sc: 0 } },
+  { cap: "Now suppose the copy comes back different. There was an error somewhere, but the sender <b>cannot tell on which journey</b>. That is why an echo check is not very reliable.", s: { k: 3, sc: 1 } },
+] });
+
+/* ---------- Lab 1: parity ---------- */
+(() => {
+  const S = $("#pS"), R = $("#pR"); let d = "1101100".split(""), flips = new Set(), par = "even";
+  const bitBtn = (v, cls, i, lab) => `<button class="bitb ${cls}" data-i="${i}" aria-label="${lab}">${v}</button>`;
+  function draw() {
+    const data = d.join(""), p = pbit(data, par), sent = p + data;
+    S.innerHTML = bitBtn(p, "par", -1, "Parity bit") + d.map((v, i) => bitBtn(v, v === "1" ? "on" : "", i, "Data bit " + (i + 1))).join("");
+    const rx = [...sent].map((b, i) => (flips.has(i) ? (b === "1" ? "0" : "1") : b)).join("");
+    R.innerHTML = [...rx].map((v, i) => bitBtn(v, flips.has(i) ? "fl" : "", i, "Received bit " + (i + 1))).join("");
+    $$("button", R).forEach((b, i) => (b.onclick = () => { flips.has(i) ? flips.delete(i) : flips.add(i); draw(); }));
+    $$("button:not(.par)", S).forEach((b) => (b.onclick = () => { d[+b.dataset.i] = d[+b.dataset.i] === "1" ? "0" : "1"; flips.clear(); draw(); }));
+    const ns = cnt(sent), nr = cnt(rx), ok = (nr % 2 === 0) === (par === "even");
+    $("#pa").textContent = ns; $("#pb").textContent = nr; $("#pc").textContent = flips.size;
+    $("#pv").innerHTML = ok ? (flips.size ? `<b>Corrupted, but not detected.</b> ${nr} 1-bits is still ${par}, so the receiver sees no error. An even number of bits changed.` : `${nr} 1-bits is ${par}, as agreed. No error.`) : `<b>Error detected.</b> ${nr} 1-bits is not ${par}. The receiver asks for the byte again, but cannot tell which bit changed.`;
+  }
+  $$("input[name=par]").forEach((r) => (r.onchange = () => { par = r.value; flips.clear(); draw(); }));
+  draw();
+})();
+
+/* ---------- Lab 2: parity block ---------- */
+(() => {
+  const T = $("#blk"), v = $("#bv"), fix = $("#bfix"); let g, orig, fl;
+  const mk = () => { const rows = Array.from({ length: 5 }, () => rbits(7)).map((d) => pbit(d, "even") + d); const pb = Array.from({ length: 8 }, (_, c) => (rows.reduce((n, r) => n + +r[c], 0) % 2 ? "1" : "0")).join(""); orig = [...rows, pb]; fl = new Set(); draw(); };
+  const val = (r, c) => (fl.has(r + "," + c) ? (orig[r][c] === "1" ? "0" : "1") : orig[r][c]);
+  function draw() {
+    const rowBad = orig.map((_, r) => [...Array(8).keys()].reduce((n, c) => n + +val(r, c), 0) % 2 === 1), colBad = [...Array(8).keys()].map((c) => orig.reduce((n, _, r) => n + +val(r, c), 0) % 2 === 1);
+    const rb = rowBad.flatMap((b, i) => (b ? [i] : [])), cb = colBad.flatMap((b, i) => (b ? [i] : []));
+    const single = rb.length === 1 && cb.length === 1 && fl.size === 1;
+    T.innerHTML = `<tr><th></th>${["P", 2, 3, 4, 5, 6, 7, 8].map((x) => `<th>${x}</th>`).join("")}<th></th></tr>` +
+      orig.map((row, r) => `<tr><th>${r < 5 ? "Byte " + (r + 1) : "Parity"}</th>${[...Array(8).keys()].map((c) => `<td><button class="bitb ${fl.has(r + "," + c) ? "fl" : r === 5 || c === 0 ? "par" : ""} ${single && rb[0] === r && cb[0] === c ? "fix" : ""}" data-r="${r}" data-c="${c}" aria-label="Row ${r + 1} column ${c + 1}">${val(r, c)}</button></td>`).join("")}<td class="mk2 ${rowBad[r] ? "bad" : "ok"}">${rowBad[r] ? "✗" : "✓"}</td></tr>`).join("") +
+      `<tr><th></th>${colBad.map((b) => `<td class="mk2 ${b ? "bad" : "ok"}">${b ? "✗" : "✓"}</td>`).join("")}<td></td></tr>`;
+    $$("button", T).forEach((b) => (b.onclick = () => { const k = b.dataset.r + "," + b.dataset.c; fl.has(k) ? fl.delete(k) : fl.add(k); draw(); }));
+    fix.disabled = !single;
+    v.innerHTML = !fl.size ? "All rows and columns have even parity. Click a bit to flip it." : single ? `One bad row (byte ${rb[0] + 1}) and one bad column (${cb[0] === 0 ? "the parity bit" : "bit " + (cb[0] + 1)}) cross at the highlighted bit. That is the error, and it can be corrected.` : !rb.length && !cb.length ? "<b>Corrupted but not detected.</b> The changes cancel out in every row and column, so every parity check passes." : `Errors are detected (${rb.length} bad row${rb.length === 1 ? "" : "s"}, ${cb.length} bad column${cb.length === 1 ? "" : "s"}) but they cannot be pinpointed with certainty. The block would have to be re-sent.`;
+  }
+  fix.onclick = () => { fl.clear(); draw(); };
+  $("#bnew").onclick = mk; mk();
+})();
+
+/* ---------- Lab 3: check digits ---------- */
+(() => {
+  const sel = $("#ckm"), inp = $("#ckd"), tab = $("#ckt"), v = $("#ckv"), ev = $("#cke"); let good = null;
+  const dig = (c) => (c === "X" ? 10 : +c);
+  const isbnCheck = (d12) => { const o = [...d12].reduce((n, c, i) => n + (i % 2 === 0 ? +c : 0), 0), e = [...d12].reduce((n, c, i) => n + (i % 2 ? +c : 0), 0) * 3, t = o + e, r = t % 10; return { o, e, t, r, cd: r === 0 ? 0 : 10 - r }; };
+  const m11Check = (d) => { const n = d.length, t = [...d].reduce((s, c, i) => s + +c * (n + 1 - i), 0), r = t % 11, c = 11 - r; return { t, r, cd: c === 11 ? "0" : c === 10 ? "X" : String(c) }; };
+  const valid = (full, m) => m === "isbn" ? full.length === 13 && [...full].reduce((n, c, i) => n + +c * (i % 2 ? 3 : 1), 0) % 10 === 0 : full.length >= 2 && [...full].reduce((n, c, i) => n + dig(c) * (full.length - i), 0) % 11 === 0;
+  function draw() {
+    const m = sel.value, d = inp.value.replace(/[^0-9]/g, ""); good = null; ev.textContent = "";
+    inp.maxLength = m === "isbn" ? 14 : 12;
+    if (m === "isbn") {
+      if (d.length !== 12) { tab.innerHTML = ""; v.textContent = `Type exactly 12 digits (you have ${d.length}).`; return; }
+      const r = isbnCheck(d);
+      tab.innerHTML = `<tr><th>Digit</th>${[...d].map((c) => `<td>${c}</td>`).join("")}</tr><tr><th>Position</th>${[...d].map((_, i) => `<td>${i + 1}</td>`).join("")}</tr><tr><th>Multiply by</th>${[...d].map((_, i) => `<td>${i % 2 ? "3" : "1"}</td>`).join("")}</tr><tr><th>Result</th>${[...d].map((c, i) => `<td>${+c * (i % 2 ? 3 : 1)}</td>`).join("")}</tr>`;
+      v.innerHTML = `Odd positions: ${r.o}. Even positions × 3: ${r.e / 3} × 3 = ${r.e}. Total ${r.o} + ${r.e} = ${r.t}; ${r.t} ÷ 10 leaves ${r.r}. ${r.r === 0 ? "Remainder 0, so the check digit is 0." : `10 − ${r.r} = <b>${r.cd}</b>.`} Full number: <b>${d}${r.cd}</b>`;
+      good = d + r.cd;
+    } else {
+      if (d.length < 3 || d.length > 11) { tab.innerHTML = ""; v.textContent = "Type between 3 and 11 digits."; return; }
+      const r = m11Check(d), n = d.length;
+      tab.innerHTML = `<tr><th>Digit</th>${[...d].map((c) => `<td>${c}</td>`).join("")}</tr><tr><th>Weighting</th>${[...d].map((_, i) => `<td>${n + 1 - i}</td>`).join("")}</tr><tr><th>Result</th>${[...d].map((c, i) => `<td>${+c * (n + 1 - i)}</td>`).join("")}</tr>`;
+      v.innerHTML = `Total ${[...d].map((c, i) => +c * (n + 1 - i)).join(" + ")} = ${r.t}. ${r.t} ÷ 11 leaves ${r.r}. ${r.r === 0 ? "Remainder 0, so the check digit is 0." : `11 − ${r.r} = ${11 - r.r}${11 - r.r === 10 ? ", written as <b>X</b>" : ""}. Check digit: <b>${r.cd}</b>.`} Full number: <b>${d}${r.cd}</b>`;
+      good = d + r.cd;
+    }
+  }
+  function err(kind) {
+    if (!good) { ev.textContent = "Enter a valid set of digits first."; return; }
+    const m = sel.value; let s = good, desc = "";
+    const digits = (n) => "0123456789".split("").filter((x) => x !== n);
+    if (kind === "rst") { ev.textContent = ""; return; }
+    if (kind === "chg") { const i = Math.floor(Math.random() * (s.length - 1)), n = pick(digits(s[i])); desc = `Changed digit ${i + 1} from ${s[i]} to ${n}`; s = s.slice(0, i) + n + s.slice(i + 1); }
+    if (kind === "swp") { const idx = [...Array(s.length - 1).keys()].filter((i) => s[i] !== s[i + 1]); if (!idx.length) { ev.textContent = "All digits are the same, nothing to swap."; return; } const i = pick(idx); desc = `Swapped digits ${i + 1} and ${i + 2} (${s[i]}${s[i + 1]} → ${s[i + 1]}${s[i]})`; s = s.slice(0, i) + s[i + 1] + s[i] + s.slice(i + 2); }
+    if (kind === "drp") { const i = Math.floor(Math.random() * s.length); desc = `Dropped digit ${i + 1}`; s = s.slice(0, i) + s.slice(i + 1); }
+    if (kind === "add") { const i = Math.floor(Math.random() * s.length), n = pick(digits("")); desc = `Added an extra ${n} at position ${i + 1}`; s = s.slice(0, i) + n + s.slice(i); }
+    const ok = valid(s, m);
+    ev.innerHTML = `${desc}. Typed in: <b style="font-family:var(--mono)">${s}</b>. ` + (ok ? `<span class="flag">Check passes. The mistake was missed.</span> Check digits catch most errors, not every one.` : `<span class="okf">Check fails. The mistake is detected.</span>`);
+  }
+  sel.onchange = () => { inp.value = sel.value === "isbn" ? "978034098382" : "4156710"; draw(); };
+  inp.addEventListener("input", draw);
+  $$("[data-e]").forEach((b) => (b.onclick = () => err(b.dataset.e)));
+  draw();
+})();
+
+/* ---------- Lab 4: ARQ simulator ---------- */
+(() => {
+  const tab = $("#atab"); let ps, rs;
+  function run() {
+    const p = ps.get() / 100, max = rs.get(); let del = 0, giv = 0, tot = 0, rows = "";
+    for (let i = 1; i <= 10; i++) {
+      let a = 0, ok = false, trail = "";
+      while (a <= max) { a++; tot++; const bad = Math.random() < p; trail += bad ? "✗ " : "✓ "; if (!bad) { ok = true; break; } }
+      ok ? del++ : giv++;
+      rows += `<tr><td>${i}</td><td>${trail}</td><td>${a}</td><td>${ok ? '<span class="okf">delivered</span>' : '<span class="flag">gave up</span>'}</td></tr>`;
+    }
+    tab.innerHTML = `<tr><th>Packet</th><th>Attempts (✗ error or loss, ✓ acknowledged)</th><th>Sent</th><th>Result</th></tr>` + rows;
+    $("#ad").textContent = del; $("#ag").textContent = giv; $("#at").textContent = tot;
+    $("#av").textContent = p === 0 ? "No errors, so every packet is delivered first time: 10 transmissions." : giv ? `With a ${Math.round(p * 100)}% chance of error and at most ${max} re-send${max === 1 ? "" : "s"}, ${giv} packet${giv > 1 ? "s were" : " was"} abandoned. More re-sends would deliver more, at the cost of more waiting.` : `All 10 packets were delivered, using ${tot} transmissions. Each extra transmission is a re-send triggered by a negative acknowledgement or a timeout.`;
+  }
+  ps = Lib.slider($("#a1"), { id: "ap", label: "Chance each attempt goes wrong", min: 0, max: 90, step: 5, value: 30, fmt: (x) => x + "%" });
+  rs = Lib.slider($("#a2"), { id: "ar", label: "Maximum re-sends", min: 0, max: 8, value: 3 });
+  $("#arun").onclick = run; run();
+})();
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), { prompt: "Drag each description to the error-detection method it describes.", buckets: [{ label: "Parity check" }, { label: "Checksum" }, { label: "Echo check" }, { label: "ARQ" }], items: [
+  { text: "An extra bit added to each byte", b: 0 }, { text: "Counts the 1-bits", b: 0 }, { text: "Cannot tell which bit is wrong", b: 0 },
+  { text: "A value calculated from a block of data", b: 1 }, { text: "Sent after the block and recalculated by the receiver", b: 1 }, { text: "Uses an agreed algorithm", b: 1 },
+  { text: "The receiver sends the data back", b: 2 }, { text: "The sender compares the two copies", b: 2 },
+  { text: "Positive and negative acknowledgements", b: 3 }, { text: "Uses a timeout before re-sending", b: 3 },
+], done: "Four methods, four different ideas." });
+
+Lib.classify($("#cl2"), { prompt: "Does each item check data transmission or data entry?", buckets: [{ label: "Transmission check" }, { label: "Data entry check" }], items: [
+  { text: "Parity check", b: 0 }, { text: "Checksum", b: 0 }, { text: "Echo check", b: 0 }, { text: "ARQ", b: 0 }, { text: "Parity block", b: 0 },
+  { text: "Check digit", b: 1 }, { text: "ISBN-13 last digit", b: 1 }, { text: "Modulo-11 final digit", b: 1 }, { text: "A mis-scanned barcode is caught", b: 1 },
+], done: "Check digits are for typing and scanning; the rest are for transmission." });
+
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Parity bit", "An extra bit that makes the number of 1-bits in a byte even or odd"], ["Parity byte", "A byte of column parity bits sent at the end of a block"], ["Checksum", "A value calculated from a block of data and sent after it"],
+  ["Echo check", "Data is sent back to the sender to be compared with the original"], ["Check digit", "The final digit of a code, calculated from the other digits"], ["Timeout", "The time a sender waits for an acknowledgement before re-sending"], ["Negative acknowledgement", "A message saying the data had an error and should be re-sent"],
+] });
+
+Lib.order($("#o1"), { prompt: "Put the steps of an ARQ in order (the first transmission has an error).", items: [
+  "The sender transmits data with an error-detection code and starts waiting", "The receiver checks the data and finds an error", "The receiver sends a negative acknowledgement", "The sender re-sends the data", "The receiver finds no error and sends a positive acknowledgement",
+], done: "Send, check, negative acknowledgement, re-send, positive acknowledgement." });
+
+Lib.calc($("#c1"), { qs: [
+  { q: "Even parity. The 7 data bits are 1011010. What is the parity bit?", a: 0, sol: "1011010 has four 1-bits (even), so the parity bit is 0.", hint: "Count the 1-bits." },
+  { q: "Odd parity. The 7 data bits are 0111001. What is the parity bit?", a: 1, sol: "0111001 has four 1-bits (even). Odd parity needs an odd total, so the parity bit is 1.", hint: "Four is even, but we want odd." },
+  { q: "How many 1-bits are in the received byte 01101101?", a: 5, sol: "0+1+1+0+1+1+0+1 = 5. If even parity was agreed, this is an error.", hint: "Add the 1s." },
+  { q: "ISBN-13: find the check digit for 978151045759.", a: 1, sol: "Odd positions: 9+8+5+0+5+5 = 32. Even: 3 × (7+1+1+4+7+9) = 3 × 29 = 87. 32 + 87 = 119. 119 ÷ 10 leaves 9. 10 − 9 = 1.", hint: "Odd positions plain, even positions × 3." },
+  { q: "ISBN-13: find the check digit for 978030640615.", a: 7, sol: "Odd: 9+8+3+6+0+1 = 27. Even: 3 × (7+0+0+4+6+5) = 3 × 22 = 66. 27 + 66 = 93. 93 ÷ 10 leaves 3. 10 − 3 = 7." },
+  { q: "Modulo-11: the weighted total for 4 1 5 6 7 1 0 (weights 8 to 2) is 130. What is the remainder when 130 is divided by 11?", a: 9, sol: "11 × 11 = 121. 130 − 121 = 9." },
+  { q: "Modulo-11: find the check digit for 3 2 5 1 6 4 8 (weights 8, 7, 6, 5, 4, 3, 2).", a: 7, sol: "24 + 14 + 30 + 5 + 24 + 12 + 16 = 125. 125 ÷ 11 = 11 remainder 4. 11 − 4 = 7.", hint: "Multiply each digit by its weight first." },
+  { q: "Check the 8-digit number 4 1 5 6 7 1 0 2 with weights 8, 7, 6, 5, 4, 3, 2, 1. What is the total?", a: 132, sol: "32 + 7 + 30 + 30 + 28 + 3 + 0 + 2 = 132. 132 ÷ 11 = 12 remainder 0, so the number is correct." },
+] });
+
+(() => {
+  const el = $("#drill");
+  el.innerHTML = `<label>Practise: <select data-m><option value="bit">Find the parity bit</option><option value="err">Spot the error</option></select></label>
+    <div class="qline" aria-live="polite"></div>
+    <div class="row"><select data-s class="sel" aria-label="Answer"></select><button class="b pri" data-a="c">Check</button><button class="b" data-a="n">New question</button><span class="fb" aria-live="polite"></span></div><p class="note" data-st></p><p class="note" data-w></p>`;
+  const ql = $(".qline", el), md = $("[data-m]", el), sl = $("[data-s]", el), fb = $(".fb", el), st = $("[data-st]", el), wk = $("[data-w]", el);
+  let ans = "", work = "", streak = 0, best = 0, solved = false;
+  function gen() {
+    const par = pick(["even", "odd"]); solved = false;
+    if (md.value === "bit") {
+      const d = rbits(7), p = pbit(d, par); ans = p; ql.textContent = `${par.toUpperCase()} parity. Data bits: ${d}. Parity bit?`;
+      sl.innerHTML = `<option value="">Choose…</option><option>0</option><option>1</option>`; work = `${d} has ${cnt(d)} 1-bits. For ${par} parity the parity bit is ${p}.`;
+    } else {
+      const b = rbits(8), n = cnt(b), good = (n % 2 === 0) === (par === "even"); ans = good ? "No error" : "Error"; ql.textContent = `${par.toUpperCase()} parity agreed. Received byte: ${b}. Is there an error?`;
+      sl.innerHTML = `<option value="">Choose…</option><option>Error</option><option>No error</option>`; work = `${b} has ${n} 1-bits, which is ${n % 2 ? "odd" : "even"}. ${par[0].toUpperCase() + par.slice(1)} parity was agreed, so ${good ? "no error is flagged" : "an error is flagged"}.`;
+    }
+    fb.textContent = ""; fb.className = "fb"; wk.textContent = "";
+  }
+  $("[data-a=c]", el).onclick = () => {
+    const good = sl.value === ans; if (!solved) { streak = good ? streak + 1 : 0; best = Math.max(best, streak); } if (good) solved = true;
+    fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); st.textContent = `Streak ${streak} · best ${best}`; wk.textContent = good ? "" : "";
+    if (good) wk.textContent = "Working: " + work;
+  };
+  $("[data-a=n]", el).onclick = gen; md.onchange = () => { streak = 0; st.textContent = ""; gen(); }; gen();
+})();
+
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Even parity is used. Which byte is received with an error?", opts: ["01100110", "10110110", "11011010", "10100000"], a: 1, why: "10110110 has five 1-bits (odd). The others have four, four and two." },
+  { q: "Which method uses a timeout and acknowledgements?", opts: ["Echo check", "Parity check", "Checksum", "ARQ"], a: 3, why: "ARQ: positive and negative acknowledgements, and a timeout before re-sending." },
+  { q: "What is the main weakness of an echo check?", opts: ["It cannot be used on bytes", "If the data differs, you cannot tell which journey had the error", "It needs a check digit", "It only works on text"], a: 1, why: "The copy could have been corrupted on the way there or on the way back." },
+  { q: "Which of these is a data entry check, not a transmission check?", opts: ["Checksum", "Parity bit", "Check digit", "Echo check"], a: 2, why: "Check digits catch typing and scanning errors." },
+  { q: "A parity block finds the position of an error using…", opts: ["the sequence number", "the bad row and the bad column", "the packet size", "the timeout"], a: 1, why: "The bad bit is where the wrong row and wrong column cross." },
+  { q: "Why might a parity check fail to detect an error?", opts: ["Two bits changed, so the parity is unchanged", "The parity bit is missing", "Parity only works on text", "The receiver cannot count"], a: 0, why: "An even number of flips keeps the same parity." },
+  { q: "In a checksum check, who calculates the checksum?", opts: ["Only the sender", "Only the receiver", "Both the sender and the receiver", "Neither, it is built into the cable"], a: 2, why: "The sender calculates and sends it; the receiver recalculates and compares." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Parity check", "A method of checking data using the number of 1-bits in a byte, which must be even (even parity) or odd (odd parity)."], ["Parity bit", "A bit added to a byte, in the most significant position, so the byte has the agreed parity."],
+  ["Parity block", "A horizontal and vertical parity check on a block of bytes, which can locate a single error."], ["Parity byte", "An extra byte at the end of a block made of the parity bits from the vertical check."],
+  ["Checksum", "A value calculated from a block of data and sent after it. The receiver recalculates it and compares."], ["Echo check", "The receiver sends the data back and the sender compares it with the original."],
+  ["Check digit", "The final digit of a code, calculated from the other digits, used to detect data entry errors."], ["Automatic repeat request (ARQ)", "A method that uses acknowledgements and a timeout to re-send data automatically if it is not received correctly."],
+  ["Acknowledgement", "A message sent back to say whether data was received correctly (positive) or with errors (negative)."], ["Timeout", "The time a sender waits for an acknowledgement before re-sending."],
+  ["Cyclic redundancy check (CRC)", "An error check in which the 1-bits in a packet's payload are totalled and stored in the trailer, then recalculated on arrival."],
+] });
+
+Lib.initTabs();
+</script>
+</body></html>

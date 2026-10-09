@@ -1,0 +1,301 @@
+<style>
+.txin{font:600 1.05rem var(--mono);padding:9px 12px;border-radius:9px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,420px)}
+.drill select,.sel{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .qline{font-size:1.1rem;font-weight:600;margin:8px 0;font-family:var(--mono)}
+.drill input{font:700 1.1rem var(--mono);padding:8px 12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,200px)}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+.flag{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--bad-soft);color:var(--bad)}
+.okf{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--good-soft);color:var(--good)}
+.bits{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.bitb{width:40px;height:44px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font:700 1.1rem var(--mono);cursor:pointer;padding:0}
+.bitb.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.bitb.par{border-style:dashed;border-color:var(--warn);color:var(--warn);background:var(--warn-soft);cursor:default}
+.bitb.fl{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.bitb.fix{outline:3px solid var(--good)}
+.bitb:disabled{opacity:1}
+.lab{font:700 .7rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 0}
+table.pb{border-collapse:separate;border-spacing:4px;margin:8px 0}
+table.pb td{padding:0;text-align:center}
+table.pb .bitb{width:34px;height:34px;font-size:.95rem}
+table.pb th{font:700 .66rem var(--sans);color:var(--muted);padding:0 4px}
+table.pb td.mk2{font:700 .9rem var(--sans);width:42px}
+table.pb td.mk2.bad{color:var(--bad)}table.pb td.mk2.ok{color:var(--good)}
+.stepw td{font-family:var(--mono);font-size:.9rem}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 2 · 2.2</div>
+  <h1>Methods of Error Detection</h1>
+  <p class="lead">Why data can be corrupted in transmission, and how parity checks, checksums, echo checks, check digits and automatic repeat requests find the errors.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>When data is transmitted it can be <b>corrupted, lost or even gained</b>. The receiver cannot see the original, so the sender and receiver agree a check. The sender adds something extra (a parity bit, a checksum, a check digit) or the receiver replies (echo, acknowledgement). If the check does not work out, the data is flagged as wrong and usually re-sent.</p>
+  </div>
+
+  <h2>2.2.1 Why errors happen</h2>
+  <ul>
+    <li><b>Interference</b>: every type of cable can suffer electrical interference, which can corrupt or lose data.</li>
+    <li><b>Packet switching problems</b>: packets can be lost, or data can even be gained.</li>
+    <li><b>Skew</b>: in parallel transmission, bits arriving out of step can corrupt the data.</li>
+  </ul>
+  <p>Corrupted data matters because a computer cannot guess what was meant. A person can read "Can you raed tihs?", but a computer would not recognise the word.</p>
+  <p>The methods below <b>detect</b> errors after transmission. Most then ask for the data to be sent again.</p>
+
+  <h2>2.2.2 Parity checks</h2>
+  <p>A <span class="kw">parity check</span> uses the number of <b>1-bits</b> in a byte. Sender and receiver agree beforehand whether they use <b>even parity</b> (an even number of 1-bits) or <b>odd parity</b> (an odd number of 1-bits).</p>
+  <p>One bit of the byte, usually the <b>most significant (left-most) bit</b>, is reserved as the <span class="kw">parity bit</span>. It is set to 0 or 1 so that the whole byte has the agreed parity.</p>
+  <div class="card"><h3>Worked example: 7 data bits 1101100</h3>
+    <div class="tw"><table class="t"><tr><th>Parity</th><th>1-bits in the data</th><th>Parity bit</th><th>Byte sent</th></tr>
+    <tr><td>Even</td><td>4 (even already)</td><td>0</td><td style="font-family:var(--mono)">0 1101100</td></tr>
+    <tr><td>Odd</td><td>4 (needs one more)</td><td>1</td><td style="font-family:var(--mono)">1 1101100</td></tr></table></div></div>
+  <p>The receiver recounts the 1-bits. If the byte no longer has the agreed parity, an <b>error</b> is flagged.</p>
+  <div class="warn"><b class="h">Two weaknesses</b>1. If <b>two bits</b> change, the count of 1-bits can still have the right parity, so the error is <b>missed</b>. 2. Even when an error is flagged, you cannot tell <b>which bit</b> changed.</div>
+
+  <h3>Parity blocks: finding the bad bit</h3>
+  <p>To locate an error, a block of bytes is checked in <b>both directions</b>. Each byte has its own parity bit (the row check), and an extra byte, the <span class="kw">parity byte</span>, is sent at the end of the block, made of the parity bits for each <b>column</b> (the vertical check). It also marks the end of the block.</p>
+  <p>If one bit flips, one <b>row</b> and one <b>column</b> now have the wrong parity. The bad bit is where they <b>cross</b>. It can be corrected automatically, or the block can be sent again.</p>
+
+  <h3>Checksum</h3>
+  <p>Data is sent in <b>blocks</b>, with an extra value, the <span class="kw">checksum</span>, sent at the end.</p>
+  <ol>
+    <li>The sender calculates the checksum from the block using an <b>agreed algorithm</b>.</li>
+    <li>The checksum is sent with the block.</li>
+    <li>The receiver recalculates the checksum from the block it received.</li>
+    <li><b>Same</b>: no error. <b>Different</b>: a request is made to re-send the block.</li>
+  </ol>
+
+  <h3>Echo check</h3>
+  <p>The receiver sends a <b>copy of the data back</b> to the sender, who compares it with the original. If they are the same, the data was sent correctly. If they differ, there was an error.</p>
+  <p class="note"><b>Weakness:</b> if the two copies differ, you cannot tell whether the error happened on the way there or on the way back. It is not very reliable.</p>
+
+  <h2>2.2.3 Check digits</h2>
+  <p>A <span class="kw">check digit</span> is the <b>final digit</b> of a code, calculated from all the other digits. It is used on barcodes, <b>ISBNs</b> and vehicle identification numbers (VINs). It is a <b>data entry</b> check, not a transmission check. It finds mistakes made by typing a number in or scanning a barcode wrongly.</p>
+  <div class="grid2">
+    <div class="card"><h3>Errors a check digit can usually detect</h3><ul><li><b>Incorrect digit</b>: 5327 instead of 5307</li><li><b>Transposition</b> (two digits swapped): 5037 instead of 5307</li><li><b>Omitted or extra digit</b>: 537 or 53107 instead of 5307</li><li><b>Phonetic error</b>: 13 (thirteen) instead of 30 (thirty)</li></ul></div>
+    <div class="card"><h3>Remember</h3><p>The check digit is calculated when the code is created, and re-calculated every time the code is entered. A mismatch means the number was mistyped or mis-scanned.</p><p class="note">The exam gives you the steps of the algorithm. You need to be able to <b>follow</b> them, not remember them.</p></div>
+  </div>
+  <div class="card"><h3>ISBN-13: generate the check digit from 12 digits</h3>
+    <ol><li>Add the digits in <b>odd</b> positions (1st, 3rd, 5th … 11th).</li><li>Add the digits in <b>even</b> positions (2nd … 12th) and <b>multiply by 3</b>.</li><li>Add the two results and divide by 10.</li><li>Take the remainder. If it is 0, the check digit is 0. Otherwise the check digit is <b>10 − remainder</b>.</li></ol>
+    <p>Example: 9 7 8 0 3 4 0 9 8 3 8 2. Odd: 9+8+3+0+8+8 = 36. Even: 3 × (7+0+4+9+3+2) = 75. 36 + 75 = 111; 111 ÷ 10 leaves remainder 1; check digit = 10 − 1 = <b>9</b>.</p>
+    <p><b>Verify</b> the full 13 digits: do the same, but include the check digit in the odd-position sum. The number is correct if the remainder is <b>0</b>. (Example: 45 + 75 = 120, remainder 0 ✓.)</p></div>
+  <div class="card"><h3>Modulo-11: generate the check digit from 7 digits</h3>
+    <ol><li>Give each digit a <b>weighting</b> from the left: 8, 7, 6, 5, 4, 3, 2.</li><li>Multiply each digit by its weighting and add the results.</li><li>Divide the total by 11.</li><li>Subtract the remainder from 11 to get the check digit (10 is written as X).</li></ol>
+    <p>Example: 4 1 5 6 7 1 0. 32 + 7 + 30 + 30 + 28 + 3 + 0 = 130. 130 ÷ 11 = 11 remainder 9. 11 − 9 = <b>2</b>. The number is 4 1 5 6 7 1 0 2.</p>
+    <p><b>Verify</b> the 8 digits with weightings 8, 7, 6, 5, 4, 3, 2, <b>1</b> (the check digit has weighting 1). Total 132 ÷ 11 = 12 remainder <b>0</b>, so the number is correct.</p></div>
+
+  <h2>2.2.4 Automatic repeat request (ARQ)</h2>
+  <p>ARQ uses <b>acknowledgements</b> and a <b>timeout</b>.</p>
+  <ol>
+    <li>The data arrives with an error-detection code, typically a CRC.</li>
+    <li>No error found: the receiver sends a <b>positive acknowledgement</b> back to the sender.</li>
+    <li>Error found: the receiver sends a <b>negative acknowledgement</b> and asks for the data to be re-sent.</li>
+    <li>The sender waits a set time, the <span class="kw">timeout</span>. If no acknowledgement of either kind arrives in that time, it <b>automatically re-sends</b> the data.</li>
+    <li>This repeats until a positive acknowledgement arrives, or a set number of re-transmissions has been reached.</li>
+  </ol>
+  <p>ARQ is often used by mobile phone networks to make sure data arrives intact.</p>
+
+  <h2>Comparing the methods</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Method</th><th>What is added or done</th><th>Can it find the bad bit?</th><th>Weakness</th></tr>
+    <tr><td><b>Parity check</b></td><td>Parity bit in each byte</td><td>No</td><td>Misses an even number of changed bits</td></tr>
+    <tr><td><b>Parity block</b></td><td>Parity bit per byte plus a parity byte</td><td>Yes (row and column)</td><td>More data to send</td></tr>
+    <tr><td><b>Checksum</b></td><td>Calculated value sent after a block</td><td>No</td><td>Block must be re-sent</td></tr>
+    <tr><td><b>Echo check</b></td><td>Receiver sends a copy back</td><td>No</td><td>Cannot tell which journey had the error</td></tr>
+    <tr><td><b>ARQ</b></td><td>Acknowledgements and a timeout</td><td>No (re-sends everything)</td><td>Waiting time, repeated sends</td></tr>
+    <tr><td><b>Check digit</b></td><td>Calculated final digit of a code</td><td>No</td><td>Data entry only; not every error is caught</td></tr>
+  </table></div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · Parity bit: what it catches and what it misses</h2><div id="stA"></div>
+  <h2>2 · A parity block pinpoints the error</h2><div id="stB"></div>
+  <h2>3 · ARQ: acknowledgements and timeout</h2><div id="stC"></div>
+  <h2>4 · Echo check</h2><div id="stD"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Parity lab</h2>
+  <p>Choose even or odd parity and set 7 data bits. The parity bit is worked out for you. Then flip bits "in transit" and see what the receiver does. Try flipping two bits.</p>
+  <div class="card">
+    <div class="row"><label><input type="radio" name="par" value="even" checked> Even parity</label><label><input type="radio" name="par" value="odd"> Odd parity</label></div>
+    <p class="lab">Sender · click the 7 data bits to change them</p><div class="bits" id="pS"></div>
+    <p class="lab">In transit · click a bit to flip it (interference)</p><div class="bits" id="pR"></div>
+    <div class="readout"><div><small>1-bits sent</small><strong id="pa"></strong></div><div><small>1-bits received</small><strong id="pb"></strong></div><div><small>Bits flipped</small><strong id="pc"></strong></div></div>
+    <div class="verdict" id="pv" aria-live="polite"></div></div>
+
+  <h2>Lab 2 · Parity block lab</h2>
+  <p>Even parity is used in both directions. Click any bit to flip it, as interference would. Red marks show the rows and columns whose parity is now wrong. One flipped bit is located exactly. Two flipped bits are harder.</p>
+  <div class="card"><div class="tw"><table class="pb" id="blk"></table></div>
+    <div class="row"><button class="b pri" id="bfix">Correct the bit</button><button class="b" id="bnew">New block</button></div>
+    <div class="verdict" id="bv" aria-live="polite"></div></div>
+
+  <h2>Lab 3 · Check digit workshop</h2>
+  <p>Pick a method, type the digits, and see the working. Then try the error buttons on a correct number and see whether the check digit catches the mistake.</p>
+  <div class="card">
+    <div class="row"><label>Method <select class="sel" id="ckm"><option value="isbn">ISBN-13 (12 digits in)</option><option value="m11">Modulo-11 (any length, weights count down)</option></select></label>
+    <input class="txin" id="ckd" type="text" inputmode="numeric" autocomplete="off" value="978034098382" maxlength="14" aria-label="Digits"></div>
+    <div class="tw"><table class="t stepw" id="ckt"></table></div>
+    <div class="verdict" id="ckv" aria-live="polite"></div>
+    <p class="lab">Make a mistake in the finished number</p>
+    <div class="row"><button class="b" data-e="chg">Change one digit</button><button class="b" data-e="swp">Swap two neighbours</button><button class="b" data-e="drp">Drop a digit</button><button class="b" data-e="add">Add a digit</button><button class="b" data-e="rst">Reset</button></div>
+    <div class="verdict" id="cke" aria-live="polite"></div></div>
+
+  <h2>Lab 4 · ARQ simulator</h2>
+  <p>Ten packets are sent. Each attempt may be corrupted or lost. Whenever there is a negative acknowledgement or a timeout, the sender tries again, up to the limit.</p>
+  <div class="card"><div class="grid2"><div><div id="a1"></div><div id="a2"></div><div class="row"><button class="b pri" id="arun">Send 10 packets</button></div></div>
+    <div><div class="readout"><div><small>Delivered</small><strong id="ad"></strong></div><div><small>Gave up</small><strong id="ag"></strong></div><div><small>Transmissions</small><strong id="at"></strong></div></div></div></div>
+    <div class="tw"><table class="t stepw" id="atab"></table></div>
+    <div class="verdict" id="av" aria-live="polite"></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which method?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Transmission check or data entry check?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>4 · ARQ in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>5 · Calculations</h2>
+  <p class="note">Plain numbers or single digits only. Type X for a check digit of 10.</p>
+  <div id="c1"></div>
+
+  <h2>6 · Parity drill (endless)</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>7 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Check current figures before quoting numbers.</p>
+  <div class="rw"><h3>Barcodes and ISBNs</h3><p>Every book carries a 13-digit ISBN whose last digit is a check digit. Scan it at a till and the system re-calculates the check digit. A mis-scan will not match, so the till asks you to scan again rather than selling you the wrong item.</p><div class="use"><b>Exam use:</b> the standard example of a check digit. Say it detects data entry errors, such as a mis-scanned barcode.</div></div>
+  <div class="rw"><h3>Mobile phone networks</h3><p>Radio signals suffer interference, so phone networks use automatic repeat requests. If a block of data arrives damaged, a negative acknowledgement is sent and the block is repeated.</p><div class="use"><b>Exam use:</b> a real example of ARQ. Describe acknowledgements, timeout and re-sending.</div></div>
+  <div class="rw"><h3>Memory and storage</h3><p>Data stored in memory or on disks can be checked with parity bits and checksums too. A checksum for a downloaded file lets you check that the copy on your computer matches the original.</p><div class="use"><b>Exam use:</b> shows a checksum is worked out from a whole block of data, then compared.</div></div>
+  <div class="rw"><h3>Vehicle identification numbers</h3><p>A car's VIN includes a check digit, so a mistyped VIN on a registration form or in a parts database can be flagged immediately.</p><div class="use"><b>Exam use:</b> a second example of where check digits are used.</div></div>
+  <div class="rw"><h3>"Repeat that, please?"</h3><p>On a poor phone line you might say "Did you say fifty or fifteen?" and the other person repeats it. That is the idea behind an echo check: send it back so it can be compared.</p><div class="use"><b>Exam use:</b> an analogy for echo check, and for why it is not very reliable if the two versions differ.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each underlined phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Give</span> <span class="mark">2 marks</span> Give two ways in which data can become corrupted during transmission.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Choose two from interference, packet switching problems and skew.</div>
+    <div class="ans"><span class="mk k" data-t="1">Interference (electrical) on the cable can change or lose bits.</span> <span class="mk k" data-t="2">Skew in parallel transmission, where bits arrive out of step; (or) problems during packet switching, such as packets being lost.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Answering with the checking method. The question asks for the <b>cause</b> of the errors.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate</span> <span class="mark">2 marks</span> (a) Even parity is used. The 7 data bits are 1011011. What is the parity bit? (b) Odd parity is used. The 7 data bits are 1100110. What is the parity bit?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Count the 1-bits first. Then decide whether the parity bit must be 0 or 1 to make the total match the parity.</div>
+    <div class="ans"><span class="mk k" data-t="1">(a) 1011011 has five 1-bits (odd), so the parity bit is 1, to make six.</span> <span class="mk k" data-t="2">(b) 1100110 has four 1-bits (even), so the parity bit is 1, to make five (odd).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Using the wrong parity for the part. Underline "even" or "odd" in the question first.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Even parity is used. The byte 01101101 is received. Has an error been detected?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Count the 1-bits in what was received, compare with the agreed parity.</div>
+    <div class="ans"><span class="mk k" data-t="1">The byte contains five 1-bits, which is an odd number.</span> <span class="mk k" data-t="2">Even parity was agreed, so an error has been detected.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Counting 0-bits. Parity is about the number of <b>1-bits</b>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Explain why a parity check might not detect an error in a transmitted byte.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>It is about two bits changing.</div>
+    <div class="ans"><span class="mk k" data-t="1">If two bits change (for example, one 1 becomes 0 and one 0 becomes 1, or two bits flip in the same direction), the byte is corrupted.</span> <span class="mk k" data-t="2">But the number of 1-bits still has the same parity, so the receiver sees no error.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>"Parity is unreliable". Say <b>why</b>: the count still looks right.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a checksum is used to check for errors in a block of data.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Calculate, send with the block, recalculate, compare. Mention the agreed algorithm.</div>
+    <div class="ans"><span class="mk k" data-t="1">The sender calculates the checksum from the block of data, using an agreed algorithm.</span> <span class="mk k" data-t="2">The checksum is sent with (after) the block of data.</span> <span class="mk k" data-t="3">The receiver recalculates the checksum from the block it received, using the same algorithm, and compares it with the one sent.</span> <span class="mk k" data-t="4">If they match there is no error; if they differ, the receiver asks for the block to be re-sent.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Forgetting the receiver calculates its own. Without that, there is nothing to compare.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe how an echo check works, and give one weakness.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Send, return, compare. Then the weakness.</div>
+    <div class="ans"><span class="mk k" data-t="1">The data is sent to the receiver, who sends a copy of it back to the sender.</span> <span class="mk k" data-t="2">The sender compares the returned data with the original; if they are different, an error has occurred.</span> <span class="mk e" data-t="3">Weakness: if they differ, the sender cannot tell whether the error happened on the way to the receiver or on the way back.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the receiver compares the data. It is the <b>sender</b> who compares.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how an automatic repeat request (ARQ) is used to check for errors in data transmission.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Error check, positive and negative acknowledgement, timeout, re-send.</div>
+    <div class="ans"><span class="mk k" data-t="1">The receiver checks the data using an error-detection code (such as a CRC) that was sent with it.</span> <span class="mk k" data-t="2">If no error is found, a positive acknowledgement is sent back to the sender; if an error is found, a negative acknowledgement is sent and the data is re-sent.</span> <span class="mk k" data-t="3">The sender waits for a set time (the timeout); if no acknowledgement arrives in that time, it automatically re-sends the data.</span> <span class="mk k" data-t="4">This repeats until a positive acknowledgement is received, or a set number of re-transmissions has been made.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Forgetting the timeout, which covers the case where no reply arrives at all.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">Describe</span> <span class="mark">3 marks</span> A block of bytes is sent using even parity in both directions, with a parity byte at the end. It arrives as shown. Find the error and give the correct value of the byte affected.
+    <table class="pb" style="margin:6px 0;font-family:var(--mono);font-size:.85rem;border-spacing:2px"><tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr><tr><th>Byte 1</th><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr><tr><th>Byte 2</th><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr><tr><th>Byte 3</th><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><th>Byte 4</th><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td></tr><tr><th>Parity byte</th><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr></table></summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Check every row, then every column. The wrong row and wrong column cross at the error.</div>
+    <div class="ans"><span class="mk k" data-t="1">Byte 3 has five 1-bits (odd), so its row has the wrong parity.</span> <span class="mk k" data-t="2">Column 6 has three 1-bits in the data bytes plus the parity byte (odd), so its column has the wrong parity; the error is the bit where they cross: byte 3, bit 6.</span> <span class="mk k" data-t="3">That bit should be 0, so byte 3 should be 11110000.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Finding the wrong row but not the column. You need both to locate the bit.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q9 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe three differences between a checksum and a check digit.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Think purpose, size/position, and when it is used.</div>
+    <div class="ans"><span class="mk k" data-t="1">A checksum checks data after transmission; a check digit checks data entry (typing or scanning).</span> <span class="mk k" data-t="2">A checksum is calculated from a whole block of data; a check digit is calculated from the other digits of one number or code.</span> <span class="mk k" data-t="3">A checksum is a value sent after the block of data; a check digit is a single digit at the end of a code (such as an ISBN).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "they both check for errors". The question asks for differences.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q10 <span class="cmd">Calculate</span> <span class="mark">4 marks</span> The ISBN-13 check digit is found like this: add the digits in odd positions; add the digits in even positions and multiply by 3; add the two results and find the remainder when divided by 10; if the remainder is 0 the check digit is 0, otherwise subtract it from 10. Find the check digit for 978030640615.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Show each stage. Method marks are available even if the last step slips.</div>
+    <div class="ans"><span class="mk k" data-t="1">Odd positions: 9 + 8 + 3 + 6 + 0 + 1 = 27</span> <span class="mk k" data-t="2">Even positions: 3 × (7 + 0 + 0 + 4 + 6 + 5) = 3 × 22 = 66</span> <span class="mk k" data-t="3">27 + 66 = 93; 93 ÷ 10 leaves a remainder of 3</span> <span class="mk k" data-t="4">Check digit = 10 − 3 = 7</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Multiplying the wrong group by 3. It is the <b>even</b> positions.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q11 <span class="cmd">Describe</span> <span class="mark">3 marks</span> A check digit can detect certain errors when a number is typed in. Describe three types of error it can detect.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Give a short example with each type.</div>
+    <div class="ans"><span class="mk k" data-t="1">An incorrect digit, for example 5327 typed instead of 5307.</span> <span class="mk k" data-t="2">A transposition error, where two digits swap places, for example 5037 instead of 5307.</span> <span class="mk k" data-t="3">An omitted or extra digit, for example 537 or 53107 instead of 5307. (Also acceptable: a phonetic error, 13 for 30.)</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Listing errors the check digit cannot help with, such as "the wrong product was chosen".</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Count the 1-bits</b> for parity, never the 0-bits. Underline "even" or "odd" in the question.</li>
+    <li><b>The parity bit goes in the left-most (most significant) position</b> unless the question says otherwise.</li>
+    <li><b>Parity does not find which bit.</b> A parity block does, using the row and the column.</li>
+    <li><b>Parity can miss errors</b> when an even number of bits change.</li>
+    <li><b>Checksum: two calculations.</b> Sender and receiver both calculate, then compare.</li>
+    <li><b>Echo check: the sender compares.</b> Weakness: cannot tell which journey had the error.</li>
+    <li><b>ARQ needs a timeout</b> as well as the positive and negative acknowledgements.</li>
+    <li><b>Check digit = data entry.</b> Checksum, parity and echo = transmission.</li>
+    <li><b>Show every step</b> in check digit calculations. You can earn method marks.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Give</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Calculate</td><td>Working and a final answer.</td></tr>
+    <tr><td>Describe</td><td>What happens, step by step, or the main features.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>

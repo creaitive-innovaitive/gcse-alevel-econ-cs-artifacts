@@ -1,0 +1,255 @@
+<style>
+.txin{font:600 1.05rem var(--mono);padding:9px 12px;border-radius:9px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,420px)}
+.drill select,.sel{font:600 .95rem var(--sans);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.drill .qline{font-size:1.1rem;font-weight:600;margin:8px 0}
+.drill input{font:700 1.1rem var(--mono);padding:8px 12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:min(100%,220px);text-transform:uppercase}
+.drill .fb{font-weight:700;margin-left:8px}.drill .fb.ok{color:var(--good)}.drill .fb.no{color:var(--bad)}
+.flag{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--bad-soft);color:var(--bad)}
+.okf{display:inline-block;font:700 .7rem var(--sans);padding:1px 7px;border-radius:99px;background:var(--good-soft);color:var(--good)}
+.lab{font:700 .7rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 4px}
+.out{font:700 1.15rem var(--mono);letter-spacing:.12em;padding:10px 14px;border-radius:9px;background:var(--soft);border:1px solid var(--line);word-break:break-all;min-height:46px}
+.out.bad{color:var(--bad)}.out.good{color:var(--good)}
+.cip{font-family:var(--mono);font-size:.82rem;text-align:center}
+.cip td,.cip th{padding:4px 6px;text-align:center}
+.ch{display:grid;gap:8px;margin:10px 0}
+.ch button{text-align:left;font:600 .95rem var(--sans);padding:10px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.ch button:hover{border-color:var(--accent)}
+.ch button.ok{border-color:var(--good);background:var(--good-soft)}.ch button.no{border-color:var(--bad);background:var(--bad-soft)}
+.kpub{color:var(--good);font-weight:700}.kpri{color:var(--bad);font-weight:700}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 2 · 2.3</div>
+  <h1>Symmetric and Asymmetric Encryption</h1>
+  <p class="lead">Why data sent over a network is encrypted, how a single shared key works (symmetric), and how a public and private key pair solves its biggest problem (asymmetric).</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>Data sent over a public network can be intercepted. <span class="kw">Encryption</span> scrambles it into a form that means nothing to anyone who is not meant to read it. It <b>cannot stop</b> data being intercepted, but the interceptor gets nonsense.</p>
+  </div>
+
+  <h2>2.3.1 The purpose of encryption</h2>
+  <p>Whenever data crosses a public network, wired or wireless, it might be intercepted by a hacker, often called an <span class="kw">eavesdropper</span>. This matters most for sensitive or confidential data such as <b>credit card or bank details, medical history and legal documents</b>.</p>
+  <div class="grid2">
+    <div class="card"><h3>Plaintext</h3><p>The <b>original data</b> before encryption. (Plaintext does not have to be text: it is just "data that has not been encrypted".)</p></div>
+    <div class="card"><h3>Ciphertext</h3><p>The <b>encrypted data</b> that comes out of the encryption algorithm.</p></div>
+    <div class="card"><h3>Encryption algorithm</h3><p>The method that scrambles the plaintext. It uses an <b>encryption key</b> to produce the ciphertext.</p></div>
+    <div class="card"><h3>Key</h3><p>A value used by the algorithm. Without the correct <b>decryption key</b> the data cannot be unscrambled.</p></div>
+  </div>
+  <div class="card"><h3>The route of an encrypted message</h3>
+    <p style="font-family:var(--mono);font-size:.92rem">plaintext → <b>encryption algorithm + encryption key</b> → ciphertext → (internet) → ciphertext → <b>decryption algorithm + decryption key</b> → plaintext</p></div>
+
+  <h2>2.3.2 Symmetric encryption</h2>
+  <p>In <span class="kw">symmetric encryption</span> the <b>same key</b> is used to encrypt and to decrypt.</p>
+  <p>A simple example uses a 10-digit key such as <b>4 2 9 1 3 6 2 8 5 6</b>. Each letter is shifted along the alphabet by the next digit of the key (+4, +2, +9, +1, and so on). The receiver applies the same key in reverse (−4, −2, −9, −1 …).</p>
+  <div class="tw"><table class="t cip" aria-label="Encryption example">
+    <tr><th>Plaintext</th><td>C</td><td>O</td><td>M</td><td>P</td><td>U</td><td>T</td><td>E</td><td>R</td></tr>
+    <tr><th>Key digit</th><td>4</td><td>2</td><td>9</td><td>1</td><td>3</td><td>6</td><td>2</td><td>8</td></tr>
+    <tr><th>Ciphertext</th><td>G</td><td>Q</td><td>V</td><td>Q</td><td>X</td><td>Z</td><td>G</td><td>Z</td></tr>
+  </table></div>
+  <ul>
+    <li>A 10-digit key has only 10¹⁰ possible values, which a modern computer could try in seconds. Real systems use keys of <b>256 bits</b>, giving 2²⁵⁶ (about 1.2 × 10⁷⁷) possible keys.</li>
+    <li>The real difficulty is <b>keeping the key secret</b>. Both sides need the same key, so it has to be passed to the other person somehow, for example in an email or text message, where it can be intercepted.</li>
+  </ul>
+  <div class="warn"><b class="h">The main drawback</b>If the key is intercepted, the eavesdropper can decrypt everything. This is the <b>key distribution problem</b>: <b>security of the shared key</b>.</div>
+
+  <h2>Asymmetric encryption</h2>
+  <p><span class="kw">Asymmetric encryption</span> was developed to solve that problem. It uses <b>two linked keys</b>:</p>
+  <div class="grid2">
+    <div class="card"><h3><span class="kpub">Public key</span></h3><p>Made available to <b>everybody</b>. Used to <b>encrypt</b> a message to its owner.</p></div>
+    <div class="card"><h3><span class="kpri">Private key</span></h3><p>Known <b>only</b> to its owner. Used to <b>decrypt</b> messages that were encrypted with the matching public key.</p></div>
+  </div>
+  <p>The two keys are mathematically linked, but one <b>cannot be worked out from the other</b>. Both are needed: one to encrypt, the matching one to decrypt.</p>
+  <div class="card"><h3>Tom sends Jane a confidential document</h3>
+    <ol>
+      <li>Jane uses an algorithm to generate a matching <b>pair</b> of keys (public and private) and keeps them on her computer.</li>
+      <li>Jane sends her <b>public key</b> to Tom. (Anyone may have it.)</li>
+      <li>Tom uses Jane's <b>public key</b> to encrypt the document, and sends the ciphertext to Jane.</li>
+      <li>Jane uses her matching <b>private key</b> to decrypt it. She cannot decrypt it with the public key.</li>
+    </ol>
+    <p>Jane can give her public key to many people, so she can receive encrypted messages from all of them, and she decrypts each with the one private key she never shares.</p></div>
+  <div class="card"><h3>Two-way communication</h3><p>At the moment Jane can only <b>receive</b> encrypted documents from Tom. For Jane to send encrypted documents back to Tom, <b>Tom</b> must also generate his own public and private key pair, and send <b>his public key</b> to Jane. If five colleagues all want to exchange encrypted messages, each needs their own key pair and each must share their public key with all the others.</p></div>
+
+  <h3>Comparing the two</h3>
+  <div class="tw"><table class="t">
+    <tr><th></th><th>Symmetric</th><th>Asymmetric</th></tr>
+    <tr><td>Keys</td><td>One key, the same at both ends</td><td>Two keys: public and private</td></tr>
+    <tr><td>Who knows the key</td><td>Sender and receiver (both must know it)</td><td>Public key: everybody. Private key: only the owner</td></tr>
+    <tr><td>Main drawback</td><td>The shared key must be sent, so it could be intercepted</td><td>Each person needs a key pair, and everyone must collect everyone else's public key</td></tr>
+    <tr><td>Security</td><td>Weaker, because the key has to travel</td><td>Stronger, because the private key never travels</td></tr>
+  </table></div>
+
+  <h3>Extension: quantum cryptography</h3>
+  <p class="note">This is an A Level extension in the course book. It is not needed for the IGCSE exam.</p>
+  <p>Quantum cryptography uses the physics of <b>photons</b> (particles of light) rather than mathematics to send encryption keys securely. A protocol called Quantum Key Distribution (QKD), such as BB84, lets two people share a key. The sender and receiver each choose a measuring method (<i>basis</i>) at random for every photon, and then publicly compare which they used. They keep only the results where both used the same basis. A spy who measures the photons disturbs them, which is why the method is thought to be very secure.</p>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play, or click the numbered steps.</p>
+  <h2>1 · Symmetric encryption, and its weak spot</h2><div id="stA"></div>
+  <h2>2 · Asymmetric encryption: Tom sends Jane a document</h2><div id="stB"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Symmetric cipher</h2>
+  <p>Type a message and a numeric key. Each letter is shifted by the next key digit, as in the course book. (Spaces and punctuation are dropped in this lab.) Then give the receiver a different key and see what comes out.</p>
+  <div class="card">
+    <p class="lab">Plaintext</p><input class="txin" id="cm" type="text" value="COMPUTER SCIENCE IS EXCITING" maxlength="40" aria-label="Plaintext">
+    <div class="grid2"><div><p class="lab">Sender's key (digits)</p><input class="txin" id="ck1" type="text" inputmode="numeric" value="4291362856" maxlength="12" aria-label="Sender key"></div>
+    <div><p class="lab">Receiver's key (digits)</p><input class="txin" id="ck2" type="text" inputmode="numeric" value="4291362856" maxlength="12" aria-label="Receiver key"></div></div>
+    <p class="lab">Ciphertext that crosses the internet</p><div class="out" id="co"></div>
+    <p class="lab">What the receiver decrypts</p><div class="out" id="cd"></div>
+    <div class="tw"><table class="t cip" id="ct"></table></div>
+    <div class="verdict" id="cv" aria-live="polite"></div></div>
+
+  <h2>Lab 2 · How long to crack a key?</h2>
+  <p>A hacker without the key can try every possible key. Choose the key length and how many keys per second the attacker can test. This is a simple model: it assumes every key must be tried.</p>
+  <div class="card"><div class="grid2"><div><div id="k1"></div><div id="k2"></div></div>
+    <div><div class="readout"><div><small>Possible keys</small><strong id="ka"></strong></div><div><small>Time to try them all</small><strong id="kb"></strong></div></div><div class="verdict" id="kv" aria-live="polite"></div></div></div></div>
+
+  <h2>Lab 3 · How many keys do people need?</h2>
+  <p>With symmetric encryption, every <b>pair</b> of people who want to talk privately needs their own shared secret key. With asymmetric encryption, each person needs just one key pair, and shares the public half. Drag the slider to add people.</p>
+  <div class="card"><div class="grid2"><div><div id="n1"></div>
+    <div class="readout"><div><small>Symmetric: secret keys</small><strong id="na"></strong></div><div><small>Asymmetric: key pairs</small><strong id="nb"></strong></div></div><div class="verdict" id="nv"></div></div>
+    <div><svg id="net" viewBox="0 0 320 320" role="img" aria-label="People joined by lines, one line for each shared secret key"></svg></div></div></div>
+
+  <h2>Lab 4 · Which key should Tom use?</h2>
+  <p>Tom wants to send Jane a document that only Jane can read. Jane has already sent Tom her public key. Which key does Tom use to encrypt it?</p>
+  <div class="card"><div class="ch" id="kch"></div><div class="verdict" id="kvv" aria-live="polite">Pick a key.</div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Symmetric or asymmetric?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Public key or private key?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>4 · Tom sends Jane a message</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>5 · Calculations</h2>
+  <p class="note">Letters can be typed in any case. For numbers, plain digits.</p>
+  <div id="c1"></div>
+
+  <h2>6 · Encrypt or decrypt (endless)</h2>
+  <div class="card drill" id="drill"></div>
+
+  <h2>7 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Descriptions are kept general. Check current details before quoting specifics.</p>
+  <div class="rw"><h3>The padlock in your browser</h3><p>When a web address begins <b>https</b> and the browser shows a padlock, the data between your device and the website is encrypted. A card number typed into a shop's page is scrambled on the way, so someone sharing the same Wi-Fi sees only ciphertext. In practice, systems like this tend to use public and private keys to agree a shared key first, and then use that shared key for the bulk of the data. You only need the two basic types for the exam.</p><div class="use"><b>Exam use:</b> a standard reason for encryption: protecting card details on a public network.</div></div>
+  <div class="rw"><h3>Messaging apps</h3><p>Many messaging apps advertise "end-to-end encryption": the message is encrypted on the sender's device and only decrypted on the receiver's device, so the company running the network in between cannot read it.</p><div class="use"><b>Exam use:</b> shows that encryption protects data even when it passes through other people's networks.</div></div>
+  <div class="rw"><h3>Home and café Wi-Fi</h3><p>Wi-Fi signals travel through the air, so anyone nearby can pick them up. Encrypted Wi-Fi turns the signal into ciphertext for anyone without the key. Unencrypted public Wi-Fi leaves eavesdroppers with readable data.</p><div class="use"><b>Exam use:</b> a wireless example. Eavesdroppers can intercept data either way, but encryption makes it meaningless.</div></div>
+  <div class="rw"><h3>Online banking and health records</h3><p>Bank logins and medical records are exactly the sort of sensitive data the course book mentions. Both are encrypted when sent so that a stolen copy is of no use.</p><div class="use"><b>Exam use:</b> examples of confidential data: credit card or bank details, medical history, legal documents.</div></div>
+  <div class="rw"><h3>Giving out your public key</h3><p>Some people publish their public key on a website or in their email footer so anyone can send them an encrypted message. Their private key stays on their own device and is never shared.</p><div class="use"><b>Exam use:</b> illustrates "public key: made available to everybody; private key: known only to the owner".</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Each underlined phrase earns one mark; the number shows which mark point it is.</p>
+
+  <details class="eq"><summary>Q1 <span class="cmd">State</span> <span class="mark">2 marks</span> What is meant by encryption?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Make data unreadable, and say who can read it again.</div>
+    <div class="ans"><span class="mk k" data-t="1">Encryption alters (scrambles) data into a form that cannot be understood by anyone it was not intended for,</span> <span class="mk k" data-t="2">using an encryption key; it can only be decoded using the correct decryption key.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying "it stops hackers". Encryption does not stop data being intercepted.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Name</span> <span class="mark">2 marks</span> Name (a) the data before it is encrypted and (b) the data after it is encrypted.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two words from the chapter.</div>
+    <div class="ans"><span class="mk k" data-t="1">(a) Plaintext</span> <span class="mk k" data-t="2">(b) Ciphertext</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "simpletext" or "encrypted text". Use <b>plaintext</b> and <b>ciphertext</b>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain why data is encrypted before it is sent across a public network.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Interception risk, what encryption does and does not do, and an example of sensitive data.</div>
+    <div class="ans"><span class="mk k" data-t="1">Data sent over a public network could be intercepted by a hacker (an eavesdropper).</span> <span class="mk k" data-t="2">Encryption does not stop the data being intercepted, but it turns it into ciphertext that makes no sense without the decryption key.</span> <span class="mk k" data-t="3">This protects sensitive or confidential data, such as bank or credit card details, medical history or legal documents.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the hacker "cannot get" the data. They <b>can</b> get it, but they cannot read it.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe symmetric encryption and give one drawback.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>One key used at both ends. Then the drawback.</div>
+    <div class="ans"><span class="mk k" data-t="1">The same key is used to encrypt the data and to decrypt it.</span> <span class="mk k" data-t="2">The sender and the receiver must both have a copy of the key.</span> <span class="mk e" data-t="3">Drawback: the key must be sent to the receiver, and it could be intercepted on the way, so the security of the key is a problem.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the drawback is that it is "too slow" or "too complicated". The textbook drawback is <b>key security</b>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Tom wants to send Jane a confidential document using asymmetric encryption. Describe the steps.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Keys generated, public key shared, encrypt with the public key, decrypt with the private key.</div>
+    <div class="ans"><span class="mk k" data-t="1">Jane generates a matching pair of keys, a public key and a private key.</span> <span class="mk k" data-t="2">Jane sends her public key to Tom.</span> <span class="mk k" data-t="3">Tom encrypts the document using Jane's public key and sends the ciphertext to Jane.</span> <span class="mk k" data-t="4">Jane decrypts the document using her matching private key.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Swapping the keys. Tom encrypts with Jane's <b>public</b> key; Jane decrypts with her <b>private</b> key.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q6 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain why asymmetric encryption is more secure than symmetric encryption.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>What has to be sent, and what an eavesdropper could do with it.</div>
+    <div class="ans"><span class="mk k" data-t="1">In symmetric encryption the secret key has to be sent to the receiver, where it could be intercepted.</span> <span class="mk k" data-t="2">In asymmetric encryption only the public key is sent, and the private key is never shared; it stays with its owner.</span> <span class="mk k" data-t="3">If the public key is intercepted, it can only encrypt, not decrypt, so the eavesdropper cannot read the messages.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying it is more secure "because it has two keys". Explain <b>what travels</b> and <b>what does not</b>.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q7 <span class="cmd">State</span> <span class="mark">2 marks</span> A student says "Encryption stops hackers from intercepting my data." Is the student correct? Explain.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>One mark for the verdict, one for what encryption really does.</div>
+    <div class="ans"><span class="mk k" data-t="1">No, encryption cannot prevent data being intercepted.</span> <span class="mk k" data-t="2">It makes the intercepted data meaningless (ciphertext) to anyone without the decryption key.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Agreeing with the student. This is a very common misconception.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q8 <span class="cmd">State</span> <span class="mark">2 marks</span> In asymmetric encryption, state who has access to (a) the public key and (b) the private key.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>One word for each: everybody, or one person.</div>
+    <div class="ans"><span class="mk k" data-t="1">(a) The public key is available to everybody (it can be shared with anyone).</span> <span class="mk k" data-t="2">(b) The private key is known only to its owner (the receiving user).</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the private key is "sent to the receiver". It is the receiver's own key; it never travels.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q9 <span class="cmd">Calculate</span> <span class="mark">2 marks</span> A simple cipher shifts each letter along the alphabet by the next digit of the key 2 4 1, repeating the key as needed. Encrypt the word COMPUTER.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>C + 2, O + 4, M + 1, then the key starts again.</div>
+    <div class="ans"><span class="mk k" data-t="1">Shifts used: 2 4 1 2 4 1 2 4 (C+2 = E, O+4 = S, M+1 = N, P+2 = R, U+4 = Y, T+1 = U, E+2 = G, R+4 = V)</span> <span class="mk k" data-t="2">Ciphertext: ESNRYUGV</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Using the whole key for each letter, or forgetting to restart the key.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Encryption does not stop interception.</b> It makes intercepted data meaningless.</li>
+    <li><b>Plaintext → algorithm + key → ciphertext.</b> Use those exact words.</li>
+    <li><b>Symmetric = one key, both ends.</b> Its drawback is that the key has to be sent securely.</li>
+    <li><b>Asymmetric = two keys.</b> Public: everybody. Private: only the owner.</li>
+    <li><b>Encrypt with the receiver's public key. Decrypt with the receiver's private key.</b></li>
+    <li><b>Say why asymmetric is more secure:</b> the private key never travels, and a stolen public key cannot decrypt.</li>
+    <li><b>Two-way needs two pairs.</b> Both people need their own key pair.</li>
+    <li><b>Give a reason with an example:</b> credit card details, medical history, legal documents.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>State / Name</td><td>A short fact. No explanation.</td></tr>
+    <tr><td>Calculate</td><td>Working and a final answer.</td></tr>
+    <tr><td>Describe</td><td>What happens, step by step, or the main features.</td></tr>
+    <tr><td>Explain</td><td>What happens and why. Use because or so.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
