@@ -1,0 +1,149 @@
+<div class="kitvars">
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">IGCSE Computer Science 0478 · Topic 5.3</div>
+  <h1>Cyber security</h1>
+  <p>The threats to data and computer systems, and the measures that stop them. Learn it, watch it happen, practise it, then answer exam questions.</p>
+</header>
+
+<div class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</div>
+<section id="learn" role="tabpanel">
+<section class="panel" id="p-learn">
+  <h2>Threats</h2>
+  <p class="lead">Each threat is a way of stealing, damaging or blocking access to data or systems. In the exam, name the threat, say how it works, then say what it does.</p>
+  <div class="grid" id="threats"></div>
+  <h2 style="margin-top:36px">Defences</h2>
+  <p class="lead">Every defence should be linked to a threat and a mechanism. "It keeps you safe" earns nothing.</p>
+  <div class="grid" id="defences"></div>
+  <h2 style="margin-top:36px">Top tips</h2>
+  <ol class="tips" id="lg-tips"></ol>
+  <h3 style="margin-top:28px">Command words you will meet</h3>
+  <div class="cmd">
+    <div><b>State / Identify / Give</b><br>A short answer. One fact, no reason needed.</div>
+    <div><b>Describe</b><br>Say what happens or what it is like. Several facts in order.</div>
+    <div><b>Explain</b><br>Give a point and a reason: "because", "so that", "which means".</div>
+    <div><b>Discuss</b><br>Advantages and disadvantages, then a judgement.</div>
+  </div>
+</section>
+
+</section>
+<section id="watch" role="tabpanel" hidden>
+<div class="panel">
+  <h2>See it work</h2>
+  <p class="lead">Pick a scenario and step through it. Red packets are attacks, teal ones are protection at work.</p>
+  <div class="seg" id="scen"></div>
+  <div id="stepper"></div>
+
+  </div>
+
+</section>
+<section id="explore" role="tabpanel" hidden>
+<div class="panel"><h2>Slider lab: DDoS attack</h2>
+  <p class="lead">The server can handle 100 requests a second. Genuine users send 10. Each infected computer (bot) adds 1 more. Drag the slider to see when genuine users get shut out.</p>
+  <canvas id="ddos" aria-label="Animation of bots sending requests to a server"></canvas>
+  <div class="ctrls"><button class="btn danger" id="atk" aria-pressed="true">Attack: on</button></div>
+  <div class="lab"><label for="bots">Infected computers in the botnet</label><output id="botsOut">80</output></div>
+  <input type="range" id="bots" min="0" max="400" step="5" value="80">
+  <div class="meter" aria-hidden="true"><i id="loadBar"></i></div>
+  <div class="readout">
+    <div><small>Server load</small><b id="loadTxt"></b></div>
+    <div><small>Genuine requests served</small><b id="servedTxt"></b></div>
+    <div><small>Server status</small><b id="statTxt"></b></div>
+  </div>
+  <div class="tipbox"><b>Exam link:</b> a DoS attack comes from one computer. DDoS is distributed: many computers, usually a botnet the attacker controls. Say "many" and "at the same time".</div>
+
+  <h2>Slider lab: brute-force attack</h2>
+  <p class="lead">A brute-force attack tries every combination. Change the password length and the characters allowed, and watch the time to crack it.</p>
+  <div class="lab"><label for="len">Password length</label><output id="lenOut">8</output></div>
+  <input type="range" id="len" min="1" max="16" value="8">
+  <div class="checks" id="sets">
+    <label><input type="checkbox" id="cLow" checked> a–z (26)</label>
+    <label><input type="checkbox" id="cUp"> A–Z (26)</label>
+    <label><input type="checkbox" id="cNum"> 0–9 (10)</label>
+    <label><input type="checkbox" id="cSym"> symbols (32)</label>
+  </div>
+  <label for="speed">Attacker speed </label>
+  <select id="speed">
+    <option value="1000">Online, login page limits it (1,000 a second)</option>
+    <option value="1e9" selected>Stolen password file, one fast computer (1 billion a second)</option>
+    <option value="1e12">Cluster of graphics cards (1 trillion a second)</option>
+  </select>
+  <div class="readout">
+    <div><small>Possible combinations</small><b id="combo"></b></div>
+    <div><small>Time to try them all</small><b id="ctime"></b></div>
+  </div>
+  <div class="meter" aria-hidden="true"><i id="bfBar"></i></div>
+  <p id="bfNote" class="why"></p>
+  <div class="tipbox"><b>Exam link:</b> longer and more varied passwords mean more combinations, so it takes longer. Limiting login attempts and 2FA stop the attack from working even if the password is guessed.</div>
+</div>
+
+</section>
+<section id="practise" role="tabpanel" hidden>
+<section class="panel" id="p-practise">
+  <h2>Practise</h2>
+  <div class="act">
+    <h3>1. Match the malware</h3>
+    <p class="lead">Drag each term onto its description. On a phone, tap a term, then tap a box.</p>
+    <div id="m1"></div>
+  </div>
+  <div class="act">
+    <h3>2. Match the defence</h3>
+    <p class="lead">Which measure does each description point to?</p>
+    <div id="m2"></div>
+  </div>
+  <div class="act">
+    <h3>3. Put it in the right order</h3>
+    <div class="seg" id="oSel"></div>
+    <p class="lead">Drag the rows, or use the arrows.</p>
+    <div id="ord"></div>
+  </div>
+  <div class="act">
+    <h3>4. Quick-fire quiz</h3>
+    <div id="quiz"></div>
+  </div>
+</section>
+
+</section>
+<section id="real" role="tabpanel" hidden>
+<section class="panel" id="p-world">
+  <h2>Real world</h2>
+  <p class="lead">Real incidents make good examples in longer answers. Use them to show you understand how a threat works, but the marks come from the technical points.</p>
+  <div class="grid" id="cases"></div>
+</section>
+
+</section>
+<section id="exam" role="tabpanel" hidden>
+<section class="panel" id="p-exam">
+  <h2>Exam questions</h2>
+  <p class="lead">Write your own answer first. Then reveal the mark scheme and tick each mark point you made. Marks are capped at the question total.</p>
+  <div id="qs"></div>
+</section>
+
+</section>
+<section id="tips" role="tabpanel" hidden>
+<div class="kit">
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Name the threat, say how it works, say what it does.</b> Three marks in three sentences.</li>
+    <li><b>Link every defence to a threat and a mechanism.</b> "It keeps you safe" earns nothing.</li>
+    <li><b>DoS is one computer; DDoS is many at the same time.</b> Mention a botnet.</li>
+    <li><b>Say what each malware type does.</b> A virus attaches to files and needs a host; a worm spreads by itself.</li>
+    <li><b>Phishing is an email, pharming is redirection.</b> Pharming changes where a website address leads.</li>
+    <li><b>Strong passwords are long and varied,</b> but 2FA and limited login attempts also stop a guessed password working.</li>
+  </ul>
+  <h2>Keyword flashcards</h2>
+  <p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</div>
+
+</section>
+</div>
+</div>
