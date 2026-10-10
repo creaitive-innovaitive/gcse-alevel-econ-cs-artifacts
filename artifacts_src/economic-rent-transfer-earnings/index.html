@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Economic Rent and Transfer Earnings</title>
+
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .arr{fill:var(--muted)}
+svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+table.mx td,table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+table.mx td.z{color:var(--muted);opacity:.6} table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+table.mx td.ls{text-align:left}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+
+.mq{max-width:480px;width:100%;display:block;margin:8px 0}
+.dg{margin:6px 0}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Economics · 9708 · Chapter 40</div>
+  <h1>Economic Rent and Transfer Earnings</h1>
+  <p class="lead">Two ideas that look hard and are not. Simple English, one story, pictures you build step by step, and every past paper question that used the ideas, with the mark schemes.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Past papers</button>
+  <button role="tab" data-p="tips">Tips &amp; words</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The two ideas in two sentences</h3>
+    <p><b class="kw">Transfer earnings</b> are the <b>smallest pay</b> a worker needs to stay in their job. If they get less, they <b>transfer</b> (move) to another job.</p>
+    <p><b class="kw">Economic rent</b> is <b>all the extra pay</b> above that smallest pay. The worker would stay without it, but the market gives it to them anyway.</p>
+    <div class="formula">Total pay = transfer earnings + economic rent</div>
+    <p class="note">"Rent" here has nothing to do with paying for a house or flat. It is an old economics word for pay that is more than you need to get the factor to work.</p>
+  </div>
+
+  <h2>1 · Start with one person</h2>
+  <div class="grid2">
+    <div class="card"><h3>Mia the teacher</h3>
+      <p>Mia earns <b>$30,000</b> a year as a teacher. She loves teaching. She says: "I would stay for $25,000, but not for less."</p>
+      <ul><li><b>Transfer earnings = $25,000.</b> This is the smallest pay that keeps her in the job.</li>
+      <li><b>Economic rent = $30,000 − $25,000 = $5,000.</b> This is the extra she gets.</li></ul></div>
+    <div class="card"><h3>Leo the fashion model</h3>
+      <p>Leo earns <b>$500,000</b> a year. The best other job he could do is teacher at <b>$100,000</b>. So if a model agency paid him less than $100,000, he would move to teaching.</p>
+      <ul><li><b>Transfer earnings = $100,000.</b> The pay in his next best job.</li>
+      <li><b>Economic rent = $500,000 − $100,000 = $400,000.</b></li></ul></div>
+  </div>
+  <div class="tip"><b class="h">Which number is the transfer earnings?</b>Use the number the question gives you. If it gives the pay in the <b>next best job</b>, that is the transfer earnings (Leo). If it says the <b>smallest pay the person would accept</b> to stay, that is the transfer earnings (Mia). Do not use the pay in a better job the person does not want.</div>
+
+  <h2>2 · Now a whole market: why one wage makes rent</h2>
+  <p>Every worker has their <b>own</b> smallest pay. A firm pays <b>everyone the same wage</b>. So almost every worker gets more than they needed. That extra is economic rent.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Worker</th><th>Smallest pay needed (transfer earnings)</th><th>Wage paid</th><th>Extra (economic rent)</th></tr>
+    <tr><td>Ana</td><td>$6</td><td>$10</td><td>$4</td></tr>
+    <tr><td>Ben</td><td>$7</td><td>$10</td><td>$3</td></tr>
+    <tr><td>Chi</td><td>$8</td><td>$10</td><td>$2</td></tr>
+    <tr><td>Dev</td><td>$9</td><td>$10</td><td>$1</td></tr>
+    <tr><td>Eli</td><td>$10</td><td>$10</td><td>$0</td></tr>
+    <tr><td><b>Total</b></td><td><b>$40</b></td><td><b>$50</b></td><td><b>$10</b></td></tr>
+  </table></div>
+  <p>Eli is the last worker the firm hires. Eli gets exactly the smallest pay, so no rent. Everyone before Eli gets some rent. The <b>supply curve</b> is just this list of "smallest pay" numbers drawn as a line.</p>
+
+  <h2>3 · The picture</h2>
+  <p>On a labour market diagram, the supply curve shows the smallest pay for each worker. The wage line is the pay everyone gets. Then:</p>
+  <div class="grid2">
+    <div class="card"><h3>Area <u>under</u> the supply curve = transfer earnings</h3><p>"Under" the curve, from zero up to the number of workers hired. This is the smallest pay of all workers added together.</p></div>
+    <div class="card"><h3>Area <u>above</u> the supply curve, <u>below</u> the wage = economic rent</h3><p>The triangle between the supply curve and the wage line. This is the extra pay.</p></div>
+  </div>
+  <div id="pic1" class="card"></div>
+  <p class="note">Watch the diagram being built, step by step, on the <b>Watch</b> tab.</p>
+
+  <h2>4 · How steep is the supply curve?</h2>
+  <p>This is the idea examiners love. <b>Elasticity of supply</b> means: how easy is it to find more workers of this kind?</p>
+  <div class="grid2">
+    <div class="card"><h3>Easy to find more workers (elastic supply)</h3><p>Example: <b>street cleaners</b>. Almost anyone can do the job after a short time. The supply curve is <b>flat</b>. Everyone would work for about the same pay, so nearly all of the pay is <b>transfer earnings</b>. Very little rent.</p></div>
+    <div class="card"><h3>Hard to find more workers (inelastic supply)</h3><p>Example: <b>a famous tennis player</b>. Only a few people in the world can play like this. The supply curve is <b>steep</b>. Their next best job pays much less, so nearly all of the pay is <b>economic rent</b>.</p></div>
+  </div>
+  <div class="tw"><table class="t">
+    <tr><th>Supply curve</th><th>Shape</th><th>Transfer earnings</th><th>Economic rent</th></tr>
+    <tr><td>Perfectly elastic</td><td>Horizontal line</td><td>All of the pay</td><td>Zero</td></tr>
+    <tr><td>Elastic</td><td>Flat</td><td>Most of the pay</td><td>Small</td></tr>
+    <tr><td>Inelastic</td><td>Steep</td><td>Small</td><td>Most of the pay</td></tr>
+    <tr><td>Perfectly inelastic</td><td>Vertical line</td><td>Zero</td><td>All of the pay</td></tr>
+  </table></div>
+  <div class="tip"><b class="h">Why vertical means all rent</b>A vertical supply curve means the number of workers cannot change, whatever the pay. So nobody will move to another job when pay falls. The smallest pay is zero, so all pay is extra.</div>
+
+  <h2>5 · What changes rent and transfer earnings?</h2>
+  <ul>
+    <li><b>Demand rises</b> (people pay more to watch the sport): the wage rises. With <b>steep</b> supply the wage rises a lot, so rent rises a lot. With <b>flat</b> supply the wage hardly changes.</li>
+    <li><b>Time</b>: in the short run supply is steep (it takes time to train new workers). In the long run it is flatter, so <b>some rent in the short run becomes transfer earnings in the long run</b>.</li>
+    <li><b>A minimum wage or union wage above equilibrium</b>: workers who keep their jobs get a higher wage, so their rent goes up. Some other workers lose their jobs.</li>
+    <li><b>Supply becomes more elastic</b> (the supply curve gets flatter through the same point): transfer earnings rise and economic rent falls.</li>
+  </ul>
+
+  <h2>6 · Not just workers</h2>
+  <p>The idea works for any factor of production. For <b>enterprise</b>, the transfer earnings are <b>normal profit</b>: the smallest profit that keeps the entrepreneur in the business. Any profit above that, <b>supernormal profit</b>, is economic rent.</p>
+
+  <h2>7 · Three mistakes to avoid</h2>
+  <div class="grid2">
+    <div class="warn"><b class="h">Mistake 1</b>Thinking "rent" means rent for a house. It does not.</div>
+    <div class="warn"><b class="h">Mistake 2</b>Mixing up <b>transfer earnings</b> with <b>transfer payments</b>. Transfer payments are money from the government (such as unemployment benefit). Different topic.</div>
+    <div class="warn"><b class="h">Mistake 3</b>Saying rent is only for rich people. A teacher can earn rent too, if they get more than they need to stay.</div>
+    <div class="warn"><b class="h">Mistake 4</b>Reading the areas the wrong way round. Remember: <b>under</b> the supply curve = transfer; <b>above</b> it (below the wage) = rent.</div>
+  </div>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <h2>1 · Build the diagram</h2>
+  <p>Press Play, or click the numbered steps.</p>
+  <div id="stA"></div>
+
+  <h2>2 · Footballer or street cleaner?</h2>
+  <p>Same market wage. Different supply curve. See where the pay comes from.</p>
+  <div id="stB"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Eight workers, one wage</h2>
+  <p>Each bar is one worker. The blue part is the smallest pay the worker needs. The green part is the extra, or economic rent. Move the wage up and down. A worker is only hired if the wage is at least their smallest pay.</p>
+  <div class="card"><div class="grid2"><div><div id="g1"></div>
+    <div class="readout"><div><small>Workers hired</small><strong id="r1"></strong></div><div><small>Total pay</small><strong id="r2"></strong></div><div><small>Transfer earnings</small><strong id="r3"></strong></div><div><small>Economic rent</small><strong id="r4"></strong></div></div>
+    <div class="verdict" id="rv"></div></div>
+    <div><svg id="labA" viewBox="0 0 420 270" role="img" aria-label="Bar chart: each worker's smallest pay and extra pay"></svg></div></div></div>
+
+  <h2>Lab 2 · How easy is it to find more workers?</h2>
+  <p>The market wage and the number of workers stay the same. Only the shape of the supply curve changes. Watch the blue and green areas.</p>
+  <div class="card"><div class="grid2"><div><div id="g2"></div>
+    <div class="readout"><div><small>Transfer earnings</small><strong id="s1"></strong></div><div><small>Economic rent</small><strong id="s2"></strong></div><div><small>Share of pay that is rent</small><strong id="s3"></strong></div></div>
+    <div class="verdict" id="sv"></div></div>
+    <div><svg id="labB" viewBox="0 0 420 300" role="img" aria-label="Labour market: supply curve shape and the split between transfer earnings and economic rent"></svg></div></div></div>
+
+  <h2>Lab 3 · Your own example</h2>
+  <p>Type any job. How much do they earn now? What is the pay in the next best job?</p>
+  <div class="card"><div class="grid2"><div><div id="g3"></div><div id="g4"></div>
+    <div class="readout"><div><small>Transfer earnings</small><strong id="t1"></strong></div><div><small>Economic rent</small><strong id="t2"></strong></div></div>
+    <div class="verdict" id="tv"></div></div>
+    <div><svg id="labC" viewBox="0 0 420 220" role="img" aria-label="Bar showing the split of earnings into transfer earnings and economic rent"></svg></div></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Transfer earnings, economic rent, or neither?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Match the sentence to the word</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>3 · Put the explanation in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Calculations</h2>
+  <div id="c1"></div>
+
+  <h2>5 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are explained in general terms. The numbers are simple on purpose, to show the idea.</p>
+  <div class="rw"><h3>The famous tennis player (and the street cleaner)</h3><p>A top tennis player could earn about the same as an ordinary person in the next best job, if tennis did not exist. Because very few people have the talent, supply is steep. Millions of fans watch, so demand is strong. The wage is very high and almost all of it is economic rent.</p><p>A street cleaner is different. Many people could do the job after a short training. Supply is flat, so even if demand rises the wage hardly changes, and most of the pay is transfer earnings.</p><div class="use"><b>Exam use:</b> this is exactly what the Oct/Nov 2022 Paper 4 question asked. Use the two types of worker side by side.</div></div>
+  <div class="rw"><h3>A teacher who loves the job</h3><p>A teacher earns $30,000 and would stay for $25,000. The $5,000 gap is economic rent. It may be small, but it is still rent.</p><div class="use"><b>Exam use:</b> shows that rent is not only for rich people. Matches the Feb/March 2025 multiple choice.</div></div>
+  <div class="rw"><h3>A fashion model</h3><p>A model earns $500,000. As a teacher the model could earn $100,000. So $100,000 is transfer earnings and $400,000 is economic rent.</p><div class="use"><b>Exam use:</b> a calculation question from Oct/Nov 2022. Subtract, then check the two parts add to the total pay.</div></div>
+  <div class="rw"><h3>A company boss</h3><p>The boss of a large bank may earn hundreds of times more than the average worker. Very few people can run a large bank, so supply is steep and most of the pay is likely to be rent. Demand is high because a good boss may add a lot to profits.</p><div class="use"><b>Exam use:</b> a good example for "why do wages differ?" questions (see the indirect questions on the Past papers tab).</div></div>
+  <div class="rw"><h3>Farm workers in a busy season</h3><p>In the short run it is hard to find skilled workers, so supply is steep and some of the pay is rent. In the long run more people can learn the skills, supply becomes flatter and the rent turns into transfer earnings.</p><div class="use"><b>Exam use:</b> a short run and long run question from Oct/Nov 2023.</div></div>
+  <div class="rw"><h3>A union wage</h3><p>A union wins a wage above the market wage. Workers who keep their jobs now get more extra pay. Their economic rent rises. But fewer workers are needed, so some people lose jobs.</p><div class="use"><b>Exam use:</b> appears in the June 2026 and Oct/Nov 2023 multiple choice. Combine it with the effect on employment for analysis marks.</div></div>
+</section>
+
+<!-- PAST PAPERS -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Past paper questions on economic rent and transfer earnings</h2>
+  <p>We searched every A Level Economics paper in the folder, 2020 to June 2026 (Papers 1 to 4, question papers and mark schemes). The ideas were set <b>directly</b> in two essay questions and 20 multiple choice questions (some repeat in Papers 31 and 33). Paper codes are given so you can open the real paper. The mark scheme points below are summarised in our own words, not copied.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Type</th><th>How many</th><th>Where</th></tr>
+    <tr><td>Essay (Paper 4)</td><td>2</td><td>March 2021 (42) Q4(a) [12]; Oct/Nov 2022 (41) Q4(b) [13]</td></tr>
+    <tr><td>Multiple choice (Paper 3)</td><td>20 questions in 19 papers</td><td>Oct/Nov 2020 to June 2026, most sessions from 2021 on; see section B</td></tr>
+    <tr><td>Indirect use (could use the ideas)</td><td>5 essay or data questions</td><td>Wage differences, MRP theory, minimum wage and unions</td></tr>
+  </table></div>
+
+  <h2>A · Essay questions that asked for it directly</h2>
+  <div class="key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <details class="eq"><summary>Oct/Nov 2022 · 9708/41 · Q4(b) <span class="mark">13 marks</span> Distinguish between economic rent and transfer earnings and, with the help of diagrams, discuss why famous sports people receive much higher pay than street cleaners.</summary><div class="body">
+    <div class="tip"><b class="h">What the mark scheme wants</b>
+      <ul>
+        <li><b>Define both terms</b> and show the difference on a labour market diagram. Transfer earnings are the smallest pay to keep a worker in the job. Economic rent is any pay above that.</li>
+        <li><b>Link to elasticity of supply.</b> Famous sports people have special talents, so supply is limited and very inelastic. If demand to watch is strong, pay is very high. Most of their pay is economic rent because their skill cannot easily be used in another job.</li>
+        <li><b>Street cleaners:</b> low skills and short training, so supply is high and elastic. Even if demand rises a lot, pay is unlikely to rise much. Most of their pay is transfer earnings.</li>
+        <li><b>Evaluation (other factors).</b> Sports pay could fall if fans lose interest in one player or in the sport. Street cleaner pay could rise through a trade union or a change in government policy on public sector pay.</li>
+        <li><b>A conclusion</b> is needed for the top level.</li>
+      </ul></div>
+    <table class="t"><tr><th>Level</th><th>What earns it</th></tr>
+      <tr><td>L4 (9–13)</td><td>Clear difference shown with diagrams, links to elasticity for both types of worker, other factors discussed, conclusion given.</td></tr>
+      <tr><td>L3 (7–8)</td><td>Competent analysis linking the two ideas to elasticity and to the two workers. No other explanations, no conclusion.</td></tr>
+      <tr><td>L2 (5–6)</td><td>Short descriptions of the two ideas. Links to the two jobs not complete. Diagrams unclear.</td></tr>
+      <tr><td>L1 (1–4)</td><td>Some correct facts, but errors and irrelevant points.</td></tr></table>
+    <p class="note">Examiner report: most students drew correct, labelled diagrams. Many missed evaluation about other factors, such as unions helping street cleaners, or sports pay falling when demand falls.</p>
+    <div class="key"><span class="k"><i></i>K</span><span class="a"><i></i>A</span><span class="n"><i></i>N</span><span class="e"><i></i>E</span></div>
+    <div class="ans"><p><span class="mk k" data-t="K">Transfer earnings are the smallest payment needed to keep a worker in their present job, while economic rent is any payment above that amount.</span> <span class="mk n" data-t="N">On a labour market diagram the area under the supply curve up to the wage shows transfer earnings, and the area above the supply curve and below the wage shows economic rent. The flatter the supply curve, the larger the share of pay that is transfer earnings.</span></p>
+    <p><span class="mk n" data-t="N">Famous sports people are likely to be paid much more than street cleaners because their supply is very inelastic.</span> <span class="mk a" data-t="A">Very few people can play tennis at the top level and the talent cannot be copied quickly, so even a large rise in the wage is unlikely to bring many more players. When millions of fans want to watch, demand is high and the wage is pushed up, so most of a top player's pay may be economic rent.</span> <span class="mk n" data-t="N">Street cleaners have a highly elastic supply because the job needs few skills and little training, so a rise in demand may raise their wage only a little and most of their pay is likely to be transfer earnings.</span></p>
+    <p><span class="mk e" data-t="E">However, elasticity of supply is not the only reason. A sports person's pay could fall if fans lose interest in the player or the sport, and street cleaner pay could rise if they join a trade union or if the government raises public sector pay.</span> <span class="mk e" data-t="E">Overall, the difference in supply elasticity is likely to be the main reason for the large pay gap, but demand and policy may change how big it is.</span></p></div>
+  </div></details>
+
+  <details class="eq"><summary>March 2021 · 9708/42 · Q4(a) <span class="mark">12 marks</span> Distinguish between transfer earnings and economic rent. With the help of diagrams, consider the links between transfer earnings, economic rent, the elasticity of supply of labour and an individual worker's wage rate.</summary><div class="body">
+    <div class="tip"><b class="h">What the mark scheme wants</b>
+      <ul>
+        <li>Clear definitions of both and the key difference, with <b>diagrams</b>.</li>
+        <li>The meaning of <b>elasticity of supply of labour</b>, linked to rent and transfer earnings.</li>
+        <li>How an <b>individual's wage</b> is set by supply and demand for that kind of labour.</li>
+        <li>Some discussion of how strong these links are.</li>
+      </ul></div>
+    <table class="t"><tr><th>Level</th><th>What earns it</th></tr>
+      <tr><td>L4 (9–12)</td><td>All three elements covered. Clear link between elasticity of supply and the individual's wage. The extent of the link is questioned (other factors) and a reasoned conclusion is given.</td></tr>
+      <tr><td>L3 (7–8)</td><td>Competent analysis of each of the three, with links shown, but no discussion of how strong the links are.</td></tr>
+      <tr><td>L2 (5–6)</td><td>Describes each of the three, only a very brief attempt to link.</td></tr>
+      <tr><td>L1 (1–4)</td><td>Some basic correct facts, with errors and irrelevant material.</td></tr></table>
+    <p class="note">Examiner report: answers were clear and precise, and nearly all diagrams were accurate and labelled. The diagrams were how most students linked rent and transfer earnings to the elasticity of supply and the wage.</p>
+    <div class="tip"><b class="h">How to plan 12 marks</b>Paragraph 1: define both, diagram. Paragraph 2: elasticity of supply, show a flat and a steep supply curve. Paragraph 3: link to the individual's wage using demand and supply. Paragraph 4: other things that decide the wage (demand, unions, discrimination) and a short conclusion.</div>
+  </div></details>
+
+  <h2>B · Multiple choice questions (Paper 3)</h2>
+  <p>Open each question. Choose an answer, then read the reason. Source: paper code and question number.</p>
+  <div id="qz2"></div>
+
+  <h3>Diagram questions</h3>
+  <p>The real papers show the diagram. These are redrawn for teaching. Check the paper for the original.</p>
+  <details class="eq"><summary>May/June 2024 · 32 · Q15 <span class="mark">1 mark</span> Which areas show economic rent and transfer earnings of the farm workers?</summary><div class="body"><div class="dg" id="d1"></div>
+    <p>Options: (A) rent GFK, transfer GHOJ · (B) rent GHOJ, transfer GJK · (C) rent GJK, transfer GJF · <b>(D) rent GJK, transfer GHOJ</b></p>
+    <div class="ans"><b>Answer: D.</b> The triangle GJK is above the supply curve and below the wage: <span class="mk n">economic rent</span>. The area GHOJ is under the supply curve up to H workers: <span class="mk k">transfer earnings</span>.</div></div></details>
+
+  <details class="eq"><summary>May/June 2025 · 31 and 33 · Q14 and 32 · Q14 <span class="mark">1 mark each</span> Three labour markets. Which two areas are economic rent? (32 asks: which two areas are transfer earnings?)</summary><div class="body"><div class="dg" id="d2"></div>
+    <p>Papers 31 and 33: options (A) 1 and 3, <b>(B) 1 and 4</b>, (C) 2 and 3, (D) 2 and 4. Paper 32: same options, with the answer <b>(C) 2 and 3</b>.</p>
+    <div class="ans"><b>Rent: 1 and 4. Transfer earnings: 2 and 3.</b> In the first diagram, area 1 is above the supply curve (rent) and area 2 is under it (transfer). In the second diagram the supply is horizontal (perfectly elastic), so area 3 is all <span class="mk k">transfer earnings</span>. In the third diagram supply is vertical (perfectly inelastic), so area 4 is all <span class="mk n">economic rent</span>.</div></div></details>
+
+  <details class="eq"><summary>Oct/Nov 2023 · 31 · Q12 <span class="mark">1 mark</span> The government sets a minimum wage W1. Which area is the increase in economic rent of the workers who keep their jobs?</summary><div class="body"><div class="dg" id="d3"></div>
+    <p>Options: <b>(A) X</b>, (B) Y, (C) X + Y, (D) X + Y + Z.</p>
+    <div class="ans"><b>Answer: A (X).</b> Before the minimum wage, the N2 workers who keep their jobs already received rent Y (area between We and the supply curve). At W1 they get rent X + Y. The <span class="mk n">increase</span> is X. Area Z is rent lost by the workers who lose their jobs.</div></div></details>
+
+  <details class="eq"><summary>Oct/Nov 2023 · 33 · Q11 <span class="mark">1 mark</span> Short run and long run supply of labour. Which area changes from economic rent in the short run to transfer earnings in the long run?</summary><div class="body"><div class="dg" id="d4"></div>
+    <p>Options: (A) X, (B) X + Y, <b>(C) Y</b>, (D) Y + Z.</p>
+    <div class="ans"><b>Answer: C (Y).</b> The short run supply curve is steeper, so rent is the area to its left (X + Y). The long run supply curve is flatter, so rent is only X. Area Y is rent in the short run but becomes <span class="mk n">transfer earnings</span> in the long run. Z is transfer earnings in both.</div></div></details>
+
+  <details class="eq"><summary>Oct/Nov 2024 · 33 · Q14 <span class="mark">1 mark</span> Supply of labour changes from S1 to S2. What happens to transfer earnings and economic rent?</summary><div class="body"><div class="dg" id="d5"></div>
+    <p>Options: (A) fall, falls · (B) fall, rises · (C) rise, rises · <b>(D) rise, falls</b>.</p>
+    <div class="ans"><b>Answer: D.</b> S2 is flatter (more elastic) through the same point. The area under the supply curve becomes <span class="mk k">bigger</span> (transfer earnings rise). The area above it becomes <span class="mk n">smaller</span> (economic rent falls).</div></div></details>
+
+  <details class="eq"><summary>June 2026 · 34 · Q11 <span class="mark">1 mark</span> A union negotiates wage WT. What is the economic rent?</summary><div class="body"><div class="dg" id="d6"></div>
+    <p>Options: (A) T + V + X, (B) V + U, <b>(C) V + X</b>, (D) X + Y + Z. (The diagram also shows areas U, Y and Z, which are not needed for the answer.)</p>
+    <div class="ans"><b>Answer: C.</b> At WT employment falls to N2. Rent is the area above the supply curve and below WT, up to N2: V (below the old wage W1) plus X (between W1 and WT). T is under the supply curve, so it is <span class="mk k">transfer earnings</span>.</div></div></details>
+
+  <h2>C · Other questions that could have used these ideas</h2>
+  <p>These did not use the words. But economic rent and transfer earnings fit well. In one of them (May/June 2021, Paper 42) the mark scheme itself says economic rent may be commented on.</p>
+
+  <details class="eq"><summary>Oct/Nov 2020 · 9708/42 · Q4 <span class="mark">25 marks</span> The pay of the bosses (CEOs) of the six biggest US banks was 250 to 360 times the average pay of the staff. All six CEOs were male. Discuss the extent to which economic theory can account for these variations in wages.</summary><div class="body">
+    <div class="tip"><b class="h">Mark scheme (summary)</b>Expected: supply and demand for labour, MRP theory, elasticity of supply and demand, discrimination, and the differing objectives of the firm. L4 (18–25): accurate discussion of differences in supply and demand and of elasticities, including MRP, with reference to discrimination, linked to the context, with a conclusion (maximum 21 marks without a conclusion). L3 (14–17): analysis of supply and demand with some reference to elasticities; maximum L3 if there is no MRP. L2 (10–13): description of differences in supply and demand. L1 (1–9): some knowledge, irrelevant points and errors.</div>
+    <div class="tip"><b class="h">Where economic rent fits</b>A bank CEO has a very <b>inelastic supply</b>: very few people can run a large bank. Demand is high because the CEO's MRP is large. So the pay is very high, and most of it is economic rent, because the CEO's next best job pays much less. This gives strong, specific analysis and links the diagram to the wage gap in the question. For evaluation, discrimination (all six CEOs were male) and the firm's own objectives may also matter, as the mark scheme says.</div>
+  </div></details>
+
+  <details class="eq"><summary>May/June 2021 · 9708/42 · Q4 <span class="mark">25 marks</span> Evaluate whether the theory of wage determination can account for wage differentials (i) between a director and a general worker in the same company and (ii) between two workers doing the same job in different companies.</summary><div class="body">
+    <div class="tip"><b class="h">Mark scheme (summary)</b>Expected: the theory of wages based on demand and supply (demand from marginal productivity and the price or MR of the product; supply from income and substitution effects), perfect markets, elasticity of demand and supply, then real world limits: imperfect information, lack of mobility, discrimination, monopsony, unions and minimum wage boards. L4 (18–25): MRP theory and labour supply, some reference to elasticities, both (i) and (ii) addressed, imperfections used to explain wage differences; a conclusion for 22–25. L3 (14–17): demand and supply analysis, limited elasticity, either (i) or (ii), one imperfection. L2 (10–13): describes supply and demand to explain different wages; <b>economic rent may be commented upon</b>. L1 (1–9): basic facts, errors.</div>
+    <div class="tip"><b class="h">Where economic rent fits</b>The mark scheme itself says economic rent may be commented on. For (i) the director has a steep supply curve, so most of the director's pay is rent. For (ii) the same job in two companies could have different pay because of local supply and demand and imperfections.</div>
+  </div></details>
+
+  <details class="eq"><summary>May/June 2021 · 9708/41 and 43 · Q5 <span class="mark">25 marks</span> "Wage differentials can be explained by economic theory. They are a sign of the power of a firm to exploit its workforce and are unjust." Do you agree with this view?</summary><div class="body">
+    <div class="tip"><b class="h">Mark scheme (summary)</b>Discuss whether the theory explains wage differentials and comment on the statement. Say what "differential" means (same job, different people, or different jobs). In imperfect competition (monopsony) wages may be lower than in perfect competition, but differentials may also come from differences in supply and the shape of the MRP curve, public and private sector pay and political choices. L4 (18–25): thorough analysis of wage determination, clear discussion of "differential", and all three parts commented on (explained by theory, due to firm power, unjust). L3 (14–17): competent theory, two parts. L2 (10–13): descriptive, one part. L1 (1–9): some knowledge, irrelevant.</div>
+    <div class="tip"><b class="h">Where economic rent fits</b>Part 1 of the statement: differentials can be explained by <b>differences in elasticity of supply</b>. Rent explains why a surgeon or a sports star earns far more than the smallest pay they need. That is not exploitation: it comes from scarce talent. Part 2: a monopsony pays below the competitive wage, which reduces the workers' rent.</div>
+  </div></details>
+
+  <details class="eq"><summary>Oct/Nov 2022 · 9708/42 · Q4 <span class="mark">25 marks</span> Discuss the extent to which marginal revenue product theory can be used to explain the determination of wages.</summary><div class="body">
+    <div class="tip"><b class="h">Mark scheme (summary)</b>Expected: demand for labour from MRP (MPP × MR), elasticity of demand and supply and the effect on wages, monopsony and minimum wage law, and questioning the assumptions (MPP, MR, a perfect labour market). L4 (18–25): analysis using MRP, comments on elasticities, imperfections linked to wage levels, assumptions questioned; a conclusion for 22–25. L3 (14–17): MRP analysis plus either elasticity comments or imperfections. L2 (10–13): limited supply and demand explanation. L1 (1–9): basic facts, errors.</div>
+    <div class="tip"><b class="h">Where economic rent fits</b>MRP only explains <b>demand</b>. To explain the full wage you need supply as well. Economic rent and transfer earnings show how the <b>supply side</b> changes who gets what: with steep supply, a rise in MRP goes mostly into economic rent. Use it as evaluation: "MRP tells only half the story".</div>
+  </div></details>
+
+  <details class="eq"><summary>Oct/Nov 2024 · 9708/42 · Q1(c) <span class="mark">6 marks</span> Using the information and labour market theory, analyse why wages of migrant workers in high-tech industries are likely to be higher than wages of migrant workers in hospitality.</summary><div class="body">
+    <div class="tip"><b class="h">Mark scheme (summary, 1 mark per point)</b>Demand: the MPP of educated workers is likely to be higher; the value of their output is greater; demand for them is higher, leading to higher wages. Some graduates become entrepreneurs and earn high profits. Prejudice against less educated workers may be reflected in their pay. Supply: when immigration falls, the wage gap for the low paid may narrow and widen for the educated.</div>
+    <div class="tip"><b class="h">Where economic rent fits</b>A strong extra point: high-tech skills take years to learn, so supply is inelastic and a large part of the pay may be economic rent. Hospitality jobs can be learnt quickly, so supply is elastic and most of the pay is transfer earnings.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Always say "minimum pay to keep the worker in the job"</b> for transfer earnings. Use these words in your definition.</li>
+    <li><b>Economic rent = payment above transfer earnings.</b> Add "over and above what is needed to keep the factor in its present use".</li>
+    <li><b>Draw the diagram</b>, label the axes, supply, demand, wage and shade the two areas. Say what each area is.</li>
+    <li><b>Under the supply curve = transfer. Above it, below the wage = rent.</b></li>
+    <li><b>Link to elasticity every time.</b> Steep supply = more rent. Flat supply = more transfer earnings.</li>
+    <li><b>Use two examples side by side:</b> a famous sports person and a street cleaner, or a CEO and a shop worker.</li>
+    <li><b>Evaluate:</b> demand could fall, unions or the government could change pay, time makes supply flatter, discrimination may affect pay.</li>
+    <li><b>In calculations,</b> check that transfer earnings + economic rent = total pay.</li>
+  </ul>
+
+  <h2>Sentences you can use</h2>
+  <div class="tw"><table class="t">
+    <tr><th>You want to say</th><th>Use this sentence</th></tr>
+    <tr><td>Define transfer earnings</td><td>"Transfer earnings are the minimum payment needed to keep a worker in their current job."</td></tr>
+    <tr><td>Define economic rent</td><td>"Economic rent is any payment above what is needed to keep a worker in their current job."</td></tr>
+    <tr><td>Show the difference</td><td>"The area under the supply curve is transfer earnings and the area above it, below the wage, is economic rent."</td></tr>
+    <tr><td>Link to elasticity</td><td>"Because supply is inelastic, a large part of the pay is economic rent."</td></tr>
+    <tr><td>Evaluate</td><td>"However, this could change if demand falls, if a trade union is formed, or in the long run when supply becomes more elastic."</td></tr>
+  </table></div>
+
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Distinguish</td><td>Say clearly how two ideas are different.</td></tr>
+    <tr><td>Consider</td><td>Think about the links, and how strong they are.</td></tr>
+    <tr><td>Discuss</td><td>Arguments on both sides, then a judgement.</td></tr>
+  </table></div>
+
+  <h2>Flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.max(0, Math.min(fr.length - 1, Math.round(s.i)))].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+/* ---------- geometry: supply curve through the market point (80, wage 10), slope m ---------- */
+const WG = 10, QM = 80;
+function geom(m) {
+  const Lmin = m > 0 ? Math.max(0, QM - WG / m) : 0, Wmin = Math.max(0, WG - QM * m), Lmax = m > 0 ? Math.min(200, QM + 18 / m) : 200;
+  const transfer = Lmin > 0 ? 0.5 * (QM - Lmin) * WG : 0.5 * QM * (WG + Wmin), pay = WG * QM, rent = pay - transfer;
+  return { Lmin, Wmin, Lmax, transfer, rent, pay, endW: Math.min(26, WG + m * (Lmax - QM)) };
+}
+/* Draw the market for a given m. X(L), Y(w) are scale functions; o: labels, wl (wage line labels) */
+function market(m, X, Y, o = {}) {
+  const g = geom(m), P = (a) => a.map(([l, w]) => [X(l), Y(w)]);
+  let s = "";
+  s += SV.poly(P([[g.Lmin, 0], [QM, 0], [QM, WG], [g.Lmin, g.Wmin]]), "f1");
+  s += SV.poly(P([[0, g.Wmin], [g.Lmin, g.Wmin], [QM, WG], [0, WG]]), "f3");
+  // demand: W = 18 - 0.1 L
+  s += SV.line(X(0), Y(18), X(180), Y(0), "c1") + SV.text(X(180) - 2, Y(0) - 6, "D", "lbl bd t1", { "text-anchor": "end" });
+  s += SV.line(X(g.Lmin), Y(g.Lmin > 0 ? 0 : g.Wmin), X(g.Lmax), Y(g.endW), "c2") + SV.text(X(g.Lmax) + 6, Y(g.endW) + 4, "S", "lbl bd t2");
+  s += SV.line(X(0), Y(WG), X(QM), Y(WG), "gr") + SV.line(X(QM), Y(WG), X(QM), Y(0), "gr") + SV.circle(X(QM), Y(WG), 6, "dot3");
+  if (o.labels !== false) {
+    s += SV.text(X(0) - 6, Y(WG) + 4, "wage", "sm", { "text-anchor": "end" });
+    s += SV.text(X(Math.max(g.Lmin, 0) + (QM - g.Lmin) * 0.55), Y(WG * 0.25), "Transfer earnings", "lbl bd t1", { "text-anchor": "middle" });
+    s += SV.text(X(Math.max(8, g.Lmin * 0.5 + 4)), Y(WG) + 18, g.rent / g.pay > 0.04 ? "Economic rent" : "", "lbl bd t3");
+  }
+  return s;
+}
+const MX = (L) => 80 + L * 3.1, MY = (w) => 330 - w * 15;
+function axes() {
+  return SV.line(80, 330, 710, 330) + SV.line(80, 330, 80, 30) + SV.text(710, 358, "Quantity of labour (number of workers)", "sm", { "text-anchor": "end" }) + SV.text(86, 34, "Wage", "sm");
+}
+const op = (v) => ({ opacity: Math.max(0, Math.min(1, v)) });
+
+/* ---------- Learn: static picture ---------- */
+$("#pic1").innerHTML = `<svg viewBox="0 0 760 370" role="img" aria-label="Labour market diagram with transfer earnings under the supply curve and economic rent above it">${axes()}
+  ${SV.poly([[MX(0), MY(0)], [MX(80), MY(0)], [MX(80), MY(10)], [MX(0), MY(2)]], "f1")}${SV.poly([[MX(0), MY(2)], [MX(80), MY(10)], [MX(0), MY(10)]], "f3")}
+  ${SV.line(MX(0), MY(18), MX(180), MY(0), "c1")}${SV.text(MX(180) - 4, MY(0) - 6, "Demand", "lbl bd t1", { "text-anchor": "end" })}
+  ${SV.line(MX(0), MY(2), MX(160), MY(18), "c2")}${SV.text(MX(160) + 6, MY(18) + 4, "Supply", "lbl bd t2")}
+  ${SV.line(MX(0), MY(10), MX(80), MY(10), "gr")}${SV.line(MX(80), MY(10), MX(80), MY(0), "gr")}${SV.circle(MX(80), MY(10), 6, "dot3")}
+  ${SV.text(MX(0) - 6, MY(10) + 4, "wage", "sm", { "text-anchor": "end" })}
+  ${SV.text(MX(40), MY(1.1), "TRANSFER EARNINGS (under supply)", "lbl bd t1", { "text-anchor": "middle" })}
+  ${SV.text(MX(12), MY(8) + 4, "ECONOMIC RENT", "lbl bd t3")}${SV.text(MX(12), MY(8) + 22, "(above supply, below wage)", "sm")}
+  </svg>`;
+
+/* ---------- Watch 1: build the diagram ---------- */
+function buildChart(s) {
+  let o = axes();
+  if (s.tr > 0) o += SV.poly([[MX(0), MY(0)], [MX(80), MY(0)], [MX(80), MY(10)], [MX(0), MY(2)]], "f1", op(s.tr));
+  if (s.rt > 0) o += SV.poly([[MX(0), MY(2)], [MX(80), MY(10)], [MX(0), MY(10)]], "f3", op(s.rt));
+  if (s.d > 0) o += SV.line(MX(0), MY(18), MX(180), MY(0), "c1", op(s.d)) + SV.text(MX(180) - 4, MY(0) - 6, "Demand", "lbl bd t1", { "text-anchor": "end", ...op(s.d) });
+  if (s.s > 0) o += SV.line(MX(0), MY(2), MX(160), MY(18), "c2", op(s.s)) + SV.text(MX(158), MY(18) - 12, "Supply = smallest pay each worker needs", "lbl bd t2", { "text-anchor": "end", ...op(s.s) });
+  if (s.e > 0) o += SV.line(MX(0), MY(10), MX(80), MY(10), "gr", op(s.e)) + SV.line(MX(80), MY(10), MX(80), MY(0), "gr", op(s.e)) + SV.circle(MX(80), MY(10), 6, "dot3", op(s.e)) + SV.text(MX(0) - 6, MY(10) + 4, "10", "lbl bd", { "text-anchor": "end", ...op(s.e) }) + SV.text(MX(80), MY(0) + 20, "80", "lbl bd", { "text-anchor": "middle", ...op(s.e) });
+  if (s.tr > 0.5) o += SV.text(MX(40), MY(1.1), "Transfer earnings = 480", "lbl bd t1", { "text-anchor": "middle", ...op(s.tr) });
+  if (s.rt > 0.5) o += SV.text(MX(26), MY(8.8), "Economic rent = 320", "lbl bd t3", op(s.rt));
+  if (s.w > 0) o += SV.line(MX(20), MY(4), MX(20), MY(10), "c4", { "stroke-width": 5, ...op(s.w) }) + SV.text(MX(24), MY(3), "worker 20 needs $4 but gets $10: rent $6", "lbl bd t4", op(s.w));
+  return o;
+}
+Lib.stepper($("#stA"), { w: 760, h: 380, label: "Building the labour market diagram for economic rent and transfer earnings", base: { s: 0, d: 0, e: 0, tr: 0, rt: 0, w: 0 }, draw: buildChart, tween: 900, dwell: 5200, steps: [
+  { cap: "The <b>supply curve</b> shows the <b>smallest pay each worker will accept</b>. The first worker needs only $2. To find more workers, the firm must offer more. Worker 80 needs $10.", s: { s: 1 } },
+  { cap: "The <b>demand curve</b> shows how many workers firms want at each wage.", s: { s: 1, d: 1 } },
+  { cap: "Demand meets supply at <b>$10</b> and <b>80 workers</b>. This is the wage. The firm pays <b>every</b> worker $10.", s: { s: 1, d: 1, e: 1 } },
+  { cap: "<b>Transfer earnings.</b> The area <b>under the supply curve</b> is the smallest pay of all 80 workers added up: <b>480</b>. This is the pay the workers need to stay.", s: { s: 1, d: 1, e: 1, tr: 1 } },
+  { cap: "<b>Economic rent.</b> Total pay is 10 × 80 = <b>800</b>. The part above the supply curve, 800 − 480 = <b>320</b>, is extra. The workers would work without it. This triangle is the economic rent.", s: { s: 1, d: 1, e: 1, tr: 1, rt: 1 } },
+  { cap: "<b>One worker.</b> Take worker 20. Their smallest pay is $4 (the supply curve) but the wage is $10. So <b>$6 of their pay is economic rent</b>. Only the last worker, number 80, gets no rent.", s: { s: 1, d: 1, e: 1, tr: 1, rt: 1, w: 1 } },
+] });
+
+/* ---------- Watch 2: elastic or inelastic supply ---------- */
+function elastChart(s) {
+  const g = geom(s.m);
+  let o = axes() + market(s.m, MX, MY, { labels: false });
+  const pct = Math.round((g.rent / g.pay) * 100);
+  o += SV.text(MX(0) - 6, MY(10) + 4, "10", "lbl bd", { "text-anchor": "end" }) + SV.text(MX(80), MY(0) + 20, "80", "lbl bd", { "text-anchor": "middle" });
+  o += SV.text(MX(112), MY(24) + 4, "Transfer earnings: " + Lib.fmtN(g.transfer, 0) + " (" + (100 - pct) + "%)", "lbl bd t1");
+  o += SV.text(MX(112), MY(24) + 24, "Economic rent: " + Lib.fmtN(g.rent, 0) + " (" + pct + "%)", "lbl bd t3");
+  return o;
+}
+Lib.stepper($("#stB"), { w: 760, h: 380, label: "Supply curves of different steepness and the split of pay between transfer earnings and economic rent", base: { m: 0.02 }, draw: elastChart, tween: 1400, dwell: 5200, steps: [
+  { cap: "<b>Street cleaner.</b> It is easy to find more cleaners, so supply is almost flat (<b>elastic</b>). Nearly all of the pay is <b>transfer earnings</b>. A rise in demand would hardly raise the wage.", s: { m: 0.02 } },
+  { cap: "Make the job a little harder to fill, for example with some training. The supply curve gets <b>steeper</b>. The green area, economic rent, grows.", s: { m: 0.15 } },
+  { cap: "<b>Famous tennis player.</b> Very few people have the talent, so supply is steep (<b>inelastic</b>). Even at a low wage almost no one would leave. Most of the pay is <b>economic rent</b>.", s: { m: 1.5 } },
+  { cap: "At the limit supply is <b>vertical</b> (perfectly inelastic). The number of workers cannot change, so <b>all</b> the pay is economic rent.", s: { m: 60 } },
+] });
+
+/* ---------- Lab 1: eight workers ---------- */
+const MINS = [6, 7, 8, 9, 10, 11, 12, 14], NAMES = ["Ana", "Ben", "Chi", "Dev", "Eli", "Fay", "Gus", "Hui"];
+function lab1() {
+  if (!$("#la1")) return;
+  const w = +$("#la1").value, hired = MINS.map((m) => m <= w), n = hired.filter(Boolean).length;
+  const tr = MINS.filter((m) => m <= w).reduce((a, b) => a + b, 0), pay = n * w, rent = pay - tr;
+  $("#r1").textContent = n; $("#r2").textContent = "$" + pay; $("#r3").textContent = "$" + tr; $("#r4").textContent = "$" + rent;
+  $("#rv").textContent = n === 0 ? "The wage is below everyone's smallest pay, so nobody takes the job." : `At a wage of $${w}, ${n} worker${n > 1 ? "s are" : " is"} hired. Total pay $${pay} = transfer earnings $${tr} + economic rent $${rent}.${rent === 0 ? " Everyone hired gets exactly the smallest pay they need, so no rent." : " The last worker hired gets less extra than the first."}`;
+  const Yc = (v) => 235 - v * 13, bw = 36, gap = 8;
+  let o = SV.line(40, 235, 410, 235) + SV.line(40, 235, 40, 20) + SV.text(44, 16, "Pay ($)", "sm");
+  MINS.forEach((m, i) => {
+    const x = 50 + i * (bw + gap);
+    if (hired[i]) {
+      o += SV.rect(x, Yc(m), bw, 235 - Yc(m), "f1") + SV.rect(x, Yc(w), bw, Yc(m) - Yc(w), "f3");
+      o += SV.text(x + bw / 2, Yc(m) + 16, m, "sm bd t1", { "text-anchor": "middle" });
+      if (w > m) o += SV.text(x + bw / 2, Yc(w) + 14, "+" + (w - m), "sm bd t3", { "text-anchor": "middle" });
+    } else o += SV.rect(x, Yc(m), bw, 235 - Yc(m), "f2", { opacity: 0.12 }) + SV.text(x + bw / 2, Yc(m) - 5, m, "sm", { "text-anchor": "middle" });
+    o += SV.text(x + bw / 2, 253, NAMES[i], "sm", { "text-anchor": "middle" });
+  });
+  o += SV.line(40, Yc(w), 410, Yc(w), "c4 dash") + SV.text(406, Yc(w) - 6, "Wage $" + w, "lbl bd t4", { "text-anchor": "end", style: "paint-order:stroke;stroke:var(--surface);stroke-width:4px" });
+  o += SV.text(210, 268, "Blue: smallest pay needed.  Green: extra pay (rent).  Grey: not hired.", "sm", { "text-anchor": "middle" });
+  $("#labA").innerHTML = o;
+}
+Lib.slider($("#g1"), { id: "la1", label: "Market wage ($): ", min: 4, max: 16, step: 1, value: 10, fmt: (v) => v, onInput: lab1 });
+
+/* ---------- Lab 2: steepness ---------- */
+const MS = [0, 0.02, 0.05, 0.1, 0.15, 0.25, 0.5, 1, 2.5, 60];
+function lab2() {
+  if (!$("#lb1")) return;
+  const k = +$("#lb1").value, m = MS[k - 1], g = geom(m), pct = Math.round((g.rent / g.pay) * 100);
+  $("#s1").textContent = Lib.fmtN(g.transfer, 0); $("#s2").textContent = Lib.fmtN(g.rent, 0); $("#s3").textContent = pct + "%";
+  $("#sv").textContent = k <= 2 ? "Supply is flat: it is easy to find more workers like these. Almost all of the pay is transfer earnings (like street cleaners)."
+    : k <= 6 ? "Supply is getting steeper. The workers are harder to replace, so more of the pay is economic rent."
+    : k < 10 ? "Supply is steep: very few people can do this job. Most of the pay is economic rent (like a famous sports player)."
+    : "Supply is vertical (perfectly inelastic). All of the pay is economic rent.";
+  const X = (L) => 50 + L * 1.75, Y = (w) => 270 - w * 14;
+  $("#labB").innerHTML = SV.line(50, 270, 410, 270) + SV.line(50, 270, 50, 20) + SV.text(406, 292, "Workers", "sm", { "text-anchor": "end" }) + SV.text(56, 24, "Wage", "sm") + market(m, X, Y, { labels: false }) +
+    SV.text(X(0) - 6, Y(10) + 4, "10", "sm bd", { "text-anchor": "end" });
+}
+Lib.slider($("#g2"), { id: "lb1", label: "How hard is it to find more workers like this? (1 = very easy, 10 = impossible): ", min: 1, max: 10, step: 1, value: 3, fmt: (v) => v, onInput: lab2 });
+
+/* ---------- Lab 3: your own example ---------- */
+function lab3() {
+  if (!$("#lc1") || !$("#lc2")) return;
+  const e = +$("#lc1").value, nb = +$("#lc2").value, tr = Math.min(e, nb), rent = e - tr;
+  $("#t1").textContent = "$" + tr + "k"; $("#t2").textContent = "$" + rent + "k";
+  $("#tv").textContent = nb > e ? `The next best job pays more ($${nb}k) than this job ($${e}k). The person would move, so this is not a stable job for them. Try a smaller next best pay.`
+    : `$${e}k − $${nb}k = $${rent}k is economic rent. That is ${Math.round((rent / e) * 100)}% of the pay.`;
+  const W = 340, f = tr / e;
+  $("#labC").innerHTML = SV.text(40, 40, "Earnings now: $" + e + "k", "lbl bd") + SV.rect(40, 60, W * f, 50, "f1") + SV.rect(40 + W * f, 60, W * (1 - f), 50, "f3") + SV.rect(40, 60, W, 50, "ax", { fill: "none" }) +
+    SV.text(40 + (W * f) / 2, 92, f > 0.15 ? "Transfer" : "", "lbl bd t1", { "text-anchor": "middle" }) + SV.text(40 + W * f + (W * (1 - f)) / 2, 92, 1 - f > 0.15 ? "Rent" : "", "lbl bd t3", { "text-anchor": "middle" }) +
+    SV.text(40, 140, "Transfer earnings = pay in the next best job = $" + tr + "k", "sm") + SV.text(40, 160, "Economic rent = earnings now − transfer earnings = $" + rent + "k", "sm");
+}
+Lib.slider($("#g3"), { id: "lc1", label: "Earnings now ($ thousand a year): ", min: 10, max: 500, step: 5, value: 120, fmt: (v) => v, onInput: lab3 });
+Lib.slider($("#g4"), { id: "lc2", label: "Pay in the next best job ($ thousand): ", min: 5, max: 400, step: 5, value: 40, fmt: (v) => v, onInput: lab3 });
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), {
+  prompt: "Put each item in the right bucket.",
+  buckets: [{ label: "Transfer earnings" }, { label: "Economic rent" }, { label: "Neither" }],
+  items: [
+    { text: "The $40,000 a footballer could earn in the next best job", b: 0 }, { text: "The other $1,960,000 of his $2 million pay", b: 1 },
+    { text: "The smallest pay a street cleaner needs to stay in the job", b: 0 }, { text: "A cleaner's pay above that smallest pay", b: 1 },
+    { text: "Normal profit for an entrepreneur", b: 0 }, { text: "Supernormal profit", b: 1 },
+    { text: "Unemployment benefit paid by the government", b: 2 }, { text: "Rent a family pays for a flat", b: 2 },
+  ], done: "Transfer payments (benefits) and house rent are different ideas.",
+});
+Lib.match($("#m1"), { prompt: "Match each word to its meaning.", pairs: [
+  ["Transfer earnings", "The smallest pay that keeps a worker in the job"],
+  ["Economic rent", "Pay above what is needed to keep a worker in the job"],
+  ["Elastic supply", "It is easy to find more workers, so the supply curve is flat"],
+  ["Inelastic supply", "It is hard to find more workers, so the supply curve is steep"],
+  ["Transfer payment", "Money from the government, such as unemployment benefit"],
+  ["Normal profit", "The transfer earnings of an entrepreneur"],
+  ["Next best job", "The job a worker would do if they left, and the pay in it"],
+], done: "Good. These seven words are enough for most exam answers." });
+Lib.order($("#o1"), { prompt: "Put the steps of the explanation in the best order.", items: [
+  "Define transfer earnings: the minimum pay needed to keep a worker in the job",
+  "Define economic rent: any pay above transfer earnings",
+  "Draw the diagram: supply, demand, the wage and the number of workers",
+  "Show transfer earnings under the supply curve and economic rent above it",
+  "Say how elasticity of supply changes the split (steep = more rent)",
+  "Give an example and an evaluation point, then a short conclusion",
+], done: "This is the structure of a full-mark answer." });
+Lib.calc($("#c1"), { qs: [
+  { q: "A model earns $500,000. The next best job pays $100,000. What is the economic rent ($)?", a: 400000, sol: "500,000 − 100,000 = <b>$400,000</b>." },
+  { q: "A teacher earns $30,000 and would stay for $25,000. What is the economic rent ($)?", a: 5000, sol: "30,000 − 25,000 = <b>$5,000</b>." },
+  { q: "Five workers need $6, $7, $8, $9 and $10. The wage is $10. What is the total economic rent ($)?", a: 10, hint: "Rent for each worker = wage − smallest pay. Add them.", sol: "4 + 3 + 2 + 1 + 0 = <b>$10</b>." },
+  { q: "The wage rises to $12 and two more workers (needing $11 and $12) join the five above. What is the total economic rent now ($)?", a: 21, sol: "Rent: 6 + 5 + 4 + 3 + 2 + 1 + 0 = <b>$21</b>. A higher wage raises the rent." },
+  { q: "A worker earns $200,000. The next best job pays $50,000. What percentage of the pay is economic rent?", a: 75, sol: "Rent = 150,000. 150,000 ÷ 200,000 × 100 = <b>75%</b>." },
+  { q: "Total pay is $800 and transfer earnings are $480. What is the economic rent ($)?", a: 320, sol: "800 − 480 = <b>$320</b>." },
+] });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Which is the best definition of transfer earnings?", opts: ["Money from the government to poor families", "The smallest pay that keeps a worker in their present job", "Any pay above what a worker needs", "The pay in a worker's dream job"], a: 1, why: "If the pay is less than this, the worker transfers to another job. Option A is a transfer payment, a different idea." },
+  { q: "Which statement about economic rent is correct?", opts: ["It is the money paid for a house", "It is only earned by rich people", "It is pay above transfer earnings", "It is the pay of a worker in their first year"], a: 2, why: "Economic rent is the extra pay above what is needed. A teacher can earn rent too." },
+  { q: "On a labour market diagram, transfer earnings are the area:", opts: ["above the supply curve and below the wage", "under the supply curve up to the number of workers hired", "under the demand curve", "above the demand curve"], a: 1, why: "Under the supply curve is the smallest pay of all the workers added together." },
+  { q: "A top singer's supply of labour is perfectly inelastic. Compared with a street cleaner, the singer's pay is:", opts: ["all transfer earnings", "mostly transfer earnings", "mostly or all economic rent", "zero"], a: 2, why: "A vertical supply curve means nobody will leave the job when pay falls, so all pay is rent." },
+  { q: "In the long run, the supply of skilled workers becomes more elastic. What is likely to happen to economic rent?", opts: ["It rises", "It falls and some becomes transfer earnings", "It stays the same", "It becomes zero for all workers"], a: 1, why: "A flatter supply curve means less area above it. Rent in the short run turns into transfer earnings." },
+  { q: "A government sets a minimum wage above the equilibrium wage. For workers who keep their jobs, economic rent:", opts: ["falls", "stays the same", "rises", "becomes transfer earnings"], a: 2, why: "Their wage rises but their smallest pay stays the same, so the gap, the rent, gets bigger." },
+] });
+Lib.cards($("#fc1"), { cards: [
+  ["Transfer earnings", "The smallest payment needed to keep a worker in their present job. Under the supply curve."],
+  ["Economic rent", "Payment above transfer earnings. Above the supply curve and below the wage."],
+  ["Supply curve (labour)", "Shows the smallest pay each worker will accept."],
+  ["Elasticity of supply of labour", "How easy it is to find more workers when the wage rises."],
+  ["Elastic supply", "Flat supply curve. Most pay is transfer earnings."],
+  ["Inelastic supply", "Steep supply curve. Most pay is economic rent."],
+  ["Perfectly inelastic supply", "Vertical supply curve. All pay is economic rent."],
+  ["Perfectly elastic supply", "Horizontal supply curve. All pay is transfer earnings."],
+  ["Next best job", "The job a worker would do if they left. Its pay is their transfer earnings."],
+  ["Normal profit", "The transfer earnings of enterprise. The smallest profit to keep the entrepreneur in business."],
+  ["Supernormal profit", "Profit above normal profit. This is economic rent for enterprise."],
+  ["Transfer payment", "Money from the government (such as a benefit). NOT the same as transfer earnings."],
+] });
+
+/* ---------- Past paper MCQ (text) ---------- */
+Lib.quiz($("#qz2"), { qs: [
+  { q: "[May/June 2021 · 31 and 33 · Q16] What is meant by economic rent?", opts: ["any amount above the minimum earnings required to keep labour in its current job", "the marginal physical product of labour multiplied by marginal revenue", "the minimum amount required to keep labour in its current job", "the regular payment to a property owner in exchange for the use of a building"], a: 0, why: "B is MRP. C is transfer earnings. D is ordinary rent for a building, the common trap." },
+  { q: "[May/June 2022 · 31 and 33 · Q16] What is a definition of transfer earnings?", opts: ["the amount of earnings above that needed to keep a worker in their current job", "the minimum earnings needed to keep a worker in their current job", "the social security benefits paid to workers whose earnings are below the poverty line", "the amount of earnings needed to cause a worker to change to a different job"], a: 1, why: "A is economic rent. C is transfer payments (benefits). D is a different idea." },
+  { q: "[Oct/Nov 2021 · 33 · Q15] What is defined as 'the payment made to a factor of production over and above that necessary to keep the factor in its present use'?", opts: ["economic rent", "normal profit", "opportunity cost", "transfer earnings"], a: 0, why: "'Over and above' is the key phrase for economic rent." },
+  { q: "[May/June 2022 · 32 · Q16] What represents the transfer earnings of the factor enterprise?", opts: ["excess profit", "normal profit", "return on capital", "start-up costs"], a: 1, why: "Normal profit is the smallest profit that keeps the entrepreneur in business. Excess (supernormal) profit is the rent." },
+  { q: "[Oct/Nov 2021 · 32 · Q16] What happens to economic rent and transfer earnings if the supply of labour becomes perfectly inelastic?", opts: ["economic rent decreases; transfer earnings increase", "economic rent decreases; transfer earnings stay the same", "economic rent increases; transfer earnings decrease", "economic rent stays the same; transfer earnings decrease"], a: 2, why: "A vertical supply curve has nothing under it, so transfer earnings fall to zero and all pay is rent." },
+  { q: "[Oct/Nov 2022 · 33 · Q16] A fashion model is paid $500,000 a year. The next best paid job he could get is as a teacher at $100,000. What are his transfer earnings and economic rent?", opts: ["transfer zero; rent $400,000", "transfer $100,000; rent $400,000", "transfer $400,000; rent zero", "transfer $400,000; rent $100,000"], a: 1, why: "Transfer earnings = pay in the next best job = $100,000. Rent = 500,000 − 100,000 = $400,000." },
+  { q: "[Feb/March 2025 · 32 · Q14] A teacher earns $30,000. She would stay for at least $25,000. Her next best job, accountant, pays $40,000, but she prefers to teach. Which is correct?", opts: ["Her economic rent as a teacher is $5,000.", "Her economic rent as an accountant is $10,000.", "Her transfer earnings as a teacher are $30,000.", "Her transfer earnings as an accountant are $15,000."], a: 0, why: "Transfer earnings as a teacher = $25,000 (the smallest pay to stay), so rent = 30,000 − 25,000 = $5,000. The $40,000 job is one she does not want, so it is not her transfer earnings." },
+  { q: "[June 2026 · 32 · Q8] What is economic rent?", opts: ["The amount paid above the lowest wage that is needed to keep a worker in employment.", "The difference in pay between workers with comparable skills in different industries.", "The difference in pay between workers with different skills.", "The lowest wage that is needed to keep a worker in employment."], a: 0, why: "D is transfer earnings. B and C describe wage differentials, not rent." },
+  { q: "[Oct/Nov 2020 · 31 · Q17] A trade union negotiates a wage OW for its members. Employment is OQ. What do the union members maximise in this situation?", opts: ["their economic rent", "their leisure hours", "their level of employment", "their total amount paid in wages"], a: 3, why: "The wage bill is OW × OQ, the rectangle under the wage up to OQ. Rent is only part of it, and it is not what the union is shown maximising." },
+  { q: "[June 2026 · 31 and 33 · Q10] What is the most likely effect of a change from a competitive labour market to a monopsony?", opts: ["decrease in trade union membership", "higher wage rates offered", "increased economic rent", "less labour employed"], a: 3, why: "A monopsony hires where MCL = MRP, which is less than the competitive quantity, and pays a lower wage. Lower wages mean less rent, so C is wrong." },
+] });
+
+/* ---------- redrawn diagrams for the diagram questions ---------- */
+function dg(id, inner, label) {
+  $("#" + id).innerHTML = `<svg viewBox="0 0 280 215" class="mq" role="img" aria-label="${label}">${SV.line(40, 190, 265, 190)}${SV.line(40, 190, 40, 12)}${inner}</svg>`;
+}
+const T = (x, y, t, c = "sm bd", o) => SV.text(x, y, t, c, { "text-anchor": "middle", ...(o || {}) });
+// 1 · May/June 2024 · 32 · Q15
+dg("d1", SV.poly([[40, 140], [150, 85], [40, 85]], "f3") + SV.poly([[40, 140], [150, 85], [150, 190], [40, 190]], "f1") +
+  SV.line(40, 140, 240, 40, "c2") + SV.line(40, 30, 240, 130, "c1") + SV.line(40, 85, 150, 85, "gr") + SV.line(150, 85, 150, 190, "gr") +
+  T(28, 33, "F", "sm bd") + T(28, 88, "K", "sm bd") + T(28, 143, "J", "sm bd") + T(160, 80, "G", "sm bd") + T(150, 205, "H", "sm bd") + T(28, 200, "O", "sm bd") +
+  SV.text(240, 36, "supply", "sm t2", { "text-anchor": "end" }) + SV.text(240, 146, "demand", "sm t1", { "text-anchor": "end" }), "Labour market for farm workers with areas G F K J H O");
+// 2 · May/June 2025 · three panels
+(function () {
+  let s = "";
+  [0, 95, 190].forEach((ox, i) => {
+    const x = (v) => ox + v, ax = SV.line(x(15), 110, x(92), 110) + SV.line(x(15), 110, x(15), 10);
+    s += ax + SV.line(x(15), 15, x(90), 100, "c1");
+    if (i === 0) s += SV.poly([[x(15), 60], [x(55), 60], [x(15), 95]], "f3") + SV.poly([[x(15), 95], [x(55), 60], [x(55), 110], [x(15), 110]], "f1") + SV.line(x(15), 95, x(90), 29, "c2") + T(x(30), 72, "1", "lbl bd") + T(x(38), 96, "2", "lbl bd");
+    if (i === 1) s += SV.poly([[x(15), 60], [x(55), 60], [x(55), 110], [x(15), 110]], "f1") + SV.line(x(15), 60, x(92), 60, "c2") + T(x(35), 90, "3", "lbl bd");
+    if (i === 2) s += SV.poly([[x(15), 60], [x(55), 60], [x(55), 110], [x(15), 110]], "f3") + SV.line(x(55), 110, x(55), 10, "c2") + T(x(35), 90, "4", "lbl bd");
+    s += SV.line(x(15), 60, x(55), 60, "gr") + SV.line(x(55), 60, x(55), 110, "gr");
+  });
+  $("#d2").innerHTML = `<svg viewBox="0 0 290 130" class="mq" role="img" aria-label="Three labour markets with areas numbered 1 to 4">${s}</svg>`;
+})();
+// 3 · Oct/Nov 2023 · 31 · Q12
+dg("d3", SV.poly([[50, 60], [130, 60], [130, 100], [50, 100]], "f3") + SV.poly([[50, 100], [130, 100], [130, 118], [50, 150]], "f1") + SV.poly([[130, 100], [170, 100], [130, 118]], "f2") +
+  SV.line(50, 150, 130, 118, "c2") + SV.line(130, 118, 170, 100, "c2") + SV.line(170, 100, 240, 70, "c2") + SV.line(90, 20, 240, 170, "c1") +
+  SV.line(50, 60, 130, 60, "gr") + SV.line(50, 100, 170, 100, "gr") + SV.line(130, 60, 130, 190, "gr") + SV.line(170, 100, 170, 190, "gr") +
+  T(36, 64, "W₁", "sm bd") + T(36, 104, "Wₑ", "sm bd") + T(130, 205, "N₂", "sm bd") + T(170, 205, "N₁", "sm bd") + T(90, 84, "X", "lbl bd") + T(92, 116, "Y", "lbl bd") + T(140, 109, "Z", "sm bd") +
+  SV.text(240, 62, "S", "sm bd t2", { "text-anchor": "end" }) + SV.text(240, 164, "D", "sm bd t1", { "text-anchor": "end" }), "Labour market with minimum wage W1 and areas X, Y and Z");
+// 4 · Oct/Nov 2023 · 33 · Q11
+dg("d4", SV.poly([[50, 100], [170, 100], [50, 150]], "f3") + SV.poly([[50, 150], [170, 100], [110, 190], [50, 190]], "f4") + SV.poly([[110, 190], [170, 100], [170, 190]], "f1") +
+  SV.line(50, 150, 240, 70, "c2") + SV.line(110, 190, 200, 55, "c4") + SV.line(70, 20, 230, 150, "c1") + SV.line(50, 100, 170, 100, "gr") + SV.line(170, 100, 170, 190, "gr") +
+  T(90, 116, "X", "lbl bd") + T(78, 168, "Y", "lbl bd") + T(150, 172, "Z", "lbl bd") + SV.text(240, 66, "long run", "sm t2", { "text-anchor": "end" }) + SV.text(204, 52, "short run", "sm t4"), "Short run and long run supply curves with areas X, Y and Z");
+// 5 · Oct/Nov 2024 · 33 · Q14
+dg("d5", SV.line(50, 170, 240, 59, "c2") + SV.line(50, 108, 240, 95, "c4") + SV.line(70, 20, 230, 150, "c1") + SV.line(40, 100, 170, 100, "gr") + SV.line(170, 100, 170, 190, "gr") +
+  T(26, 104, "W", "sm bd") + T(170, 205, "N", "sm bd") + SV.text(244, 56, "S₁", "sm bd t2") + SV.text(244, 94, "S₂", "sm bd t4") + SV.text(232, 156, "D", "sm bd t1"), "Supply of labour changing from steep S1 to flatter S2");
+// 6 · June 2026 · 34 · Q11
+dg("d6", SV.poly([[40, 190], [120, 190], [120, 124]], "f1") + SV.poly([[40, 95], [120, 95], [120, 124], [40, 190]], "f3") + SV.poly([[40, 55], [120, 55], [120, 95], [40, 95]], "f3") +
+  SV.line(40, 190, 203, 55, "c2") + SV.line(90, 21, 200, 146, "c1") + SV.line(40, 95, 155, 95, "gr") + SV.line(40, 55, 203, 55, "gr") + SV.line(120, 55, 120, 190, "gr") + SV.line(155, 95, 155, 190, "gr") + SV.line(203, 55, 203, 190, "gr") +
+  T(26, 59, "W_T", "sm bd") + T(26, 99, "W₁", "sm bd") + T(120, 205, "N₂", "sm bd") + T(155, 205, "N₁", "sm bd") + T(203, 205, "N₃", "sm bd") + T(85, 178, "T", "lbl bd") + T(72, 118, "V", "lbl bd") + T(78, 80, "X", "lbl bd") +
+  SV.text(210, 52, "S", "sm bd t2") + SV.text(204, 148, "D", "sm bd t1"), "Competitive labour market with a union wage WT and areas T, V and X");
+
+Lib.initTabs();
+</script>
+</body></html>
