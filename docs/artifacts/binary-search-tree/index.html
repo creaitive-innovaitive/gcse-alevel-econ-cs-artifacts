@@ -1,6 +1,197 @@
-<!doctype html><html><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en"><head><script>try{var t=localStorage.getItem("site.theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script>document.documentElement.classList.add("gated")</script><style>html.gated{visibility:hidden!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Binary Search Tree Walkthrough</title>
-<style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>/* Base for artifacts that keep their own page CSS: the tab bar plus kit components scoped under .kit, mapped onto whatever palette the page defines. */
+.kit,.kitvars{--soft:var(--accent-soft);--warn:var(--amber,#a85d00);--warn-soft:var(--amber-soft,#fbead2);--accent-ink:var(--bg);--sans:var(--body,system-ui,sans-serif);--serif:var(--display,Georgia,serif);--k:#1f5fa8;--a:#1d7a4c;--n:#7a3fa0;--e:#b25a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(.kit,.kitvars){--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}}
+:root[data-theme="dark"] :is(.kit,.kitvars){--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}
+.tl-wrap{max-width:var(--tl-w,900px);margin:0 auto}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+.kit .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.kit .card.big{background:var(--accent-soft);border-color:var(--accent)}
+.kit .card h3:first-child{margin-top:0}
+.kit .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.kit .grid2>.card{margin:0}
+.kit .formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kit .kw{font-weight:700;color:var(--accent)}
+.kit table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+.kit table.t th,.kit table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.kit table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.kit .tw{overflow-x:auto}
+.kit .b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.kit .b:hover{background:var(--soft)}
+.kit .b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.kit .b:disabled{opacity:.5;cursor:default}
+.kit .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.kit .note{font-size:.88rem;color:var(--muted)}
+.kit .pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.kit .tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.kit .tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.kit .warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.kit .warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+.kit /* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.kit .stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.kit .stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.kit .stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.kit .stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.kit .stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.kit .stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.kit .stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+.kit /* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+.kit svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+.kit svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+.kit svg .lbl{font-size:13px}
+.kit svg .sm{font-size:11.5px;fill:var(--muted)}
+.kit svg .bd{font-weight:700}
+.kit svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+.kit svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+.kit svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+.kit svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+.kit svg .f1{fill:var(--accent);opacity:.18}
+.kit svg .f2{fill:var(--bad);opacity:.18}
+.kit svg .f3{fill:var(--good);opacity:.2}
+.kit svg .f4{fill:var(--warn);opacity:.22}
+.kit svg .dash{stroke-dasharray:6 5}
+.kit svg .t1{fill:var(--accent)}
+.kit svg .t2{fill:var(--bad)}
+.kit svg .t3{fill:var(--good)}
+.kit svg .t4{fill:var(--warn)}
+.kit svg .dot1{fill:var(--accent)}
+.kit svg .dot2{fill:var(--bad)}
+.kit svg .dot3{fill:var(--good)}
+.kit svg .dot4{fill:var(--warn)}
+.kit /* sliders */
+.sl{margin:10px 0}
+.kit .sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.kit .sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.kit .sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.kit .readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.kit .readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.kit .readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kit .readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.kit .verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+.kit /* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.kit .cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.kit .cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.kit .cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.kit .cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.kit .cls .bk.over,.kit .cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.kit .chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.kit .chip.sel{background:var(--accent);color:var(--accent-ink)}
+.kit .chip.ok{border-color:var(--good);background:var(--good-soft)}
+.kit .chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.kit .cls .msg,.kit .ord .msg,.kit .calc .msg{font-weight:700;margin:8px 0}
+.kit .match .bk h4{font-size:.9rem;color:var(--ink)}
+.kit /* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.kit .ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.kit .ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.kit .ord li.ok{border-color:var(--good);background:var(--good-soft)}
+.kit .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.kit .ord li.drag{opacity:.4}
+.kit .ord li span{flex:1}
+.kit .ord li button{padding:2px 8px}
+.kit /* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.kit .qz .q p.qt{font-weight:700;margin-bottom:8px}
+.kit .opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.kit .opt:hover{border-color:var(--accent)}
+.kit .opt.ok{border-color:var(--good);background:var(--good-soft)}
+.kit .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.kit .why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.kit .q.done .why{display:block}
+.kit .score{font:700 1.05rem var(--sans);margin:10px 0}
+.kit /* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.kit .calc input[type=number],.kit .calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.kit .calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.kit .calc .sol.show{display:block}
+.kit .calc .fb{font-weight:700;margin-left:8px}
+.kit .calc .fb.ok{color:var(--good)}
+.kit .calc .fb.no{color:var(--bad)}
+.kit /* cards */
+.fc{perspective:900px;max-width:520px}
+.kit .fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.kit .fc .face.back{background:var(--accent-soft)}
+.kit .fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+.kit /* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+.kit details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.kit details.eq>summary::-webkit-details-marker{display:none}
+.kit details.eq>summary::before{content:"▸";color:var(--accent)}
+.kit details.eq[open]>summary::before{content:"▾"}
+.kit details.eq .body{padding:4px 18px 16px}
+.kit .mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.kit .cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.kit .ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.kit .mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.kit .mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.kit .mk.k{color:var(--k)}
+.kit .mk.a{color:var(--a)}
+.kit .mk.n{color:var(--n)}
+.kit .mk.e{color:var(--e)}
+.kit .key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.kit .key span{display:inline-flex;gap:5px;align-items:center}
+.kit .key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.kit .key .k i{background:var(--k)}
+.kit .key .a i{background:var(--a)}
+.kit .key .n i{background:var(--n)}
+.kit .key .e i{background:var(--e)}
+.kit .rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.kit .rw h3{margin:0 0 4px}
+.kit .rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.kit .rw .use b{color:var(--accent)}
+.kit ul.tips{list-style:none;padding:0;margin:0}
+.kit ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+.kit ul.tips li b{color:var(--warn)}
+.kit .algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.kit .algo .stp{margin:0}
+.kit @media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.kit .code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.kit .ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.kit .ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.kit .ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+.kit svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+.kit svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+.kit svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+.kit svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+.kit svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+.kit svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+.kit svg .cell-dimg{opacity:.28}
+.kit svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+.kit svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+.kit svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+.kit svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+.kit svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+.kit svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+.kit svg .arr{fill:var(--muted)}
+.kit svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.kit .vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.kit .vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.kit .bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.kit .bar.b2{background:var(--bad)}
+.kit .bar.b3{background:var(--good)}
+.kit .bar.b4{background:var(--warn)}
+.kit table.mx td,.kit table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+.kit table.mx td.z{color:var(--muted);opacity:.6}
+.kit table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.kit table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+.kit table.mx td.ls{text-align:left}
+.kit .stp{scroll-margin-top:70px}
+
+/* legacy */
+
 :root{
   --bg:#f7f5f1;
   --panel:#ffffff;
@@ -123,17 +314,51 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
 @media (max-width:480px){
   .node-text{ font-size:13px; }
 }
-</style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
 
+</style></head>
+<body>
+<div class="kitvars">
 <div class="wrap">
-  <div>
-    <div class="eyebrow">Chapter 19 &middot; Trees</div>
-    <h1>Binary Search Tree Walkthrough</h1>
-    <p class="intro">A binary search tree keeps every node's left subtree smaller and its right subtree bigger. Both <code>insert</code> and <code>search</code> run the same logic: start at the root, compare, and step left or right — <code>insert</code> stops at an empty spot and plants a node there, <code>search</code> stops when it finds a match or runs off the tree into <code>None</code>.</p>
-  </div>
+<header class="hero">
+  <div class="eyebrow">A-Level Computer Science · 9618 · Chapter 19 · Trees</div>
+  <h1>Binary Search Tree Walkthrough</h1>
+  <p>Every node's left subtree is smaller and its right subtree is bigger. Insert and search follow the same path: compare, then step left or right.</p>
+</header>
 
-  <div class="panel" style="display:flex; flex-direction:column; gap:16px;">
+<div class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</div>
+<section id="learn" role="tabpanel">
+<div class="kit">
+  <div class="card big"><h3>The big idea</h3><p>A <b>binary search tree</b> keeps every node's left subtree smaller and its right subtree bigger. Searching halves the possibilities at every step, so a balanced tree of N nodes needs only about log₂ N comparisons.</p></div>
+  <div class="grid2">
+    <div class="card"><h3>Insert</h3><p>Start at the root. If the new value is smaller go left, otherwise go right. Repeat until you reach an empty spot, then plant the new node there.</p></div>
+    <div class="card"><h3>Search</h3><p>Start at the root. Stop if it matches. If the target is smaller go left, if bigger go right. If you run off the tree into an empty spot (None), the value is not there.</p></div>
+  </div>
+  <h2>Traversals</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Traversal</th><th>Order</th><th>Used for</th></tr>
+    <tr><td>In-order</td><td>left, node, right</td><td>Output in ascending order</td></tr>
+    <tr><td>Pre-order</td><td>node, left, right</td><td>Copying a tree</td></tr>
+    <tr><td>Post-order</td><td>left, right, node</td><td>Deleting a tree, evaluating expressions</td></tr>
+  </table></div>
+  <div class="grid2">
+    <div class="card"><h3>Balanced tree</h3><p>Search, insert and delete take O(log N) because each step discards about half of the remaining nodes.</p></div>
+    <div class="card"><h3>Degenerate tree</h3><p>If values arrive already in order, every node goes to the same side and the tree becomes a chain. Search then takes O(N).</p></div>
+  </div>
+</div>
+
+</section>
+<section id="watch" role="tabpanel" hidden>
+<div class="kit">
+  <p>Pick insert or search, then press Play or step through. Watch the path from the root and the table fill in.</p>
+<div class="panel" style="display:flex; flex-direction:column; gap:16px;">
     <div class="tabs" id="tabs"></div>
 
     <div class="controls">
@@ -162,7 +387,13 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
     <pre id="codeBlock"></pre>
   </div>
 
-  <div class="panel arr">
+  
+</div>
+
+</section>
+<section id="explore" role="tabpanel" hidden>
+<div class="kit">
+<div class="panel arr">
     <div class="eyebrow">Exam view</div>
     <h2 style="font-family:Fraunces,Georgia,serif;font-size:22px;margin:4px 0 8px">The same tree as an array of records</h2>
     <p class="note">In the pseudocode, the tree is stored in an array of records. Each node holds <code>LeftPtr</code>, <code>Data</code> and <code>RightPtr</code>, where the pointers are array indexes and <code>-1</code> means null. Nodes fill the array in the order they were inserted. Step through the tree above and watch this table fill in.</p>
@@ -177,10 +408,365 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
     <div class="code-panel"><pre id="travBlock"></pre></div>
   </div>
 
-  <footer>Built from <code style="background:var(--code-hl); color:var(--code-ink); padding:1px 6px; border-radius:5px;">[50, 30, 70, 20, 40, 60, 80]</code> inserted in that order — the exact tree the sequence above produces.</footer>
+  
+</div>
+
+</section>
+<section id="practise" role="tabpanel" hidden>
+<div class="kit">
+  <h2>1 · Left or right?</h2>
+  <p>The tree is built from 50, 30, 70, 20, 40, 60, 80. Drag each value into the side of the root (50) where it sits.</p>
+  <div id="cl1" class="card"></div>
+  <h2>2 · Put the search steps in order</h2>
+  <div id="o1" class="card"></div>
+  <h2>3 · Match the traversal to its order</h2>
+  <div id="m1" class="card"></div>
+  <h2>4 · Calculations</h2>
+  <div id="c1"></div>
+  <h2>5 · Multiple choice</h2>
+  <div id="qz1"></div>
+</div>
+
+</section>
+<section id="real" role="tabpanel" hidden>
+<div class="kit">
+  <p class="note">Examples are explained in general terms.</p>
+  <div class="rw"><h3>Database indexes</h3><p>Many databases keep an index in a tree-like structure so a record can be found in a handful of steps instead of scanning every row.</p><div class="use"><b>Use it for:</b> why a tree makes search fast.</div></div>
+  <div class="rw"><h3>Autocomplete and spell check</h3><p>Ordered structures let a program jump to the words that start with what you typed, rather than reading the whole dictionary.</p><div class="use"><b>Use it for:</b> in-order traversal giving sorted output.</div></div>
+  <div class="rw"><h3>File systems</h3><p>Folders contain other folders, a tree shape. Programs walk the tree to find, copy or delete files.</p><div class="use"><b>Use it for:</b> pre-order and post-order traversals.</div></div>
+  <div class="rw"><h3>A sorted list that grows as data arrives</h3><p>If new values keep arriving in order, a plain binary search tree degenerates into a chain, which is why balanced variants exist.</p><div class="use"><b>Use it for:</b> evaluation: balanced versus degenerate trees.</div></div>
+</div>
+
+</section>
+<section id="exam" role="tabpanel" hidden>
+<div class="kit">
+  <h2>Exam-style questions</h2>
+  <p>Write your answer first, then open the mark points. Tick the ones you earned.</p>
+  <details class="eq"><summary>Q1 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe how the value 45 is inserted into a binary search tree.</summary><div class="body">
+    <div class="ans"><p>1. Start at the root and compare 45 with the value there.</p><p>2. If 45 is smaller follow the left pointer, if larger the right pointer, and repeat the comparison at each node.</p><p>3. When the pointer to follow is null (empty), create a new node holding 45 there and set the parent's pointer to it.</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the new node replaces an existing one. It always becomes a new leaf.</div></div></details>
+  <details class="eq"><summary>Q2 <span class="cmd">Write</span> <span class="mark">2 marks</span> State the output of an in-order traversal of the tree built from 50, 30, 70, 20, 40, 60, 80.</summary><div class="body">
+    <div class="ans"><p>20 30 40 50 60 70 80 (ascending order). One mark for left, node, right order; one mark for the correct output.</p></div></div></details>
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Explain why searching a binary search tree can be faster than searching an unsorted list.</summary><div class="body">
+    <div class="ans"><p>1. In an unsorted list every item may have to be checked, so N comparisons in the worst case.</p><p>2. In a binary search tree each comparison tells you to go left or right, discarding a whole subtree.</p><p>3. In a balanced tree this halves the remaining items each time, so about log₂ N comparisons.</p><p>4. This only holds if the tree is balanced; a degenerate tree is as slow as a list.</p></div></div></details>
+</div>
+
+</section>
+<section id="tips" role="tabpanel" hidden>
+<div class="kit">
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Smaller goes left, larger goes right.</b> Check duplicates against the rule in your question.</li>
+    <li><b>New nodes are always leaves.</b></li>
+    <li><b>In-order of a BST is sorted.</b> Use it as a check on your answer.</li>
+    <li><b>In the array version, −1 means null</b> and pointers are array indexes.</li>
+    <li><b>Say balanced or degenerate</b> when giving the time complexity.</li>
+  </ul>
+  <h2>Keyword flashcards</h2>
+  <p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</div>
+
+</section>
+</div>
 </div>
 
 <script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.max(0, Math.min(fr.length - 1, Math.round(s.i)))].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+Lib.classify($("#cl1"), {
+  prompt: "Is each value in the left or the right subtree of the root (50)?",
+  buckets: [{ label: "Left of 50" }, { label: "Right of 50" }],
+  items: [{ text: "20", b: 0 }, { text: "30", b: 0 }, { text: "40", b: 0 }, { text: "60", b: 1 }, { text: "70", b: 1 }, { text: "80", b: 1 }],
+  done: "Everything smaller than the root is in its left subtree, everything bigger in its right subtree.",
+});
+Lib.order($("#o1"), { prompt: "Put the steps for searching a binary search tree in order.", items: [
+  "Start at the root.",
+  "Compare the target with the current node.",
+  "If equal, stop: it is found.",
+  "If smaller go left, if bigger go right.",
+  "If you reach an empty pointer, stop: it is not in the tree.",
+] });
+Lib.match($("#m1"), { prompt: "Match each traversal to its order.", pairs: [
+  ["In-order", "Left, node, right"],
+  ["Pre-order", "Node, left, right"],
+  ["Post-order", "Left, right, node"],
+] });
+Lib.calc($("#c1"), { qs: [
+  { q: "Roughly how many comparisons does a search of a balanced tree of 1,024 nodes need (log₂ N)?", a: 10, hint: "2 to the power of what is 1,024?", sol: "2¹⁰ = 1,024, so about 10." },
+  { q: "The tree is built from 50, 30, 70, 20, 40, 60, 80. How many nodes are in the left subtree of the root?", a: 3, sol: "30, 20 and 40." },
+  { q: "Values 1, 2, 3, 4, 5 are inserted in that order. How many comparisons does it take to find 5?", a: 5, hint: "The tree is a chain going right.", sol: "1, 2, 3, 4 then 5: five comparisons." },
+] });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "In a binary search tree, values smaller than a node are", opts: ["in its right subtree", "in its left subtree", "above it", "anywhere"], a: 1, why: "Smaller goes left." },
+  { q: "An in-order traversal of a binary search tree outputs the values", opts: ["in descending order", "in ascending order", "in insertion order", "randomly"], a: 1, why: "Left, node, right visits smaller values first." },
+  { q: "A new value is inserted", opts: ["at the root", "as a new leaf", "replacing a node", "at the deepest node"], a: 1, why: "You walk down until the pointer is empty and plant a new leaf." },
+  { q: "The worst-case search time for a degenerate tree is", opts: ["O(1)", "O(log N)", "O(N)", "O(N²)"], a: 2, why: "It is a chain, so every node may be visited." },
+] });
+Lib.cards($("#fc1"), { cards: [
+  ["Binary search tree", "A tree where each node's left subtree is smaller and its right subtree is bigger."],
+  ["Root", "The top node of the tree."],
+  ["Leaf", "A node with no children."],
+  ["Subtree", "A node together with all the nodes below it."],
+  ["In-order traversal", "Left, node, right. Gives ascending order on a binary search tree."],
+  ["Pre-order traversal", "Node, left, right."],
+  ["Post-order traversal", "Left, right, node."],
+  ["Balanced tree", "A tree with similar depth on both sides, so search is O(log N)."],
+  ["Null pointer", "A pointer (−1 in the array version) meaning there is no child."],
+] });
+
+/* ---------- original page scripts (own scope) ---------- */
+(function(){
+
 (function(){
   const buildValues = [50, 30, 70, 20, 40, 60, 80];
   const sortedVals = buildValues.slice().sort((a,b)=>a-b);
@@ -627,6 +1213,9 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
 
   render();
 })();
-</script>
 
-<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}.site-pill .pill-more{display:none}@media(max-width:700px){body{padding-bottom:64px}.site-pill{right:8px;bottom:8px;opacity:.6;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 16px)}.site-pill>*:not(.pill-more){display:none}.site-pill.open{opacity:.95}.site-pill.open>*:not(.pill-more):not([hidden]){display:inline-block}.site-pill .pill-more{display:block;border:0;border-radius:999px;width:36px;height:36px;padding:0;text-align:center;font-size:18px}.site-pill.open .pill-more{border-left:0}}</style><div class="site-pill"><button type="button" class="pill-more" aria-label="Menu" onclick="this.parentNode.classList.toggle(&#39;open&#39;)">☰</button><a href="../../a-cs/a-level/ch-19/#res">← Chapter 19</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="binary-search-tree" hidden></button><button data-role-toggle="binary-search-tree" hidden></button><button data-role-delete="binary-search-tree" hidden></button><button data-role-restore="binary-search-tree" hidden></button></div><script src="../../assets/config.js?v=1791617839"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js?v=1791617839"></script><script src="../../assets/gate.js?v=1791617839" data-courses="a-cs"></script><script>document.addEventListener('click',function(e){var t=e.target.closest('[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script><script>document.addEventListener('click',function(e){var p=document.querySelector('.site-pill.open');if(p&&!p.contains(e.target))p.classList.remove('open')});addEventListener('scroll',function(){var p=document.querySelector('.site-pill.open');if(p)p.classList.remove('open')},{passive:true});</script></body></html>
+})();
+
+Lib.initTabs();
+</script>
+<style id=site-pill>.site-pill{position:fixed;right:12px;bottom:12px;opacity:.8;z-index:2147483000;display:flex;gap:2px;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:rgba(20,24,28,.88);border-radius:999px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.25)}.site-pill a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:999px;white-space:nowrap}.site-pill a:hover,.site-pill button:hover{background:rgba(255,255,255,.18)}.site-pill button{font:inherit;color:#fff;background:transparent;border:0;border-left:1px solid rgba(255,255,255,.25);border-radius:0 999px 999px 0;padding:8px 12px;cursor:pointer}.site-pill button.is-done{color:#7be0a0}@media print{.site-pill{display:none}}.site-pill .pill-more{display:none}@media(max-width:700px){body{padding-bottom:64px}.site-pill{right:8px;bottom:8px;opacity:.6;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 16px)}.site-pill>*:not(.pill-more){display:none}.site-pill.open{opacity:.95}.site-pill.open>*:not(.pill-more):not([hidden]){display:inline-block}.site-pill .pill-more{display:block;border:0;border-radius:999px;width:36px;height:36px;padding:0;text-align:center;font-size:18px}.site-pill.open .pill-more{border-left:0}}</style><div class="site-pill"><button type="button" class="pill-more" aria-label="Menu" onclick="this.parentNode.classList.toggle(&#39;open&#39;)">☰</button><a href="../../a-cs/a-level/ch-19/#res">← Chapter 19</a><a href="../../">Home</a><button type="button" title="Light / dark" onclick="var r=document.documentElement,d=(r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('site.theme',d)}catch(e){}">◐</button><button data-done-slug="binary-search-tree" hidden></button><button data-role-toggle="binary-search-tree" hidden></button><button data-role-delete="binary-search-tree" hidden></button><button data-role-restore="binary-search-tree" hidden></button></div><script src="../../assets/config.js?v=1791618655"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/app.js?v=1791618655"></script><script src="../../assets/gate.js?v=1791618655" data-courses="a-cs"></script><script>document.addEventListener('click',function(e){var t=e.target.closest('[role=tab],.tab,.tabbar button,.tabs button,.section-tabs button,[data-tab],[data-panel-tab]');if(!t)return;var n=t,s=false;while(n&&n!==document.body){var p=getComputedStyle(n).position;if(p==='sticky'||p==='fixed'){s=true;break}n=n.parentElement}if(s)setTimeout(function(){window.scrollTo(0,0)},30)});</script><script>document.addEventListener('click',function(e){var p=document.querySelector('.site-pill.open');if(p&&!p.contains(e.target))p.classList.remove('open')});addEventListener('scroll',function(){var p=document.querySelector('.site-pill.open');if(p)p.classList.remove('open')},{passive:true});</script></body></html>

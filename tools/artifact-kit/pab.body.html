@@ -1,0 +1,170 @@
+<div class="kitvars">
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">Investing · Mean reversion · Educational</div>
+  <h1>Buying Panic at the Bottom</h1>
+  <p>A rules-based way to look at sharp, fear-driven falls: five signals that all have to agree before the setup counts, and an exit decided before the trade starts. Educational and historical only; nothing here is advice or a recommendation.</p>
+</header>
+
+<div class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</div>
+<section id="learn" role="tabpanel">
+<div class="panel">
+<h2>The idea in one minute</h2>
+<p>Most strategies follow a trend. This one does the opposite. It is a <b>mean-reversion</b> setup: when a price has fallen so far and so fast that the move looks statistically extreme, a bounce becomes more likely than a further collapse. It only looks at the <b>daily chart</b> (one candle, or one point, per day), and it fires only a handful of times a year.</p>
+
+<div class="tip"><b class="l">Top tip</b>The edge in this setup is patience, not cleverness. Three or four signals out of five feels like a bottom but is not the setup. Only five out of five counts.</div>
+<h3>The sequence</h3>
+<div class="grid">
+<div class="card"><b>1. Wait</b><p>Watch the daily chart. Do nothing while fewer than five conditions are true.</p></div>
+<div class="card"><b>2. Check all five</b><p>RSI, Bollinger Band, the 30% dip, the volume spike and the support level must all be true at once.</p></div>
+<div class="card"><b>3. Enter</b><p>When the fifth condition lands, the setup is complete. It will feel uncomfortable because price has just fallen hard.</p></div>
+<div class="card"><b>4. Exit by plan</b><p>Place a sell limit order 30% above the entry price straight after entering, so no decision is made under pressure.</p></div>
+</div>
+<div class="tip"><b class="l">Where the Signals tool fits</b>The Growth Capital Group <a href="https://www.growthcapitalgroup.co/tools/signals" target="_blank" rel="noopener">Signals tool</a> lets you build a strategy from conditions and choose whether it fires when <b>ALL</b> or <b>ANY</b> of them are met, with a target gain and a stop-loss. This strategy is the ALL setting with five conditions. The Signal lab tab copies that panel so you can see why ALL matters.</div>
+</div>
+<div class="panel">
+<h2>The five signals</h2>
+<p>Each chart shows the same fall, with the cursor on the day all five lined up (day 74). The strategy needs every one of these true on the same day.</p>
+<div class="grid" id="sigCards" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr))"></div>
+<div class="tip warn"><b class="l">Common mistake</b>Treating RSI below 30 as enough. The textbook oversold line is 30. This strategy deliberately waits for the rarer reading below 20.</div>
+</div>
+
+</section>
+<section id="watch" role="tabpanel" hidden>
+<div class="kit">
+  <p>Press Play, or use Back and Next, to follow the setup day by day on an illustrative chart.</p>
+
+</div>
+<div class="panel"><div class="card">
+<div class="row" style="justify-content:space-between"><h3 style="margin:0">Animated walkthrough</h3>
+<div class="row"><button id="ovPrev">Back</button><button class="pri" id="ovPlay">Play</button><button id="ovNext">Next</button></div></div>
+<div id="ovChart"></div>
+<ol class="steps" id="ovSteps"></ol>
+</div></div>
+
+</section>
+<section id="explore" role="tabpanel" hidden>
+<div class="panel">
+<h2>Signal lab</h2>
+<p>Drag the day slider or press Play. The panel on the right works like the Signals tool's strategy output: each condition lights up when true, and the strategy fires only when its rule is met.</p>
+<div class="card">
+<div id="labChart"></div>
+<div class="row" style="margin-top:8px"><button class="pri" id="labPlay">Play</button>
+<label class="read" style="flex:1;min-width:200px">Day <span id="labDay"></span><input type="range" id="labSlider" min="40" max="110" value="60" aria-label="Day"></label></div>
+<p class="read" style="margin-top:8px">Build the same conditions yourself in the <a href="https://www.growthcapitalgroup.co/tools/signals" target="_blank" rel="noopener">Signals tool</a>, then test them in the <a href="https://www.growthcapitalgroup.co/backtester" target="_blank" rel="noopener">Backtester</a>.</p><div class="legend"><span><i style="border-color:var(--price)"></i>Close</span><span><i style="border-color:var(--s2)"></i>Bollinger Bands (21, 2)</span><span><i style="border-color:var(--s5)"></i>Support</span><span><i style="border-color:var(--s4)"></i>Volume spike (2x or more)</span></div>
+</div>
+<div class="grid">
+<div class="card"><h3 style="margin-top:0">Strategy output</h3><div id="labConds"></div><div id="labVerdict" class="verdict v-wait"></div><div id="labPos" class="read"></div></div>
+<div class="card"><h3 style="margin-top:0">Fire when</h3>
+<div class="row"><button id="mAll" class="pri">ALL 5</button><button id="m3">At least 3</button><button id="mAny">ANY 1</button></div>
+<p id="modeOut" style="margin-top:10px"></p>
+<div class="tip"><b class="l">Why it matters</b>Loosen the rule and the strategy fires constantly, mostly on days that are not the bottom. ALL five is what makes it rare.</div></div>
+</div>
+</div>
+<div class="panel">
+<h2>The exit</h2>
+<p>Straight after entering, a <b>sell limit order</b> is placed 30% above the entry price. A limit order is an instruction to the broker to sell automatically once the price reaches a level you set, so nothing has to be decided while watching the screen.</p>
+<div class="card">
+<div id="exitChart"></div>
+<label class="read">Take-profit target: <b id="tpVal">30%</b><input type="range" id="tpSlider" min="5" max="50" value="30" aria-label="Take profit percent"></label>
+<div class="stats" style="margin-top:10px" id="exitStats"></div>
+</div>
+<div class="tip"><b class="l">Top tip</b>A limit order either fills or it does not. Setting the target in advance removes the temptation to hold on for more, or to sell early out of fear.</div>
+<div class="tip warn"><b class="l">What the rules do not include</b>The post describes an entry and a take-profit but no stop-loss. A setup that looks complete can still keep falling, so in any historical study it is worth asking what a failed trade would have cost. The <a href="https://www.growthcapitalgroup.co/tools/signals" target="_blank" rel="noopener">Signals tool</a> has stop-loss settings for exactly that kind of test.</div>
+</div>
+<div class="panel">
+<h2>Does it actually work? Reading a backtest</h2>
+<p>A backtest runs the rules against historical prices to see what would have happened, without hindsight. You can run your own on the Growth Capital Group <a href="https://www.growthcapitalgroup.co/backtester" target="_blank" rel="noopener">Backtester</a>. The post reports this result for the setup on SOL-USD over a six-month window.</p>
+<div class="stats">
+<div class="stat"><b>+30%</b><span>Total return (£10,000 to £13,000)</span></div>
+<div class="stat"><b>100%</b><span>Win rate (1 win, 0 losses)</span></div>
+<div class="stat"><b>3.00</b><span>Profit factor</span></div>
+<div class="stat"><b>0%</b><span>Max drawdown</span></div>
+<div class="stat"><b>£1,000</b><span>Best and average trade</span></div>
+</div>
+<div class="tip warn"><b class="l">Read it carefully</b>These figures come from one closed winning trade. A 100% win rate and a 0% drawdown on a sample that small say very little about how the rules behave across many panics, so treat it as an illustration of the maths, not proof.</div>
+<h3>Profit factor calculator</h3>
+<div class="card"><div class="row">
+<label>Gross profit £ <input type="number" id="gp" value="3000" min="0" step="100" style="width:100px"></label>
+<label>Gross loss £ <input type="number" id="gl" value="1000" min="0" step="100" style="width:100px"></label>
+<label>Wins <input type="number" id="nw" value="3" min="0" style="width:60px"></label>
+<label>Losses <input type="number" id="nl" value="2" min="0" style="width:60px"></label></div>
+<p id="pfOut" style="margin-top:10px"></p></div>
+<h3>Match the term</h3>
+<div class="card"><p class="read">Tap a term, then its meaning.</p><div class="match" id="match"></div><p id="matchOut" class="read"></p></div>
+<div class="tip"><b class="l">Top tip</b>Profit factor above 1.5 is generally considered good, but only when it comes from enough trades. Ask how many trades sit behind any headline number.</div>
+</div>
+
+</section>
+<section id="practise" role="tabpanel" hidden>
+<div class="panel">
+<h2>Practice</h2>
+<h3>1. Signal or no signal?</h3>
+<p>Judge each reading by the rules. Daily chart, all five required.</p>
+<div id="scen"></div>
+<h3>2. Put the sequence in order</h3>
+<div class="card"><ul class="ord" id="ord"></ul><div class="row"><button class="pri" id="ordCheck">Check order</button><span id="ordOut" class="read"></span></div></div>
+<h3>3. Quick quiz</h3>
+<div id="quiz"></div>
+</div>
+<div class="kit">
+
+  <h2>Multiple choice</h2>
+  <div id="qz1"></div>
+</div>
+
+</section>
+<section id="real" role="tabpanel" hidden>
+<div class="kit">
+  <p class="note">Historical illustrations only, in general terms. Nothing here is a recommendation.</p>
+
+</div>
+<div class="panel"><h3>In history</h3>
+<div class="grid">
+<div class="card"><b>March 2020</b><p>US shares fell roughly a third in about a month as the pandemic took hold, with record trading volumes. It is a textbook example of the kind of fear-driven fall this setup describes.</p><p class="read">Exercise: pull the daily data for one index and check how many of the five conditions were true, and on which days.</p></div>
+<div class="card"><b>Crypto sell-offs</b><p>Large crypto assets have had several days where prices fell tens of percent within weeks on heavy volume, which is why the post tests it on SOL-USD.</p><p class="read">Exercise: ask whether a fall that big always found support, or whether some kept falling after all five lined up.</p></div>
+</div>
+</div>
+<div class="kit">
+
+  <div class="rw"><h3>2008 and 2022</h3><p>Broad market indices have had long falls as well as sharp ones. A setup that waits for a sharp, fast fall would have looked very different in a slow decline, where prices can keep falling without a single panic day.</p><div class="use"><b>Use it for:</b> asking when a mean-reversion rule would and would not have applied.</div></div>
+  <div class="rw"><h3>Trading volume in a sell-off</h3><p>In many sharp falls, trading volume jumps to several times its usual level as holders sell in a hurry. The volume condition tries to capture that.</p><div class="use"><b>Use it for:</b> understanding why volume is one of the five conditions.</div></div>
+</div>
+
+</section>
+<section id="exam" role="tabpanel" hidden>
+<div class="kit">
+  <h2>Exam-style questions</h2>
+  <p>Write your answer first, then open the mark points. These are educational questions about how the rules work, not about what anyone should do.</p>
+  <details class="eq"><summary><span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain why this setup waits for all five conditions rather than any one of them.</summary><div class="body"><div class="ans"><p>1. A single condition (such as RSI below 30) is common and often appears long before a fall ends.</p><p>2. Requiring all five at once makes the setup rare, so it only flags the most extreme falls.</p><p>3. Loosening the rule makes it fire constantly, mostly on days that were not the bottom.</p></div></div></details>
+  <details class="eq"><summary><span class="cmd">Calculate</span> <span class="mark">3 marks</span> A study of 5 trades has gross profit of £3,000 and gross loss of £1,000. Calculate the profit factor and the win rate if 3 trades won.</summary><div class="body"><div class="ans"><p>1. Profit factor = gross profit ÷ gross loss.</p><p>2. £3,000 ÷ £1,000 = 3.0.</p><p>3. Win rate = 3 ÷ 5 = 60%.</p></div></div></details>
+  <details class="eq"><summary><span class="cmd">Evaluate</span> <span class="mark">4 marks</span> The post reports a 100% win rate and 0% maximum drawdown for the setup. Evaluate how much these figures show.</summary><div class="body"><div class="ans"><p>1. The figures come from a single closed trade, so the sample is tiny.</p><p>2. A 100% win rate on one trade says little about how the rules behave across many falls.</p><p>3. The rules include no stop-loss, so a failed trade could have been much worse than the sample shows.</p><p>4. A longer test across several assets and periods would be needed before drawing conclusions.</p></div></div></details>
+  <details class="eq"><summary><span class="cmd">State</span> <span class="mark">2 marks</span> State what a sell limit order is and why the setup uses one.</summary><div class="body"><div class="ans"><p>1. An instruction to sell automatically once the price reaches a level set in advance.</p><p>2. It means the exit is decided before the trade, so nothing has to be decided under pressure.</p></div></div></details>
+</div>
+
+</section>
+<section id="tips" role="tabpanel" hidden>
+<div class="kit">
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>All five or nothing.</b> Three or four out of five is not the setup.</li>
+    <li><b>RSI below 20, not 30.</b> The strategy waits for the rarer reading.</li>
+    <li><b>Quote the sample size.</b> A headline statistic from one trade proves little.</li>
+    <li><b>Say what is missing.</b> The rules in the post have no stop-loss.</li>
+    <li><b>Keep it historical.</b> Describe what the rules would have flagged, not what to do next.</li>
+  </ul>
+  <h2>Keyword flashcards</h2><p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</div>
+
+</section>
+</div>
+</div>

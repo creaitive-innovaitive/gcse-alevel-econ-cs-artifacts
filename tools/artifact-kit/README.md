@@ -14,3 +14,5 @@ Shared components for the AS Economics artifacts (stepper animations, sliders, d
 - `mmm` = A Level Econ ch 40/41 Multipliers, Markets and Monopsony; its original step-by-step engine runs inside the Watch tab, scoped under `.mmm` (see mmm.css).
 - `lt` = A Level Econ ch 44 Liquidity Trap Lab. Older content is ported with `legacy_wrap.py` (prefixes every class with `lt-` and scopes CSS under `.lt`), so it cannot clash with kit classes.
 - `ltn` = A Level Econ ch 44 Liquidity Trap Notes.
+- Pages that keep their own CSS (`bigo`, `adtimp`, `ll`, `isort`, `bst`, `comp`, `www`, `bc`, `cyber`, `pab`): the first line of `<name>.css` is `/* legacy */`, which swaps `lib.css` for `legacy_base.css` (tab bar plus kit components scoped under `.kit`). Kit-written blocks sit in `<div class="kit">`; the page's original sections are left alone.
+- `hwl`, `dnsc`, `kww` embed the original stand-alone page as `animation.htm`, `clue-station.htm` and `worksheet.htm` (iframe; `.htm` so the build does not inject the login gate twice). `mae` = IGCSE Econ Four + Two Aims, driven by the original OBJECTIVES data.
