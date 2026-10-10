@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Labour Market Forces and Government Intervention</title>
+
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .arr{fill:var(--muted)}
+svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+table.mx td,table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+table.mx td.z{color:var(--muted);opacity:.6} table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+table.mx td.ls{text-align:left}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Economics · 9708 · Chapter 40</div>
+  <h1>Labour Market Forces and Government Intervention</h1>
+  <p class="lead">How wages and employment are decided: the demand for labour (marginal revenue product), the supply of labour, wage differentials, monopsony, trade unions, and what a minimum wage does in each case.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel">
+  <div class="card big">
+    <h3>The big idea</h3>
+    <p>A wage is the <b>price of labour</b>, set where the demand for labour meets the supply of labour. Firms demand labour because of what workers help them sell, so the demand is a <span class="kw">derived demand</span>. Workers supply labour by trading off pay against leisure. The government can change the outcome with a <b>minimum wage</b>, and the effect depends on whether the labour market is <b>competitive</b> or has a <b>monopsony</b> employer.</p>
+  </div>
+
+  <h2>The demand for labour</h2>
+  <div class="grid2">
+    <div class="card"><h3>Marginal revenue product (MRP)</h3><p>The extra revenue a firm gains from employing <b>one more worker</b>. It is the marginal physical product of the worker multiplied by the marginal revenue from each extra unit sold.</p>
+      <div class="formula">MRP = MPP × MR</div>
+      <p class="note">If the firm is a price taker in the product market, MR is the price, so MRP = MPP × P.</p></div>
+    <div class="card"><h3>The hiring rule</h3><p>A profit-maximising firm keeps hiring while each extra worker adds more to revenue than to cost. In a competitive labour market the extra cost of a worker is the wage, so the firm hires up to the point where:</p>
+      <div class="formula">MRP = wage (MC of labour)</div>
+      <p class="note">The firm's MRP curve slopes downward because of <b>diminishing marginal returns</b>, so it is the firm's demand curve for labour.</p></div>
+  </div>
+
+  <div class="tip"><b class="h">Why derived?</b>Nobody wants a worker for the sake of it. A firm wants the output that labour helps to make. If demand for the product rises, the demand for the labour that makes it tends to rise too.</div>
+
+  <h3>What shifts the demand for labour?</h3>
+  <div class="tw"><table class="t">
+    <tr><th>Factor</th><th>Effect on MRP and demand for labour</th></tr>
+    <tr><td>Demand for the product rises (price rises)</td><td>MR and MRP rise, so demand for labour shifts right</td></tr>
+    <tr><td>Productivity of labour rises (training, better machines)</td><td>MPP rises, so MRP rises and demand shifts right</td></tr>
+    <tr><td>Price of a substitute (capital, other labour) rises</td><td>Firms may switch towards labour, so demand shifts right</td></tr>
+    <tr><td>Price of a complement rises</td><td>May reduce the use of both, so demand shifts left</td></tr>
+    <tr><td>Wage is the only thing that changes</td><td>Movement <b>along</b> the curve, not a shift</td></tr>
+  </table></div>
+
+  <h3>Wage elasticity of demand for labour</h3>
+  <p>This measures how responsive the quantity of labour demanded is to a change in the wage: <b>%Δ quantity of labour demanded ÷ %Δ wage</b>. Demand is likely to be <b>more elastic</b> when:</p>
+  <ul>
+    <li>labour is a <b>large share of total costs</b>, so a wage rise changes costs a lot (a small share makes demand less elastic);</li>
+    <li>there are <b>good substitutes</b> for labour, such as machines, and they can be introduced easily;</li>
+    <li>the <b>demand for the product is elastic</b>, so higher costs passed on in prices cut sales and jobs;</li>
+    <li>the <b>time period is long</b>, because firms have time to change their methods of production.</li>
+  </ul>
+
+  <h2>The supply of labour</h2>
+  <div class="grid2">
+    <div class="card"><h3>The individual worker</h3><p>When the wage rises two effects pull in opposite directions. The <b>substitution effect</b>: leisure becomes more expensive, so the worker may supply more hours. The <b>income effect</b>: the worker earns more per hour and may choose to buy more leisure and work fewer hours.</p><p class="note">At low wages the substitution effect usually dominates. At high wages the income effect may dominate, which gives a <b>backward-bending</b> supply curve.</p></div>
+    <div class="card"><h3>The market (an occupation)</h3><p>Higher wages in one occupation attract workers from other occupations and from outside the labour force, so the supply curve for a <b>particular occupation</b> slopes upward.</p><p class="note">Supply is more elastic when skills are easy to acquire, when there is spare labour (unemployment) and over a longer time. It is less elastic for jobs needing long training, such as surgeons.</p></div>
+  </div>
+  <h3>What shifts the supply of labour?</h3>
+  <ul>
+    <li>Changes in <b>population</b>, migration and the age structure of the workforce;</li>
+    <li>Changes in <b>wages in other occupations</b> and in <b>non-wage benefits</b> (hours, holidays, job satisfaction);</li>
+    <li>The <b>cost and length of training</b>, and the availability of education;</li>
+    <li>Changes in <b>social attitudes</b> and legislation, for example the participation of women or the retirement age.</li>
+  </ul>
+
+  <h2>Equilibrium, wage differences and economic rent</h2>
+  <p>In a competitive market the wage settles where demand equals supply. Wages differ between jobs because the demand and supply conditions differ:</p>
+  <ul>
+    <li><b>Skills and training:</b> jobs needing scarce skills have a limited supply and often a high MRP.</li>
+    <li><b>Compensating differences:</b> unpleasant, risky or unsocial jobs may pay more to attract workers.</li>
+    <li><b>Productivity and MRP:</b> workers who add more to revenue tend to be paid more.</li>
+    <li><b>Imperfections:</b> discrimination, poor information, trade union power and geographical or occupational immobility can keep wages different from the competitive level.</li>
+  </ul>
+  <div class="grid2">
+    <div class="card"><h3>Transfer earnings</h3><p>The minimum payment needed to keep a worker in their <b>current</b> job: what they could earn in their next best alternative.</p></div>
+    <div class="card"><h3>Economic rent</h3><p>Any payment <b>above</b> transfer earnings. It is larger when supply is inelastic (a very scarce talent) and smaller when supply is elastic.</p></div>
+  </div>
+  <div class="formula">Economic rent = actual earnings − transfer earnings</div>
+
+  <h2>Monopsony</h2>
+  <p>A <span class="kw">monopsony</span> is a market with a <b>single buyer</b> of labour. In practice it means an employer with <b>wage-setting power</b>, such as the main hospital employer in a region or a big firm in a small town.</p>
+  <div class="grid2">
+    <div class="card"><h3>Why MCL is above the supply curve</h3><p>The supply curve is the <b>average cost of labour</b> (ACL): the wage each worker gets. To hire one more worker the monopsonist must raise the wage, and (if it cannot pay different workers different wages) it must pay that higher wage to <b>all</b> its workers. So the <b>marginal cost of labour (MCL)</b> lies above the ACL.</p></div>
+    <div class="card"><h3>The outcome</h3><p>The firm hires where <b>MCL = MRP</b>, but pays the wage on the <b>supply curve</b> for that quantity. Compared with a competitive market, employment is <b>lower</b> and the wage is <b>lower</b>, and the wage is below the worker's MRP.</p></div>
+  </div>
+  <div class="tip"><b class="h">Careful</b>Read across from MCL = MRP to the supply (ACL) curve to find the wage. The most common error is to read the wage off the MCL or MRP curve.</div>
+
+  <h2>Trade unions</h2>
+  <p>A <span class="kw">trade union</span> is an organisation of workers. It may <b>bargain collectively</b> over pay and conditions, which can lift wages above the competitive level.</p>
+  <ul>
+    <li><b>In a competitive market</b> a wage above equilibrium is likely to reduce employment (the same effect as a minimum wage), unless the union also raises productivity.</li>
+    <li><b>Against a monopsony</b> a union can offset the employer's power: this is a <b>bilateral monopoly</b>, and the bargain may raise the wage towards the competitive level without cutting employment.</li>
+    <li><b>Insiders and outsiders:</b> higher wages for members may come at the cost of jobs for those outside the union.</li>
+    <li>Unions can also improve working conditions, training and productivity, and cut staff turnover.</li>
+  </ul>
+
+  <h2>Government intervention: the minimum wage</h2>
+  <div class="grid2">
+    <div class="card"><h3>Competitive labour market</h3><p>A binding minimum wage is set <b>above</b> the equilibrium wage. The quantity of labour supplied rises and the quantity demanded falls, so there is <b>unemployment</b>. Workers who keep their jobs gain; those who lose them, or cannot find one, lose.</p></div>
+    <div class="card"><h3>Monopsony</h3><p>A minimum wage that lies <b>between</b> the monopsony wage and the competitive wage can <b>raise both the wage and employment</b>. The firm can no longer cut the wage to hire fewer people, so its marginal cost of labour is flat at the minimum wage until supply runs out.</p></div>
+  </div>
+  <h3>Evaluating a minimum wage</h3>
+  <ul>
+    <li><b>The size of the minimum:</b> a low minimum may not bind; a very high one is more likely to cost jobs.</li>
+    <li><b>Elasticity of demand for labour:</b> the less elastic the demand, the smaller the loss of jobs.</li>
+    <li><b>Market structure:</b> real labour markets are rarely perfectly competitive, so job losses may be smaller than the simple model suggests.</li>
+    <li><b>Who gains:</b> it may reduce poverty and inequality, but low-paid workers in households that are not poor also benefit, and some workers may lose jobs or hours.</li>
+    <li><b>Other effects:</b> higher productivity and morale, lower turnover and higher consumer spending may offset the cost; firms may raise prices, cut hours or replace workers with machines.</li>
+    <li><b>Time period:</b> the effects may differ between the short run and the long run.</li>
+  </ul>
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <h2>1 · Hiring where MRP equals the wage</h2>
+  <p>Press Play, or click the numbered steps. The MRP curve is the firm's demand for labour.</p>
+  <div id="stA"></div>
+
+  <h2>2 · A minimum wage in a competitive labour market</h2>
+  <div id="stB"></div>
+
+  <h2>3 · Monopsony, and a minimum wage that helps</h2>
+  <div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Should the firm hire the next worker?</h2>
+  <p>Each worker adds less output than the one before (diminishing returns). Change the price of the product and the wage and see where the firm stops hiring.</p>
+  <div class="card"><div class="grid2"><div><div id="g1"></div><div id="g2"></div>
+    <div class="readout"><div><small>Workers hired</small><strong id="r1"></strong></div><div><small>MRP of the last worker</small><strong id="r2"></strong></div><div><small>Extra profit from last worker</small><strong id="r3"></strong></div></div>
+    <div class="verdict" id="rv"></div></div>
+    <div><svg id="labA" viewBox="0 0 420 270" role="img" aria-label="Bar chart of the marginal revenue product of each worker against the wage"></svg></div></div></div>
+
+  <h2>Lab 2 · Competitive labour market and the minimum wage</h2>
+  <p>Shift demand and supply, then set a minimum wage. Set the minimum wage to 0 for none.</p>
+  <div class="card"><div class="grid2"><div><div id="g3"></div><div id="g4"></div><div id="g5"></div>
+    <div class="row"><button class="b" id="pb1">Productivity rises</button><button class="b" id="pb2">More migrant workers</button><button class="b" id="pb3">Reset</button></div>
+    <div class="readout"><div><small>Wage</small><strong id="s1"></strong></div><div><small>Employment</small><strong id="s2"></strong></div><div><small>Unemployment</small><strong id="s3"></strong></div><div><small>Wage bill</small><strong id="s4"></strong></div></div>
+    <div class="verdict" id="sv"></div></div>
+    <div><svg id="labB" viewBox="0 0 420 300" role="img" aria-label="Competitive labour market with a minimum wage"></svg></div></div></div>
+
+  <h2>Lab 3 · Monopsony and the minimum wage</h2>
+  <p>Move the minimum wage up from the monopsony wage. Watch employment rise first, then fall once the minimum passes the competitive wage.</p>
+  <div class="card"><div class="grid2"><div><div id="g6"></div>
+    <div class="readout"><div><small>Wage</small><strong id="m1"></strong></div><div><small>Employment</small><strong id="m2"></strong></div><div><small>Wage below MRP by</small><strong id="m3"></strong></div><div><small>Unemployment</small><strong id="m4"></strong></div></div>
+    <div class="verdict" id="mv"></div></div>
+    <div><svg id="labC" viewBox="0 0 420 300" role="img" aria-label="Monopsony labour market with a minimum wage"></svg></div></div></div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Shift of demand or supply?</h2>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Competitive market or monopsony?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Put the monopsony analysis in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>4 · Calculations</h2>
+  <div id="c1"></div>
+
+  <h2>5 · Match the term</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are explained in general terms so they stay accurate. Check current details before quoting figures.</p>
+  <div class="rw"><h3>The UK National Minimum Wage and the Low Pay Commission</h3><p>The UK introduced a national minimum wage in 1999 and a higher rate for workers aged 25 and over, the National Living Wage, in 2016. An independent body, the Low Pay Commission, advises on the rates. Many studies found small effects on total employment when the wage was introduced, though the effects of larger rises are debated.</p><div class="use"><b>Exam use:</b> evidence for evaluation. The job losses predicted by the simple competitive model were small, which suggests many low-wage markets have some monopsony power or that demand for labour is inelastic.</div></div>
+  <div class="rw"><h3>Fast food in New Jersey and Pennsylvania</h3><p>In the 1990s the economists David Card and Alan Krueger compared fast-food employment in New Jersey, which raised its minimum wage, with neighbouring Pennsylvania, which did not. They did not find the fall in employment the competitive model would predict.</p><div class="use"><b>Exam use:</b> a well-known study that supports the monopsony view. Evaluate by noting that other researchers disputed the methods and results.</div></div>
+  <div class="rw"><h3>Nurses and the NHS</h3><p>In many areas the National Health Service is by far the largest employer of nurses. Pay is largely set nationally rather than by local competition, and nurses have few other employers who need their specific skills.</p><div class="use"><b>Exam use:</b> an example of a monopsony buyer of a specialised labour supply. Pay rises that increase the number of nurses are consistent with the monopsony model.</div></div>
+  <div class="rw"><h3>Footballers and economic rent</h3><p>The best Premier League players earn many times what they could in any other job. Their talent is scarce, so supply is highly inelastic and most of their pay is economic rent.</p><div class="use"><b>Exam use:</b> a clear case of large economic rent. Write the formula: earnings minus transfer earnings.</div></div>
+  <div class="rw"><h3>Surgeons and compensating differences</h3><p>Surgeons earn high wages because the training takes many years and costs a lot, so supply is restricted, and because the MRP of their skills is high.</p><div class="use"><b>Exam use:</b> use for wage differentials: scarce skills, long training and a high MRP.</div></div>
+  <div class="rw"><h3>Trade unions and train drivers</h3><p>Rail unions in several countries negotiate pay for train drivers, whose absence can stop a whole network. That gives the union bargaining power because the demand for their labour is inelastic and substitutes are hard to find.</p><div class="use"><b>Exam use:</b> union power depends on elasticity of demand for the labour. Link it to the costs of strikes for consumers and firms.</div></div>
+  <div class="rw"><h3>Gig economy platforms</h3><p>Ride-hailing and delivery platforms can set the rate paid to a large number of drivers and couriers, who may have few alternatives in their area. Some economists see this as an example of monopsony power.</p><div class="use"><b>Exam use:</b> a modern application of wage-setting power. Evaluate: drivers can often work for more than one platform, which weakens the monopsony case.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for reminders, a model answer and common mistakes. Answers are colour-coded to the mark scheme.</p>
+  <div class="key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Define</span> <span class="mark">2 marks</span> What is meant by the marginal revenue product of labour?</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Say what it is <i>per worker</i> and where the revenue comes from.</div>
+    <div class="ans"><span class="mk k" data-t="K">The marginal revenue product of labour is the additional revenue a firm gains from employing one more worker,</span> <span class="mk k" data-t="K">equal to the marginal physical product of that worker multiplied by the marginal revenue from selling each extra unit.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Writing "the extra output" only (that is MPP), or "the wage".</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate</span> <span class="mark">3 marks</span> A firm sells its product at $5 a unit. The 4th worker adds 6 units of output. The wage is $24 per day. Calculate the MRP of the 4th worker and state whether the firm should employ that worker.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>In a competitive product market MR is the price. Compare MRP with the wage.</div>
+    <div class="ans"><span class="mk a" data-t="A">MRP = MPP × MR = 6 × $5 = $30.</span> <span class="mk n" data-t="N">The MRP of $30 is greater than the wage of $24,</span> <span class="mk k" data-t="K">so the firm should employ the 4th worker, because the extra revenue ($30) is more than the extra cost ($24) and profit rises by $6.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Stopping at $30 without comparing it with the wage.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Explain why a monopsonist may pay workers less than their marginal revenue product.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two links: MCL above the supply curve, then the wage is read off the supply curve.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">A monopsonist is the only buyer of labour, so it faces the whole upward-sloping supply curve and must pay a higher wage to attract more workers.</span> <span class="mk n" data-t="N">If it pays that higher wage to all its workers, the marginal cost of labour is above the wage, so it is likely to hire fewer workers, where MCL equals MRP.</span> <span class="mk n" data-t="N">It then pays the wage that is just enough to attract that number of workers, read from the supply curve, which lies below MRP at that level of employment.</span> <span class="mk a" data-t="A">For example, a hospital that is the main employer of nurses in a region may be able to pay below their MRP.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the wage is where MCL meets MRP. That is the quantity; the wage is read down to the supply curve.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Analyse</span> <span class="mark">8 marks</span> Analyse the likely effects of introducing a minimum wage above the equilibrium wage in a competitive labour market.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Draw the diagram first: label the minimum wage, the quantity demanded and the quantity supplied, and the gap. Then describe winners and losers.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">A minimum wage is a legal floor on the wage firms may pay.</span> <span class="mk n" data-t="N">If it is set above the equilibrium wage, the higher wage is likely to make some firms demand fewer workers, because each worker now costs more than their marginal revenue product, so the quantity of labour demanded may fall.</span></p>
+    <p><span class="mk n" data-t="N">At the same time the higher wage may attract more people into work, so the quantity of labour supplied may rise. Supply then exceeds demand and the result could be unemployment, equal to the gap between the two quantities.</span> <span class="mk a" data-t="A">For example, if the equilibrium wage is $12 and the minimum is $14, firms might demand 60,000 workers while 100,000 want jobs, leaving 40,000 unemployed.</span></p>
+    <p><span class="mk n" data-t="N">Workers who keep their jobs may be better off, but those who lose them or cannot find work may be worse off, and firms' costs rise, which may lead to higher prices or machines replacing workers.</span> <span class="mk e" data-t="E">The size of the job losses is likely to depend on how elastic the demand for labour is: if it is inelastic, fewer jobs may be lost.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Drawing the minimum wage below equilibrium: it would have no effect. It must be set above.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Discuss</span> <span class="mark">12 marks</span> Discuss whether a national minimum wage is likely to benefit low-paid workers.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Argue both sides with diagrams, then give a judgement that says what the answer depends on: the level of the minimum, market structure and the elasticity of demand for labour.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">A national minimum wage is a legal minimum hourly pay that applies across the economy, and low-paid workers are those whose earnings are in the lowest part of the distribution.</span></p>
+    <p><span class="mk n" data-t="N">A minimum wage is likely to benefit low-paid workers who stay in work, because it raises their hourly pay.</span> <span class="mk n" data-t="N">If an employer has monopsony power and pays below MRP, a minimum wage between the monopsony wage and the competitive wage could raise both the wage and employment, as the firm can no longer cut the wage to hire fewer workers.</span> <span class="mk a" data-t="A">This could apply to care homes or to nursing in an area with one main employer.</span> <span class="mk e" data-t="E">This argument may not hold if the labour market is closer to competitive, or if the minimum is set above the competitive wage.</span></p>
+    <p><span class="mk n" data-t="N">A minimum wage may not benefit all low-paid workers because a wage above equilibrium in a competitive market may cut the quantity of labour demanded and raise the quantity supplied, causing unemployment.</span> <span class="mk n" data-t="N">Workers who lose their jobs, or young and less-skilled workers who find it harder to get a first job, could be worse off. Firms may also cut hours, reduce training or raise prices.</span> <span class="mk e" data-t="E">The effect on jobs is likely to be smaller where the demand for labour is inelastic or where higher pay raises productivity and lowers turnover.</span></p>
+    <p><span class="mk n" data-t="N">The minimum wage may also not target the poorest: many low-paid workers live in households that have other income, while the poorest households may have no one in work.</span> <span class="mk e" data-t="E">Tax credits or training schemes may target poverty better, although they cost the government more.</span></p>
+    <p><span class="mk e" data-t="E">Overall, a minimum wage is likely to benefit most low-paid workers if it is set at a moderate level, close to the monopsony wage and below the competitive wage, and the evidence from the UK suggests job losses have been small. The benefits could be smaller if it is set too high, in a recession, or in a market with elastic demand for labour. The answer therefore depends on the level, the market structure and the state of the economy.</span></p></div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Say "derived demand".</b> Demand for labour comes from demand for the product the workers make.</li>
+    <li><b>Define MRP in full.</b> MPP × MR, and the extra revenue from one more worker. Do not confuse it with MPP.</li>
+    <li><b>Hire where MRP = wage</b> in a competitive market, and where <b>MCL = MRP</b> for a monopsony.</li>
+    <li><b>Read the monopsony wage off the supply curve.</b> Go up to MRP, across to MCL, then down to the quantity and up to the supply (ACL) curve.</li>
+    <li><b>A minimum wage must be above equilibrium to bite</b> in a competitive market. Draw it above, and show the surplus of workers.</li>
+    <li><b>Monopsony is the exception.</b> A minimum wage between the monopsony and competitive wages can raise employment. Do not forget to say the range.</li>
+    <li><b>Separate movements from shifts.</b> A wage change moves along the curve; a change in productivity or product demand shifts it.</li>
+    <li><b>Evaluate with elasticity, size and market structure,</b> and with evidence: the UK's experience suggests small job losses.</li>
+    <li><b>Economic rent = earnings − transfer earnings.</b> It is largest where supply is most inelastic.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Define</td><td>A precise meaning, using the key term (for example MPP × MR).</td></tr>
+    <tr><td>Calculate</td><td>Show the working, then compare with the wage if asked for a decision.</td></tr>
+    <tr><td>Explain</td><td>Reasons with a developed link, ideally with an example.</td></tr>
+    <tr><td>Analyse</td><td>A developed chain of cause and effect, usually with a diagram.</td></tr>
+    <tr><td>Discuss</td><td>Arguments on both sides, then a judgement.</td></tr>
+  </table></div>
+  <h2>Keyword flashcards</h2>
+  <div id="fc1"></div>
+</section>
+</div>
+
+<script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.max(0, Math.min(fr.length - 1, Math.round(s.i)))].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+/* ---------- shared chart helpers ---------- */
+/* Steppers: L (thousand workers) 0-200 on x, wage ($ per hour) 0-28 on y */
+const SX = (L) => 80 + L * 3.1, SY = (w) => 330 - w * 10.5;
+function sAxes(extra) {
+  return SV.line(80, 330, 710, 330) + SV.line(80, 330, 80, 30) + SV.text(710, 368, "Quantity of labour (thousand workers)", "sm", { "text-anchor": "end" }) + SV.text(86, 34, "Wage ($ per hour)", "sm") + (extra || "");
+}
+function sLine(a, b, L0, L1, cls, o) { return SV.line(SX(L0), SY(a + b * L0), SX(L1), SY(a + b * L1), cls, o); }
+const op = (v) => ({ opacity: Math.max(0, Math.min(1, v)) });
+
+/* ---------- 1 · hiring where MRP = wage ---------- */
+function hireChart(s) {
+  const w = 10, a = s.a, Lend = Math.min(200, a * 10), hire = (a - w) * 10;
+  let o = sAxes();
+  if (s.old > 0) o += sLine(20, -0.1, 0, 200, "c1 dash", op(s.old * 0.5)) + SV.text(SX(150), SY(5) - 6, "old MRP", "sm", op(s.old));
+  o += sLine(a, -0.1, 0, Lend, "c1") + SV.text(SX(12), SY(a - 1.2) - 12, "MRP = demand for labour", "lbl bd t1");
+  if (s.wl > 0) o += SV.line(SX(0), SY(w), SX(200), SY(w), "c2", op(s.wl)) + SV.text(SX(200) - 4, SY(w) - 8, "Wage $10 (supply to the firm)", "lbl bd t2", { "text-anchor": "end", ...op(s.wl) });
+  if (s.pt > 0) {
+    o += SV.line(SX(hire), SY(w), SX(hire), SY(0), "gr", op(s.pt)) + SV.circle(SX(hire), SY(w), 7, "dot3", op(s.pt));
+    o += SV.text(SX(hire), SY(0) + 20, Lib.fmtN(hire, 0), "lbl bd t3", { "text-anchor": "middle", ...op(s.pt) });
+    o += SV.text(SX(hire) + 12, SY(w) + 22, "MRP = wage: hire " + Lib.fmtN(hire, 0), "lbl bd t3", op(s.pt));
+    if (s.zones > 0) {
+      o += SV.text(SX(hire / 2), SY(w) + 40, "MRP > wage: hire", "sm", { "text-anchor": "middle", ...op(s.zones) });
+      o += SV.text(SX(hire + (200 - hire) / 2) - 10, SY(w) - 40, "MRP < wage: stop", "sm", { "text-anchor": "middle", ...op(s.zones) });
+    }
+  }
+  return o;
+}
+Lib.stepper($("#stA"), { w: 760, h: 370, label: "Marginal revenue product curve and the wage showing how many workers a firm hires", base: { a: 20, old: 0, wl: 0, pt: 0, zones: 0 }, draw: hireChart, tween: 1100, dwell: 5000, steps: [
+  { cap: "The <b>marginal revenue product (MRP)</b> of labour is the extra revenue from one more worker. It slopes <b>downward</b> because of diminishing marginal returns: each extra worker adds less output. This curve is the firm's <b>demand for labour</b>.", s: {} },
+  { cap: "The firm is one of many employers, so it takes the <b>market wage</b> of $10 an hour. The extra cost of each worker is the wage, shown as a horizontal line.", s: { wl: 1 } },
+  { cap: "Profit is maximised where <b>MRP = wage</b>: 100 thousand workers. To the left each worker adds more to revenue than to cost, so hiring raises profit. To the right the next worker would cost more than they add.", s: { wl: 1, pt: 1, zones: 1 } },
+  { cap: "Now the <b>price of the product rises</b>. MR rises, so MRP rises at every level of employment and the demand for labour <b>shifts right</b>. At the same $10 wage the firm now hires <b>140</b> thousand workers. This is why labour demand is a <b>derived demand</b>.", s: { a: 24, old: 1, wl: 1, pt: 1 } },
+] });
+
+/* ---------- 2 · minimum wage, competitive market ---------- */
+function cmChart(s) {
+  let o = sAxes();
+  o += sLine(20, -0.1, 0, 200, "c1") + SV.text(SX(12), SY(18.8) - 12, "D = MRP", "lbl bd t1", op(s.d));
+  if (s.s > 0) o += sLine(4, 0.1, 0, 200, "c2", op(s.s)) + SV.text(SX(200) - 4, SY(24) - 8, "S", "lbl bd t2", { "text-anchor": "end", ...op(s.s) });
+  if (s.e > 0) {
+    o += SV.line(SX(80), SY(12), SX(80), SY(0), "gr", op(s.e)) + SV.line(SX(0), SY(12), SX(80), SY(12), "gr", op(s.e)) + SV.circle(SX(80), SY(12), 7, "dot3", op(s.e));
+    o += SV.text(SX(80), SY(0) + 20, "80", "lbl bd", { "text-anchor": "middle", ...op(s.e) }) + SV.text(SX(0) - 6, SY(12) + 4, "12", "lbl bd", { "text-anchor": "end", ...op(s.e) });
+    o += SV.text(SX(80) + 12, SY(12) + 22, "Equilibrium", "lbl bd t3", op(s.e));
+  }
+  if (s.m > 0) {
+    o += SV.line(SX(0), SY(14), SX(200), SY(14), "c4 dash", op(s.m)) + SV.text(SX(0) - 6, SY(14) + 4, "14", "lbl bd t4", { "text-anchor": "end", ...op(s.m) }) + SV.text(SX(200) - 4, SY(14) - 8, "Minimum wage $14", "lbl bd t4", { "text-anchor": "end", ...op(s.m) });
+  }
+  if (s.q > 0) {
+    o += SV.circle(SX(60), SY(14), 6, "dot1", op(s.q)) + SV.circle(SX(100), SY(14), 6, "dot2", op(s.q));
+    o += SV.line(SX(60), SY(14), SX(60), SY(0), "gr", op(s.q)) + SV.line(SX(100), SY(14), SX(100), SY(0), "gr", op(s.q));
+    o += SV.text(SX(60), SY(0) + 20, "60", "lbl bd t1", { "text-anchor": "middle", ...op(s.q) }) + SV.text(SX(100), SY(0) + 20, "100", "lbl bd t2", { "text-anchor": "middle", ...op(s.q) });
+    o += SV.text(SX(60) - 10, SY(14) - 24, "Demanded", "sm", { "text-anchor": "end", ...op(s.q) }) + SV.text(SX(100) + 10, SY(14) - 24, "Supplied", "sm", op(s.q));
+  }
+  if (s.u > 0) {
+    o += SV.rect(SX(60), SY(14), SX(100) - SX(60), 14, "f2", op(s.u)) + SV.text((SX(60) + SX(100)) / 2, SY(14) + 62, "Unemployment 40", "lbl bd t2", { "text-anchor": "middle", ...op(s.u) });
+  }
+  return o;
+}
+Lib.stepper($("#stB"), { w: 760, h: 370, label: "Labour market diagram with a minimum wage above the equilibrium wage", base: { d: 0, s: 0, e: 0, m: 0, q: 0, u: 0 }, draw: cmChart, tween: 1000, dwell: 5000, steps: [
+  { cap: "The <b>demand for labour</b> (MRP) slopes down: firms hire more when labour is cheaper.", s: { d: 1 } },
+  { cap: "The <b>supply of labour</b> slopes up: a higher wage attracts more workers into this occupation.", s: { d: 1, s: 1 } },
+  { cap: "In a competitive market the wage settles where demand equals supply: <b>$12 an hour and 80 thousand workers</b>.", s: { d: 1, s: 1, e: 1 } },
+  { cap: "The government sets a <b>minimum wage of $14</b>, above equilibrium, so it is <b>binding</b>. Firms cannot legally pay less.", s: { d: 1, s: 1, e: 0.5, m: 1 } },
+  { cap: "At $14 firms demand only <b>60</b> thousand workers (MRP falls below the wage for the others), but <b>100</b> thousand want to work. Employment falls from 80 to 60.", s: { d: 1, s: 1, e: 0.5, m: 1, q: 1 } },
+  { cap: "The gap is <b>unemployment of 40 thousand</b>. Those with jobs gain $2 an hour; those who lose or cannot find jobs lose. The size of the job loss depends on how <b>elastic</b> the demand for labour is.", s: { d: 1, s: 1, e: 0.5, m: 1, q: 1, u: 1 } },
+] });
+
+/* ---------- 3 · monopsony ---------- */
+function monoChart(s) {
+  let o = sAxes();
+  o += sLine(20, -0.1, 0, 200, "c1") + SV.text(SX(200) - 4, SY(0) - 8, "MRP", "lbl bd t1", { "text-anchor": "end" });
+  o += sLine(2, 0.1, 0, 180, "c2") + SV.text(SX(180) + 4, SY(20) + 4, "ACL = S", "lbl bd t2");
+  if (s.mcl > 0) o += sLine(2, 0.2, 0, 90, "c4", op(s.mcl)) + SV.text(SX(90) + 4, SY(20) + 4, "MCL", "lbl bd t4", op(s.mcl));
+  if (s.mono > 0) {
+    o += SV.line(SX(60), SY(14), SX(60), SY(0), "gr", op(s.mono)) + SV.line(SX(0), SY(8), SX(60), SY(8), "gr", op(s.mono)) + SV.line(SX(0), SY(14), SX(60), SY(14), "gr", op(s.mono));
+    o += SV.circle(SX(60), SY(14), 6, "dot4", op(s.mono)) + SV.circle(SX(60), SY(8), 7, "dot2", op(s.mono));
+    o += SV.text(SX(60), SY(0) + 20, "60", "lbl bd", { "text-anchor": "middle", ...op(s.mono) }) + SV.text(SX(0) - 6, SY(8) + 4, "8", "lbl bd t2", { "text-anchor": "end", ...op(s.mono) }) + SV.text(SX(0) - 6, SY(14) + 4, "14", "lbl bd t4", { "text-anchor": "end", ...op(s.mono) });
+    o += SV.text(SX(60) + 10, SY(14) - 10, "MCL = MRP", "lbl bd t4", op(s.mono));
+  }
+  if (s.gap > 0) o += SV.rect(SX(0), SY(14), SX(60) - SX(0), SY(8) - SY(14), "f2", op(s.gap)) + SV.text(SX(30), SY(11) + 4, "wage below MRP", "lbl bd t2", { "text-anchor": "middle", ...op(s.gap) });
+  if (s.comp > 0) {
+    o += SV.circle(SX(90), SY(11), 7, "dot3", op(s.comp)) + SV.line(SX(90), SY(11), SX(90), SY(0), "gr", op(s.comp));
+    o += SV.text(SX(90), SY(0) + 20, "90", "lbl bd t3", { "text-anchor": "middle", ...op(s.comp) }) + SV.text(SX(90) + 14, SY(11) - 14, "Competitive: 90, $11", "lbl bd t3", op(s.comp));
+  }
+  if (s.mw > 0) {
+    o += SV.line(SX(0), SY(10), SX(80), SY(10), "c3 dash", op(s.mw)) + SV.text(SX(0) - 6, SY(10) + 4, "10", "lbl bd t3", { "text-anchor": "end", ...op(s.mw) });
+    o += SV.circle(SX(80), SY(10), 7, "dot3", op(s.mw)) + SV.line(SX(80), SY(10), SX(80), SY(0), "gr", op(s.mw));
+    o += SV.text(SX(80), SY(0) + 20, "80", "lbl bd t3", { "text-anchor": "middle", ...op(s.mw) }) + SV.text(SX(80) - 10, SY(10) + 44, "Minimum wage $10: 80", "lbl bd t3", { "text-anchor": "end", ...op(s.mw) }) + SV.text(0, 0, "", "lbl bd t3", op(s.mw));
+  }
+  return o;
+}
+Lib.stepper($("#stC"), { w: 760, h: 370, label: "Monopsony labour market diagram with marginal cost of labour and a minimum wage", base: { mcl: 0, mono: 0, gap: 0, comp: 0, mw: 0 }, draw: monoChart, tween: 1000, dwell: 5200, steps: [
+  { cap: "The monopsonist's <b>MRP</b> is its demand for labour. As the only buyer it faces the whole market supply curve, which is the <b>average cost of labour (ACL)</b>: the wage it must pay at each level of employment.", s: {} },
+  { cap: "To hire one more worker it must raise the wage, and it pays that higher wage to <b>all</b> its workers. So the <b>marginal cost of labour (MCL)</b> lies above the ACL and is steeper.", s: { mcl: 1 } },
+  { cap: "It hires where <b>MCL = MRP</b>: <b>60</b> thousand workers. This is the profit-maximising quantity.", s: { mcl: 1, mono: 1 } },
+  { cap: "The wage is read <b>down to the ACL (supply) curve</b>: just <b>$8</b>. Workers produce $14 of revenue at the margin but are paid $8: the wage is <b>below MRP</b>.", s: { mcl: 1, mono: 1, gap: 1 } },
+  { cap: "In a competitive market ACL would meet MRP at <b>90 thousand workers and $11</b>. So the monopsony pays a <b>lower wage</b> and employs <b>fewer workers</b>.", s: { mcl: 1, mono: 1, gap: 1, comp: 1 } },
+  { cap: "A <b>minimum wage of $10</b> (between $8 and $11): the firm cannot pay less, so its MCL is flat at $10 until supply runs out. It hires where MRP meets that, <b>80 thousand</b> workers. Wage <b>and</b> employment rise. Above $11 the minimum would start to cost jobs.", s: { mcl: 0.4, mono: 0.35, gap: 0, comp: 1, mw: 1 } },
+] });
+
+/* ---------- Lab 1: hire the next worker ---------- */
+const HALO = "paint-order:stroke;stroke:var(--surface);stroke-width:4px";
+const MPP = [20, 18, 15, 12, 9, 7, 5, 3];
+function lab1() {
+  if (!$("#la1") || !$("#la2")) return;
+  const p = +$("#la1").value, w = +$("#la2").value, mrp = MPP.map((m) => m * p);
+  let n = 0; while (n < mrp.length && mrp[n] >= w) n++;
+  $("#r1").textContent = n; $("#r2").textContent = n ? "$" + Lib.fmtN(mrp[n - 1], 1) : "-"; $("#r3").textContent = n ? "$" + Lib.fmtN(mrp[n - 1] - w, 1) : "-";
+  $("#rv").textContent = n === 0 ? `Even the first worker's MRP ($${Lib.fmtN(mrp[0], 1)}) is below the wage, so the firm hires nobody.`
+    : n === MPP.length ? `Every worker's MRP is at least the wage, so the firm hires all ${n}. A lower product price or higher wage would stop it sooner.`
+    : `The firm hires ${n} workers. Worker ${n + 1} would add only $${Lib.fmtN(mrp[n], 1)}, which is less than the $${w} wage, so hiring stops where MRP falls below the wage.`;
+  const X0 = 40, bw = 36, gap = 8, Yc = (v) => 230 - v * (200 / 120);
+  let o = SV.line(X0, 230, 410, 230) + SV.line(X0, 230, X0, 20) + SV.text(X0 + 4, 16, "MRP and wage ($ per day)", "sm");
+  mrp.forEach((v, i) => {
+    const x = X0 + 8 + i * (bw + gap), h = Math.min(v, 120);
+    o += SV.rect(x, Yc(h), bw, 230 - Yc(h), i < n ? "f3" : "f2") + SV.text(x + bw / 2, Yc(h) - 5, Lib.fmtN(v, 0), "sm bd", { "text-anchor": "middle", style: HALO }) + SV.text(x + bw / 2, 248, i + 1, "sm", { "text-anchor": "middle" });
+  });
+  o += SV.text(X0 + 190, 266, "Worker number", "sm", { "text-anchor": "middle" });
+  const wy = Yc(Math.min(w, 120));
+  o += SV.line(X0, wy, 410, wy, "c2 dash") + SV.text(406, wy - 6, "Wage $" + w, "lbl bd t2", { "text-anchor": "end", style: HALO });
+  $("#labA").innerHTML = o;
+}
+Lib.slider($("#g1"), { id: "la1", label: "Price of the product ($): ", min: 1, max: 6, step: 0.5, value: 2, fmt: (v) => v.toFixed(1), onInput: lab1 });
+Lib.slider($("#g2"), { id: "la2", label: "Wage per day ($): ", min: 5, max: 100, step: 1, value: 20, fmt: (v) => v, onInput: lab1 });
+
+/* ---------- Lab 2: competitive market + minimum wage ---------- */
+let sl3, sl4, sl5;
+function lab2() {
+  if (!$("#lb1") || !$("#lb2") || !$("#lb3")) return;
+  const a = 20 + +$("#lb1").value, b = 4 - +$("#lb2").value, mw = +$("#lb3").value;
+  const Le = (a - b) / 0.2, We = a - 0.1 * Le;
+  const bind = mw > We + 0.001, W = bind ? mw : We;
+  const Ld = bind ? Math.max(0, (a - mw) * 10) : Le, Ls = bind ? Math.max(0, (mw - b) * 10) : Le, un = Ls - Ld;
+  $("#s1").textContent = "$" + Lib.fmtN(W, 2); $("#s2").textContent = Lib.fmtN(Ld, 0) + "k"; $("#s3").textContent = Lib.fmtN(un, 0) + "k"; $("#s4").textContent = "$" + Lib.fmtN(W * Ld, 0) + "k/hr";
+  $("#sv").textContent = mw === 0 ? `No minimum wage: the market clears at $${Lib.fmtN(We, 2)} and ${Lib.fmtN(Le, 0)} thousand workers.`
+    : !bind ? `The minimum wage ($${mw}) is below the equilibrium wage ($${Lib.fmtN(We, 2)}), so it is not binding and changes nothing.`
+    : `A binding minimum wage of $${mw}: ${Lib.fmtN(Le - Ld, 0)} thousand fewer jobs than at equilibrium, and ${Lib.fmtN(un, 0)} thousand people who want work cannot find it.`;
+  const X = (L) => 50 + L * 1.75, Y = (w) => 260 - w * 8.2;
+  let o = SV.line(50, 260, 410, 260) + SV.line(50, 260, 50, 20) + SV.text(406, 280, "Labour (thousand)", "sm", { "text-anchor": "end" }) + SV.text(56, 24, "Wage ($/hr)", "sm");
+  const De = Math.min(200, a * 10);
+  o += SV.line(X(0), Y(a), X(De), Y(a - 0.1 * De), "c1") + SV.text(X(De) - 4, Y(a - 0.1 * De) - 6, "D", "lbl bd t1", { "text-anchor": "end" });
+  o += SV.line(X(0), Y(b), X(200), Y(b + 20), "c2") + SV.text(X(200) - 4, Y(b + 20) - 6, "S", "lbl bd t2", { "text-anchor": "end" });
+  o += SV.circle(X(Le), Y(We), 5, "dot3", { opacity: bind ? 0.4 : 1 });
+  if (mw > 0) {
+    o += SV.line(X(0), Y(mw), X(200), Y(mw), "c4 dash");
+    if (bind) {
+      o += SV.rect(X(Ld), Y(mw), X(Ls) - X(Ld), 10, "f2") + SV.circle(X(Ld), Y(mw), 5, "dot1") + SV.circle(X(Ls), Y(mw), 5, "dot2");
+      o += SV.line(X(Ld), Y(mw), X(Ld), 260, "gr") + SV.line(X(Ls), Y(mw), X(Ls), 260, "gr");
+    }
+  }
+  $("#labB").innerHTML = o;
+}
+sl3 = Lib.slider($("#g3"), { id: "lb1", label: "Demand for labour (productivity / product price): ", min: -6, max: 8, step: 1, value: 0, fmt: (v) => (v > 0 ? "+" + v : v), onInput: lab2 });
+sl4 = Lib.slider($("#g4"), { id: "lb2", label: "Supply of labour (more workers to the right): ", min: -4, max: 4, step: 1, value: 0, fmt: (v) => (v > 0 ? "+" + v : v), onInput: lab2 });
+sl5 = Lib.slider($("#g5"), { id: "lb3", label: "Minimum wage ($ per hour, 0 = none): ", min: 0, max: 20, step: 0.5, value: 0, fmt: (v) => (v === 0 ? "none" : v.toFixed(1)), onInput: lab2 });
+$("#pb1").onclick = () => sl3.set(4); $("#pb2").onclick = () => sl4.set(3); $("#pb3").onclick = () => { sl3.set(0); sl4.set(0); sl5.set(0); };
+
+/* ---------- Lab 3: monopsony + minimum wage ---------- */
+function lab3() {
+  if (!$("#lc1")) return;
+  const mw = +$("#lc1").value;
+  let W, L, un = 0, note;
+  if (mw <= 8) { W = 8; L = 60; note = `A minimum wage of $${mw.toFixed(1)} is below the monopsony wage of $8, so it has no effect.`; }
+  else if (mw <= 11) { W = mw; L = (mw - 2) * 10; note = `Between the monopsony wage ($8) and the competitive wage ($11): the wage and employment both rise. The firm is forced to pay $${mw.toFixed(1)}, and it is still profitable to hire up to the point where supply runs out.`; }
+  else { W = mw; L = (20 - mw) * 10; un = (mw - 2) * 10 - L; note = `Above the competitive wage ($11), MRP is below the minimum wage for the marginal worker, so employment falls and there is unemployment of ${Lib.fmtN(un, 0)} thousand. Beyond $11 the monopsony gain turns into a competitive-market loss.`; }
+  const gap = 20 - 0.1 * L - W;
+  $("#m1").textContent = "$" + Lib.fmtN(W, 2); $("#m2").textContent = Lib.fmtN(L, 0) + "k"; $("#m3").textContent = "$" + Lib.fmtN(Math.max(0, gap), 2); $("#m4").textContent = Lib.fmtN(un, 0) + "k";
+  $("#mv").textContent = note;
+  const X = (l) => 50 + l * 1.75, Y = (w) => 260 - w * 11.5;
+  let o = SV.line(50, 260, 410, 260) + SV.line(50, 260, 50, 20) + SV.text(406, 280, "Labour (thousand)", "sm", { "text-anchor": "end" }) + SV.text(56, 24, "Wage ($/hr)", "sm");
+  o += SV.line(X(0), Y(20), X(200), Y(0), "c1") + SV.text(X(200) - 2, Y(0) - 6, "MRP", "lbl bd t1", { "text-anchor": "end" });
+  o += SV.line(X(0), Y(2), X(180), Y(20), "c2") + SV.text(X(180) + 3, Y(20) + 14, "S", "lbl bd t2");
+  o += SV.line(X(0), Y(2), X(90), Y(20), "c4") + SV.text(X(90) + 4, Y(20) - 2, "MCL", "lbl bd t4");
+  if (mw > 8) o += SV.line(X(0), Y(mw), X(Math.max(L, (mw - 2) * 10)), Y(mw), "c3 dash");
+  if (gap > 0.05) o += SV.rect(X(L) - 4, Y(20 - 0.1 * L), 4, Y(W) - Y(20 - 0.1 * L), "f2");
+  o += SV.line(X(L), Y(W), X(L), 260, "gr") + SV.circle(X(L), Y(W), 6, "dot3") + SV.circle(X(L), Y(20 - 0.1 * L), 4, "dot4");
+  if (un > 0) o += SV.rect(X(L), Y(W), X((mw - 2) * 10) - X(L), 8, "f2");
+  $("#labC").innerHTML = o;
+}
+Lib.slider($("#g6"), { id: "lc1", label: "Minimum wage ($ per hour): ", min: 4, max: 16, step: 0.5, value: 8, fmt: (v) => v.toFixed(1), onInput: lab3 });
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), {
+  prompt: "Drag each event into the right bucket for the labour market it affects.",
+  buckets: [{ label: "Shifts demand for labour" }, { label: "Shifts supply of labour" }, { label: "Movement along a curve" }],
+  items: [
+    { text: "Demand for the firm's product rises", b: 0 }, { text: "Training raises the productivity of workers", b: 0 },
+    { text: "Machines used instead of workers become cheaper", b: 0 },
+    { text: "Net migration into the economy rises", b: 1 }, { text: "The retirement age is raised", b: 1 },
+    { text: "Wages in a rival occupation rise", b: 1 },
+    { text: "The wage in this job rises and more people apply", b: 2 }, { text: "The wage rises and the firm hires fewer workers", b: 2 },
+  ], done: "Wage changes move along; everything else shifts a curve.",
+});
+Lib.classify($("#cl2"), {
+  prompt: "Which market structure does each statement describe?",
+  buckets: [{ label: "Competitive labour market" }, { label: "Monopsony" }, { label: "Both" }],
+  items: [
+    { text: "The firm hires where wage = MRP", b: 0 }, { text: "The firm hires where MCL = MRP", b: 1 },
+    { text: "The wage paid is below MRP", b: 1 }, { text: "MCL lies above the supply curve", b: 1 },
+    { text: "The firm faces a horizontal supply of labour at the market wage", b: 0 },
+    { text: "A minimum wage above equilibrium reduces employment", b: 0 }, { text: "A minimum wage in a range can raise employment", b: 1 },
+    { text: "Demand for labour is derived from demand for the product", b: 2 }, { text: "MRP = MPP × MR", b: 2 },
+  ], done: "Keep the two cases apart in an exam diagram.",
+});
+Lib.order($("#o1"), { prompt: "Order the steps for analysing a monopsony on a diagram.", items: [
+  "Draw the MRP curve (demand for labour) and the ACL curve (supply of labour)",
+  "Draw the MCL curve above and steeper than the ACL curve",
+  "Find where MCL = MRP: this is the profit-maximising employment",
+  "Read down from that point to the horizontal axis to find the quantity of labour",
+  "Read up from that quantity to the ACL curve to find the wage",
+  "Compare with the competitive outcome where ACL meets MRP: wage and employment are lower",
+], done: "A reliable exam routine." });
+Lib.calc($("#c1"), { qs: [
+  { q: "A firm sells its product at $4 a unit. The 5th worker adds 7 units of output. Calculate the MRP of the 5th worker ($).", a: 28, sol: "MRP = MPP × MR = 7 × $4 = <b>$28</b>." },
+  { q: "The wage is $24 a day and the next worker has an MRP of $30. By how much would employing this worker change profit ($)?", a: 6, sol: "Extra revenue $30 − extra cost $24 = <b>+$6</b>. The firm should hire." },
+  { q: "A wage rise of 10% reduces the quantity of labour demanded by 15%. Calculate the wage elasticity of demand for labour (include the sign).", a: -1.5, tol: 0.01, ph: "e.g. -0.5", sol: "−15% ÷ 10% = <b>−1.5</b>: elastic." },
+  { q: "A footballer earns $200,000 a year. The best alternative job would pay $30,000. Calculate the economic rent ($).", a: 170000, sol: "Economic rent = earnings − transfer earnings = 200,000 − 30,000 = <b>$170,000</b>." },
+  { q: "Demand for labour: L = 200 − 10W. Supply of labour: L = 10W − 40 (L in thousands, W in $). A minimum wage of $14 is set. How many thousand workers are unemployed?", a: 40, hint: "Find L demanded and L supplied at W = 14.", sol: "Demand: 200 − 140 = 60. Supply: 140 − 40 = 100. Unemployment = 100 − 60 = <b>40 thousand</b>." },
+  { q: "A monopsony has MRP = 20 − 0.1L and MCL = 2 + 0.2L (L in thousands). Find the profit-maximising employment (thousand).", a: 60, hint: "Set MCL = MRP and solve for L.", sol: "2 + 0.2L = 20 − 0.1L → 0.3L = 18 → L = <b>60</b>." },
+  { q: "The supply curve (ACL) is W = 2 + 0.1L. At 60 thousand workers, what wage ($) does the monopsony pay?", a: 8, sol: "W = 2 + 0.1 × 60 = <b>$8</b>. MRP at 60 is $14, so the wage is $6 below MRP." },
+] });
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Derived demand", "Demand that arises from the demand for the product the factor helps to make"],
+  ["Marginal revenue product", "The extra revenue from employing one more worker"],
+  ["Marginal cost of labour", "The extra cost of employing one more worker"],
+  ["Transfer earnings", "The minimum payment needed to keep a worker in their current job"],
+  ["Economic rent", "Earnings above transfer earnings"],
+  ["Monopsony", "A market with a single buyer of labour"],
+  ["Bilateral monopoly", "A single buyer of labour facing a single seller, such as a union"],
+  ["Minimum wage", "A legal floor on the hourly wage"],
+], done: "Strong vocabulary." });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "Marginal revenue product is equal to:", opts: ["MPP × MR", "MPP × wage", "Total revenue ÷ workers", "MR ÷ MPP"], a: 0, why: "MRP is the extra output from one more worker multiplied by the revenue from each extra unit." },
+  { q: "A profit-maximising firm in a competitive labour market hires until:", opts: ["Total revenue is maximised", "MRP equals the wage", "MPP is zero", "MRP is zero"], a: 1, why: "Each worker adds MRP to revenue and the wage to cost, so hiring stops where they are equal." },
+  { q: "The demand for labour is more likely to be elastic when:", opts: ["Labour is a small share of costs", "Good substitutes for labour are available", "Demand for the product is inelastic", "The time period is short"], a: 1, why: "If machines or other inputs are easy to switch to, a wage rise leads to a larger fall in jobs." },
+  { q: "For a monopsonist the MCL is above the supply curve because:", opts: ["Workers are more productive", "A higher wage to attract one more worker must be paid to all its workers", "Demand is falling", "Unions raise the wage"], a: 1, why: "Hiring one more worker raises the wage bill for everyone already employed." },
+  { q: "Compared with a competitive market, a monopsony is likely to lead to:", opts: ["A higher wage and higher employment", "A lower wage and lower employment", "A lower wage and higher employment", "A higher wage and lower employment"], a: 1, why: "It hires where MCL = MRP, which is less than the competitive quantity, and pays the lower wage from the supply curve." },
+  { q: "A minimum wage set above equilibrium in a competitive labour market is likely to cause:", opts: ["Excess demand for labour", "Unemployment", "Higher employment", "A fall in labour supply"], a: 1, why: "The quantity of labour supplied rises and the quantity demanded falls." },
+  { q: "Which minimum wage could raise both the wage and employment?", opts: ["Below the monopsony wage", "Between the monopsony wage and the competitive wage", "Above the competitive wage", "Any minimum wage"], a: 1, why: "In that range the firm is forced to pay more but still wants to hire up to the point where supply runs out." },
+  { q: "Economic rent is likely to be largest when the supply of a type of labour is:", opts: ["Perfectly elastic", "Elastic", "Inelastic", "Falling"], a: 2, why: "The scarcer the talent, the more of the pay is above what it would earn in the next best job." },
+  { q: "Which would shift the demand for labour to the right?", opts: ["A fall in the price of the product", "A rise in labour productivity", "A rise in net migration", "A fall in the wage"], a: 1, why: "Higher productivity raises MPP and so MRP. Migration shifts supply; a lower wage is a movement along the curve." },
+  { q: "A backward-bending supply curve of labour arises when, at high wages:", opts: ["The substitution effect outweighs the income effect", "The income effect outweighs the substitution effect", "Unemployment rises", "MRP falls"], a: 1, why: "Workers earn enough to choose more leisure, so they may supply fewer hours." },
+] });
+Lib.cards($("#fc1"), { cards: [
+  ["Derived demand", "Demand for a factor of production that comes from the demand for the product it makes."],
+  ["Marginal physical product (MPP)", "The extra output from employing one more worker."],
+  ["Marginal revenue product (MRP)", "The extra revenue from employing one more worker: MPP × MR."],
+  ["Marginal cost of labour (MCL)", "The extra cost of employing one more worker."],
+  ["Average cost of labour (ACL)", "The wage paid at each level of employment: the supply curve facing a monopsony."],
+  ["Wage elasticity of demand for labour", "%Δ quantity of labour demanded ÷ %Δ wage."],
+  ["Substitution effect (labour supply)", "A higher wage makes leisure more expensive, so workers may supply more hours."],
+  ["Income effect (labour supply)", "A higher wage raises income, so workers may buy more leisure and work fewer hours."],
+  ["Transfer earnings", "The minimum payment needed to keep a worker in their current job."],
+  ["Economic rent", "Earnings above transfer earnings."],
+  ["Monopsony", "A market with a single buyer of labour, able to set the wage."],
+  ["Bilateral monopoly", "A single buyer of labour facing a single seller, such as one employer and one union."],
+  ["Trade union", "An organisation of workers that bargains collectively over pay and conditions."],
+  ["Minimum wage", "A legal floor on the hourly wage that employers may pay."],
+  ["Compensating differences", "Extra pay for jobs that are unpleasant, risky or have unsocial hours."],
+] });
+lab1(); lab2(); lab3();
+
+Lib.initTabs();
+</script>
+</body></html>
