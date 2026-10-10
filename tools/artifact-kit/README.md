@@ -12,3 +12,4 @@ Shared components for the AS Economics artifacts (stepper animations, sliders, d
 - `mkt` = A Level Econ ch 35 Market Structures Lab (`python3 tools/artifact-kit/assemble.py mkt "Market Structures Lab" market-structures-lab`). A first line of `// uses: econ` in a `.js` file pulls in `econ.js` (cost-curve helpers).
 - `gf` = A Level Econ ch 31 The Giffen Paradox (`python3 tools/artifact-kit/assemble.py gf "The Giffen Paradox" giffen-paradox`).
 - `mmm` = A Level Econ ch 40/41 Multipliers, Markets and Monopsony; its original step-by-step engine runs inside the Watch tab, scoped under `.mmm` (see mmm.css).
+- `lt` = A Level Econ ch 44 Liquidity Trap Lab. Older content is ported with `legacy_wrap.py` (prefixes every class with `lt-` and scopes CSS under `.lt`), so it cannot clash with kit classes.
