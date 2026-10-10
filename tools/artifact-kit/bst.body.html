@@ -1,0 +1,132 @@
+<div class="kit">
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">A-Level Computer Science · 9618 · Chapter 19 · Trees</div>
+  <h1>Binary Search Tree Walkthrough</h1>
+  <p>Every node's left subtree is smaller and its right subtree is bigger. Insert and search follow the same path: compare, then step left or right.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+<section id="learn" role="tabpanel">
+  <div class="card big"><h3>The big idea</h3><p>A <b>binary search tree</b> keeps every node's left subtree smaller and its right subtree bigger. Searching halves the possibilities at every step, so a balanced tree of N nodes needs only about log₂ N comparisons.</p></div>
+  <div class="grid2">
+    <div class="card"><h3>Insert</h3><p>Start at the root. If the new value is smaller go left, otherwise go right. Repeat until you reach an empty spot, then plant the new node there.</p></div>
+    <div class="card"><h3>Search</h3><p>Start at the root. Stop if it matches. If the target is smaller go left, if bigger go right. If you run off the tree into an empty spot (None), the value is not there.</p></div>
+  </div>
+  <h2>Traversals</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Traversal</th><th>Order</th><th>Used for</th></tr>
+    <tr><td>In-order</td><td>left, node, right</td><td>Output in ascending order</td></tr>
+    <tr><td>Pre-order</td><td>node, left, right</td><td>Copying a tree</td></tr>
+    <tr><td>Post-order</td><td>left, right, node</td><td>Deleting a tree, evaluating expressions</td></tr>
+  </table></div>
+  <div class="grid2">
+    <div class="card"><h3>Balanced tree</h3><p>Search, insert and delete take O(log N) because each step discards about half of the remaining nodes.</p></div>
+    <div class="card"><h3>Degenerate tree</h3><p>If values arrive already in order, every node goes to the same side and the tree becomes a chain. Search then takes O(N).</p></div>
+  </div>
+</section>
+<section id="watch" role="tabpanel" hidden>
+  <p>Pick insert or search, then press Play or step through. Watch the path from the root and the table fill in.</p>
+<div class="panel" style="display:flex; flex-direction:column; gap:16px;">
+    <div class="tabs" id="tabs"></div>
+
+    <div class="controls">
+      <button id="btnReset" title="Restart">&#8634; Restart</button>
+      <button id="btnPrev">&larr; Back</button>
+      <button id="btnPlay" class="primary">&#9654; Play</button>
+      <button id="btnNext">Next &rarr;</button>
+      <span class="step-counter" id="stepCounter">step 0 / 0</span>
+    </div>
+
+    <div class="stage">
+      <svg id="svg" width="700" height="340" viewBox="0 0 700 340"></svg>
+    </div>
+
+    <div class="narration" id="narration"></div>
+
+    <div class="legend">
+      <span><i class="swatch sw-current"></i> node being visited</span>
+      <span><i class="swatch sw-new"></i> new node / match found</span>
+      <span><i class="swatch sw-miss"></i> ran off the tree — not found</span>
+    </div>
+  </div>
+
+  <div class="lang" id="langTabs"><span class="lbl">Code</span></div>
+  <div class="code-panel">
+    <pre id="codeBlock"></pre>
+  </div>
+
+  
+</section>
+<section id="explore" role="tabpanel" hidden>
+<div class="panel arr">
+    <div class="eyebrow">Exam view</div>
+    <h2 style="font-family:Fraunces,Georgia,serif;font-size:22px;margin:4px 0 8px">The same tree as an array of records</h2>
+    <p class="note">In the pseudocode, the tree is stored in an array of records. Each node holds <code>LeftPtr</code>, <code>Data</code> and <code>RightPtr</code>, where the pointers are array indexes and <code>-1</code> means null. Nodes fill the array in the order they were inserted. Step through the tree above and watch this table fill in.</p>
+    <div class="ptrs" id="arrPtrs"></div>
+    <table><thead><tr><th>Index</th><th>LeftPtr</th><th>Data</th><th>RightPtr</th></tr></thead><tbody id="arrBody"></tbody></table>
+  </div>
+
+  <div class="panel">
+    <div class="eyebrow">Pseudocode</div>
+    <h2 style="font-family:Fraunces,Georgia,serif;font-size:22px;margin:4px 0 8px">Tree traversals</h2>
+    <p class="note">Each traversal visits every node once. They differ only in when the node is output. In-order on a binary search tree gives the values in ascending order. For this tree the three outputs are: in-order 20 30 40 50 60 70 80, pre-order 50 30 20 40 70 60 80, post-order 20 40 30 60 80 70 50.</p>
+    <div class="code-panel"><pre id="travBlock"></pre></div>
+  </div>
+
+  
+</section>
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Left or right?</h2>
+  <p>The tree is built from 50, 30, 70, 20, 40, 60, 80. Drag each value into the side of the root (50) where it sits.</p>
+  <div id="cl1" class="card"></div>
+  <h2>2 · Put the search steps in order</h2>
+  <div id="o1" class="card"></div>
+  <h2>3 · Match the traversal to its order</h2>
+  <div id="m1" class="card"></div>
+  <h2>4 · Calculations</h2>
+  <div id="c1"></div>
+  <h2>5 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are explained in general terms.</p>
+  <div class="rw"><h3>Database indexes</h3><p>Many databases keep an index in a tree-like structure so a record can be found in a handful of steps instead of scanning every row.</p><div class="use"><b>Use it for:</b> why a tree makes search fast.</div></div>
+  <div class="rw"><h3>Autocomplete and spell check</h3><p>Ordered structures let a program jump to the words that start with what you typed, rather than reading the whole dictionary.</p><div class="use"><b>Use it for:</b> in-order traversal giving sorted output.</div></div>
+  <div class="rw"><h3>File systems</h3><p>Folders contain other folders, a tree shape. Programs walk the tree to find, copy or delete files.</p><div class="use"><b>Use it for:</b> pre-order and post-order traversals.</div></div>
+  <div class="rw"><h3>A sorted list that grows as data arrives</h3><p>If new values keep arriving in order, a plain binary search tree degenerates into a chain, which is why balanced variants exist.</p><div class="use"><b>Use it for:</b> evaluation: balanced versus degenerate trees.</div></div>
+</section>
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Write your answer first, then open the mark points. Tick the ones you earned.</p>
+  <details class="eq"><summary>Q1 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe how the value 45 is inserted into a binary search tree.</summary><div class="body">
+    <div class="ans"><p>1. Start at the root and compare 45 with the value there.</p><p>2. If 45 is smaller follow the left pointer, if larger the right pointer, and repeat the comparison at each node.</p><p>3. When the pointer to follow is null (empty), create a new node holding 45 there and set the parent's pointer to it.</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the new node replaces an existing one. It always becomes a new leaf.</div></div></details>
+  <details class="eq"><summary>Q2 <span class="cmd">Write</span> <span class="mark">2 marks</span> State the output of an in-order traversal of the tree built from 50, 30, 70, 20, 40, 60, 80.</summary><div class="body">
+    <div class="ans"><p>20 30 40 50 60 70 80 (ascending order). One mark for left, node, right order; one mark for the correct output.</p></div></div></details>
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Explain why searching a binary search tree can be faster than searching an unsorted list.</summary><div class="body">
+    <div class="ans"><p>1. In an unsorted list every item may have to be checked, so N comparisons in the worst case.</p><p>2. In a binary search tree each comparison tells you to go left or right, discarding a whole subtree.</p><p>3. In a balanced tree this halves the remaining items each time, so about log₂ N comparisons.</p><p>4. This only holds if the tree is balanced; a degenerate tree is as slow as a list.</p></div></div></details>
+</section>
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Smaller goes left, larger goes right.</b> Check duplicates against the rule in your question.</li>
+    <li><b>New nodes are always leaves.</b></li>
+    <li><b>In-order of a BST is sorted.</b> Use it as a check on your answer.</li>
+    <li><b>In the array version, −1 means null</b> and pointers are array indexes.</li>
+    <li><b>Say balanced or degenerate</b> when giving the time complexity.</li>
+  </ul>
+  <h2>Keyword flashcards</h2>
+  <p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</section>
+</div>
+</div>
