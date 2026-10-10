@@ -14,6 +14,7 @@ def _sel(s, drop_el=()):
     if s == "section":
         return ".lt .lt-sec"
     s = CLS.sub(lambda m: "." + P + m.group(1), s)
+    s = re.sub(r"(?<![\w.-])section(?![\w-])", "", s).strip() or ".lt-sec"
     return ".lt " + s
 
 
@@ -54,8 +55,37 @@ def _tok(m):
 
 def html(src):
     src = re.sub(r'(class=")([^"]*)(")', _tok, src)
-    src = re.sub(r"<section id=\"(\w+)\">", r'<div class="lt-sec" id="\1">', src).replace("</section>", "</div>")
+    src = re.sub(r"<section\b", "<div", src).replace("</section>", "</div>")
     return src
+
+
+KIT = {"bg", "surface", "ink", "muted", "line", "accent", "accent-soft", "good", "good-soft", "bad", "bad-soft", "mono", "sans", "serif", "soft", "accent-ink", "warn", "warn-soft"}
+
+
+def extras(src):
+    """Legacy custom properties the kit does not define, as a .lt block (light + both dark forms). Maps --display/--body onto the kit fonts."""
+    def grab(block):
+        return {k: v.strip() for k, v in re.findall(r"(--[\w-]+)\s*:\s*([^;}]+)", block) if k[2:] not in KIT and k not in ("--display", "--body", "--mono")}
+    m = re.search(r":root\s*\{([^}]*)\}", src)
+    light = grab(m.group(1)) if m else {}
+    m = re.search(r":root\[data-theme=\"dark\"\]\s*\{([^}]*)\}", src)
+    dark = grab(m.group(1)) if m else {}
+    f = lambda d: ";".join(f"{k}:{v}" for k, v in d.items())
+    return (".lt{" + f(light) + ";--display:var(--serif);--body:var(--sans)}\n"
+            "@media (prefers-color-scheme:dark){:root:not([data-theme=\"light\"]) .lt{" + f(dark) + "}}\n"
+            ":root[data-theme=\"dark\"] .lt{" + f(dark) + "}\n")
+
+
+def section(src, sid):
+    """Raw HTML of the <section ... id=sid> element (balanced)."""
+    m = re.search(r"<section\b[^>]*\bid=\"%s\"[^>]*>" % re.escape(sid), src)
+    if not m:
+        raise KeyError(sid)
+    depth, i = 0, m.start()
+    for t in re.finditer(r"<section\b|</section>", src[m.start():]):
+        depth += 1 if t.group().startswith("<section") else -1
+        if depth == 0:
+            return src[m.start(): m.start() + t.end()]
 
 
 def js(src):

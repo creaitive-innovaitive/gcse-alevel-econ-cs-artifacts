@@ -1,7 +1,197 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Big O Notation</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
-<style>
+<style>/* Base for artifacts that keep their own page CSS: the tab bar plus kit components scoped under .kit, mapped onto whatever palette the page defines. */
+.kit{--soft:var(--accent-soft);--warn:var(--amber,#a85d00);--warn-soft:var(--amber-soft,#fbead2);--accent-ink:var(--bg);--sans:var(--body,system-ui,sans-serif);--serif:var(--display,Georgia,serif);--k:#1f5fa8;--a:#1d7a4c;--n:#7a3fa0;--e:#b25a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kit{--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}}
+:root[data-theme="dark"] .kit{--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}
+.tl-wrap{max-width:var(--tl-w,900px);margin:0 auto}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+.kit .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.kit .card.big{background:var(--accent-soft);border-color:var(--accent)}
+.kit .card h3:first-child{margin-top:0}
+.kit .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.kit .grid2>.card{margin:0}
+.kit .formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kit .kw{font-weight:700;color:var(--accent)}
+.kit table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+.kit table.t th,.kit table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.kit table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.kit .tw{overflow-x:auto}
+.kit .b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.kit .b:hover{background:var(--soft)}
+.kit .b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.kit .b:disabled{opacity:.5;cursor:default}
+.kit .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.kit .note{font-size:.88rem;color:var(--muted)}
+.kit .pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.kit .tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.kit .tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.kit .warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.kit .warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+.kit /* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.kit .stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.kit .stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.kit .stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.kit .stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.kit .stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.kit .stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.kit .stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+.kit /* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+.kit svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+.kit svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+.kit svg .lbl{font-size:13px}
+.kit svg .sm{font-size:11.5px;fill:var(--muted)}
+.kit svg .bd{font-weight:700}
+.kit svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+.kit svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+.kit svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+.kit svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+.kit svg .f1{fill:var(--accent);opacity:.18}
+.kit svg .f2{fill:var(--bad);opacity:.18}
+.kit svg .f3{fill:var(--good);opacity:.2}
+.kit svg .f4{fill:var(--warn);opacity:.22}
+.kit svg .dash{stroke-dasharray:6 5}
+.kit svg .t1{fill:var(--accent)}
+.kit svg .t2{fill:var(--bad)}
+.kit svg .t3{fill:var(--good)}
+.kit svg .t4{fill:var(--warn)}
+.kit svg .dot1{fill:var(--accent)}
+.kit svg .dot2{fill:var(--bad)}
+.kit svg .dot3{fill:var(--good)}
+.kit svg .dot4{fill:var(--warn)}
+.kit /* sliders */
+.sl{margin:10px 0}
+.kit .sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.kit .sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.kit .sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.kit .readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.kit .readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.kit .readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kit .readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.kit .verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+.kit /* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.kit .cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.kit .cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.kit .cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.kit .cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.kit .cls .bk.over,.kit .cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.kit .chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.kit .chip.sel{background:var(--accent);color:var(--accent-ink)}
+.kit .chip.ok{border-color:var(--good);background:var(--good-soft)}
+.kit .chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.kit .cls .msg,.kit .ord .msg,.kit .calc .msg{font-weight:700;margin:8px 0}
+.kit .match .bk h4{font-size:.9rem;color:var(--ink)}
+.kit /* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.kit .ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.kit .ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.kit .ord li.ok{border-color:var(--good);background:var(--good-soft)}
+.kit .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.kit .ord li.drag{opacity:.4}
+.kit .ord li span{flex:1}
+.kit .ord li button{padding:2px 8px}
+.kit /* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.kit .qz .q p.qt{font-weight:700;margin-bottom:8px}
+.kit .opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.kit .opt:hover{border-color:var(--accent)}
+.kit .opt.ok{border-color:var(--good);background:var(--good-soft)}
+.kit .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.kit .why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.kit .q.done .why{display:block}
+.kit .score{font:700 1.05rem var(--sans);margin:10px 0}
+.kit /* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.kit .calc input[type=number],.kit .calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.kit .calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.kit .calc .sol.show{display:block}
+.kit .calc .fb{font-weight:700;margin-left:8px}
+.kit .calc .fb.ok{color:var(--good)}
+.kit .calc .fb.no{color:var(--bad)}
+.kit /* cards */
+.fc{perspective:900px;max-width:520px}
+.kit .fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.kit .fc .face.back{background:var(--accent-soft)}
+.kit .fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+.kit /* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+.kit details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.kit details.eq>summary::-webkit-details-marker{display:none}
+.kit details.eq>summary::before{content:"▸";color:var(--accent)}
+.kit details.eq[open]>summary::before{content:"▾"}
+.kit details.eq .body{padding:4px 18px 16px}
+.kit .mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.kit .cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.kit .ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.kit .mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.kit .mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.kit .mk.k{color:var(--k)}
+.kit .mk.a{color:var(--a)}
+.kit .mk.n{color:var(--n)}
+.kit .mk.e{color:var(--e)}
+.kit .key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.kit .key span{display:inline-flex;gap:5px;align-items:center}
+.kit .key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.kit .key .k i{background:var(--k)}
+.kit .key .a i{background:var(--a)}
+.kit .key .n i{background:var(--n)}
+.kit .key .e i{background:var(--e)}
+.kit .rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.kit .rw h3{margin:0 0 4px}
+.kit .rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.kit .rw .use b{color:var(--accent)}
+.kit ul.tips{list-style:none;padding:0;margin:0}
+.kit ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+.kit ul.tips li b{color:var(--warn)}
+.kit .algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.kit .algo .stp{margin:0}
+.kit @media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.kit .code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.kit .ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.kit .ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.kit .ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+.kit svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+.kit svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+.kit svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+.kit svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+.kit svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+.kit svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+.kit svg .cell-dimg{opacity:.28}
+.kit svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+.kit svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+.kit svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+.kit svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+.kit svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+.kit svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+.kit svg .arr{fill:var(--muted)}
+.kit svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.kit .vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.kit .vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.kit .bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.kit .bar.b2{background:var(--bad)}
+.kit .bar.b3{background:var(--good)}
+.kit .bar.b4{background:var(--warn)}
+.kit table.mx td,.kit table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+.kit table.mx td.z{color:var(--muted);opacity:.6}
+.kit table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.kit table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+.kit table.mx td.ls{text-align:left}
+.kit .stp{scroll-margin-top:70px}
+
+/* legacy */
+
 /* Layout: one readable column, sticky section nav. Each complexity class keeps one colour everywhere (charts, chips, tabs). */
 :root{
   --bg:#EFF2FA; --surface:#FFFFFF; --ink:#111A33; --muted:#4F5B7A; --line:#CFD6EA;
@@ -161,20 +351,27 @@ svg.diagram .ptr{fill:var(--accent)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tag{color:#0D1226!important}}
 :root[data-theme="dark"] .tag{color:#0D1226!important}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
 
+</style></head>
+<body>
+<div class="kit">
 <div class="wrap">
 <header class="hero">
   <div class="eyebrow">A-Level Computer Science · 9618 · Topic 19</div>
   <h1>19.1.5 Comparing algorithms: Big O notation</h1>
-  <p>How to describe, in one short expression, what happens to an algorithm's running time or memory use as the amount of data grows. Definition, interactive explainers, Activity 19Q answers, past paper questions and a toolkit for spotting the order of any algorithm.</p>
+  <p>How to describe, in one short expression, how the time or memory an algorithm needs grows as the amount of data grows.</p>
 </header>
 
-<nav class="top" aria-label="Sections">
-  <a href="#def">1 Definition</a><a href="#time">2 Time</a><a href="#space">3 Space</a><a href="#act">4 Activity 19Q</a><a href="#ppq">5 Exam questions</a><a href="#more">6 Toolkit</a>
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
 </nav>
-
-<!-- 1 DEFINITION -->
+<section id="learn" role="tabpanel">
 <section class="panel" id="def">
   <div class="sec-label">1 · Definition</div>
   <h2>What Big O notation is</h2>
@@ -211,48 +408,7 @@ svg.diagram .ptr{fill:var(--accent)}
       <tr><td><code>O(2<sup>N</sup>)</code></td><td>Exponential</td><td>Recursive calculation of Fibonacci numbers</td></tr>
     </tbody></table></div>
   <p style="margin-top:10px;color:var(--muted);font-size:.95rem">For space complexity the syllabus only asks for <code>O(1)</code> and <code>O(N)</code>. The textbook writes the exponential one as O(2N) in places. It means 2 to the power N, not 2 × N.</p>
-</section>
-
-<!-- 2 TIME -->
-<section class="panel" id="time">
-  <div class="sec-label">2 · Time complexity</div>
-  <h2>Each order of time complexity, explained</h2>
-  <p>Pick an order. Each one has a live demo you can drive.</p>
-  <div class="tabs" role="tablist" id="ttabs"></div>
-  <div class="card" id="tpanel"></div>
-
-  <h3>All five side by side</h3>
-  <p>Drag N along and watch the curves separate. Everything looks similar for tiny N. The difference only becomes obvious as N grows, and that is exactly when it matters.</p>
-  <div class="card">
-    <div class="legend" id="legend"></div>
-    <div class="chartbox"><svg class="chart" id="chart" viewBox="0 0 640 330" role="img" aria-label="Growth curves for each Big O order"></svg></div>
-    <div class="ctrl"><label for="chN">N = <b id="chNv">10</b></label><input type="range" id="chN" min="1" max="20" value="10">
-      <label for="chY">Chart height</label><select id="chY"><option value="50">50 steps</option><option value="100" selected>100 steps</option><option value="500">500 steps</option><option value="1000">1,000 steps</option></select></div>
-    <div class="tablewrap"><table><thead><tr><th>Order</th><th style="text-align:right">Steps at this N</th><th style="text-align:right">Steps at 2N</th></tr></thead><tbody id="chTable"></tbody></table></div>
-  </div>
-
-  <h3>Activity: match the algorithm to its order</h3>
-  <p>Drag each card into a box, or tap a card then tap a box.</p>
-  <div class="card" id="match">
-    <div class="pool" id="pool" aria-label="Cards to sort"></div>
-    <div class="buckets" id="buckets"></div>
-    <div class="readout" id="mscore"></div>
-    <button class="ghost" id="mreset">Shuffle and restart</button>
-  </div>
-
-  <h3>Activity: put them in order</h3>
-  <p>Rank the orders from <b>slowest-growing (best)</b> at the top to <b>fastest-growing (worst)</b> at the bottom.</p>
-  <div class="card">
-    <ol class="rank" id="rank"></ol>
-    <div class="btnrow"><button id="rcheck">Check order</button><button class="ghost" id="rshuf">Shuffle</button></div>
-    <div class="fb" id="rfb"></div>
-  </div>
-
-  <div class="tip"><b>Top tip: doubling test</b>To recognise an order, ask what happens to the time when N doubles. Same time: O(1). One extra step: O(log N). Twice the time: O(N). Four times the time: O(N²). Squared, or worse: O(2<sup>N</sup>) (adding just one item doubles it).</div>
-</section>
-
-<!-- 3 SPACE -->
-<section class="panel" id="space">
+</section><section class="panel" id="space">
   <div class="sec-label">3 · Space complexity</div>
   <h2>Each order of space complexity, explained</h2>
   <p>Space complexity asks how much <b>memory</b> the algorithm needs as N grows. The syllabus gives two orders.</p>
@@ -290,8 +446,70 @@ NEXT i</pre>
 
   <div class="tip"><b>Going further (not required for 9618)</b>Recursion also uses memory: each call adds a stack frame. A recursive factorial of N stacks N frames, so it needs O(N) space even though it declares no array. Useful in an evaluation point about recursion vs iteration.</div>
 </section>
+</section>
+<section id="watch" role="tabpanel" hidden>
+  <h2>1 · How the steps grow as N grows</h2>
+  <p>Press Play, or use the numbered steps. Each bar is the number of steps an algorithm needs for N items.</p>
+  <div id="stA"></div>
+</section>
+<section id="explore" role="tabpanel" hidden>
+<section class="panel" id="time">
+  <div class="sec-label">2 · Time complexity</div>
+  <h2>Each order of time complexity, explained</h2>
+  <p>Pick an order. Each one has a live demo you can drive.</p>
+  <div class="tabs" role="tablist" id="ttabs"></div>
+  <div class="card" id="tpanel"></div>
 
-<!-- 4 ACTIVITY 19Q -->
+  <h3>All five side by side</h3>
+  <p>Drag N along and watch the curves separate. Everything looks similar for tiny N. The difference only becomes obvious as N grows, and that is exactly when it matters.</p>
+  <div class="card">
+    <div class="legend" id="legend"></div>
+    <div class="chartbox"><svg class="chart" id="chart" viewBox="0 0 640 330" role="img" aria-label="Growth curves for each Big O order"></svg></div>
+    <div class="ctrl"><label for="chN">N = <b id="chNv">10</b></label><input type="range" id="chN" min="1" max="20" value="10">
+      <label for="chY">Chart height</label><select id="chY"><option value="50">50 steps</option><option value="100" selected>100 steps</option><option value="500">500 steps</option><option value="1000">1,000 steps</option></select></div>
+    <div class="tablewrap"><table><thead><tr><th>Order</th><th style="text-align:right">Steps at this N</th><th style="text-align:right">Steps at 2N</th></tr></thead><tbody id="chTable"></tbody></table></div>
+  </div>
+
+  <h3>Activity: match the algorithm to its order</h3>
+  <p>Drag each card into a box, or tap a card then tap a box.</p>
+  <div class="card" id="match">
+    <div class="pool" id="pool" aria-label="Cards to sort"></div>
+    <div class="buckets" id="buckets"></div>
+    <div class="readout" id="mscore"></div>
+    <button class="ghost" id="mreset">Shuffle and restart</button>
+  </div>
+
+  <h3>Activity: put them in order</h3>
+  <p>Rank the orders from <b>slowest-growing (best)</b> at the top to <b>fastest-growing (worst)</b> at the bottom.</p>
+  <div class="card">
+    <ol class="rank" id="rank"></ol>
+    <div class="btnrow"><button id="rcheck">Check order</button><button class="ghost" id="rshuf">Shuffle</button></div>
+    <div class="fb" id="rfb"></div>
+  </div>
+
+  <div class="tip"><b>Top tip: doubling test</b>To recognise an order, ask what happens to the time when N doubles. Same time: O(1). One extra step: O(log N). Twice the time: O(N). Four times the time: O(N²). Squared, or worse: O(2<sup>N</sup>) (adding just one item doubles it).</div>
+</section>
+</section>
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Which order is it?</h2>
+  <p>Drag each description into the box for its order of time complexity. Tap an item, then tap a box if dragging is awkward.</p>
+  <div id="cl1" class="card"></div>
+  <h2>2 · Match the term to its meaning</h2>
+  <div id="m1" class="card"></div>
+  <h2>3 · Calculations</h2>
+  <div id="c1"></div>
+  <h2>4 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are explained in general terms. Real systems add many details.</p>
+  <div class="rw"><h3>Looking up a name in a sorted contacts list</h3><p>A binary search halves the list each time, so even a list of a million names needs about 20 comparisons. A linear search could need a million.</p><div class="use"><b>Use it for:</b> O(log N) versus O(N), and why sorted data is worth keeping.</div></div>
+  <div class="rw"><h3>Sorting a large table in a database</h3><p>Simple sorts such as bubble sort take about N² steps, which becomes far too slow for millions of rows. Better algorithms such as merge sort take about N log N.</p><div class="use"><b>Use it for:</b> comparing sorting algorithms by order of growth.</div></div>
+  <div class="rw"><h3>Checking every pair of users</h3><p>Comparing each user with every other user in a network takes about N² steps. Doubling the number of users makes the work four times bigger.</p><div class="use"><b>Use it for:</b> the doubling test and O(N²).</div></div>
+  <div class="rw"><h3>Planning a delivery route</h3><p>Trying every possible order of stops grows extremely fast with the number of stops. Real systems use shortcuts that give good routes, not guaranteed best ones.</p><div class="use"><b>Use it for:</b> exponential and factorial growth, and why some problems are hard.</div></div>
+  <div class="rw"><h3>Memory for an array of readings</h3><p>A program that stores one reading per sensor needs memory in proportion to the number of sensors, O(N). A program that keeps only a running total needs the same small amount of memory however many readings arrive, O(1).</p><div class="use"><b>Use it for:</b> space complexity.</div></div>
+</section>
+<section id="exam" role="tabpanel" hidden>
 <section class="panel" id="act">
   <div class="sec-label">4 · Textbook activity</div>
   <h2>Activity 19Q: answers with explainers</h2>
@@ -391,10 +609,7 @@ DECLARE heapStartPointer : INTEGER   // first free node</pre>
     </div>
     <div class="tip"><b>Exam tip</b>"Compare" means both sides, joined by a comparative word: "whereas", "much slower", "more efficient". Two separate descriptions with no comparison lose the last mark. Always quote the notation <i>and</i> say what it means.</div>
   </div></details>
-</section>
-
-<!-- 5 PAST PAPER -->
-<section class="panel" id="ppq">
+</section><section class="panel" id="ppq">
   <div class="sec-label">5 · Exam questions</div>
   <h2>Past paper questions on Big O</h2>
   <p>The two real Cambridge questions from your Chapter 19 practice set that test this topic. Write your answer, reveal the mark points, and tick the ones you earned.</p>
@@ -406,8 +621,8 @@ DECLARE heapStartPointer : INTEGER   // first free node</pre>
   <p>Same style and mark allocation. These cover space complexity and the doubling test, which are less common in past papers but are on the syllabus.</p>
   <div id="xqs"></div>
 </section>
-
-<!-- 6 TOOLKIT -->
+</section>
+<section id="tips" role="tabpanel" hidden>
 <section class="panel" id="more">
   <div class="sec-label">6 · Toolkit</div>
   <h2>Spotting the order of any algorithm</h2>
@@ -455,10 +670,341 @@ DECLARE heapStartPointer : INTEGER   // first free node</pre>
     <div class="tip"><b>Tip 6</b>Say "worst case" once in any answer. It shows you know what Big O measures.</div>
   </div>
   <p style="color:var(--muted);font-size:.9rem;margin-top:24px">Source: Cambridge International AS &amp; A Level Computer Science (Williams &amp; Watson), 19.1.5 and Activity 19Q. Past paper questions from 9618 Paper 3. Mark points for the past paper questions follow your Chapter 19 practice set.</p>
+</section>  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Big O describes the worst case</b> as N gets large. Ignore constants and smaller terms: N² + N is O(N²).</li>
+    <li><b>Say "as N increases".</b> Complexity is about growth, not about one particular run time.</li>
+    <li><b>Use the doubling test.</b> Doubling N doubles the steps for O(N), quadruples them for O(N²), and adds one step for O(log N).</li>
+    <li><b>Loops after each other add; loops inside loops multiply.</b></li>
+    <li><b>Do not confuse time and space complexity.</b> Name which one the question asks for.</li>
+  </ul>
+  <h2>Keyword flashcards</h2>
+  <p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
 </section>
+</div>
 </div>
 
 <script>
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
+
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
+
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.max(0, Math.min(fr.length - 1, Math.round(s.i)))].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+/* ---------- Watch: growth of steps ---------- */
+Lib.stepper($("#stA"), {
+  w: 760, h: 340, label: "Steps needed by four algorithm orders as N grows", base: { n: 4 },
+  draw: (s) => {
+    const N = s.n, rows = [["O(1)", 1, "c3"], ["O(log N)", Math.log2(N), "c1"], ["O(N)", N, "c4"], ["O(N²)", N * N, "c2"]], max = N * N, W = 520;
+    let o = SV.text(40, 34, "N = " + Math.round(N), "lbl bd", { "text-anchor": "start" });
+    rows.forEach((r, i) => {
+      const y = 70 + i * 62, w = Math.max(4, (r[1] / max) * W);
+      o += SV.text(120, y + 26, r[0], "lbl bd", { "text-anchor": "end" }) + SV.rect(130, y, w, 38, "f" + [3, 1, 4, 2][i], { style: "opacity:.75" }) + SV.text(136 + w, y + 25, Math.round(r[1] * 10) / 10 >= 1000 ? Math.round(r[1]).toLocaleString() : Lib.fmtN(r[1], 1), "lbl bd", { "text-anchor": "start" });
+    });
+    return o;
+  },
+  steps: [
+    { cap: "With <b>4 items</b> all four orders look similar: 1, 2, 4 and 16 steps.", s: { n: 4 } },
+    { cap: "At <b>16 items</b>: 1, 4, 16 and 256 steps. O(N²) is already pulling away.", s: { n: 16 } },
+    { cap: "At <b>64 items</b>: 1, 6, 64 and 4,096 steps. O(log N) has barely moved.", s: { n: 64 } },
+    { cap: "At <b>1,024 items</b>: 1, 10, 1,024 and more than a million steps. The difference only becomes obvious as N grows, and that is when it matters.", s: { n: 1024 } },
+  ],
+});
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), {
+  prompt: "Which order of time complexity fits each description?",
+  buckets: [{ label: "O(1)" }, { label: "O(log N)" }, { label: "O(N)" }, { label: "O(N²)" }],
+  items: [
+    { text: "Read the first item of an array", b: 0 }, { text: "Add two variables", b: 0 },
+    { text: "Binary search of a sorted list", b: 1 }, { text: "Halve the problem each time", b: 1 },
+    { text: "One loop through all N items", b: 2 }, { text: "Linear search, worst case", b: 2 },
+    { text: "A loop inside a loop, both over N", b: 3 }, { text: "Bubble sort, worst case", b: 3 },
+  ],
+  done: "Fixed steps: O(1). Halving: O(log N). One loop: O(N). Nested loops: O(N²).",
+});
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Time complexity", "How the number of steps grows as N grows"],
+  ["Space complexity", "How the memory needed grows as N grows"],
+  ["O(1)", "Constant: the same work whatever N is"],
+  ["O(N)", "Linear: work grows in proportion to N"],
+  ["O(2^N)", "Exponential: work doubles for each extra item"],
+  ["Worst case", "The largest number of steps an input of size N can need"],
+] });
+Lib.calc($("#c1"), { qs: [
+  { q: "A loop inside a loop, both over N = 50 items. How many steps (order N²)?", a: 2500, hint: "N × N.", sol: "50 × 50 = 2,500." },
+  { q: "An O(N²) algorithm takes 4 seconds for N = 100. Roughly how many seconds for N = 200?", a: 16, hint: "Doubling N multiplies N² by 4.", sol: "Doubling N gives 4 times the steps: 4 × 4 = 16 seconds." },
+  { q: "An O(N) algorithm takes 3 seconds for N = 1,000. Roughly how many seconds for N = 4,000?", a: 12, hint: "Linear: four times the data, four times the time.", sol: "3 × 4 = 12 seconds." },
+  { q: "Binary search on N = 1,024 items needs about how many comparisons (log₂ N)?", a: 10, hint: "How many times can you halve 1,024 to reach 1?", sol: "2¹⁰ = 1,024, so about 10 comparisons." },
+] });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "What does Big O notation describe?", opts: ["The exact run time in seconds", "How the time or memory needed grows as N grows, in the worst case", "The number of lines of code", "The speed of the processor"], a: 1, why: "It describes growth with N, ignoring machine speed and constants." },
+  { q: "Which is the order of an algorithm with two nested loops over N items?", opts: ["O(1)", "O(N)", "O(N²)", "O(log N)"], a: 2, why: "N iterations of an inner loop of N iterations gives N × N steps." },
+  { q: "An algorithm uses a fixed number of variables whatever N is. Its space complexity is", opts: ["O(1)", "O(N)", "O(N²)", "O(log N)"], a: 0, why: "Memory does not grow with N." },
+  { q: "N² + 3N + 7 simplifies to", opts: ["O(N)", "O(N²)", "O(3N)", "O(7)"], a: 1, why: "Keep only the term that grows fastest and drop constants." },
+] });
+Lib.cards($("#fc1"), { cards: [
+  ["Big O notation", "A notation describing how the time or memory an algorithm needs grows with N, in the worst case."],
+  ["Time complexity", "How the number of steps grows as the amount of data N grows."],
+  ["Space complexity", "How the memory needed grows as the amount of data N grows."],
+  ["O(1)", "Constant time or space: does not depend on N."],
+  ["O(log N)", "Logarithmic: halving the problem each step, such as binary search."],
+  ["O(N)", "Linear: grows in direct proportion to N."],
+  ["O(N log N)", "Typical of efficient sorts such as merge sort."],
+  ["O(N²)", "Polynomial: nested loops over N, such as bubble sort."],
+  ["O(2^N)", "Exponential: the work doubles with each extra item."],
+  ["Worst case", "The input of size N that needs the most steps."],
+] });
+
+/* ---------- original page scripts (own scope) ---------- */
+(function(){
+
 (function(){
 "use strict";
 var $=function(s,r){return (r||document).querySelector(s)};
@@ -762,6 +1308,9 @@ var XQ=[
 PP.forEach(function(q){examQ($('#ppqs'),q)});
 XQ.forEach(function(q){examQ($('#xqs'),q)});
 })();
-</script>
 
+})();
+
+Lib.initTabs();
+</script>
 </body></html>

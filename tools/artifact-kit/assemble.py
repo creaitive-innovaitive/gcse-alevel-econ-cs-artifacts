@@ -7,10 +7,18 @@ css, lib = (d/"lib.css").read_text(), (d/"lib.js").read_text()
 body, js = (d/f"{name}.body.html").read_text(), (d/f"{name}.js").read_text()
 if "uses: econ" in js.split("\n", 1)[0]: js = (d/"econ.js").read_text() + "\n" + js   # shared cost-curve helpers
 extra = d/f"{name}.css"   # optional per-artifact styles (e.g. legacy chart classes)
-if extra.exists(): css += "\n" + extra.read_text()
+head = ""
+if extra.exists():
+    ex = extra.read_text()
+    if ex.startswith("/* legacy */"):   # keep the page's own CSS; kit components only inside .kit
+        css = (d/"legacy_base.css").read_text() + "\n" + ex
+    else:
+        css += "\n" + ex
+if (d/f"{name}.head.html").exists(): head = (d/f"{name}.head.html").read_text()
 html = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
+{head}
 <style>{css}</style></head>
 <body>
 {body}
