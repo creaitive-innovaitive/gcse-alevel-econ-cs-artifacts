@@ -1,0 +1,468 @@
+<div class="kit">
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">A-Level Computer Science · 9618 · Topic 19.1.4</div>
+  <h1>Implementing one ADT from another ADT</h1>
+  <p>Build a linked list from an array, a dictionary from a linked list, and a stack, queue or tree from the types you already have.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+<section id="learn" role="tabpanel">
+<section class="panel" id="idea">
+  <div class="sec-label">The idea</div>
+  <h2>Building on what already exists</h2>
+  <div class="def">
+    <p>An <b>abstract data type (ADT)</b> is a collection of data together with the operations used on that data. Its definition can refer to other data types, so a new ADT can be <b>implemented from</b> an existing one.</p>
+  </div>
+  <p>The textbook's examples: a linked list is defined using an <code>INTEGER</code> pointer and an item. A stack, queue and binary tree are all defined using existing types. A dictionary can be defined using a linked list. Each layer hides the one beneath it, so the user of a dictionary never sees pointers.</p>
+  <div class="layers" aria-label="Layers of data types">
+    <div>Dictionary <small>key and value pairs, find a value from its key</small></div>
+    <div>Linked list <small>ordered items joined by pointers</small></div>
+    <div>Array of records <small>TYPE with an item and a pointer</small></div>
+    <div>Primitive types <small>INTEGER, STRING, BOOLEAN</small></div>
+  </div>
+  <div class="warn"><b>Exam wording</b>"Implement" in these questions means "show how it can be built from". Name the underlying structure, name the pointers or variables that make it behave like the ADT, and show the operation working.</div>
+</section><section class="panel" id="others">
+  <div class="sec-label">Other ADTs</div>
+  <h2>Stack, queue and binary tree from existing types</h2>
+  <p>The same pattern repeats. Pick an array (or linked list), add the pointers the ADT needs, and the operations follow.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>ADT</th><th>Built from</th><th>Extra variables or fields</th></tr></thead>
+    <tbody>
+      <tr><td><b>Stack</b></td><td>1D array</td><td>a <code>topPointer</code>; push and pop both work at the top (LIFO)</td></tr>
+      <tr><td><b>Queue</b></td><td>1D array</td><td><code>frontPointer</code> and <code>rearPointer</code>; add at the rear, remove from the front (FIFO)</td></tr>
+      <tr><td><b>Linked list</b></td><td>array of records</td><td><code>item</code> and <code>pointer</code> per node, plus <code>startPointer</code> and <code>heapStartPointer</code></td></tr>
+      <tr><td><b>Binary tree</b></td><td>array of records</td><td>each node has <code>leftPointer</code>, <code>item</code>, <code>rightPointer</code>, plus <code>rootPointer</code></td></tr>
+      <tr><td><b>Dictionary</b></td><td>linked list + array</td><td>keys in the list, values in a parallel array at the same index</td></tr>
+    </tbody></table></div>
+  <svg class="diagram" viewBox="0 0 640 150" role="img" aria-label="A stack shown as an array with a top pointer">
+    <text x="0" y="16" class="sm">Stack of 5 built from an array, topPointer = 2</text>
+    <g>
+      <rect class="box" x="10" y="40" width="80" height="46"/><text x="38" y="68">[0] 7</text>
+      <rect class="box" x="90" y="40" width="80" height="46"/><text x="118" y="68">[1] 3</text>
+      <rect class="hl" x="170" y="40" width="80" height="46"/><text x="198" y="68">[2] 9</text>
+      <rect class="box" x="250" y="40" width="80" height="46" style="opacity:.5"/><text x="278" y="68" class="sm">[3]</text>
+      <rect class="box" x="330" y="40" width="80" height="46" style="opacity:.5"/><text x="358" y="68" class="sm">[4]</text>
+    </g>
+    <path class="ln" d="M210 128 V92"/><path class="ln" d="M204 99 L210 91 L216 99"/>
+    <text x="150" y="146">topPointer = 2</text>
+    <text x="430" y="68" class="sm">push writes to [3]</text>
+  </svg>
+</section>
+</section>
+<section id="watch" role="tabpanel" hidden>
+<section class="panel" id="ll">
+  <div class="sec-label">Linked list</div>
+  <h2>A linked list built from an array of records</h2>
+  <p>Define a record type with the data and a pointer, then make an array of them. The array indexes are the memory addresses. The pointer holds the index of the <i>next</i> node, and <code>-1</code> means null (no next node).</p>
+<pre>TYPE linkedList
+   DECLARE item    : INTEGER
+   DECLARE pointer : INTEGER
+ENDTYPE
+
+DECLARE myLinkedList    : ARRAY [0:11] OF linkedList
+DECLARE heapStartPointer : INTEGER   // first free node
+DECLARE startPointer     : INTEGER   // first node in the list
+DECLARE index            : INTEGER</pre>
+  <div class="tip"><b>Two linked lists in one array</b>The array holds <i>two</i> chains. The list in use starts at <code>startPointer</code>. The unused nodes form the heap, a second chain starting at <code>heapStartPointer</code>. Adding a node moves it from the heap to the list. Deleting moves it back.</div>
+
+  <h3>Simulator: ordered list of names</h3>
+  <p>Add and delete names, then press <b>Next step</b> to walk through exactly which pointers change. Amber rows are free heap nodes. Struck-through names are old data that is no longer reachable.</p>
+  <div class="card" id="llsim">
+    <div class="btnrow">
+      <input type="text" id="llname" maxlength="8" value="Mira" aria-label="Name to add or delete" style="width:9ch">
+      <button id="lladd">Add (in order)</button><button id="lldel" class="ghost">Delete</button><button id="llreset" class="ghost">Reset</button>
+    </div>
+    <div class="vars" id="llvars"></div>
+    <div class="stepbox" id="llstep" aria-live="polite"></div>
+    <div class="btnrow"><button id="llnext" disabled>Next step ▶</button><button id="llall" class="ghost" disabled>Finish</button></div>
+    <div class="chain" id="llchain" aria-label="List in order"></div>
+    <div class="tablewrap"><table class="nodes"><thead><tr><th>Index</th><th>item</th><th>pointer</th><th></th></tr></thead><tbody id="lltbody"></tbody></table></div>
+  </div>
+
+  <h3>Activity 19O answer</h3>
+  <p>Declare a linked list for names, set up 30 nodes, then store and display names. Every node starts on the heap, chained to the next.</p>
+<pre>TYPE linkedList
+   DECLARE item    : STRING
+   DECLARE pointer : INTEGER
+ENDTYPE
+
+DECLARE names : ARRAY [0:29] OF linkedList
+DECLARE startPointer, heapStartPointer, newPtr, current : INTEGER
+
+// set up: empty list, all 30 nodes on the heap
+startPointer ← -1
+heapStartPointer ← 0
+FOR index ← 0 TO 28
+   names[index].pointer ← index + 1
+NEXT index
+names[29].pointer ← -1
+
+PROCEDURE addName(newName : STRING)     // add at the front
+   IF heapStartPointer = -1
+      THEN OUTPUT "List full"
+      ELSE
+         newPtr ← heapStartPointer
+         heapStartPointer ← names[newPtr].pointer
+         names[newPtr].item ← newName
+         names[newPtr].pointer ← startPointer
+         startPointer ← newPtr
+   ENDIF
+ENDPROCEDURE
+
+PROCEDURE displayNames()
+   current ← startPointer
+   WHILE current <> -1
+      OUTPUT names[current].item
+      current ← names[current].pointer
+   ENDWHILE
+ENDPROCEDURE</pre>
+  <p>The program stores names by calling <code>addName</code> (for example three times with input from the user) and then calls <code>displayNames</code>. Names appear in reverse order of entry because each new node is added at the front.</p>
+</section>
+</section>
+<section id="explore" role="tabpanel" hidden>
+<section class="panel" id="dict">
+  <div class="sec-label">Dictionary</div>
+  <h2>A dictionary built from a linked list</h2>
+  <div class="def">
+    <p>A <b>dictionary</b> is an ADT of key and value pairs. The key is used to find the value. Each key can appear <b>only once</b>, keys are <b>unordered</b>, and the same value can appear more than once.</p>
+  </div>
+  <p>A dictionary is not an ordered list, so a linked list can be part of its definition. One linked list stores the keys. A parallel array stores the value for each key at the same position. To get a value you search the key list for the key, then read the value at that index.</p>
+<pre>TYPE linkedList
+   DECLARE item    : STRING
+   DECLARE pointer : INTEGER
+ENDTYPE
+
+TYPE dictionary
+   DECLARE keys   : ARRAY [0:19] OF linkedList
+   DECLARE values : ARRAY [0:19] OF STRING
+ENDTYPE
+
+DECLARE myDictionary     : dictionary
+DECLARE heapStartPointer : INTEGER
+DECLARE startPointer     : INTEGER
+DECLARE index            : INTEGER</pre>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">Same key twice</h3><p>Adding a key that is already there must <b>replace its value</b>, not create a second entry. That is what "each key can only appear once" means in practice.</p></div>
+    <div class="card"><h3 style="margin-top:0">Dictionary or set?</h3><p>A set holds unique values. A dictionary holds unique <i>keys</i>, but the values can repeat. That is the textbook's distinction.</p></div>
+  </div>
+
+  <h3>Simulator: put and get</h3>
+  <p>Press <b>Put</b> to add a pair, or <b>Get</b> to look a key up and watch the search walk the key list.</p>
+  <div class="card" id="dsim">
+    <div class="btnrow">
+      <input type="text" id="dkey" maxlength="8" value="Ahmad" aria-label="Key" style="width:9ch">
+      <input type="text" id="dval" maxlength="8" value="78" aria-label="Value" style="width:9ch">
+      <button id="dput">Put key, value</button><button id="dget" class="ghost">Get value for key</button><button id="dreset" class="ghost">Reset</button>
+    </div>
+    <div class="readout" id="dout"></div>
+    <div class="tablewrap"><table class="nodes"><thead><tr><th>Index</th><th>keys[i].item</th><th>keys[i].pointer</th><th>values[i]</th></tr></thead><tbody id="dtbody"></tbody></table></div>
+  </div>
+
+  <h3>A dictionary in Python</h3>
+  <p>Python has a built-in dictionary type, so you rarely build one by hand. You still need to know it can be built from a linked list.</p>
+<pre>studentdict = {
+    "Leon": 27,
+    "Ahmad": 78,
+    "Susie": 64
+}
+studentdict["Ahmad"]        # 78, found from the key
+studentdict["Ahmad"] = 80   # same key again replaces the value</pre>
+</section>
+</section>
+<section id="practise" role="tabpanel" hidden>
+<section class="panel" id="act">
+  <div class="sec-label">Activities</div>
+  <h2>Practise it</h2>
+
+  <h3>Match each ADT to how it is built</h3>
+  <p>Drag each card into a box, or tap a card then tap a box.</p>
+  <div class="card" id="match">
+    <div class="pool" id="pool" aria-label="Cards to sort"></div>
+    <div class="buckets" id="buckets"></div>
+    <div class="readout" id="mscore"></div>
+    <button class="ghost" id="mreset">Shuffle and restart</button>
+  </div>
+
+  <h3>Put the steps in order</h3>
+  <p>Order the steps to add a node at the <b>front</b> of a linked list.</p>
+  <div class="card">
+    <ol class="rank" id="rank"></ol>
+    <div class="btnrow"><button id="rcheck">Check order</button><button class="ghost" id="rshuf">Shuffle</button></div>
+    <div class="fb" id="rfb"></div>
+  </div>
+
+  <h3>Quick check</h3>
+  <div class="card" id="mcq"></div>
+
+  <h3>Activity 19Q answers</h3>
+  <details><summary>Q1 · Diagrams of a binary tree and a linked list <span class="marks">4 marks</span></summary><div class="inner">
+    <svg class="diagram" viewBox="0 0 640 200" role="img" aria-label="Binary tree and linked list diagrams">
+      <text x="20" y="16" class="sm">Binary tree</text>
+      <rect class="hl" x="100" y="26" width="46" height="30" rx="4"/><text x="114" y="46">50</text>
+      <path class="ln" d="M112 56 L70 90"/><path class="ln" d="M134 56 L176 90"/>
+      <rect class="box" x="46" y="90" width="46" height="30" rx="4"/><text x="60" y="110">30</text>
+      <rect class="box" x="154" y="90" width="46" height="30" rx="4"/><text x="168" y="110">70</text>
+      <text x="20" y="160" class="sm">Each node: left pointer, data, right pointer</text>
+      <text x="300" y="16" class="sm">Linked list</text>
+      <text x="300" y="70" class="sm">start</text><path class="ln" d="M336 66 H356"/>
+      <rect class="hl" x="360" y="48" width="64" height="36"/><text x="372" y="70">Ann</text><rect class="box" x="424" y="48" width="30" height="36"/>
+      <path class="ln" d="M439 66 H470"/>
+      <rect class="box" x="472" y="48" width="64" height="36"/><text x="484" y="70">Bob</text><rect class="box" x="536" y="48" width="30" height="36"/>
+      <path class="ln" d="M551 66 H580"/>
+      <rect class="box" x="582" y="48" width="48" height="36"/><text x="590" y="70">Cy</text>
+      <text x="300" y="130" class="sm">Each node: data, pointer to next node. Last pointer is null (-1).</text>
+    </svg>
+    <ul class="mp"><li><b>1</b>Binary tree: nodes drawn with a root at the top</li><li><b>2</b>Each node has at most two children, left and right, with lines or pointers</li><li><b>3</b>Linked list: boxes holding data and a pointer field</li><li><b>4</b>Arrows from each node to the next, a start pointer, and the last pointer null</li></ul>
+  </div></details>
+  <details><summary>Q2 · Dictionary data type <span class="marks">5 marks</span></summary><div class="inner">
+    <p><b>(a) Explain what is meant by a dictionary data type.</b> <span class="cmd">Explain</span></p>
+    <ul class="mp"><li><b>1</b>An abstract data type made up of pairs, each a key and a value</li><li><b>2</b>The key is used to find (retrieve) the corresponding value</li><li><b>3</b>Each key can only appear once and keys are unordered, but values may be duplicated</li></ul>
+    <p><b>(b) Show how a dictionary can be constructed from a linked list.</b> <span class="cmd">Show</span></p>
+    <ul class="mp"><li><b>4</b>A linked list holds the keys, as an array of nodes each with an item and a pointer, plus start and heap pointers</li><li><b>5</b>A parallel array holds the values; the value for a key is at the same index as the key's node</li></ul>
+<pre>TYPE dictionary
+   DECLARE keys   : ARRAY [0:19] OF linkedList
+   DECLARE values : ARRAY [0:19] OF STRING
+ENDTYPE</pre>
+  </div></details>
+  <details><summary>Q3 · Linear vs binary search in Big O <span class="marks">2 marks</span></summary><div class="inner">
+    <ul class="mp"><li><b>1</b>Linear search is O(N): worst case every item is checked, so time grows in proportion to N</li><li><b>2</b>Binary search is O(log N): each comparison halves the data, so it is faster for large lists (but needs sorted data)</li></ul>
+  </div></details>
+</section>
+</section>
+<section id="real" role="tabpanel" hidden>
+<section class="panel" id="rw">
+  <div class="sec-label">Real world</div>
+  <h2>Where these structures show up</h2>
+  <div class="rw">
+    <div class="card"><h3>Browser back button</h3><p>A stack of visited pages. Back pops the most recent one.</p><div class="use"><b>In an exam:</b> use it to justify why a stack (LIFO) suits the task.</div></div>
+    <div class="card"><h3>Print queue</h3><p>Jobs are added at the rear and printed from the front, in arrival order.</p><div class="use"><b>In an exam:</b> name front and rear pointers and FIFO.</div></div>
+    <div class="card"><h3>Phone contacts or a Python dict</h3><p>Look up a number from a name. Names are unique keys, numbers are values.</p><div class="use"><b>In an exam:</b> link it to key, value and "each key once".</div></div>
+    <div class="card"><h3>Music playlist</h3><p>Songs joined one after the next, easy to insert in the middle without shifting the rest.</p><div class="use"><b>In an exam:</b> advantage of a linked list: insert and delete by changing pointers.</div></div>
+    <div class="card"><h3>File system</h3><p>Folders branch into folders and files, like a tree of nodes with pointers.</p><div class="use"><b>In an exam:</b> use it as a tree example, with root and child nodes.</div></div>
+    <div class="card"><h3>Undo in an editor</h3><p>Each action is pushed on a stack. Undo pops the latest one.</p><div class="use"><b>In an exam:</b> tie push and pop to the stack's top pointer.</div></div>
+  </div>
+</section>
+</section>
+<section id="exam" role="tabpanel" hidden>
+<section class="panel" id="ppq">
+  <div class="sec-label">Exam questions</div>
+  <h2>Exam-style questions with model answers</h2>
+  <p>Tick each mark point you included before opening the answer in your head. Colours match the mark scheme points.</p>
+
+  <details><summary>Q1 · Implement a stack from an array <span class="marks">4 marks</span> <span class="cmd">Describe</span></summary><div class="inner">
+    <p>Describe how a stack ADT can be implemented using an array.</p>
+    <div class="tip"><b>Reminder</b>"Describe" needs a few distinct points. Mention the array, the pointer, and what push and pop do to the pointer.</div>
+    <ul class="mp"><li><b>1</b>Use a 1D array to hold the stack data, with a fixed maximum size</li><li><b>2</b>Use a variable (top pointer) to record the index of the top item</li><li><b>3</b>Push: check not full, increase the top pointer, store the item at that index</li><li><b>4</b>Pop: check not empty, read the item at the top pointer, decrease the top pointer</li></ul>
+    <p><b>Common mistake:</b> forgetting the full and empty checks. They are often worth a mark.</p>
+  </div></details>
+
+  <details><summary>Q2 · Dictionary from a linked list <span class="marks">3 marks</span> <span class="cmd">Describe</span></summary><div class="inner">
+    <p>A dictionary ADT is to be implemented using a linked list. Describe how a value is found from a given key.</p>
+    <ul class="mp"><li><b>1</b>Start at the node the start pointer refers to</li><li><b>2</b>Compare each node's key with the given key, following the pointer to the next node until a match or the null pointer is reached</li><li><b>3</b>On a match, return the value stored at the same index in the values array (otherwise report "not found")</li></ul>
+    <div class="warn"><b>Mark tip</b>Mention the "not found" case. Without it you cannot reach full marks on a search description.</div>
+  </div></details>
+
+  <details><summary>Q3 · Write the pseudocode <span class="marks">5 marks</span> <span class="cmd">Write</span></summary><div class="inner">
+    <p>A linked list stores integers using nodes with <code>item</code> and <code>pointer</code>. Write a function <code>countNodes()</code> that returns how many items are in the list.</p>
+<pre>FUNCTION countNodes() RETURNS INTEGER
+   DECLARE total, current : INTEGER
+   total ← 0
+   current ← startPointer
+   WHILE current <> -1
+      total ← total + 1
+      current ← myLinkedList[current].pointer
+   ENDWHILE
+   RETURN total
+ENDFUNCTION</pre>
+    <ul class="mp"><li><b>1</b>Function header and RETURNS INTEGER</li><li><b>2</b>Total initialised to 0 and current set to startPointer</li><li><b>3</b>Loop until the null pointer (-1)</li><li><b>4</b>Increment the total inside the loop</li><li><b>5</b>Move to the next node using the pointer, and return the total</li></ul>
+    <p><b>Common mistake:</b> using a FOR loop over the whole array. That counts free heap nodes too.</p>
+  </div></details>
+
+  <h3 style="margin-top:34px">Real past paper questions</h3>
+  <div class="tip"><b>Paper 3 and Paper 4</b>Paper 3 (Advanced Theory, 9618/31, 32, 33) asks you to identify, compare and justify ADTs in words, 1 to 3 marks at a time. Paper 4 (Practical, and the old 9608/4x) asks you to show an ADT working: pointer diagrams, trace tables and pseudocode for a stack, queue or linked list. Learn the wording for Paper 3 and the pointer manipulation for Paper 4.</div>
+  <p style="color:var(--muted);font-size:.95rem">These come from Cambridge 9618 papers in the local Past Papers folder. Mark points follow the published mark schemes, shortened. Examiner report comments are summarised from the Principal Examiner Reports.</p>
+
+  <details><summary>Paper 3 · 9618/32 Oct/Nov 2023, Q9(b) <span class="marks">2 marks</span> <span class="cmd">Justify</span></summary><div class="inner">
+    <p>Justify the use of a linked list instead of an array to implement a stack.</p>
+    <div class="tip"><b>Reminder</b>"Justify" means give a reason <i>and</i> tie it to the stack. One mark per developed point.</div>
+    <p><i>Scheme: one mark for a linked list point and one for an array point (max 2).</i></p>
+    <ul class="mp"><li><b>LL</b>A linked list is a dynamic data structure, not restricted in size</li><li><b>LL</b>It can expand or contract by adding or removing nodes as necessary</li><li><b>LL</b>Editing is more efficient using pointers instead of moving the data</li><li><b>Array</b>An array is a static data structure, generally fixed in size</li><li><b>Array</b>When the array is full, the stack cannot be extended any further</li></ul>
+    <p><b>Advice:</b> you need one point from each side to reach 2/2. Contrast the two structures in the same sentence. "Linked lists are dynamic" alone is a description, not a justification.</p>
+  </div></details>
+
+  <details><summary>Paper 3 · 9618/31 Oct/Nov 2023, Q10(c) <span class="marks">2 marks</span> <span class="cmd">Compare and contrast</span></summary><div class="inner">
+    <p>Compare and contrast the queue and stack Abstract Data Types (ADT).</p>
+    <div class="tip"><b>Reminder</b>Compare means similarities, contrast means differences. Give at least one of each.</div>
+    <p><i>Scheme: any two of these four points (max 2).</i></p>
+    <ul class="mp"><li><b>1</b>A queue is FIFO and a stack is LIFO (data leaves a queue in the order received, a stack in reverse order)</li><li><b>2</b>Both ADTs can vary in size (indeterminate length)</li><li><b>3</b>A stack pushes and pops at the same end; a queue enqueues and dequeues at opposite ends</li><li><b>4</b>A stack has one moveable pointer, a queue has two</li></ul>
+    <p><b>Advice:</b> a table or "whereas" sentence keeps both sides of every point visible. Mention the pointers: that links straight back to how each is implemented.</p>
+  </div></details>
+
+  <details><summary>Paper 3 · 9618/31 and 32 Oct/Nov 2021, Q10(b) and (c) <span class="marks">5 marks</span> <span class="cmd">Explain, Identify</span></summary><div class="inner">
+    <p>(b) Explain the reasons why a stack is a suitable ADT to implement recursion. [3]<br>(c) Identify two ADTs other than a stack. [2]</p>
+    <ul class="mp"><li><b>1</b>(b) A stack is a LIFO data structure</li><li><b>2</b>(b) Each recursive call is pushed onto the stack and popped as the function ends</li><li><b>3</b>(b) This enables backtracking or unwinding, maintaining the required order (max 3)</li><li><b>4</b>(c) Linked list</li><li><b>5</b>(c) Queue, or binary tree (two correct ADTs for 2 marks)</li></ul>
+    <p><b>Advice:</b> the three marks in (b) are three links in one chain: what is stored, why LIFO matters, what that gives you. The mark scheme for (c) lists linked list, queue and binary tree. Do not list data types such as array or record.</p>
+  </div></details>
+
+  <details><summary>Paper 3 · 9618/33 May/June 2025, Q12(a) <span class="marks">1 mark</span> <span class="cmd">Identify</span></summary><div class="inner">
+    <p>An array is an Abstract Data Type (ADT). Identify two other ADTs.</p>
+    <ul class="mp"><li><b>1</b>Any two of: stack, queue, linked list, binary tree, graph (both needed for the mark)</li></ul>
+    <p><b>Advice:</b> this identify question appears in different sessions. Learn the five names above and you have a free mark.</p>
+  </div></details>
+
+  <details><summary>Paper 4 style · Queue as a linked list of nodes <span class="marks">11 marks</span> <span class="cmd">Show, Write</span></summary><div class="inner">
+    <p><i>Cambridge 9608 Paper 4, as printed in the Cambridge A Level textbook's end-of-chapter questions. The session is not given in the extract, and this version of the mark scheme is my own worked answer.</i></p>
+    <p>A queue ADT has the operations create queue, add item to queue and remove item from queue. It is implemented as a linked list of nodes, each with data and a pointer to the next node. Nodes are stored in <code>DECLARE Queue : ARRAY[1:10] OF Node</code>, where <code>Node</code> has <code>Name : STRING</code> and <code>Pointer : INTEGER</code>. A pointer of 0 means null.</p>
+    <p><b>(a)</b> These operations are carried out: CreateQueue, AddName("Ali"), AddName("Jack"), AddName("Ben"), AddName("Ahmed"), RemoveName, AddName("Jatinder"), RemoveName. Show the final state of the queue. [3]</p>
+    <ul class="mp"><li><b>1</b>Ali then Jack are removed from the front (FIFO)</li><li><b>2</b>Final order from head to tail: Ben, Ahmed, Jatinder</li><li><b>3</b>Nodes drawn linked in that order, with the last pointer null</li></ul>
+    <p><b>(b)(i)</b> Show the value of HeadPointer, TailPointer, FreePointer and every node's Pointer straight after CreateQueue. [4]</p>
+    <ul class="mp"><li><b>4</b>HeadPointer = 0 and TailPointer = 0 (queue is empty)</li><li><b>5</b>FreePointer = 1 (first free node)</li><li><b>6</b>Pointers of nodes 1 to 9 are 2 to 10 (each linked to the next)</li><li><b>7</b>Pointer of node 10 = 0 (end of the free list)</li></ul>
+    <p><b>(b)(ii)</b> Complete the procedure <code>AddName(NewName)</code>. [4]</p>
+<pre>PROCEDURE AddName(BYVALUE NewName : STRING)
+   IF FreePointer = 0
+      THEN
+         Report Error               // no free nodes
+      ELSE
+         CurrentPointer ← FreePointer
+         Queue[CurrentPointer].Name ← NewName
+         FreePointer ← Queue[FreePointer].Pointer
+         Queue[CurrentPointer].Pointer ← 0
+         IF HeadPointer = 0
+            THEN HeadPointer ← CurrentPointer     // first item
+            ELSE Queue[TailPointer].Pointer ← CurrentPointer
+         ENDIF
+         TailPointer ← CurrentPointer
+   ENDIF
+ENDPROCEDURE</pre>
+    <ul class="mp"><li><b>8</b>Test for no free nodes and report an error</li><li><b>9</b>Store the name in the free node, then move FreePointer on to the next free node (before overwriting the node's pointer)</li><li><b>10</b>Set the new node's pointer to 0</li><li><b>11</b>Link the old tail to the new node (or set HeadPointer if the queue was empty), then update TailPointer</li></ul>
+    <div class="warn"><b>Paper 4 advice</b>Do the first-item case separately: with an empty queue there is no old tail to link from. Update FreePointer <i>before</i> you change the pointer field, or you lose the rest of the free list. Pointer diagrams score on the three header pointers as much as on the nodes, so label them all.</div>
+  </div></details>
+
+  <details><summary>Paper 3 · 9618/32 Oct/Nov 2022, Q11 <span class="marks">10 marks</span> <span class="cmd">Complete, Explain</span></summary><div class="inner">
+    <p>A simplified linked list stores flower names in alphabetical order using two 1D arrays: <code>Flower</code> (the names) and <code>NextPointer</code>. <code>HeadPointer</code> is the index of the first name, and 0 marks the end of the list. Initially <code>HeadPointer = 6</code>.</p>
+    <div class="tablewrap"><table><thead><tr><th>Index</th><th>Flower</th><th>NextPointer</th></tr></thead><tbody>
+      <tr><td class="m">1</td><td>Rose</td><td class="m">7</td></tr><tr><td class="m">2</td><td>Marigold</td><td class="m">1</td></tr><tr><td class="m">3</td><td>Foxglove</td><td class="m">10</td></tr><tr><td class="m">4</td><td>Iris</td><td class="m">9</td></tr><tr><td class="m">5</td><td>Daisy</td><td class="m">3</td></tr><tr><td class="m">6</td><td>Dahlia</td><td class="m">5</td></tr><tr><td class="m">7</td><td>Saxifrage</td><td class="m">0</td></tr><tr><td class="m">8</td><td>Lupin</td><td class="m">2</td></tr><tr><td class="m">9</td><td>Lily</td><td class="m">8</td></tr><tr><td class="m">10</td><td>Hydrangea</td><td class="m">4</td></tr></tbody></table></div>
+    <p><b>(a)</b> Marigold, Dahlia, Saxifrage and Hydrangea are deleted. Show the new <code>HeadPointer</code> and <code>NextPointer</code> values that keep the remaining names in alphabetical order. [3]</p>
+    <p><b>(b)</b> Complete the pseudocode to input a flower name, search the list in order, and output whether it is found. The search ends when the pointer is 0. [5]</p>
+    <p><b>(c)</b> Explain how you could improve the simplified linked list structure. [2]</p>
+    <div class="tip"><b>Reminder</b>In (a), follow the order Daisy, Foxglove, Iris, Lily, Lupin, Rose, and make each pointer hold the index of the next name. Deleted rows are left blank.</div>
+    <p><b>(a)</b> HeadPointer 5. Rose 0, Foxglove 4, Iris 9, Daisy 3, Lupin 1, Lily 8.</p>
+    <ul class="mp"><li><b>1</b>(a) Correct HeadPointer (5, Daisy)</li><li><b>2</b>(a) Any three correct NextPointer</li><li><b>3</b>(a) All six NextPointer correct</li></ul>
+<pre>Pointer ← HeadPointer
+Found ← 0
+OUTPUT "Enter a flower name "
+INPUT FlowerName
+WHILE Pointer <> 0
+   IF Flower[Pointer] = FlowerName THEN
+      Found ← Pointer
+      Pointer ← 0
+   ELSE
+      Pointer ← NextPointer[Pointer]
+   ENDIF
+ENDWHILE
+IF Found <> 0 THEN
+   OUTPUT Flower[Found], " is found"
+ELSE
+   OUTPUT "The flower you wanted is not in the list"
+ENDIF</pre>
+    <ul class="mp"><li><b>4</b>(b) One mark for each correct completed line (5 lines)</li><li><b>5</b>(c) Include a free list pointer</li><li><b>6</b>(c) ...to reuse the unused space, as a linked list of free space</li></ul>
+    <div class="warn"><b>Examiner report</b>Very few candidates got full marks in (b). Typical errors: a wrong WHILE condition, a wrong assignment for the next value of Pointer, missing THEN, or outputting <code>Flower[Found]</code> when the name is not found (it is not in the array). In (c) many candidates improved the search instead of using a free list pointer to reuse deleted nodes. Read what the question asks you to improve.</div>
+    <p><b>Advice:</b> this is the textbook's heap idea in an exam. A free list pointer is the <code>heapStartPointer</code> from the linked list tab. If an improvement is asked for on a linked list, think about the unused nodes.</p>
+  </div></details>
+
+  <details><summary>Paper 3 · 9618/31 May/June 2023, Q11 <span class="marks">11 marks</span> <span class="cmd">Write, Complete, Explain</span></summary><div class="inner">
+    <p>A queue ADT of strings is implemented with: <code>FrontPointer</code> (INTEGER, start of the queue), <code>RearPointer</code> (INTEGER, end of the queue), <code>Length</code> (INTEGER, current size) and <code>Queue</code> (a 1D STRING array). A constant <code>MaxSize</code> limits the queue to 60 items.</p>
+    <p><b>(a)</b> Write the pseudocode to declare MaxSize, FrontPointer, RearPointer, Length and Queue. [3]</p>
+    <p><b>(b)</b> Complete the function <code>Dequeue</code> so it removes the front item (the function stores the item, moves the front pointer, reduces the length, and wraps the pointer round when it passes MaxSize). [4]</p>
+    <p><b>(c)</b> Explain how a new element can be added to the queue if it is implemented using <b>two stacks</b>. [4]</p>
+    <div class="tip"><b>Reminder</b>(c) is a direct example of implementing one ADT from another: a queue built from two stacks. Two LIFO stacks back to back reverse the order twice, which gives FIFO.</div>
+<pre>CONSTANT MaxSize = 60
+DECLARE Queue : ARRAY[1:60] OF STRING
+DECLARE FrontPointer : INTEGER
+DECLARE RearPointer : INTEGER
+DECLARE Length : INTEGER</pre>
+    <ul class="mp"><li><b>1</b>(a) Correctly defined constant</li><li><b>2</b>(a) Correctly defined array (1:60, 0:59, or using MaxSize)</li><li><b>3</b>(a) Three correctly defined integers</li></ul>
+<pre>FUNCTION Dequeue RETURNS STRING
+   DECLARE Item : STRING
+   IF Length > 0 THEN
+      Item ← Queue[FrontPointer]
+      FrontPointer ← FrontPointer + 1
+      Length ← Length - 1
+      IF Length = 0 THEN
+         CALL Initialise            // reset the pointers
+      ELSE
+         IF FrontPointer > MaxSize THEN
+            FrontPointer ← 1
+         ENDIF
+      ENDIF
+   ELSE
+      OUTPUT "The print queue was empty - error"
+      Item ← ""
+   ENDIF
+   RETURN Item
+ENDFUNCTION</pre>
+    <ul class="mp"><li><b>4</b>(b) One mark for each correctly completed line (max 4)</li><li><b>5</b>(c) Two stacks are needed so the second can reverse the order of the first</li><li><b>6</b>(c) Stack 1 acts as the queue with the newest elements at the bottom; stack 2 is empty</li><li><b>7</b>(c) To add: pop all elements from stack 1 and push them onto stack 2, push the new element, then pop everything from stack 2 back onto stack 1</li></ul>
+    <div class="warn"><b>Examiner report</b>Most candidates got at least one mark for the three integers, but few declared all parts. Part (b) was awarded as 4 marks to every candidate because of a wording problem in the printed question, so do not treat that part as a guide to difficulty. In (c), candidates generally understood that items must leave in the order they entered, which needs data moved between the two stacks.</div>
+    <p><b>Advice:</b> in (c), say what each stack does and in what order you move items. "Use two stacks to make a queue" earns nothing without the reversal.</p>
+  </div></details>
+
+  <details><summary>Paper 4 · 9618/41 May/June 2026, Q1(a), (b), (c)(i) <span class="marks">15 marks</span> <span class="cmd">Write program code</span></summary><div class="inner">
+    <p>A program stores integer data in a linear queue. The queue is a global 1D array with space for 10 elements. A global head pointer, initialised to -1, points to the first element. A global tail pointer, initialised to -1, points to the last element.</p>
+    <p><b>(a)</b> Write program code to declare the global variables and initialise the queue and pointers. [3]</p>
+    <p><b>(b)</b> Write the function <code>Enqueue()</code>. It takes an integer parameter, returns Boolean FALSE if the queue is full, and otherwise stores the parameter, updates the appropriate pointer(s) and returns TRUE. [7]</p>
+    <p><b>(c)(i)</b> Extend the main program to take 11 integers as input, insert each using the function, output a message whenever the queue is full, and output the final content of the array. Do not dequeue. [5]</p>
+    <div class="tip"><b>Reminder</b>Paper 4 is marked on working code that you save and screenshot. Write it in your exam language. Python is shown below.</div>
+<pre>Queue = []
+HeadPointer = -1
+TailPointer = -1
+for x in range(10):
+    Queue.append(-1)
+
+def Enqueue(Data):
+    global Queue, TailPointer, HeadPointer
+    if TailPointer < 9:
+        TailPointer = TailPointer + 1
+        Queue[TailPointer] = Data
+        if HeadPointer == -1:
+            HeadPointer = 0
+        return True
+    else:
+        return False
+
+for x in range(11):
+    Returned = Enqueue(int(input("Enter a number ")))
+    if not Returned:
+        print("Queue full")
+print(Queue)</pre>
+    <ul class="mp"><li><b>1</b>(a) Global array of 10 integers</li><li><b>2</b>(a) Head and tail pointers both initialised to -1</li><li><b>3</b>(a) Queue values initialised to -1</li><li><b>4</b>(b) Header taking one integer parameter, with the full check returning False</li><li><b>5</b>(b) Otherwise store the parameter at tail pointer + 1</li><li><b>6</b>(b) Increment the tail pointer and return True</li><li><b>7</b>(b) Deal with the first element and set the head pointer to 0</li><li><b>8</b>(c)(i) Take 11 integers as input, call <code>Enqueue()</code> with each, store or check the return value, output a message on False, output the array</li></ul>
+    <div class="warn"><b>Paper 4 advice</b>Queue full means the tail pointer is at the last index (9 for 10 elements). Set the head pointer only when the first value goes in. The 11th value must produce the message, so test with 11 inputs and keep the screenshot as evidence. No examiner report is available for this session.</div>
+  </div></details>
+</section>
+</section>
+<section id="tips" role="tabpanel" hidden>
+<section class="panel" id="lg-tips">
+  <div class="sec-label">Top tips</div>
+  <h2>What to remember in the exam</h2>
+  <div class="grid2">
+    <div class="tip" style="margin:0"><b>Name the parts</b>Say which type it is built from (array, linked list), then name the pointers. "Array plus a top pointer" earns more than "an array".</div>
+    <div class="tip" style="margin:0"><b>Keep the two pointers apart</b>For a linked list, <code>startPointer</code> is the list in use and <code>heapStartPointer</code> is the free nodes.</div>
+    <div class="tip" style="margin:0"><b>Null is -1</b>Loops walk the list until the pointer is -1, never until the end of the array.</div>
+    <div class="tip" style="margin:0"><b>Dictionary, in one line</b>Keys in a linked list, values in a parallel array at the same index, each key stored once.</div>
+    <div class="warn" style="margin:0"><b>Common slip</b>Declaring the dictionary type with a mix of two structures in one line. Write the TYPE with separate DECLARE lines for keys and values.</div>
+    <div class="warn" style="margin:0"><b>Command words</b>"Show how" and "describe how" need working and detail. "State" needs only the name.</div>
+  </div>
+</section>  <h2>Keyword flashcards</h2>
+  <p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</section>
+</div>
+</div>
