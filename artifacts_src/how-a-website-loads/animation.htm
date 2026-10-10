@@ -1,0 +1,372 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>How a Website Loads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Archivo:wght@800;900&display=swap">
+<style>
+  :root{
+    --paper:#FAF9F3;
+    --ink:#0F2038;
+    --ink-soft:#3B5170;
+    --line:#C9CFD8;
+    --s1:#1E7A32;   /* step 1 - browser to DNS(1) */
+    --s2:#B3261E;   /* step 2/3 - DNS(1) <-> DNS(2) */
+    --s4:#6A1B9A;   /* step 4 - DNS(1) to computer */
+    --s5:#0B5FA5;   /* step 5 - computer to website (request) */
+    --s6:#0E8F86;   /* step 6 - website to computer (response) */
+    --panel:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Atkinson Hyperlegible', Arial, sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    padding:20px; padding-block:24px;
+  }
+  .stage{
+    width:100%; max-width:1100px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .top{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+  h1{
+    font-family:'Archivo', Arial, sans-serif; font-weight:900;
+    font-size:clamp(22px,3.6vw,34px); margin:0; letter-spacing:-0.01em;
+    text-wrap:balance;
+  }
+  .eyebrow{
+    font-family:'Archivo', Arial, sans-serif; font-weight:800; font-size:13px;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);
+  }
+  .dots{ display:flex; gap:10px; }
+  .dot{
+    width:34px; height:34px; border-radius:50%; border:3px solid var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Archivo',sans-serif; font-weight:900; font-size:15px;
+    background:var(--panel); color:var(--ink); flex:none;
+    transition:background .25s, color .25s, transform .25s, border-color .25s;
+    cursor:pointer; padding:0;
+  }
+  .dot:hover{ transform:scale(1.08); }
+  .dot:focus-visible{ outline:3px solid var(--s5); outline-offset:2px; }
+  .dot.active{ transform:scale(1.14); }
+  .dot.done{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+
+  .diagram-wrap{
+    background:var(--panel); border:3px solid var(--ink); border-radius:18px;
+    padding:18px clamp(10px,3vw,32px); position:relative;
+  }
+  svg{ width:100%; height:auto; display:block; }
+  .box-rect{ fill:var(--paper); stroke:var(--ink); stroke-width:4; }
+  .box-label{ font-family:'Archivo',sans-serif; font-weight:900; fill:var(--ink); }
+  .path-line{ fill:none; stroke:var(--line); stroke-width:6; stroke-linecap:round; }
+  .path-active{ fill:none; stroke-linecap:round; stroke-width:9; opacity:0; transition:opacity .2s; }
+  .path-active.on{ opacity:1; }
+  .beam{ opacity:0; }
+  .beam.on{ opacity:1; }
+  .num-badge{ font-family:'Archivo',sans-serif; font-weight:900; font-size:26px; }
+  .num-circle{ stroke-width:4; fill:var(--panel); }
+
+  .caption-bar{
+    background:var(--ink); color:var(--paper); border-radius:16px;
+    padding:20px clamp(16px,4vw,34px); min-height:96px;
+    display:flex; align-items:center; gap:16px;
+  }
+  .caption-text{
+    font-size:clamp(19px,3vw,27px); line-height:1.35; font-weight:700; margin:0;
+    text-wrap:balance;
+  }
+  .caption-text b{ color:var(--accent, #FFD166); }
+
+  .controls{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;
+  }
+  .buttons{ display:flex; gap:10px; flex-wrap:wrap; }
+  button{
+    font-family:'Archivo',sans-serif; font-weight:800; font-size:15px;
+    border:3px solid var(--ink); background:var(--panel); color:var(--ink);
+    padding:12px 20px; border-radius:12px; cursor:pointer;
+  }
+  button.primary{ background:var(--ink); color:var(--paper); }
+  button:active{ transform:translateY(1px); }
+  .progress-track{
+    flex:1 1 220px; height:14px; border:3px solid var(--ink); border-radius:8px;
+    background:var(--panel); overflow:hidden; min-width:180px;
+  }
+  .progress-fill{ height:100%; background:var(--ink); width:0%; }
+
+  @media (max-width:620px){
+    .top{ align-items:flex-start; }
+    .dots{ order:3; width:100%; justify-content:space-between; }
+  }
+</style>
+
+<div class="stage">
+  <div class="top">
+    <div>
+      <div class="eyebrow">IGCSE Computer Science &middot; 5.1.5</div>
+      <h1>How does a website appear on your screen?</h1>
+    </div>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg">
+      <!-- static connector lines -->
+      <path class="path-line" d="M 190 430 L 780 430"/>                 <!-- computer <-> DNS1 -->
+      <path class="path-line" d="M 780 380 L 780 150"/>                 <!-- DNS1 <-> DNS2 -->
+      <path class="path-line" d="M 160 380 L 160 170"/>                 <!-- computer <-> website server -->
+
+      <!-- active highlight paths (one per step) -->
+      <path id="p1" class="path-active" stroke="var(--s1)" d="M 200 415 L 745 415"/>
+      <path id="p2" class="path-active" stroke="var(--s2)" d="M 790 385 L 790 165"/>
+      <path id="p3" class="path-active" stroke="var(--s2)" d="M 770 165 L 770 385"/>
+      <path id="p4" class="path-active" stroke="var(--s4)" d="M 745 445 L 200 445"/>
+      <path id="p5" class="path-active" stroke="var(--s5)" d="M 148 385 L 148 165"/>
+      <path id="p6" class="path-active" stroke="var(--s6)" d="M 172 165 L 172 385"/>
+
+      <!-- moving beam dots -->
+      <circle id="beam1" class="beam" r="12" fill="var(--s1)"/>
+      <circle id="beam2" class="beam" r="12" fill="var(--s2)"/>
+      <circle id="beam3" class="beam" r="12" fill="var(--s2)"/>
+      <circle id="beam4" class="beam" r="12" fill="var(--s4)"/>
+      <circle id="beam5" class="beam" r="12" fill="var(--s5)"/>
+      <circle id="beam6" class="beam" r="12" fill="var(--s6)"/>
+
+      <!-- computer -->
+      <g>
+        <rect class="box-rect" x="60" y="380" width="200" height="110" rx="14"/>
+        <rect x="90" y="405" width="140" height="40" rx="4" fill="var(--paper)" stroke="var(--ink)" stroke-width="3"/>
+        <text id="urlText" x="98" y="431" font-family="Atkinson Hyperlegible" font-size="15" fill="var(--ink-soft)">your browser</text>
+        <text class="box-label" x="160" y="472" font-size="20" text-anchor="middle">Computer</text>
+      </g>
+
+      <!-- DNS server (1) -->
+      <g>
+        <rect class="box-rect" x="700" y="380" width="200" height="110" rx="14"/>
+        <text class="box-label" x="800" y="428" font-size="19" text-anchor="middle">DNS</text>
+        <text class="box-label" x="800" y="452" font-size="19" text-anchor="middle">server (1)</text>
+      </g>
+
+      <!-- DNS server (2) -->
+      <g>
+        <rect class="box-rect" x="700" y="60" width="200" height="110" rx="14"/>
+        <text class="box-label" x="800" y="108" font-size="19" text-anchor="middle">DNS</text>
+        <text class="box-label" x="800" y="132" font-size="19" text-anchor="middle">server (2)</text>
+      </g>
+
+      <!-- website server -->
+      <g>
+        <rect class="box-rect" x="60" y="60" width="200" height="110" rx="14"/>
+        <text class="box-label" x="160" y="108" font-size="19" text-anchor="middle">Website</text>
+        <text class="box-label" x="160" y="132" font-size="19" text-anchor="middle">server</text>
+      </g>
+
+      <!-- step number badges, shown only when active -->
+      <g id="badge1" class="badge" opacity="0"><circle class="num-circle" cx="470" cy="400" r="26" stroke="var(--s1)"/><text class="num-badge" x="470" y="409" text-anchor="middle" fill="var(--s1)">1</text></g>
+      <g id="badge2" class="badge" opacity="0"><circle class="num-circle" cx="760" cy="275" r="26" stroke="var(--s2)"/><text class="num-badge" x="760" y="284" text-anchor="middle" fill="var(--s2)">2</text></g>
+      <g id="badge3" class="badge" opacity="0"><circle class="num-circle" cx="820" cy="275" r="26" stroke="var(--s2)"/><text class="num-badge" x="820" y="284" text-anchor="middle" fill="var(--s2)">3</text></g>
+      <g id="badge4" class="badge" opacity="0"><circle class="num-circle" cx="470" cy="460" r="26" stroke="var(--s4)"/><text class="num-badge" x="470" y="469" text-anchor="middle" fill="var(--s4)">4</text></g>
+      <g id="badge5" class="badge" opacity="0"><circle class="num-circle" cx="105" cy="275" r="26" stroke="var(--s5)"/><text class="num-badge" x="105" y="284" text-anchor="middle" fill="var(--s5)">5</text></g>
+      <g id="badge6" class="badge" opacity="0"><circle class="num-circle" cx="220" cy="275" r="26" stroke="var(--s6)"/><text class="num-badge" x="220" y="284" text-anchor="middle" fill="var(--s6)">6</text></g>
+    </svg>
+  </div>
+
+  <div class="caption-bar">
+    <p class="caption-text" id="caption">Watch what happens between you typing a web address and the page appearing.</p>
+  </div>
+
+  <div class="controls">
+    <div class="buttons">
+      <button id="backBtn">&#9664;&#9664; Back 5s</button>
+      <button class="primary" id="playBtn">&#9654; Play</button>
+      <button id="replayBtn">&#8635; Restart</button>
+      <button id="speakBtn">&#128264; Read aloud: Off</button>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</div>
+
+<script>
+const SCENES = [
+  { t: 7500, caption: 'A user types a website address into their <b>browser</b>.', accent:'#FFD166', active:null, badge:null },
+  { t: 14500, caption: 'Step 1: The browser asks a <b>DNS server</b> to find the matching address — computers only understand <b>IP addresses</b>, not words like "google.com".', accent:'#8CFFA0', active:'p1', beam:'beam1', from:[200,415], to:[745,415], badge:'badge1' },
+  { t: 17500, caption: 'Step 2: DNS server (1) does not know the <b>IP address</b>, so it asks <b>DNS server (2)</b> — no single DNS server stores every address, so servers pass requests on until one has the answer.', accent:'#FF9B8A', active:'p2', beam:'beam2', from:[790,385], to:[790,165], badge:'badge2' },
+  { t: 16500, caption: 'Step 3: DNS server (2) finds the address and sends it <b>back</b>. DNS server (1) stores it in its <b>cache</b>, so it doesn’t have to ask again next time.', accent:'#FF9B8A', active:'p3', beam:'beam3', from:[770,165], to:[770,385], badge:'badge3' },
+  { t: 7500, caption: 'Step 4: The address is sent back to the <b>user\'s computer</b>.', accent:'#D6A6FF', active:'p4', beam:'beam4', from:[745,445], to:[200,445], badge:'badge4' },
+  { t: 9500, caption: 'Step 5: The computer uses the address to contact the <b>website server</b> and ask for the page.', accent:'#9FD4FF', active:'p5', beam:'beam5', from:[148,380], to:[148,170], badge:'badge5' },
+  { t: 11500, caption: 'Step 6: The website server sends the <b>HTML files</b> back. The browser reads them and shows the page on screen.', accent:'#8FE9E0', active:'p6', beam:'beam6', from:[172,170], to:[172,380], badge:'badge6' },
+  { t: 7500, caption: 'That\'s how a website loads — <b>six steps</b>, every time you open a page.', accent:'#FFD166', active:null, badge:null },
+];
+
+const STEP_COUNT = 6;
+const dotsEl = document.getElementById('dots');
+for(let i=1;i<=STEP_COUNT;i++){
+  const d = document.createElement('button');
+  d.type = 'button';
+  d.className='dot'; d.id='dot'+i; d.textContent=i;
+  d.setAttribute('aria-label', 'Jump to step ' + i);
+  d.addEventListener('click', ()=>jumpToScene(i));
+  dotsEl.appendChild(d);
+}
+
+const captionEl = document.getElementById('caption');
+const progressFill = document.getElementById('progressFill');
+const playBtn = document.getElementById('playBtn');
+const backBtn = document.getElementById('backBtn');
+const replayBtn = document.getElementById('replayBtn');
+const speakBtn = document.getElementById('speakBtn');
+
+// cumulative start time (ms) for each scene, for elapsed -> scene lookup
+const SCENE_STARTS = [];
+{
+  let acc = 0;
+  for(const sc of SCENES){ SCENE_STARTS.push(acc); acc += sc.t; }
+}
+const TOTAL_T = SCENES.reduce((a,s)=>a+s.t,0);
+
+let elapsedMs = 0;      // absolute position in the timeline
+let playing = false;
+let lastFrameTs = null;
+let rafId = null;
+let speakOn = false;
+let lastSpokenIndex = -1;
+
+function clearHighlights(){
+  document.querySelectorAll('.path-active').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.beam').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.badge').forEach(b=>b.setAttribute('opacity','0'));
+}
+
+function setDots(activeStepNum, pastEnd){
+  for(let i=1;i<=STEP_COUNT;i++){
+    const el = document.getElementById('dot'+i);
+    el.classList.remove('active','done');
+    if(activeStepNum && i === activeStepNum) el.classList.add('active');
+    else if((activeStepNum && i < activeStepNum) || pastEnd) el.classList.add('done');
+  }
+}
+
+function stepNumForScene(idx){
+  return (idx>=1 && idx<=STEP_COUNT) ? idx : null;
+}
+
+function sceneAt(ms){
+  ms = Math.max(0, Math.min(ms, TOTAL_T - 1));
+  let idx = SCENES.length - 1;
+  for(let i=0;i<SCENES.length;i++){
+    if(ms < SCENE_STARTS[i] + SCENES[i].t){ idx = i; break; }
+  }
+  const sceneElapsed = ms - SCENE_STARTS[idx];
+  const progress = Math.min(1, sceneElapsed / SCENES[idx].t);
+  return { idx, progress };
+}
+
+function render(ms){
+  ms = Math.max(0, Math.min(ms, TOTAL_T));
+  const { idx, progress } = sceneAt(ms);
+  const sc = SCENES[idx];
+
+  clearHighlights();
+  captionEl.innerHTML = sc.caption;
+  captionEl.style.setProperty('--accent', sc.accent || '#FFD166');
+  if(sc.active) document.getElementById(sc.active).classList.add('on');
+  if(sc.badge) document.getElementById(sc.badge).setAttribute('opacity','1');
+  if(sc.beam){
+    const beam = document.getElementById(sc.beam);
+    beam.classList.add('on');
+    const x = sc.from[0] + (sc.to[0]-sc.from[0])*progress;
+    const y = sc.from[1] + (sc.to[1]-sc.from[1])*progress;
+    beam.setAttribute('cx', x);
+    beam.setAttribute('cy', y);
+  }
+  setDots(stepNumForScene(idx), ms >= TOTAL_T - 1);
+  progressFill.style.width = (ms / TOTAL_T * 100) + '%';
+
+  if(speakOn && lastSpokenIndex !== idx){
+    lastSpokenIndex = idx;
+    try{
+      const plain = sc.caption.replace(/<[^>]+>/g,'');
+      // split into sentences and speak them with a short pause between —
+      // one long utterance runs clauses together and sounds rushed.
+      const sentences = plain.split(/(?<=[.!?—-])\s+/).filter(s => s.trim());
+      speechSynthesis.cancel();
+      const speakNext = (i) => {
+        if(i >= sentences.length) return;
+        const utter = new SpeechSynthesisUtterance(sentences[i]);
+        utter.rate = 0.92;
+        utter.onend = () => setTimeout(() => speakNext(i + 1), 260);
+        speechSynthesis.speak(utter);
+      };
+      speakNext(0);
+    }catch(e){}
+  }
+}
+
+function tick(ts){
+  if(!playing) return;
+  if(lastFrameTs === null) lastFrameTs = ts;
+  elapsedMs += (ts - lastFrameTs);
+  lastFrameTs = ts;
+  if(elapsedMs >= TOTAL_T){
+    elapsedMs = TOTAL_T;
+    render(elapsedMs);
+    pause();
+    return;
+  }
+  render(elapsedMs);
+  rafId = requestAnimationFrame(tick);
+}
+
+function play(){
+  if(elapsedMs >= TOTAL_T) elapsedMs = 0;
+  playing = true;
+  lastFrameTs = null;
+  playBtn.innerHTML = '&#10074;&#10074; Pause';
+  rafId = requestAnimationFrame(tick);
+}
+function pause(){
+  playing = false;
+  playBtn.innerHTML = '&#9654; Play';
+  if(rafId) cancelAnimationFrame(rafId);
+}
+function restart(){
+  pause();
+  elapsedMs = 0;
+  lastSpokenIndex = -1;
+  render(0);
+}
+function backFiveSeconds(){
+  pause();
+  elapsedMs = Math.max(0, elapsedMs - 5000);
+  // allow re-speaking the scene we land back in
+  const { idx } = sceneAt(elapsedMs);
+  if(lastSpokenIndex === idx) lastSpokenIndex = -1;
+  render(elapsedMs);
+}
+function jumpToScene(stepNum){
+  // scene index equals step number for steps 1..STEP_COUNT (scene 0 is the intro)
+  pause();
+  elapsedMs = SCENE_STARTS[stepNum];
+  lastSpokenIndex = -1;
+  render(elapsedMs);
+}
+
+playBtn.addEventListener('click', ()=>{
+  if(playing) pause();
+  else play();
+});
+backBtn.addEventListener('click', backFiveSeconds);
+replayBtn.addEventListener('click', ()=>{ restart(); play(); });
+speakBtn.addEventListener('click', ()=>{
+  speakOn = !speakOn;
+  speakBtn.innerHTML = speakOn ? '&#128264; Read aloud: On' : '&#128264; Read aloud: Off';
+  if(!speakOn){ try{ speechSynthesis.cancel(); }catch(e){} }
+});
+
+// resting state: start of timeline visible on load
+render(0);
+</script>
+
+</body></html>

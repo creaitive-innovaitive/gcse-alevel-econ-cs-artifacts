@@ -1,0 +1,75 @@
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 5.1 · Classroom activity</div>
+  <h1>DNS Clue Station</h1>
+  <p class="lead">How a domain name becomes an IP address, plus the classroom activity where each team spells a code word to reveal a check-in question.</p>
+</header>
+
+<div class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</div>
+<section id="learn" role="tabpanel">
+  <div class="card big"><h3>The big idea</h3><p>Computers find websites by <b>IP address</b>, but people use <b>domain names</b>. The <b>Domain Name System (DNS)</b> is the service that translates one into the other.</p></div>
+  <div class="grid2">
+    <div class="card"><h3>Why DNS is needed</h3><p>Names such as www.school-shoes.com are easy to remember. The network needs a number such as 203.0.113.7 to send data to the right server.</p></div>
+    <div class="card"><h3>What a DNS server stores</h3><p>A database of domain names and their IP addresses. If it has no record, it asks another DNS server.</p></div>
+  </div>
+  <h2>DNS server or web server?</h2>
+  <div class="tw"><table class="t"><tr><th></th><th>DNS server</th><th>Web server</th></tr>
+    <tr><td>Stores</td><td>Domain names and IP addresses</td><td>The website's files</td></tr>
+    <tr><td>Sends back</td><td>An IP address</td><td>HTML files</td></tr></table></div>
+</section>
+<section id="watch" role="tabpanel" hidden>
+  <h2>How DNS resolves a URL</h2>
+  <p>Press Play, or use the numbered steps.</p>
+  <div id="stA"></div>
+</section>
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab · Does the first DNS server know the address?</h2>
+  <p>Choose whether DNS server 1 already has the record and see the path the request takes.</p>
+  <div class="card"><div class="row"><button class="b pri" data-k="hit">DNS server 1 has the record</button><button class="b" data-k="miss">DNS server 1 does not</button><button class="b" data-k="none">No server has it</button></div><div class="verdict" id="v1" style="margin-top:12px"></div></div>
+  <svg id="lab1" viewBox="0 0 700 220" role="img" aria-label="Path of a DNS request" style="width:100%;height:auto"></svg>
+</section>
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · The DNS Clue Station</h2>
+  <p class="note">A classroom activity: each team sequences its cards to spell a code word, enters it, and reveals a check-in question. <a href="clue-station.htm" target="_blank" rel="noopener">Open it full screen</a>.</p>
+  <iframe src="clue-station.htm" title="DNS Clue Station" style="width:100%;height:620px;border:1px solid var(--line);border-radius:12px;background:var(--surface)" onload="try{var d=this.contentDocument;this.style.height=Math.max(620,d.documentElement.scrollHeight+4)+'px'}catch(e){}"></iframe>
+  <h2>2 · Put the DNS steps in order</h2>
+  <div id="o1" class="card"></div>
+  <h2>3 · Match the term to its meaning</h2>
+  <div id="m1" class="card"></div>
+</section>
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are explained in general terms.</p>
+  <div class="rw"><h3>Mistyping an address</h3><p>If no DNS server has a record for the name you typed, the browser reports that the server was not found.</p><div class="use"><b>Use it for:</b> what happens when DNS fails.</div></div>
+  <div class="rw"><h3>A phone's contacts list</h3><p>You tap a name and the phone dials the number. DNS does the same job for websites.</p><div class="use"><b>Use it for:</b> explaining DNS in plain words.</div></div>
+  <div class="rw"><h3>Moving a website to a new server</h3><p>The owner updates the DNS record to the new IP address. Users still type the same name, so they do not notice.</p><div class="use"><b>Use it for:</b> why names are better than numbers.</div></div>
+</section>
+<section id="exam" role="tabpanel" hidden>
+  <h2>Check-in questions with answers</h2>
+  <p>These are the questions behind the Clue Station codes. Answer first, then open the mark points.</p>
+  <details class="eq"><summary><span class="cmd">Explain</span> <span class="mark">2 marks</span> Why does DNS server 1 store the IP address it receives from DNS server 2?</summary><div class="body"><div class="ans"><p>1. So it can answer the next request for the same domain itself.</p><p>2. This is faster and avoids asking another DNS server again.</p></div></div></details>
+  <details class="eq"><summary><span class="cmd">Explain</span> <span class="mark">2 marks</span> What is the difference between a DNS server and the website server?</summary><div class="body"><div class="ans"><p>1. A DNS server stores domain names and their IP addresses and returns an IP address.</p><p>2. The website server stores the website's files and sends them to the browser.</p></div></div></details>
+  <details class="eq"><summary><span class="cmd">Explain</span> <span class="mark">2 marks</span> Why does a computer need DNS to translate a URL into an IP address?</summary><div class="body"><div class="ans"><p>1. Devices on a network are found by IP address, not by name.</p><p>2. DNS gives the computer the number it needs to contact the server.</p></div></div></details>
+  <details class="eq"><summary><span class="cmd">State</span> <span class="mark">2 marks</span> What does the browser do once it receives the HTML files?</summary><div class="body"><div class="ans"><p>1. It renders (interprets) the HTML.</p><p>2. It displays the web page on the screen.</p></div></div></details>
+  <details class="eq"><summary><span class="cmd">Explain</span> <span class="mark">2 marks</span> Why does the computer need an IP address before it can contact the website server?</summary><div class="body"><div class="ans"><p>1. The IP address identifies where the web server is on the network.</p><p>2. Data (the request) can only be sent to the right device if it is addressed to it.</p></div></div></details>
+  <details class="eq"><summary><span class="cmd">State</span> <span class="mark">2 marks</span> What does the website server send back once it receives the request?</summary><div class="body"><div class="ans"><p>1. The HTML files (and other files such as images) for the page.</p><p>2. They are sent to the computer's IP address.</p></div></div></details>
+</section>
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>DNS returns an IP address.</b> It does not send the web page.</li>
+    <li><b>Use the words "domain name" and "IP address"</b> rather than "the address".</li>
+    <li><b>Mention caching</b> when a DNS server stores a record it was given.</li>
+    <li><b>Say what happens if no record exists:</b> an error such as "server not found".</li>
+  </ul>
+  <h2>Keyword flashcards</h2><p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</section>
+</div>

@@ -1,0 +1,82 @@
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 5.1.5</div>
+  <h1>How a website appears on your screen</h1>
+  <p class="lead">What happens between typing a web address and the page appearing: browser, DNS server, IP address, web server and HTML.</p>
+</header>
+
+<div class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</div>
+<section id="learn" role="tabpanel">
+  <div class="card big"><h3>The big idea</h3><p>When you type a web address, your <b>browser</b> asks a <b>DNS server</b> for the website's <b>IP address</b>, then asks the <b>web server</b> at that address for the page. The server sends back <b>HTML</b> files, and the browser <b>renders</b> them as the page you see.</p></div>
+  <h2>The sequence</h2>
+  <div class="card">
+    <p><b>1.</b> You type a URL, for example www.school-shoes.com, into the browser.</p>
+    <p><b>2.</b> The browser sends the domain name to a DNS server.</p>
+    <p><b>3.</b> If the DNS server has no record, it asks another DNS server, which returns the IP address.</p>
+    <p><b>4.</b> The IP address is sent back to your computer.</p>
+    <p><b>5.</b> Your computer contacts the web server at that IP address and requests the page using HTTP or HTTPS.</p>
+    <p style="margin-bottom:0"><b>6.</b> The web server sends the HTML files back, and the browser renders the page.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>DNS server</h3><p>Stores a database of domain names and their IP addresses. It never sends the web page.</p></div>
+    <div class="card"><h3>Web server</h3><p>Stores the website's files. It sends the page when it receives a request.</p></div>
+  </div>
+</section>
+<section id="watch" role="tabpanel" hidden>
+  <p>Press Play to watch what happens between you typing a web address and the page appearing. The Back 5s and Restart buttons help you replay a part.</p>
+  <p class="note">This is the full animation. <a href="animation.htm" target="_blank" rel="noopener">Open it full screen</a>.</p>
+  <iframe src="animation.htm" title="How a website appears on your screen" style="width:100%;height:720px;border:1px solid var(--line);border-radius:12px;background:var(--surface)" onload="try{var d=this.contentDocument;this.style.height=Math.max(720,d.documentElement.scrollHeight+4)+'px'}catch(e){}"></iframe>
+</section>
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab · Where did it go wrong?</h2>
+  <p>Choose a problem and see which step of the sequence failed and what the browser shows.</p>
+  <div class="card"><div class="row" id="fails"></div><div class="verdict" id="v1" style="margin-top:12px"></div></div>
+  <svg id="lab1" viewBox="0 0 700 140" role="img" aria-label="Sequence of steps with the failed step highlighted" style="width:100%;height:auto"></svg>
+</section>
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Put the steps in order</h2>
+  <div id="o1" class="card"></div>
+  <h2>2 · Who does it?</h2>
+  <p>Drag each action into the box for the device that does it. Tap an item, then tap a box if dragging is awkward.</p>
+  <div id="cl1" class="card"></div>
+  <h2>3 · Multiple choice</h2>
+  <div id="qz1"></div>
+</section>
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are explained in general terms.</p>
+  <div class="rw"><h3>"Server not found"</h3><p>If you mistype a domain name, no DNS server has a record for it. The IP address cannot be found, so the browser shows an error.</p><div class="use"><b>Use it for:</b> what happens when DNS fails.</div></div>
+  <div class="rw"><h3>A slow website</h3><p>The delay can come from any step: finding the IP address, contacting a busy web server, or sending large files back.</p><div class="use"><b>Use it for:</b> describing the sequence in order.</div></div>
+  <div class="rw"><h3>Caching</h3><p>A DNS server may store an IP address it has just received, so the next request for the same website is answered faster.</p><div class="use"><b>Use it for:</b> why a DNS server stores a record it was given by another DNS server.</div></div>
+</section>
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Write your answer first, then open the mark points. Tick the ones you earned.</p>
+  <details class="eq"><summary>Q1 <span class="cmd">Describe</span> <span class="mark">4 marks</span> Describe how a web page is retrieved and displayed when a user enters a URL.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Name the device doing each step: the browser, the DNS server and the web server.</div>
+    <div class="ans"><p>1. The browser sends the domain name to a DNS server.</p><p>2. The DNS server finds the matching IP address (asking another DNS server if needed) and returns it.</p><p>3. The browser sends a request to the web server at that IP address.</p><p>4. The web server sends the HTML files back and the browser renders the page.</p></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying the DNS server sends the web page. It only returns the IP address.</div></div></details>
+  <details class="eq"><summary>Q2 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Explain why a computer needs DNS to turn a URL into an IP address.</summary><div class="body">
+    <div class="ans"><p>1. Computers and web servers are identified on the network by IP addresses, not names.</p><p>2. People remember names better than numbers, so DNS translates the domain name into the IP address the computer needs.</p></div></div></details>
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Explain why a DNS server might store the IP address it receives from another DNS server.</summary><div class="body">
+    <div class="ans"><p>1. It can answer the next request for the same domain itself (a cache).</p><p>2. This is quicker and avoids asking other DNS servers again.</p></div></div></details>
+</section>
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Say who does what.</b> The browser asks, the DNS server looks up, the web server sends.</li>
+    <li><b>DNS returns an IP address,</b> not the page.</li>
+    <li><b>Use the exact terms:</b> domain name, IP address, web server, HTML, render.</li>
+    <li><b>Order matters.</b> Name to DNS, IP back, request to web server, page sent back.</li>
+  </ul>
+  <h2>Keyword flashcards</h2><p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</section>
+</div>
