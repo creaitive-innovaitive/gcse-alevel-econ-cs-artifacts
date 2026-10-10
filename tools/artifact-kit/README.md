@@ -11,3 +11,4 @@ Shared components for the AS Economics artifacts (stepper animations, sliders, d
 - `fif` = A Level Econ ch 34 Firm in Focus (`python3 tools/artifact-kit/assemble.py fif "Firm in Focus" firm-in-focus`). An optional `<name>.css` next to the body is appended to `lib.css` (used for the older Learn content's chart classes).
 - `mkt` = A Level Econ ch 35 Market Structures Lab (`python3 tools/artifact-kit/assemble.py mkt "Market Structures Lab" market-structures-lab`). A first line of `// uses: econ` in a `.js` file pulls in `econ.js` (cost-curve helpers).
 - `gf` = A Level Econ ch 31 The Giffen Paradox (`python3 tools/artifact-kit/assemble.py gf "The Giffen Paradox" giffen-paradox`).
+- `mmm` = A Level Econ ch 40/41 Multipliers, Markets and Monopsony; its original step-by-step engine runs inside the Watch tab, scoped under `.mmm` (see mmm.css).
