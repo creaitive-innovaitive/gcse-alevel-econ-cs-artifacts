@@ -1,4 +1,4 @@
-<div class="kit">
+<div class="kitvars">
 <div class="wrap">
 <header class="hero">
   <div class="eyebrow">A-Level Computer Science · 9618 · Chapter 19 · Sorting algorithms</div>
@@ -6,7 +6,7 @@
   <p>Compare place and place + 1, and swap with a temp variable, walking each new item backwards through the sorted part of the list.</p>
 </header>
 
-<nav class="tablist" role="tablist" aria-label="Sections">
+<div class="tablist" role="tablist" aria-label="Sections">
   <button role="tab" data-p="learn">Learn</button>
   <button role="tab" data-p="watch">Watch</button>
   <button role="tab" data-p="explore">Explore</button>
@@ -14,8 +14,9 @@
   <button role="tab" data-p="real">Real world</button>
   <button role="tab" data-p="exam">Exam questions</button>
   <button role="tab" data-p="tips">Tips &amp; keywords</button>
-</nav>
+</div>
 <section id="learn" role="tabpanel">
+<div class="kit">
   <div class="card big"><h3>The big idea</h3><p>Insertion sort builds a sorted list from the left. It takes the next item and walks it <b>backwards</b> through the sorted part, swapping with its left neighbour until that neighbour is no longer bigger. Then it moves on to the next item.</p></div>
   <h2>The steps</h2>
   <div class="card"><p><b>1.</b> Treat the first item as a sorted list of one.</p><p><b>2.</b> Take the next item (place + 1) and compare it with the item on its left (place).</p><p><b>3.</b> If they are in the wrong order, swap them using temp, then step one place to the left and compare again.</p><p><b>4.</b> Stop when the left neighbour is not bigger, or the front of the list is reached.</p><p style="margin-bottom:0"><b>5.</b> Repeat for every remaining item.</p></div>
@@ -64,8 +65,11 @@
 
     <p class="intro">Insertion sort's advantage shows up on lists that are already <em>nearly</em> in order: each new item only has to travel a short way before the inner loop ends, so the work drops close to one comparison per item. Bubble sort has no such shortcut unless you add one. On a list in reverse order neither has any advantage, and both are slow on big lists, which is why the exam usually cares about the method, not the speed.</p>
   </section></div>
+</div>
+
 </section>
 <section id="watch" role="tabpanel" hidden>
+<div class="kit">
   <p>Press Play, or step through one comparison at a time. Watch the sorted region grow from the left.</p>
 <div class="panel" style="display:flex; flex-direction:column; gap:16px;">
     <div class="controls">
@@ -97,8 +101,11 @@
   </div>
 
   
+</div>
+
 </section>
 <section id="explore" role="tabpanel" hidden>
+<div class="kit">
   <h2>Lab · How many swaps and comparisons?</h2>
   <p>Choose the size of the list and how it starts. Insertion sort does very little work on a list that is nearly in order.</p>
   <div class="grid2">
@@ -108,8 +115,11 @@
       <div class="verdict" id="v1"></div></div>
     <div class="card"><svg id="lab1" viewBox="0 0 480 300" role="img" aria-label="Swaps for best, average and worst case"></svg></div>
   </div>
+</div>
+
 </section>
 <section id="practise" role="tabpanel" hidden>
+<div class="kit">
   <h2>1 · Bubble sort or insertion sort?</h2>
   <p>Drag each statement into the box it describes. Tap an item, then tap a box if dragging is awkward.</p>
   <div id="cl1" class="card"></div>
@@ -119,14 +129,20 @@
   <div id="c1"></div>
   <h2>4 · Multiple choice</h2>
   <div id="qz1"></div>
+</div>
+
 </section>
 <section id="real" role="tabpanel" hidden>
+<div class="kit">
   <p class="note">Examples are explained in general terms.</p>
   <div class="rw"><h3>Sorting a hand of playing cards</h3><p>Most people pick up one card at a time and slide it into the right place among the cards already held. That is insertion sort.</p><div class="use"><b>Use it for:</b> explaining the algorithm in plain words.</div></div>
   <div class="rw"><h3>Keeping a leaderboard in order</h3><p>When a new score arrives, it is slotted into the sorted board. Only scores below it shift down, with no need to sort everything again.</p><div class="use"><b>Use it for:</b> why it is quick when the data is nearly sorted.</div></div>
   <div class="rw"><h3>Small parts inside faster sorts</h3><p>Many standard library sorts switch to insertion sort for very short sections, because for small lists its low overhead beats fancier methods.</p><div class="use"><b>Use it for:</b> evaluation: best for small or nearly sorted lists, poor for large random ones.</div></div>
+</div>
+
 </section>
 <section id="exam" role="tabpanel" hidden>
+<div class="kit">
   <h2>Exam-style questions</h2>
   <p>Write your answer first, then open the mark points. Tick the ones you earned.</p>
   <details class="eq"><summary>Q1 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe how an insertion sort puts a list of numbers into ascending order.</summary><div class="body">
@@ -138,8 +154,11 @@
     <div class="warn"><b class="h">Common mistake</b>Counting comparisons instead of swaps. Every swap fixes one pair that was out of order.</div></div></details>
   <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">3 marks</span> Explain why an insertion sort is quicker on a nearly sorted list than on a list in reverse order.</summary><div class="body">
     <div class="ans"><p>1. On a nearly sorted list each new item is already close to or in its correct place, so it needs very few comparisons and swaps.</p><p>2. On a reversed list every new item must be moved all the way to the front of the sorted part.</p><p>3. So the work is close to N for a nearly sorted list but about N² ÷ 2 for a reversed list.</p></div></div></details>
+</div>
+
 </section>
 <section id="tips" role="tabpanel" hidden>
+<div class="kit">
   <h2>Top tips</h2>
   <ul class="tips">
     <li><b>Say "sorted part" and "unsorted part".</b> The sorted part grows from the left.</li>
@@ -151,6 +170,8 @@
   <h2>Keyword flashcards</h2>
   <p>Click the card to flip it. Mark the ones you know.</p>
   <div id="fc1"></div>
+</div>
+
 </section>
 </div>
 </div>

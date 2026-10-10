@@ -1,7 +1,7 @@
 /* Base for artifacts that keep their own page CSS: the tab bar plus kit components scoped under .kit, mapped onto whatever palette the page defines. */
-.kit{--soft:var(--accent-soft);--warn:var(--amber,#a85d00);--warn-soft:var(--amber-soft,#fbead2);--accent-ink:var(--bg);--sans:var(--body,system-ui,sans-serif);--serif:var(--display,Georgia,serif);--k:#1f5fa8;--a:#1d7a4c;--n:#7a3fa0;--e:#b25a00}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kit{--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}}
-:root[data-theme="dark"] .kit{--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}
+.kit,.kitvars{--soft:var(--accent-soft);--warn:var(--amber,#a85d00);--warn-soft:var(--amber-soft,#fbead2);--accent-ink:var(--bg);--sans:var(--body,system-ui,sans-serif);--serif:var(--display,Georgia,serif);--k:#1f5fa8;--a:#1d7a4c;--n:#7a3fa0;--e:#b25a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(.kit,.kitvars){--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}}
+:root[data-theme="dark"] :is(.kit,.kitvars){--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}
 .tl-wrap{max-width:var(--tl-w,900px);margin:0 auto}
 .tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
 .tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}

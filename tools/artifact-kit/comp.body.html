@@ -1,0 +1,247 @@
+<div class="kitvars">
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">IGCSE Computer Science · 0478 · Chapter 1.3</div>
+  <h1>Compression Lab</h1>
+  <p>Why files are compressed, how run-length encoding works step by step, and how sample rate, bit depth and resolution decide file size.</p>
+</header>
+
+<div class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</div>
+<section id="learn" role="tabpanel">
+<section id="basics">
+  <h2>Why compress, and the two methods</h2>
+  <p>Compression makes a file smaller. Smaller files take up less storage, download faster and use less bandwidth when streamed. There are two families of method.</p>
+  <div class="grid2">
+    <div class="panel"><span class="lab">Lossless</span><h3>Nothing is thrown away</h3>
+      <p>The data is stored more cleverly. When decompressed, the file is rebuilt exactly as it was. RLE is lossless.</p>
+      <p><b>Use when</b> every bit matters: text documents, program files, spreadsheets, medical images.</p></div>
+    <div class="panel"><span class="lab">Lossy</span><h3>Some data is removed for good</h3>
+      <p>Detail the user is unlikely to notice is deleted. The original can never be recovered, but the file gets much smaller.</p>
+      <p><b>Use when</b> a small drop in quality is fine: streamed music, photos on a website, video calls.</p></div>
+  </div>
+  <div class="panel tbl"><table>
+    <tr><th></th><th>Lossless</th><th>Lossy</th></tr>
+    <tr><td>Original recoverable?</td><td>Yes, exactly</td><td>No</td></tr>
+    <tr><td>File size reduction</td><td>Moderate</td><td>Large</td></tr>
+    <tr><td>Quality</td><td>Unchanged</td><td>Reduced</td></tr>
+    <tr><td>Examples</td><td>RLE, ZIP, PNG, FLAC</td><td>MP3, JPEG, MP4</td></tr>
+  </table></div>
+</section>
+
+</section>
+<section id="watch" role="tabpanel" hidden>
+<div class="kit">
+<p>Step through RLE one run at a time, then scan a bitmap image row by row.</p>
+
+</div>
+<section id="rle">
+  <h2>Run-length encoding, step by step</h2>
+  <p>A <b>run</b> is a stretch of the same value repeated. RLE replaces each run with two things: <b>how many</b> (the count) and <b>what</b> (the value). <code>AAAAA</code> becomes <code>5A</code>.</p>
+  <div class="panel">
+    <div class="row"><label for="rleIn" class="lab">Your data (letters only)</label>
+      <input type="text" id="rleIn" value="AAAAABBBCCDAAA" maxlength="24" size="26" autocomplete="off" spellcheck="false">
+      <button class="btn alt" id="rleLoad">Load</button></div>
+    <div class="cells tall" id="rleCells" aria-label="Input data"></div>
+    <div class="msg" id="rleMsg" aria-live="polite"></div>
+    <div><span class="lab">Output so far</span><div class="out" id="rleOut"></div></div>
+    <div class="row">
+      <button class="btn alt" id="rlePrev">◀ Back</button>
+      <button class="btn" id="rlePlay">▶ Play</button>
+      <button class="btn alt" id="rleNext">Next ▶</button>
+      <button class="btn alt" id="rleReset">Reset</button>
+      <span class="mono" id="rleCount" style="margin-left:auto"></span>
+    </div>
+    <div class="ctl" style="max-width:320px"><label for="rleSpeed">Speed <span id="rleSpeedV"></span></label><input type="range" id="rleSpeed" min="1" max="5" value="3"></div>
+    <div class="stat" id="rleStat" hidden>
+      <div><span>Original</span><span id="sO"></span></div><div><span>Encoded</span><span id="sE"></span></div><div><span>Saved</span><span id="sS"></span></div>
+    </div>
+  </div>
+  <div class="callout"><b>The four things RLE does:</b> keep a count, compare each new item with the current run, write <code>count + value</code> when the run breaks, and write the last run when the data ends. Notice the second <code>A</code> run is a separate token. RLE only joins items that are next to each other.</div>
+  <div class="callout"><b>When RLE backfires.</b> Try <code>ABCDEF</code>. Every run has length 1, so <code>1A1B1C1D1E1F</code> is twice as long. RLE only helps when there are long runs.</div>
+</section>
+<section id="image">
+  <h2>RLE on a bitmap image</h2>
+  <p>An image is a grid of pixels. Here each pixel is 1 bit: black (B) or white (W). Encode one row at a time, left to right. Click or drag on the grid to draw, or pick a preset.</p>
+  <div class="panel">
+    <div class="row" id="presets"></div>
+    <div class="grid2" style="align-items:start">
+      <div style="display:grid;gap:10px;justify-items:start">
+        <div class="pixgrid" id="pixgrid"></div>
+        <div class="row"><button class="btn" id="scan">▶ Animate the scan</button><button class="btn alt" id="scanStop">Show all</button></div>
+      </div>
+      <div style="display:grid;gap:10px">
+        <span class="lab">Encoded, row by row</span>
+        <div class="rows" id="imgRows"></div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div style="display:grid;gap:6px"><span class="lab">Original: 64 pixels × 1 bit</span><div class="bar orig"><i id="bOrig" style="width:100%"></i></div><span class="mono" id="tOrig"></span></div>
+      <div style="display:grid;gap:6px"><span class="lab">Encoded</span><div class="bar" id="bEncWrap"><i id="bEnc"></i></div><span class="mono" id="tEnc"></span></div>
+    </div>
+    <p id="imgVerdict" style="font-weight:600"></p>
+    <p style="color:var(--muted);font-size:.95rem">Bits per run = bits needed to store the longest count, plus 1 bit for the colour. Longest run of 8 needs 4 bits for the count (0–15), so each run costs 5 bits.</p>
+  </div>
+</section>
+
+</section>
+<section id="explore" role="tabpanel" hidden>
+<section id="lossy">
+  <h2>Lossy compression and the sliders</h2>
+  <p>Lossy methods for sound and images work by keeping less detail. Drag the sliders to see how the RLE saving depends on run length, and how sound and image file sizes change.</p>
+
+  <div class="panel">
+    <h3>RLE saving against run length</h3>
+    <div class="ctl"><label for="runLen">Average run length <span id="runLenV"></span></label><input type="range" id="runLen" min="1" max="12" value="4"></div>
+    <div class="cells" id="rlA"></div>
+    <div class="out" id="rlB"></div>
+    <div class="grid2">
+      <div style="display:grid;gap:6px"><span class="lab">Original</span><div class="bar orig"><i style="width:100%"></i></div><span class="mono" id="rlO"></span></div>
+      <div style="display:grid;gap:6px"><span class="lab">Encoded</span><div class="bar" id="rlBarW"><i id="rlBar"></i></div><span class="mono" id="rlE"></span></div>
+    </div>
+    <p id="rlV" style="font-weight:600"></p>
+  </div>
+
+  <div class="panel">
+    <h3>Sound: sample rate and bit depth</h3>
+    <p>A sound is stored by measuring the wave many times a second (<b>sample rate</b>, in Hz) and rounding each measurement to one of 2<sup>bits</sup> levels (<b>bit depth</b>). The dashed line is the real sound. The solid line is what gets stored.</p>
+    <svg class="wave" id="wave" viewBox="0 0 640 200" role="img" aria-label="Sampled sound wave"></svg>
+    <div class="grid3">
+      <div class="ctl"><label for="sr">Sample rate <span id="srV"></span></label><input type="range" id="sr" min="4000" max="44100" step="100" value="44100"></div>
+      <div class="ctl"><label for="bd">Bit depth <span id="bdV"></span></label><input type="range" id="bd" min="1" max="16" value="16"></div>
+      <div class="ctl"><label for="dur">Length <span id="durV"></span></label><input type="range" id="dur" min="5" max="240" value="30"></div>
+    </div>
+    <div class="stat"><div><span>Bits</span><span id="aBits"></span></div><div><span>Bytes</span><span id="aBytes"></span></div><div><span>File size</span><span id="aSize"></span></div></div>
+    <p style="color:var(--muted);font-size:.95rem">File size = sample rate × bit depth × length in seconds (mono). Divide by 8 for bytes and by 1024 for KiB. Lowering the rate or depth is lossy: the sound is less accurate and cannot be restored.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Image: resolution and colour depth</h3>
+    <div class="grid3">
+      <div class="ctl"><label for="iw">Width in pixels <span id="iwV"></span></label><input type="range" id="iw" min="16" max="4000" step="16" value="1600"></div>
+      <div class="ctl"><label for="ih">Height in pixels <span id="ihV"></span></label><input type="range" id="ih" min="16" max="3000" step="16" value="1200"></div>
+      <div class="ctl"><label for="id">Colour depth <span id="idV"></span></label><input type="range" id="id" min="1" max="24" value="24"></div>
+    </div>
+    <div class="stat"><div><span>Colours possible</span><span id="iCol"></span></div><div><span>File size</span><span id="iSize"></span></div></div>
+    <p style="color:var(--muted);font-size:.95rem">Image size = width × height × colour depth (in bits). Lower resolution and lower colour depth are both lossy.</p>
+  </div>
+</section>
+
+</section>
+<section id="practise" role="tabpanel" hidden>
+<section id="decode">
+  <h2>Decode and encode</h2>
+  <p>Decoding is the reverse: write each value out as many times as its count says. Try these. Answers are checked ignoring spaces and case.</p>
+  <div class="panel" id="quiz"></div>
+</section>
+<section id="activities">
+  <h2>Activities</h2>
+  <div class="panel">
+    <h3>Put the RLE algorithm in order</h3>
+    <p>Drag the steps, or use the arrows.</p>
+    <ol class="order" id="order"></ol>
+    <div class="row"><button class="btn" id="ordCheck">Check order</button><button class="btn alt" id="ordShuffle">Shuffle</button><span class="fb" id="ordFb"></span></div>
+  </div>
+  <div class="panel">
+    <h3>Match the term to its meaning</h3>
+    <p>Drag a term onto its definition. On a phone, tap a term, then tap a definition. Tap a placed term to send it back.</p>
+    <div class="pool" id="pool"></div>
+    <div class="slots" id="slots"></div>
+    <div class="row"><button class="btn" id="mCheck">Check matches</button><button class="btn alt" id="mReset">Reset</button><span class="fb" id="mFb"></span></div>
+  </div>
+</section>
+<div class="kit">
+  <h2>Multiple choice</h2>
+  <div id="qz1"></div>
+</div>
+
+</section>
+<section id="real" role="tabpanel" hidden>
+<section id="world">
+  <h2>Real-world examples and how to use them in an answer</h2>
+  <div class="panel tbl"><table>
+    <tr><th>Example</th><th>Type</th><th>Why</th><th>Exam sentence</th></tr>
+    <tr><td>Spotify or Apple Music (MP3, AAC)</td><td>Lossy</td><td>Millions of songs streamed over mobile data</td><td>"Lossy compression is used so the file is smaller, so it streams with less buffering and uses less bandwidth."</td></tr>
+    <tr><td>Photos on a website (JPEG)</td><td>Lossy</td><td>Pages load faster with smaller images</td><td>"Reducing colour depth removes some detail permanently but the image is still acceptable."</td></tr>
+    <tr><td>Netflix, YouTube (MP4)</td><td>Lossy</td><td>Video is huge; viewers tolerate slight quality loss</td><td>"Data the viewer is unlikely to notice is removed to cut the file size."</td></tr>
+    <tr><td>Zipping a Word document or program</td><td>Lossless</td><td>One wrong character would corrupt it</td><td>"Lossless is needed because the original file must be rebuilt exactly."</td></tr>
+    <tr><td>Logos, icons, diagrams, fax pages (GIF, PNG)</td><td>Lossless, RLE-style</td><td>Large areas of one colour make long runs</td><td>"RLE suits images with large blocks of the same colour because the runs are long."</td></tr>
+    <tr><td>Medical scans, archived music (FLAC)</td><td>Lossless</td><td>Detail can matter for a diagnosis or a master copy</td><td>"No data is lost, so nothing important is missing."</td></tr>
+  </table></div>
+</section>
+
+</section>
+<section id="exam" role="tabpanel" hidden>
+<section id="lg-exam">
+  <h2>Exam questions and model answers</h2>
+  <div class="panel">
+    <span class="lab">Command words</span>
+    <div class="cw">
+      <div><b>State / Give</b><br>Short fact, no explanation.</div>
+      <div><b>Describe</b><br>Say what happens, one point per mark.</div>
+      <div><b>Explain</b><br>Point plus a reason: "because", "so".</div>
+      <div><b>Calculate</b><br>Show working. Units matter.</div>
+    </div>
+    <p style="font-size:.95rem;color:var(--muted)">In each model answer, every coloured highlight is one mark.</p>
+  </div>
+
+  <details class="q"><summary><span class="marks">2 marks</span><span>State what is meant by <b>lossless</b> compression.</span></summary>
+    <div class="ans"><div class="model">A compression method that <mark class="m1">reduces the file size without permanently removing any data</mark>, so <mark class="m2">the original file can be rebuilt exactly</mark> when decompressed.</div>
+    <div class="tipbox"><b>Tip:</b> "State" with 2 marks means two short points. Avoid "no loss of quality" on its own.</div></div></details>
+
+  <details class="q"><summary><span class="marks">3 marks</span><span>Describe how <b>lossy</b> compression can reduce the size of a sound file.</span></summary>
+    <div class="ans"><div class="model">Some data is <mark class="m1">permanently removed from the file</mark>. For example the <mark class="m2">sample rate or bit depth is reduced</mark>, so fewer or less detailed samples are stored. Sounds that <mark class="m3">humans are unlikely to hear can be deleted</mark>.</div>
+    <div class="tipbox"><b>Tip:</b> Three marks, three separate points. Naming sample rate or bit depth turns a vague answer into a full-mark one.</div></div></details>
+
+  <details class="q"><summary><span class="marks">3 marks</span><span>A row of pixels is <code>WWWWBBBBBBWW</code>. Show how it is stored using run-length encoding (RLE).</span></summary>
+    <div class="ans"><div class="model">Runs: WWWW, BBBBBB, WW.<br><mark class="m1">4W</mark> <mark class="m2">6B</mark> <mark class="m3">2W</mark> → <b class="mono">4W6B2W</b><br>12 items become 6 characters.</div>
+    <div class="tipbox"><b>Tip:</b> One mark per correct run. Keep the format count then value. Do not merge the two W runs.</div></div></details>
+
+  <details class="q"><summary><span class="marks">4 marks</span><span>Explain why RLE would not work well on a photograph.</span></summary>
+    <div class="ans"><div class="model">A photograph contains <mark class="m1">many different colours</mark>, so <mark class="m2">neighbouring pixels are rarely identical</mark>. The <mark class="m3">runs are very short, often length 1</mark>. Each run needs a count and a value, so the <mark class="m4">encoded file can be the same size or larger than the original</mark>.</div>
+    <div class="tipbox"><b>Tip:</b> "Explain" is a chain: cause, then effect, then result. Finish on the file size.</div></div></details>
+
+  <details class="q"><summary><span class="marks">3 marks</span><span>Explain why a text document should be compressed using lossless compression.</span></summary>
+    <div class="ans"><div class="model">Lossy compression would <mark class="m1">remove some of the characters or data</mark>, so the <mark class="m2">text could be changed or unreadable</mark>. Lossless means the <mark class="m3">original document can be recreated exactly</mark>.</div>
+    <div class="tipbox"><b>Tip:</b> Tie the answer to the data type. Text and programs cannot lose a single character.</div></div></details>
+
+  <details class="q"><summary><span class="marks">4 marks</span><span>A streaming service uses lossy compression for its films. Give <b>two</b> benefits and <b>two</b> drawbacks.</span></summary>
+    <div class="ans"><div class="model">Benefits: the <mark class="m1">file size is much smaller</mark>, so it <mark class="m2">streams faster with less buffering and uses less bandwidth</mark>. Drawbacks: <mark class="m3">some data is lost permanently</mark>, so the <mark class="m4">picture or sound quality is reduced</mark>.</div>
+    <div class="tipbox"><b>Tip:</b> Also acceptable: less storage needed on the servers. Make sure you give the number of points asked for, no more.</div></div></details>
+
+  <details class="q"><summary><span class="marks">3 marks</span><span>Calculate the file size, in KiB, of a 30 second mono sound recording with a sample rate of 8000 Hz and a bit depth of 16 bits.</span></summary>
+    <div class="ans"><div class="model"><mark class="m1">8000 × 16 × 30</mark> = <mark class="m2">3 840 000 bits</mark><br>÷ 8 = 480 000 bytes; ÷ 1024 = <mark class="m3">468.75 KiB</mark></div>
+    <div class="tipbox"><b>Tip:</b> Check your answer with the sound sliders above. Set 8000 Hz, 16 bits, 30 s.</div></div></details>
+</section>
+
+</section>
+<section id="tips" role="tabpanel" hidden>
+<section id="lg-tips">
+  <h2>Top tips</h2>
+  <div class="tips">
+    <div class="tip"><b>Say "data", not just "quality"</b><p>Lossless means no data is lost and the original can be rebuilt. "No loss of quality" alone often earns nothing.</p></div>
+    <div class="tip"><b>Count then value</b><p>Write RLE as count first, then the value: 4W3B. Match the format in the question if it shows one.</p></div>
+    <div class="tip"><b>Runs only join neighbours</b><p>WWBWW is 2W1B2W, not 4W1B. Separate runs stay separate.</p></div>
+    <div class="tip"><b>Check the answer is shorter</b><p>If the encoded version is not smaller, say so. Short runs make RLE useless, and examiners like this point.</p></div>
+    <div class="tip"><b>Lossy is permanent</b><p>The removed data cannot be recovered. Always link it to a reason: smaller size, faster streaming, less storage.</p></div>
+    <div class="tip"><b>Show the calculation</b><p>Sample rate × bit depth × seconds. Then ÷ 8 for bytes, ÷ 1024 for KiB. Method marks are easy to pick up.</p></div>
+    <div class="tip"><b>Two-digit counts</b><p>12A means twelve As, not one then two. Read the whole number before the letter.</p></div>
+    <div class="tip"><b>Match your reason to the data</b><p>Text and programs need lossless. Music, photos and video usually allow lossy.</p></div>
+  </div>
+</section>
+<div class="kit">
+  <h2>Keyword flashcards</h2>
+  <p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</div>
+
+</section>
+</div>
+</div>

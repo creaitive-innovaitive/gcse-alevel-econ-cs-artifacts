@@ -3,9 +3,9 @@
 <title>Implementing one ADT from another ADT</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
 <style>/* Base for artifacts that keep their own page CSS: the tab bar plus kit components scoped under .kit, mapped onto whatever palette the page defines. */
-.kit{--soft:var(--accent-soft);--warn:var(--amber,#a85d00);--warn-soft:var(--amber-soft,#fbead2);--accent-ink:var(--bg);--sans:var(--body,system-ui,sans-serif);--serif:var(--display,Georgia,serif);--k:#1f5fa8;--a:#1d7a4c;--n:#7a3fa0;--e:#b25a00}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kit{--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}}
-:root[data-theme="dark"] .kit{--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}
+.kit,.kitvars{--soft:var(--accent-soft);--warn:var(--amber,#a85d00);--warn-soft:var(--amber-soft,#fbead2);--accent-ink:var(--bg);--sans:var(--body,system-ui,sans-serif);--serif:var(--display,Georgia,serif);--k:#1f5fa8;--a:#1d7a4c;--n:#7a3fa0;--e:#b25a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(.kit,.kitvars){--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}}
+:root[data-theme="dark"] :is(.kit,.kitvars){--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}
 .tl-wrap{max-width:var(--tl-w,900px);margin:0 auto}
 .tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
 .tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
@@ -320,7 +320,7 @@ svg.diagram .ln{stroke:var(--muted);stroke-width:1.6;fill:none}
 
 </style></head>
 <body>
-<div class="kit">
+<div class="kitvars">
 <div class="wrap">
 <header class="hero">
   <div class="eyebrow">A-Level Computer Science · 9618 · Topic 19.1.4</div>
@@ -328,7 +328,7 @@ svg.diagram .ln{stroke:var(--muted);stroke-width:1.6;fill:none}
   <p>Build a linked list from an array, a dictionary from a linked list, and a stack, queue or tree from the types you already have.</p>
 </header>
 
-<nav class="tablist" role="tablist" aria-label="Sections">
+<div class="tablist" role="tablist" aria-label="Sections">
   <button role="tab" data-p="learn">Learn</button>
   <button role="tab" data-p="watch">Watch</button>
   <button role="tab" data-p="explore">Explore</button>
@@ -336,7 +336,7 @@ svg.diagram .ln{stroke:var(--muted);stroke-width:1.6;fill:none}
   <button role="tab" data-p="real">Real world</button>
   <button role="tab" data-p="exam">Exam questions</button>
   <button role="tab" data-p="tips">Tips &amp; keywords</button>
-</nav>
+</div>
 <section id="learn" role="tabpanel">
 <section class="panel" id="idea">
   <div class="sec-label">The idea</div>
@@ -352,7 +352,8 @@ svg.diagram .ln{stroke:var(--muted);stroke-width:1.6;fill:none}
     <div>Primitive types <small>INTEGER, STRING, BOOLEAN</small></div>
   </div>
   <div class="warn"><b>Exam wording</b>"Implement" in these questions means "show how it can be built from". Name the underlying structure, name the pointers or variables that make it behave like the ADT, and show the operation working.</div>
-</section><section class="panel" id="others">
+</section>
+<section class="panel" id="others">
   <div class="sec-label">Other ADTs</div>
   <h2>Stack, queue and binary tree from existing types</h2>
   <p>The same pattern repeats. Pick an array (or linked list), add the pointers the ADT needs, and the operations follow.</p>
@@ -379,6 +380,7 @@ svg.diagram .ln{stroke:var(--muted);stroke-width:1.6;fill:none}
     <text x="430" y="68" class="sm">push writes to [3]</text>
   </svg>
 </section>
+
 </section>
 <section id="watch" role="tabpanel" hidden>
 <section class="panel" id="ll">
@@ -449,6 +451,7 @@ PROCEDURE displayNames()
 ENDPROCEDURE</pre>
   <p>The program stores names by calling <code>addName</code> (for example three times with input from the user) and then calls <code>displayNames</code>. Names appear in reverse order of entry because each new node is added at the front.</p>
 </section>
+
 </section>
 <section id="explore" role="tabpanel" hidden>
 <section class="panel" id="dict">
@@ -499,6 +502,7 @@ DECLARE index            : INTEGER</pre>
 studentdict["Ahmad"]        # 78, found from the key
 studentdict["Ahmad"] = 80   # same key again replaces the value</pre>
 </section>
+
 </section>
 <section id="practise" role="tabpanel" hidden>
 <section class="panel" id="act">
@@ -559,6 +563,7 @@ ENDTYPE</pre>
     <ul class="mp"><li><b>1</b>Linear search is O(N): worst case every item is checked, so time grows in proportion to N</li><li><b>2</b>Binary search is O(log N): each comparison halves the data, so it is faster for large lists (but needs sorted data)</li></ul>
   </div></details>
 </section>
+
 </section>
 <section id="real" role="tabpanel" hidden>
 <section class="panel" id="rw">
@@ -573,6 +578,7 @@ ENDTYPE</pre>
     <div class="card"><h3>Undo in an editor</h3><p>Each action is pushed on a stack. Undo pops the latest one.</p><div class="use"><b>In an exam:</b> tie push and pop to the stack's top pointer.</div></div>
   </div>
 </section>
+
 </section>
 <section id="exam" role="tabpanel" hidden>
 <section class="panel" id="ppq">
@@ -769,6 +775,7 @@ print(Queue)</pre>
     <div class="warn"><b>Paper 4 advice</b>Queue full means the tail pointer is at the last index (9 for 10 elements). Set the head pointer only when the first value goes in. The 11th value must produce the message, so test with 11 inputs and keep the screenshot as evidence. No examiner report is available for this session.</div>
   </div></details>
 </section>
+
 </section>
 <section id="tips" role="tabpanel" hidden>
 <section class="panel" id="lg-tips">
@@ -782,9 +789,13 @@ print(Queue)</pre>
     <div class="warn" style="margin:0"><b>Common slip</b>Declaring the dictionary type with a mix of two structures in one line. Write the TYPE with separate DECLARE lines for keys and values.</div>
     <div class="warn" style="margin:0"><b>Command words</b>"Show how" and "describe how" need working and detail. "State" needs only the name.</div>
   </div>
-</section>  <h2>Keyword flashcards</h2>
+</section>
+<div class="kit">
+  <h2>Keyword flashcards</h2>
   <p>Click the card to flip it. Mark the ones you know.</p>
   <div id="fc1"></div>
+</div>
+
 </section>
 </div>
 </div>

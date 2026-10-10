@@ -5,9 +5,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>/* Base for artifacts that keep their own page CSS: the tab bar plus kit components scoped under .kit, mapped onto whatever palette the page defines. */
-.kit{--soft:var(--accent-soft);--warn:var(--amber,#a85d00);--warn-soft:var(--amber-soft,#fbead2);--accent-ink:var(--bg);--sans:var(--body,system-ui,sans-serif);--serif:var(--display,Georgia,serif);--k:#1f5fa8;--a:#1d7a4c;--n:#7a3fa0;--e:#b25a00}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kit{--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}}
-:root[data-theme="dark"] .kit{--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}
+.kit,.kitvars{--soft:var(--accent-soft);--warn:var(--amber,#a85d00);--warn-soft:var(--amber-soft,#fbead2);--accent-ink:var(--bg);--sans:var(--body,system-ui,sans-serif);--serif:var(--display,Georgia,serif);--k:#1f5fa8;--a:#1d7a4c;--n:#7a3fa0;--e:#b25a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(.kit,.kitvars){--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}}
+:root[data-theme="dark"] :is(.kit,.kitvars){--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}
 .tl-wrap{max-width:var(--tl-w,900px);margin:0 auto}
 .tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
 .tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
@@ -745,7 +745,7 @@ details.eq{background:var(--surface);border:1px solid var(--line);border-radius:
 section[data-panel]{display:block!important;margin-top:18px}
 </style></head>
 <body>
-<div class="kit">
+<div class="kitvars">
 <div class="wrap">
 <header class="hero">
   <div class="eyebrow">A-Level Computer Science · 9618 · Data Structures &amp; ADTs</div>
@@ -753,7 +753,7 @@ section[data-panel]{display:block!important;margin-top:18px}
   <p>How an array-based linked list works: nodes, pointers, the heap of free space, and the find, insert and delete algorithms, with Cambridge exam questions and mark schemes.</p>
 </header>
 
-<nav class="tablist" role="tablist" aria-label="Sections">
+<div class="tablist" role="tablist" aria-label="Sections">
   <button role="tab" data-p="learn">Learn</button>
   <button role="tab" data-p="watch">Watch</button>
   <button role="tab" data-p="explore">Explore</button>
@@ -761,7 +761,7 @@ section[data-panel]{display:block!important;margin-top:18px}
   <button role="tab" data-p="real">Real world</button>
   <button role="tab" data-p="exam">Exam questions</button>
   <button role="tab" data-p="tips">Tips &amp; keywords</button>
-</nav>
+</div>
 <section id="learn" role="tabpanel">
 <section id="concept" data-panel="concept" class="active">
     <h2><span class="num">01</span> The idea</h2>
@@ -817,7 +817,8 @@ section[data-panel]{display:block!important;margin-top:18px}
     </div>
 
     <div class="note"><strong>Why bother?</strong> Linked lists keep data in order (usually ascending or descending) without having to shuffle every element along, the way inserting into the middle of a sorted array would. You only ever rewrite two pointers.</div>
-  </section><section id="anatomy" data-panel="anatomy">
+  </section>
+<section id="anatomy" data-panel="anatomy">
     <h2><span class="num">02</span> Anatomy: two arrays, one heap</h2>
     <p>On the exam, a linked list is almost always <strong>implemented using two parallel 1D arrays</strong> of the same fixed size &mdash; never real pointers/memory addresses. This is the detail examiners repeatedly say candidates skip.</p>
     <ul>
@@ -896,7 +897,8 @@ myLinkedListPointers[11] = -1
     <div class="stepper" id="stepper-setup">
       <div class="stepper-title">Step through it &mdash; click Next</div>
     </div>
-  </section><section id="compare" data-panel="compare">
+  </section>
+<section id="compare" data-panel="compare">
     <h2><span class="num">06</span> Linked list vs. plain array</h2>
     <div class="tbl-wrap">
       <table>
@@ -914,6 +916,7 @@ myLinkedListPointers[11] = -1
     <p>This trade-off &mdash; cheap insert/delete vs. expensive direct access &mdash; is exactly what several past-paper "explain the advantage / disadvantage" questions are testing. Say <em>why</em>, not just <em>that</em> it's faster or slower.</p>
     <div class="note"><strong>Paper 3 mark-scheme language.</strong> The "static vs dynamic" framing is the actual wording Cambridge examiners credit (9618/32, Oct/Nov 2023, Q9(b) &mdash; see Exam corner): "a linked list is a dynamic data structure / not restricted in size... has greater freedom to expand or contract by adding or removing nodes as necessary", vs. "an array is a static data structure, generally fixed in size... when the array is full, [it] cannot be extended any further." Use those exact terms &mdash; <em>static</em>, <em>dynamic</em>, <em>fixed in size</em> &mdash; rather than vaguer phrasing like "more flexible".</div>
   </section>
+
 </section>
 <section id="watch" role="tabpanel" hidden>
 <section id="find" data-panel="find">
@@ -992,6 +995,7 @@ ENDFUNCTION</code></pre>
       <div class="stepper-title">Step through it &mdash; searching for 42</div>
     </div>
   </section>
+
 </section>
 <section id="explore" role="tabpanel" hidden>
 <section id="insert" data-panel="insert">
@@ -1102,7 +1106,8 @@ ENDPROCEDURE</code></pre>
     <div class="stepper" id="stepper-insert">
       <div class="stepper-title">Step through it &mdash; building the worked example (27, 19, 36, 42, 16)</div>
     </div>
-  </section><section id="delete" data-panel="delete">
+  </section>
+<section id="delete" data-panel="delete">
     <h2><span class="num">05</span> Deleting an item</h2>
     <p>Deleting doesn't shuffle data along, unlike a plain array. Instead: find the node, splice it out by pointing its <em>predecessor</em> directly at its successor, then return the freed index to the front of the heap so it can be reused.</p>
     <div class="tabs" role="tablist" data-group="delete-code">
@@ -1162,8 +1167,10 @@ ENDPROCEDURE</code></pre>
       <div class="stepper-title">Step through it &mdash; deleting 36</div>
     </div>
   </section>
+
 </section>
 <section id="practise" role="tabpanel" hidden>
+<div class="kit">
   <h2>1 · Array or linked list?</h2>
   <p>Drag each statement into the box it describes. Tap an item, then tap a box if dragging is awkward.</p>
   <div id="cl1" class="card"></div>
@@ -1173,13 +1180,18 @@ ENDPROCEDURE</code></pre>
   <div id="o1" class="card"></div>
   <h2>4 · Multiple choice</h2>
   <div id="qz1"></div>
+</div>
+
 </section>
 <section id="real" role="tabpanel" hidden>
+<div class="kit">
   <p class="note">Examples are explained in general terms.</p>
   <div class="rw"><h3>A music playlist</h3><p>Each track can store where the next one is. Adding a song in the middle only changes two links, with no need to move every later song.</p><div class="use"><b>Use it for:</b> why insertion is cheap in a linked list.</div></div>
   <div class="rw"><h3>Free memory managed by an operating system</h3><p>The operating system can keep a list of free blocks, each pointing to the next. Handing out a block means taking the first one off the list; freeing it puts it back on the front.</p><div class="use"><b>Use it for:</b> the heap pointer and reusing deleted slots.</div></div>
   <div class="rw"><h3>Undo history in an editor</h3><p>Each change can point to the previous one, so the program can walk back through the history one step at a time.</p><div class="use"><b>Use it for:</b> following pointers rather than searching an array.</div></div>
   <div class="rw"><h3>Blockchain</h3><p>Each block contains a reference to the one before it, forming a chain. Changing an old block would break every later reference.</p><div class="use"><b>Use it for:</b> the idea of data linked by pointers.</div></div>
+</div>
+
 </section>
 <section id="exam" role="tabpanel" hidden>
 <section id="lg-exam" data-panel="exam">
@@ -1351,6 +1363,7 @@ ReturnValue2 = CreateList.Traverse()
       <strong>The thread connecting all three questions above:</strong> every single one is really testing the same node/pointer idea from section 1 &mdash; a static array-of-records version (Paper 3, Q11), an abstract justify-the-choice version (Paper 3, Q9), and a fully object-oriented version (Paper 4, Q3). Learn the <em>concept</em> once, and recognise it under each of these three disguises.
     </div>
   </section>
+
 </section>
 <section id="tips" role="tabpanel" hidden>
 <section id="glossary" data-panel="glossary">
@@ -1369,7 +1382,9 @@ ReturnValue2 = CreateList.Traverse()
       <dt>Traversal</dt>
       <dd>Following the chain of pointers from the start pointer to visit every node in order.</dd>
     </dl>
-  </section>  <h2>Top tips</h2>
+  </section>
+<div class="kit">
+  <h2>Top tips</h2>
   <ul class="tips">
     <li><b>Two parallel arrays.</b> Exams use one array for data and one for the pointers, with the same index for each node.</li>
     <li><b>Say what −1 means.</b> A null pointer: no next node, or an empty list.</li>
@@ -1381,6 +1396,8 @@ ReturnValue2 = CreateList.Traverse()
   <h2>Keyword flashcards</h2>
   <p>Click the card to flip it. Mark the ones you know.</p>
   <div id="fc1"></div>
+</div>
+
 </section>
 </div>
 </div>

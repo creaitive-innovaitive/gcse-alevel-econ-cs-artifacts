@@ -3,9 +3,9 @@
 <title>Binary Search Tree Walkthrough</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>/* Base for artifacts that keep their own page CSS: the tab bar plus kit components scoped under .kit, mapped onto whatever palette the page defines. */
-.kit{--soft:var(--accent-soft);--warn:var(--amber,#a85d00);--warn-soft:var(--amber-soft,#fbead2);--accent-ink:var(--bg);--sans:var(--body,system-ui,sans-serif);--serif:var(--display,Georgia,serif);--k:#1f5fa8;--a:#1d7a4c;--n:#7a3fa0;--e:#b25a00}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kit{--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}}
-:root[data-theme="dark"] .kit{--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}
+.kit,.kitvars{--soft:var(--accent-soft);--warn:var(--amber,#a85d00);--warn-soft:var(--amber-soft,#fbead2);--accent-ink:var(--bg);--sans:var(--body,system-ui,sans-serif);--serif:var(--display,Georgia,serif);--k:#1f5fa8;--a:#1d7a4c;--n:#7a3fa0;--e:#b25a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(.kit,.kitvars){--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}}
+:root[data-theme="dark"] :is(.kit,.kitvars){--k:#7fb2ee;--a:#6ccb9b;--n:#c79be6;--e:#f0a95a}
 .tl-wrap{max-width:var(--tl-w,900px);margin:0 auto}
 .tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
 .tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
@@ -317,7 +317,7 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
 
 </style></head>
 <body>
-<div class="kit">
+<div class="kitvars">
 <div class="wrap">
 <header class="hero">
   <div class="eyebrow">A-Level Computer Science · 9618 · Chapter 19 · Trees</div>
@@ -325,7 +325,7 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
   <p>Every node's left subtree is smaller and its right subtree is bigger. Insert and search follow the same path: compare, then step left or right.</p>
 </header>
 
-<nav class="tablist" role="tablist" aria-label="Sections">
+<div class="tablist" role="tablist" aria-label="Sections">
   <button role="tab" data-p="learn">Learn</button>
   <button role="tab" data-p="watch">Watch</button>
   <button role="tab" data-p="explore">Explore</button>
@@ -333,8 +333,9 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
   <button role="tab" data-p="real">Real world</button>
   <button role="tab" data-p="exam">Exam questions</button>
   <button role="tab" data-p="tips">Tips &amp; keywords</button>
-</nav>
+</div>
 <section id="learn" role="tabpanel">
+<div class="kit">
   <div class="card big"><h3>The big idea</h3><p>A <b>binary search tree</b> keeps every node's left subtree smaller and its right subtree bigger. Searching halves the possibilities at every step, so a balanced tree of N nodes needs only about log₂ N comparisons.</p></div>
   <div class="grid2">
     <div class="card"><h3>Insert</h3><p>Start at the root. If the new value is smaller go left, otherwise go right. Repeat until you reach an empty spot, then plant the new node there.</p></div>
@@ -351,8 +352,11 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
     <div class="card"><h3>Balanced tree</h3><p>Search, insert and delete take O(log N) because each step discards about half of the remaining nodes.</p></div>
     <div class="card"><h3>Degenerate tree</h3><p>If values arrive already in order, every node goes to the same side and the tree becomes a chain. Search then takes O(N).</p></div>
   </div>
+</div>
+
 </section>
 <section id="watch" role="tabpanel" hidden>
+<div class="kit">
   <p>Pick insert or search, then press Play or step through. Watch the path from the root and the table fill in.</p>
 <div class="panel" style="display:flex; flex-direction:column; gap:16px;">
     <div class="tabs" id="tabs"></div>
@@ -384,8 +388,11 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
   </div>
 
   
+</div>
+
 </section>
 <section id="explore" role="tabpanel" hidden>
+<div class="kit">
 <div class="panel arr">
     <div class="eyebrow">Exam view</div>
     <h2 style="font-family:Fraunces,Georgia,serif;font-size:22px;margin:4px 0 8px">The same tree as an array of records</h2>
@@ -402,8 +409,11 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
   </div>
 
   
+</div>
+
 </section>
 <section id="practise" role="tabpanel" hidden>
+<div class="kit">
   <h2>1 · Left or right?</h2>
   <p>The tree is built from 50, 30, 70, 20, 40, 60, 80. Drag each value into the side of the root (50) where it sits.</p>
   <div id="cl1" class="card"></div>
@@ -415,15 +425,21 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
   <div id="c1"></div>
   <h2>5 · Multiple choice</h2>
   <div id="qz1"></div>
+</div>
+
 </section>
 <section id="real" role="tabpanel" hidden>
+<div class="kit">
   <p class="note">Examples are explained in general terms.</p>
   <div class="rw"><h3>Database indexes</h3><p>Many databases keep an index in a tree-like structure so a record can be found in a handful of steps instead of scanning every row.</p><div class="use"><b>Use it for:</b> why a tree makes search fast.</div></div>
   <div class="rw"><h3>Autocomplete and spell check</h3><p>Ordered structures let a program jump to the words that start with what you typed, rather than reading the whole dictionary.</p><div class="use"><b>Use it for:</b> in-order traversal giving sorted output.</div></div>
   <div class="rw"><h3>File systems</h3><p>Folders contain other folders, a tree shape. Programs walk the tree to find, copy or delete files.</p><div class="use"><b>Use it for:</b> pre-order and post-order traversals.</div></div>
   <div class="rw"><h3>A sorted list that grows as data arrives</h3><p>If new values keep arriving in order, a plain binary search tree degenerates into a chain, which is why balanced variants exist.</p><div class="use"><b>Use it for:</b> evaluation: balanced versus degenerate trees.</div></div>
+</div>
+
 </section>
 <section id="exam" role="tabpanel" hidden>
+<div class="kit">
   <h2>Exam-style questions</h2>
   <p>Write your answer first, then open the mark points. Tick the ones you earned.</p>
   <details class="eq"><summary>Q1 <span class="cmd">Describe</span> <span class="mark">3 marks</span> Describe how the value 45 is inserted into a binary search tree.</summary><div class="body">
@@ -433,8 +449,11 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
     <div class="ans"><p>20 30 40 50 60 70 80 (ascending order). One mark for left, node, right order; one mark for the correct output.</p></div></div></details>
   <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">4 marks</span> Explain why searching a binary search tree can be faster than searching an unsorted list.</summary><div class="body">
     <div class="ans"><p>1. In an unsorted list every item may have to be checked, so N comparisons in the worst case.</p><p>2. In a binary search tree each comparison tells you to go left or right, discarding a whole subtree.</p><p>3. In a balanced tree this halves the remaining items each time, so about log₂ N comparisons.</p><p>4. This only holds if the tree is balanced; a degenerate tree is as slow as a list.</p></div></div></details>
+</div>
+
 </section>
 <section id="tips" role="tabpanel" hidden>
+<div class="kit">
   <h2>Top tips</h2>
   <ul class="tips">
     <li><b>Smaller goes left, larger goes right.</b> Check duplicates against the rule in your question.</li>
@@ -446,6 +465,8 @@ footer{ color:var(--sub); font-size:13px; text-align:center; }
   <h2>Keyword flashcards</h2>
   <p>Click the card to flip it. Mark the ones you know.</p>
   <div id="fc1"></div>
+</div>
+
 </section>
 </div>
 </div>
