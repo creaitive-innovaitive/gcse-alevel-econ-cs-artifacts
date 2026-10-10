@@ -1048,6 +1048,7 @@ function listHtml(g) {
 
 window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
 
+/* shared cost-curve helpers: include in an artifact with a first line of  // uses: econ */
 /* ---------- shared maths ---------- */
 // Cost model used throughout: VC = Q^3 - 6Q^2 + 15Q, FC set per lab (20 unless a slider changes it).
 const MC = (q) => 3 * q * q - 12 * q + 15, AVC = (q) => q * q - 6 * q + 15, ATC = (q, fc = 20) => AVC(q) + fc / q;
@@ -1061,7 +1062,7 @@ function curve(f, q0, q1, F) {
   return ptsPath(p);
 }
 function axes(F, xl, yl, y0 = 0) {
-  return SV.line(F.l, F.t, F.l, F.Y(y0)) + SV.line(F.l, F.Y(y0), F.r, F.Y(y0)) + SV.text(F.l + 6, F.t + 8, yl, "sm", { "text-anchor": "start" }) + SV.text(F.r, F.b + 24, xl, "sm", { "text-anchor": "end" });
+  return SV.line(F.l, F.t, F.l, F.Y(y0)) + SV.line(F.l, F.Y(y0), F.r, F.Y(y0)) + SV.text(F.l, F.t - 7, yl, "sm", { "text-anchor": "start" }) + SV.text(F.r, F.b + 24, xl, "sm", { "text-anchor": "end" });
 }
 const costSet = (F, fc, o = {}) => {
   const op = (k) => (o[k] === undefined ? 1 : o[k]);
@@ -1073,6 +1074,8 @@ const costSet = (F, fc, o = {}) => {
   return s;
 };
 
+
+// uses: econ
 /* ---------- 1. stepper: diminishing returns ---------- */
 const TP = [10, 30, 60, 84, 100, 110, 114, 114], MPd = [10, 20, 30, 24, 16, 10, 4, 0], APd = TP.map((v, i) => v / (i + 1));
 Lib.stepper($("#stA"), {
