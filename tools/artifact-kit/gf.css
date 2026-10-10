@@ -1,0 +1,70 @@
+.gf{--teal:var(--accent);--teal-soft:var(--accent-soft);--amber:var(--warn);--amber-soft:var(--warn-soft);--brick:var(--bad);--brick-soft:var(--bad-soft);--slate:var(--muted);--ink-soft:var(--muted);--ink-faint:var(--muted);--border:var(--line);--surface-2:var(--soft)}
+.gf .layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.95fr);gap:22px;align-items:start}
+@media (max-width:880px){.gf .layout{grid-template-columns:1fr}}
+.gf .card{padding:18px 18px 14px}
+.gf .scenario-toggle button{font-family:var(--sans)}
+.gf .axis-label,.gf .pt-label{fill:var(--ink)}
+.gf .pt-label{font-family:var(--serif)}
+@media (prefers-reduced-motion:reduce){.gf *{transition:none!important}}
+.gf .diagram-card svg{width:100%;height:auto;display:block;}
+.gf .diagram-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px;}
+.gf .diagram-title{font-weight:600;font-size:14px;}
+.gf .diagram-sub{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-faint);}
+.gf .axis-label{font-family:"IBM Plex Sans";font-size:12.5px;fill:var(--ink-soft);}
+.gf .tick-label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--ink-faint);}
+.gf .pt-label{font-family:"Fraunces",serif;font-weight:600;font-size:15px;}
+.gf .pt-sub{font-family:"IBM Plex Mono",monospace;font-size:10px;fill:var(--ink-soft);}
+.gf .ic-path{fill:none;stroke-width:2;transition:opacity .5s ease;}
+.gf .ic-initial{stroke:var(--slate);}
+.gf .ic-final{stroke:var(--teal);}
+.gf .budget-line{stroke-width:2;transition:x1 .8s cubic-bezier(.4,0,.2,1),y1 .8s cubic-bezier(.4,0,.2,1),x2 .8s cubic-bezier(.4,0,.2,1),y2 .8s cubic-bezier(.4,0,.2,1),opacity .5s ease,stroke .5s ease;}
+.gf .budget-initial{stroke:var(--ink-faint);}
+.gf .budget-final{stroke:var(--teal);}
+.gf .budget-compensated{stroke:var(--amber);stroke-dasharray:6 5;}
+.gf .bundle-pt{transition:cx .8s cubic-bezier(.4,0,.2,1),cy .8s cubic-bezier(.4,0,.2,1),opacity .5s ease;stroke:var(--surface);stroke-width:2;}
+.gf .pt-A{fill:var(--ink);}
+.gf .pt-S{fill:var(--amber);}
+.gf .pt-F{fill:var(--teal);}
+.gf .eff-arrow{fill:none;stroke-width:2.25;transition:opacity .5s ease, d .6s ease;marker-end:url(#arrowhead);}
+.gf .arrow-sub{stroke:var(--amber);}
+.gf .arrow-inc{stroke:var(--brick);}
+.gf .arrow-net{stroke:var(--ink);stroke-dasharray:2 4;}
+.gf .fadeable{transition:opacity .5s ease;}
+.gf .hide{opacity:0;}
+.gf .legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:10px;padding-top:12px;border-top:1px solid var(--border);}
+.gf .legend-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-soft);}
+.gf .swatch{width:16px;height:2.5px;border-radius:2px;flex:none;}
+.gf .swatch.dot{width:9px;height:9px;border-radius:50%;}
+.gf .swatch.dashed{background:none;border-top:2.5px dashed var(--amber);height:0;}
+.gf .scenario-toggle{display:grid;grid-template-columns:1fr 1fr;gap:6px; background:var(--surface-2);border:1px solid var(--border); border-radius:10px;padding:4px;margin-bottom:18px;}
+.gf .scenario-toggle button{font-family:"IBM Plex Sans";font-size:13px;font-weight:600; border:none;background:transparent;color:var(--ink-soft); padding:9px 8px;border-radius:7px;cursor:pointer;transition:background .2s,color .2s;}
+.gf .scenario-toggle button.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.gf .scenario-toggle button:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+.gf .steps{display:flex;flex-direction:column;gap:0;margin-bottom:16px;}
+.gf .step-row{display:grid;grid-template-columns:22px 1fr;gap:10px; padding:9px 4px;border-radius:8px;cursor:pointer; border:1px solid transparent;}
+.gf .step-row:hover{background:var(--surface-2);}
+.gf .step-row.active{background:var(--surface-2);border-color:var(--border);}
+.gf .step-dot{width:22px;height:22px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-family:"IBM Plex Mono";font-size:11px;font-weight:500; background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.gf .step-row.active .step-dot{background:var(--teal);color:#fff;border-color:var(--teal);}
+.gf .step-row.done .step-dot{background:var(--teal-soft);color:var(--teal);border-color:var(--teal-soft);}
+.gf .step-name{font-size:13px;font-weight:600;color:var(--ink);line-height:22px;}
+.gf .step-row:not(.active) .step-name{color:var(--ink-soft);}
+.gf .narration{background:var(--surface-2);border:1px solid var(--border);border-radius:10px; padding:14px 15px;font-size:13.5px;line-height:1.6;color:var(--ink);min-height:118px;}
+.gf .narration b{color:inherit;}
+.gf .controls{display:flex;gap:8px;margin-top:14px;}
+.gf .controls button{font-family:"IBM Plex Sans";font-weight:600;font-size:13px; border:1px solid var(--border);background:var(--surface);color:var(--ink); padding:9px 14px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.gf .controls button:hover{border-color:var(--teal);color:var(--teal);}
+.gf .controls button:focus-visible{outline:2px solid var(--teal);outline-offset:1px;}
+.gf .controls button.primary{background:var(--teal);color:#fff;border-color:var(--teal);}
+.gf .controls button.primary:hover{opacity:.9;color:#fff;}
+.gf .controls button:disabled{opacity:.4;cursor:default;}
+.gf .controls button:disabled:hover{border-color:var(--border);color:var(--ink);}
+.gf .effect-table{margin-top:16px;border-top:1px solid var(--border);padding-top:14px;}
+.gf .effect-table h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);margin:0 0 10px;font-weight:600;}
+.gf .eff-row{display:grid;grid-template-columns:1fr auto;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);gap:8px;}
+.gf .eff-row:last-child{border-bottom:none;}
+.gf .eff-label{font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:7px;}
+.gf .eff-dot{width:8px;height:8px;border-radius:50%;flex:none;}
+.gf .eff-val{font-family:"IBM Plex Mono",monospace;font-size:13.5px;font-variant-numeric:tabular-nums;font-weight:500;}
+.gf .eff-val.pending{color:var(--ink-faint);}.gf #labS .pt-label{fill:var(--amber)} .gf #labF .pt-label{fill:var(--teal)}
+.gf .pt-sub{fill:var(--muted)}
