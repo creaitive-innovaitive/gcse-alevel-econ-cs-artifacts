@@ -13,3 +13,4 @@ Shared components for the AS Economics artifacts (stepper animations, sliders, d
 - `gf` = A Level Econ ch 31 The Giffen Paradox (`python3 tools/artifact-kit/assemble.py gf "The Giffen Paradox" giffen-paradox`).
 - `mmm` = A Level Econ ch 40/41 Multipliers, Markets and Monopsony; its original step-by-step engine runs inside the Watch tab, scoped under `.mmm` (see mmm.css).
 - `lt` = A Level Econ ch 44 Liquidity Trap Lab. Older content is ported with `legacy_wrap.py` (prefixes every class with `lt-` and scopes CSS under `.lt`), so it cannot clash with kit classes.
+- `ltn` = A Level Econ ch 44 Liquidity Trap Notes.
