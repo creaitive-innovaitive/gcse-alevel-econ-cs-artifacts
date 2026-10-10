@@ -1,199 +1,262 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Firm in Focus</title>
-<style>
-:root{
-  --bg:#f3f4ee; --surface:#ffffff; --surface-2:#ebede4;
-  --ink:#1c2624; --ink-dim:#5b6864; --line:#d6d9cd;
-  --prod:#0f766e; --prod-soft:#d9efe9;
-  --cost:#b5502e; --cost-soft:#fae2d6;
-  --rev:#4c3f91; --rev-soft:#e6e2f7;
-  --profit:#9a6b12; --profit-soft:#f5e6c4;
-  --good:#2f7d4f; --bad:#b3392f;
-  --focus:#0f766e;
+<style>:root{
+  --bg:#f5f3ee; --surface:#fff; --ink:#17212b; --muted:#566573; --line:#d9d4c7; --soft:#eef2f5;
+  --accent:#2b5d7c; --accent-ink:#fff; --accent-soft:#e0ecf3;
+  --good:#1d7a4c; --good-soft:#dff2e7; --bad:#b3372f; --bad-soft:#f9e2df; --warn:#a85d00; --warn-soft:#fbead2;
+  --k:#1f5fa8; --a:#1d7a4c; --n:#7a3fa0; --e:#b25a00;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#161b19; --surface:#1e2523; --surface-2:#242c29;
-    --ink:#eef1ec; --ink-dim:#a8b3ad; --line:#38423e;
-    --prod:#4fb6a8; --prod-soft:#1e3532;
-    --cost:#e08a5f; --cost-soft:#3a2a20;
-    --rev:#a89bef; --rev-soft:#2c2748;
-    --profit:#e0b558; --profit-soft:#3a2f16;
-    --good:#6fce93; --bad:#e2837a;
-  }
-}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#161b19; --surface:#1e2523; --surface-2:#242c29;
-  --ink:#eef1ec; --ink-dim:#a8b3ad; --line:#38423e;
-  --prod:#4fb6a8; --prod-soft:#1e3532;
-  --cost:#e08a5f; --cost-soft:#3a2a20;
-  --rev:#a89bef; --rev-soft:#2c2748;
-  --profit:#e0b558; --profit-soft:#3a2f16;
-  --good:#6fce93; --bad:#e2837a;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
-
+  --bg:#12171c; --surface:#1b232b; --ink:#e8edf0; --muted:#9aa8b2; --line:#2e3a44; --soft:#202b34;
+  --accent:#7fb6d6; --accent-ink:#0d1a23; --accent-soft:#1f3140;
+  --good:#6ccb9b; --good-soft:#173a2a; --bad:#f0857d; --bad-soft:#3d1f1c; --warn:#f0b36a; --warn-soft:#3a2b14;
+  --k:#7fb2ee; --a:#6ccb9b; --n:#c79be6; --e:#f0a95a; color-scheme:dark}
 *{box-sizing:border-box}
-body{
-  margin:0; background:var(--bg); color:var(--ink);
-  font-family:'IBM Plex Sans',system-ui,sans-serif;
-  font-size:15px; line-height:1.55;
-  padding-inline:0;
-}
-h1,h2,h3{font-family:'Literata',Georgia,serif; text-wrap:balance; margin:0 0 .3em}
-.mono{font-family:'IBM Plex Mono',monospace}
-.wrap{max-width:880px; margin:0 auto; padding-inline:20px}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 90px}
+h1,h2,h3{font-family:var(--serif);line-height:1.18;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);letter-spacing:-.015em}
+h2{font-size:1.45rem;margin:26px 0 10px}
+h3{font-size:1.12rem;margin:18px 0 6px}
+p{margin:0 0 .8em}
+.eyebrow{font:700 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lead{color:var(--muted);font-size:1.08rem;max-width:68ch;margin-top:8px}
+header.top{padding:6px 0 14px}
+.tablist{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:8px}
+.tablist button{font:600 .9rem var(--sans);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tablist button:hover{color:var(--ink)}
+.tablist button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tablist button:focus-visible,.b:focus-visible,summary:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card.big{background:var(--accent-soft);border-color:var(--accent)}
+.card h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2>.card{margin:0}
+.formula{font:600 1.05rem var(--mono);background:var(--soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;overflow-x:auto}
+.kw{font-weight:700;color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tw{overflow-x:auto}
+.b{font:700 .9rem var(--sans);padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.b:hover{background:var(--soft)}
+.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.b:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font:700 .72rem var(--sans);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tip{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.tip b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.warn{border-left:4px solid var(--bad);background:var(--bad-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.warn b.h{display:block;font:700 .72rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--bad)}
+/* stepper */
+.stp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 14px}
+.stp svg{display:block;width:100%;height:auto;background:var(--surface)}
+.stp-cap{padding:12px 16px;background:var(--ink);color:var(--bg);font-size:1.02rem;min-height:3.6em}
+.stp-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 12px}
+.stp-dots{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.stp-dots button{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font:700 .72rem var(--sans);cursor:pointer;padding:0}
+.stp-dots button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stp-dots button.done{border-color:var(--accent);color:var(--accent)}
+/* svg theme classes */
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .ax{stroke:var(--ink);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg .lbl{font-size:13px}
+svg .sm{font-size:11.5px;fill:var(--muted)}
+svg .bd{font-weight:700}
+svg .c1{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .c2{stroke:var(--bad);stroke-width:3.5;fill:none}
+svg .c3{stroke:var(--good);stroke-width:3.5;fill:none}
+svg .c4{stroke:var(--warn);stroke-width:3.5;fill:none}
+svg .f1{fill:var(--accent);opacity:.18} svg .f2{fill:var(--bad);opacity:.18} svg .f3{fill:var(--good);opacity:.2} svg .f4{fill:var(--warn);opacity:.22}
+svg .dash{stroke-dasharray:6 5}
+svg .t1{fill:var(--accent)} svg .t2{fill:var(--bad)} svg .t3{fill:var(--good)} svg .t4{fill:var(--warn)}
+svg .dot1{fill:var(--accent)} svg .dot2{fill:var(--bad)} svg .dot3{fill:var(--good)} svg .dot4{fill:var(--warn)}
+/* sliders */
+.sl{margin:10px 0}
+.sl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.sl output{font:600 .9rem var(--mono);color:var(--accent)}
+.sl input{width:100%;accent-color:var(--accent);margin:6px 0}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.readout div{border-top:3px solid var(--accent);background:var(--surface);padding:8px 10px;border-radius:0 0 8px 8px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.readout small{display:block;font:700 .66rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.readout strong{font:700 1.25rem var(--mono);font-variant-numeric:tabular-nums}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent);font-weight:600;margin:8px 0}
+/* classify / match */
+.cls .pool{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:var(--soft)}
+.cls .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.cls .bk{border:2px solid var(--line);border-radius:10px;padding:8px;min-height:84px;background:var(--surface)}
+.cls .bk h4{margin:0 0 6px;font:700 .82rem var(--sans);color:var(--accent)}
+.cls .bk .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.cls .bk.over,.cls .pool.over{border-color:var(--accent);background:var(--accent-soft)}
+.chip{font:600 .88rem var(--sans);padding:6px 11px;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);cursor:grab;user-select:none;text-align:left}
+.chip.sel{background:var(--accent);color:var(--accent-ink)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft)}
+.cls .msg,.ord .msg,.calc .msg{font-weight:700;margin:8px 0}
+.match .bk h4{font-size:.9rem;color:var(--ink)}
+/* order */
+.ord ol{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{counter-increment:o;display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);cursor:grab}
+.ord li::before{content:counter(o);font:700 .8rem var(--mono);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ord li.ok{border-color:var(--good);background:var(--good-soft)} .ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord li.drag{opacity:.4}
+.ord li span{flex:1}
+.ord li button{padding:2px 8px}
+/* quiz */
+.qz .q{margin:0 0 16px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.qz .q p.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font:500 .95rem var(--sans);padding:9px 12px;margin:5px 0;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)} .opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.why{display:none;margin-top:8px;font-size:.92rem;padding:8px 12px;background:var(--soft);border-radius:8px}
+.q.done .why{display:block}
+.score{font:700 1.05rem var(--sans);margin:10px 0}
+/* calc */
+.calc .q{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.calc input[type=number],.calc input[type=text]{width:130px;padding:7px 10px;font:600 1rem var(--mono);border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.calc .sol{display:none;margin-top:8px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:.93rem}
+.calc .sol.show{display:block}
+.calc .fb{font-weight:700;margin-left:8px}
+.calc .fb.ok{color:var(--good)} .calc .fb.no{color:var(--bad)}
+/* cards */
+.fc{perspective:900px;max-width:520px}
+.fc .face{min-height:170px;display:grid;place-items:center;text-align:center;padding:20px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);cursor:pointer;font-size:1.1rem}
+.fc .face.back{background:var(--accent-soft)}
+.fc .face small{display:block;font:700 .66rem var(--sans);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+/* exam Qs */
+details.eq{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.eq>summary{cursor:pointer;padding:12px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+details.eq>summary::-webkit-details-marker{display:none}
+details.eq>summary::before{content:"▸";color:var(--accent)}
+details.eq[open]>summary::before{content:"▾"}
+details.eq .body{padding:4px 18px 16px}
+.mark{font:700 .72rem var(--mono);background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px}
+.cmd{font:700 .72rem var(--sans);background:var(--warn-soft);color:var(--warn);padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.ans{border-left:4px solid var(--accent);padding:6px 14px;margin:10px 0;background:var(--soft);border-radius:0 8px 8px 0}
+.mk{border-bottom:2px solid currentColor;padding-bottom:1px}
+.mk[data-t]::after{content:" [" attr(data-t) "]";font:700 .64rem var(--sans);vertical-align:super;opacity:.85}
+.mk.k{color:var(--k)} .mk.a{color:var(--a)} .mk.n{color:var(--n)} .mk.e{color:var(--e)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;margin:6px 0}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.key .k i{background:var(--k)} .key .a i{background:var(--a)} .key .n i{background:var(--n)} .key .e i{background:var(--e)}
+.rw{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px}
+.rw h3{margin:0 0 4px}
+.rw .use{margin-top:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;font-size:.93rem}
+.rw .use b{color:var(--accent)}
+ul.tips{list-style:none;padding:0;margin:0}
+ul.tips li{padding:10px 14px;margin-bottom:8px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;background:var(--surface)}
+ul.tips li b{color:var(--warn)}
+.algo{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:14px;align-items:start;margin:10px 0 14px}
+.algo .stp{margin:0}
+@media (max-width:820px){.algo{grid-template-columns:minmax(0,1fr)}}
+.code{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ctabs{display:flex;gap:4px;padding:8px 8px 0;border-bottom:1px solid var(--line);background:var(--soft)}
+.ctabs button{font:700 .78rem var(--sans);padding:6px 12px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+pre.cp{margin:0;padding:8px 0;font:500 .82rem/1.55 var(--mono);overflow-x:auto;counter-reset:l}
+pre.cp[hidden]{display:none}
+pre.cp .ln{display:block;padding:0 12px 0 8px;white-space:pre;border-left:4px solid transparent;counter-increment:l}
+pre.cp .ln::before{content:counter(l);display:inline-block;width:1.7em;margin-right:.8em;text-align:right;color:var(--muted);opacity:.6}
+pre.cp .ln.on{background:var(--warn-soft);border-left-color:var(--warn);font-weight:700}
+svg .cell{fill:var(--soft);stroke:var(--line);stroke-width:2}
+svg .cell-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+svg .cell-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3}
+svg .cell-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .cell-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:3}
+svg .cell-sorted{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .cell-dimg{opacity:.28}
+svg .nd{fill:var(--soft);stroke:var(--muted);stroke-width:2}
+svg .nd-cur{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3.5}
+svg .nd-ok{fill:var(--good-soft);stroke:var(--good);stroke-width:3.5}
+svg .nd-no{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}
+svg .nd-seen{fill:var(--good-soft);stroke:var(--good);stroke-width:2}
+svg .edge{stroke:var(--muted);stroke-width:2.5;fill:none}
+svg .arr{fill:var(--muted)}
+svg .edge-on{stroke:var(--accent);stroke-width:4;fill:none}
+.vars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.vars span{font:600 .85rem var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bar{height:14px;border-radius:7px;background:var(--accent);min-width:2px}
+.bar.b2{background:var(--bad)} .bar.b3{background:var(--good)} .bar.b4{background:var(--warn)}
+table.mx td,table.mx th{text-align:center;font:600 .95rem var(--mono);padding:6px 10px}
+table.mx td.z{color:var(--muted);opacity:.6} table.mx td.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+table.mx td.hl{outline:3px solid var(--warn);outline-offset:-3px}
+table.mx td.ls{text-align:left}
+@media (max-width:640px){.tablist{position:static}}
+@media print{.tablist{display:none}[role=tabpanel][hidden]{display:block}.stp-ctl{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stp{scroll-margin-top:70px}
 
-/* ---------- top bar ---------- */
-.topbar{
-  position:sticky; top:env(safe-area-inset-top,0px); z-index:50;
-  background:var(--surface); border-bottom:1px solid var(--line);
-}
-.topbar-inner{max-width:880px; margin:0 auto; padding:10px 20px;}
-.brand{display:flex; align-items:baseline; gap:10px; margin-bottom:8px}
-.brand h1{font-size:1.15rem; margin:0}
-.brand .tag{font-size:.72rem; color:var(--ink-dim); font-family:'IBM Plex Mono',monospace; letter-spacing:.04em}
-.nav-scroll{display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:thin}
-.nav-scroll a{
-  flex:none; font-size:.78rem; padding:6px 11px; border-radius:99px;
-  background:var(--surface-2); color:var(--ink-dim); text-decoration:none;
-  border:1px solid transparent; white-space:nowrap;
-}
-.nav-scroll a:hover{color:var(--ink); border-color:var(--line)}
-.mode-toggle{display:flex; gap:0; margin-left:auto; flex:none}
-.mode-toggle button{
-  font:inherit; font-size:.78rem; padding:6px 12px; border:1px solid var(--line);
-  background:var(--surface); color:var(--ink-dim); cursor:pointer;
-}
-.mode-toggle button:first-child{border-radius:99px 0 0 99px}
-.mode-toggle button:last-child{border-radius:0 99px 99px 0; border-left:none}
-.mode-toggle button.active{background:var(--prod); color:#fff; border-color:var(--prod)}
+/* Firm in Focus: styles for the original Learn content (topic sections, chart cards, keyword chips) mapped onto the kit palette */
+.legacy{--prod:var(--accent);--cost:var(--bad);--rev:var(--n);--profit:var(--warn);--ink-dim:var(--muted);--surface-2:var(--soft)}
+.legacy section.topic{padding:6px 0 10px;margin-bottom:12px;border-top:1px solid var(--line)}
+.legacy .topic.production{--tc:var(--prod)} .legacy .topic.cost{--tc:var(--cost)} .legacy .topic.revenue{--tc:var(--rev)} .legacy .topic.profit{--tc:var(--profit)}
+.legacy .topic-head{display:flex;align-items:center;gap:10px;margin:18px 0 8px}
+.legacy .topic-head h2{margin:0}
+.legacy .topic-num{font:700 .78rem var(--mono);color:#fff;background:var(--tc,var(--accent));width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
+.legacy .keyword-row{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.legacy .keyword-row .kw{font-weight:600;font-size:.8rem;padding:4px 10px;border-radius:99px;background:var(--accent-soft);color:var(--ink);border:1px solid var(--line)}
+.legacy .card{margin:14px 0}
+.legacy .chart-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px 4px;margin:14px 0}
+.legacy .chart-card figcaption{font-size:.85rem;color:var(--muted);padding:0 4px 10px;text-align:center}
+.legacy .callout{border-left:4px solid var(--tc,var(--accent));background:var(--soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0;font-size:.95rem}
+.legacy .callout b{color:var(--tc,var(--accent))}
+.legacy .table-wrap{overflow-x:auto;margin:14px 0}
+.legacy table{width:100%;border-collapse:collapse;font-size:.9rem}
+.legacy th,.legacy td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.legacy th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.legacy .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.legacy .two-col{grid-template-columns:1fr}}
+.legacy .pill-label{display:inline-block;font:700 .7rem var(--mono);padding:2px 8px;border-radius:6px;margin-bottom:6px}
+.legacy .pill-label.internal{background:var(--accent-soft);color:var(--accent)}
+.legacy .pill-label.external{background:var(--soft);color:var(--n)}
+.legacy .qa{margin:10px 0} .legacy .qa .q{font-weight:700;margin-bottom:3px} .legacy .qa .a{color:var(--muted)}
+.legacy .mono{font-family:var(--mono)}
+.legacy svg .axis{stroke:var(--muted);stroke-width:1;fill:none}
+.legacy svg .gridline{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+.legacy svg .lbl{font-size:11px;fill:var(--ink)}
+.legacy svg .lbl-dim{font-size:10px;fill:var(--muted)}
+.prompt-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+.prompt-card h3{font-size:1.02rem;margin:0 0 2px}
+.prompt-card .ctx{font-size:.88rem;color:var(--muted);margin-bottom:10px}
+.prompt-card .draw-box{border:1.5px dashed var(--line);border-radius:10px;height:120px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.8rem;margin-bottom:10px;background:var(--soft)}
+.prompt-card label{font:700 .72rem var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.prompt-card textarea{width:100%;min-height:80px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:.92rem;padding:9px 11px;resize:vertical;margin-top:4px}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Economics · 9708 · Chapter 34</div>
+  <h1>Firm in Focus</h1>
+  <p class="lead">How a firm turns inputs into output and output into profit: short-run and long-run production, the shape of every cost curve, economies of scale, revenue, and the three kinds of profit.</p>
+</header>
 
-/* ---------- hero ---------- */
-.hero{padding:34px 20px 20px}
-.hero .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--prod)}
-.hero h1{font-size:clamp(1.7rem,4.5vw,2.3rem); margin:.2em 0 .35em}
-.hero p{color:var(--ink-dim); max-width:60ch}
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
 
-/* ---------- sections ---------- */
-section.topic{padding:26px 20px 8px; border-top:1px solid var(--line); scroll-margin-top:calc(96px + env(safe-area-inset-top,0px))}
-section.topic > .wrap{padding-inline:0}
-.topic-head{display:flex; align-items:center; gap:10px; margin-bottom:4px}
-.topic-num{
-  font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:#fff;
-  background:var(--accent,var(--prod)); width:26px; height:26px; border-radius:7px;
-  display:flex; align-items:center; justify-content:center; flex:none;
-}
-.topic-head h2{font-size:1.35rem; margin:0}
-.topic.production{--accent:var(--prod)}
-.topic.cost{--accent:var(--cost)}
-.topic.revenue{--accent:var(--rev)}
-.topic.profit{--accent:var(--profit)}
-
-.card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:14px 0}
-.chart-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:10px 14px 4px; margin:14px 0}
-.chart-card figcaption{font-size:.82rem; color:var(--ink-dim); padding:0 4px 10px; text-align:center}
-svg text{font-family:'IBM Plex Sans',sans-serif}
-svg .axis{stroke:var(--ink-dim); stroke-width:1}
-svg .gridline{stroke:var(--line); stroke-width:1; stroke-dasharray:3 3}
-svg .lbl{fill:var(--ink); font-size:11px}
-svg .lbl-dim{fill:var(--ink-dim); font-size:10px}
-
-.keyword-row{display:flex; flex-wrap:wrap; gap:7px; margin:14px 0}
-.kw{
-  background:var(--cost-soft,var(--accent-soft)); color:var(--ink);
-  border:1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
-  font-size:.78rem; padding:4px 10px; border-radius:99px; font-weight:500;
-}
-.topic.production .kw{background:var(--prod-soft); border-color:color-mix(in srgb, var(--prod) 35%, var(--line))}
-
-.formula{
-  font-family:'IBM Plex Mono',monospace; background:var(--surface-2);
-  border:1px solid var(--line); border-radius:10px; padding:10px 14px;
-  font-size:.86rem; margin:8px 0; display:inline-block;
-}
-
-table{width:100%; border-collapse:collapse; font-size:.85rem}
-th,td{padding:8px 10px; text-align:left; border-bottom:1px solid var(--line)}
-th{font-family:'IBM Plex Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-dim); font-weight:600}
-.table-wrap{overflow-x:auto; margin:14px 0}
-.two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px}
-@media(max-width:640px){.two-col{grid-template-columns:1fr}}
-.pill-label{
-  display:inline-block; font-size:.7rem; font-family:'IBM Plex Mono',monospace;
-  padding:2px 8px; border-radius:6px; margin-bottom:6px; font-weight:600;
-}
-.pill-label.internal{background:var(--prod-soft); color:var(--prod)}
-.pill-label.external{background:var(--rev-soft); color:var(--rev)}
-
-.callout{
-  border-left:3px solid var(--accent,var(--prod)); background:var(--surface-2);
-  border-radius:0 10px 10px 0; padding:12px 16px; margin:14px 0; font-size:.93rem;
-}
-.callout b{color:var(--accent,var(--prod))}
-.qa{margin:10px 0}
-.qa .q{font-weight:600; margin-bottom:3px}
-.qa .a{color:var(--ink-dim)}
-
-footer{padding:28px 20px 40px; text-align:center; color:var(--ink-dim); font-size:.8rem; border-top:1px solid var(--line); margin-top:20px}
-
-/* ---------- practice mode ---------- */
-#practice{display:none}
-body.mode-practice #learn{display:none}
-body.mode-practice #practice{display:block}
-.prompt-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:16px 0}
-.prompt-card h3{font-size:1.02rem; margin-bottom:2px}
-.prompt-card .ctx{font-size:.82rem; color:var(--ink-dim); margin-bottom:10px}
-.draw-box{
-  border:1.5px dashed var(--line); border-radius:10px; height:150px;
-  display:flex; align-items:center; justify-content:center; color:var(--ink-dim);
-  font-size:.78rem; margin-bottom:10px; background:var(--surface-2);
-}
-.prompt-card textarea{
-  width:100%; min-height:70px; border:1px solid var(--line); border-radius:8px;
-  background:var(--bg); color:var(--ink); font:inherit; font-size:.88rem;
-  padding:9px 11px; resize:vertical;
-}
-.prompt-card textarea:focus{outline:2px solid var(--prod); outline-offset:1px}
-.applywrap{margin-top:8px}
-.applywrap label{font-size:.72rem; font-family:'IBM Plex Mono',monospace; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.03em}
-
-@media(prefers-reduced-motion:no-preference){
-  .card,.chart-card,.prompt-card{transition:border-color .15s}
-}
-a{color:var(--prod)}
-</style>
-
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="brand"><h1>Firm in Focus</h1><span class="tag">CIE A Level · Ch. 34</span></div>
-    <div class="nav-scroll" id="navScroll">
-      <a href="#srprod">SR production</a>
-      <a href="#srcost">SR costs</a>
-      <a href="#lrprod">LR production</a>
-      <a href="#lrcost">LR costs</a>
-      <a href="#scale">Economies of scale</a>
-      <a href="#revenue">Revenue</a>
-      <a href="#profit">Profit</a>
-      <div class="mode-toggle" style="margin-left:auto">
-        <button id="btnLearn" class="active" onclick="setMode('learn')">Explainer</button>
-        <button id="btnPractice" onclick="setMode('practice')">Practice</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="learn">
-<div class="hero wrap">
-  <div class="eyebrow">Costs, production &amp; profit</div>
-  <h1>How a firm turns inputs into output — and output into profit</h1>
-  <p>Short-run and long-run production, the shape of every cost curve, economies of scale, and why the firm's revenue curve decides how much of a market it can win. Built around Chapter 34 of the CIE A Level coursebook.</p>
-</div>
-
-<!-- ============ SHORT RUN PRODUCTION ============ -->
+<!-- LEARN -->
+<section id="learn" role="tabpanel" class="legacy">
 <section class="topic production" id="srprod">
-  <div class="wrap">
     <div class="topic-head"><span class="topic-num">1</span><h2>Short-run production function</h2></div>
     <p>In the short run at least one factor is fixed — almost always <b>capital</b> (the factory, the machines). <b>Labour</b> is the usual variable factor: the firm adjusts output by hiring more or fewer workers onto a fixed amount of kit.</p>
 
@@ -245,14 +308,12 @@ a{color:var(--prod)}
     </figure>
 
     <div class="card" style="border-color:color-mix(in srgb, var(--prod) 35%, var(--line))">
-      <p style="margin:0"><b>Worked numbers, from the coursebook's example</b> — 1 worker: TP 100 (AP 100); 2 workers: TP 180, MP 80 (AP 90); 3 workers: TP 240, MP 60 (AP 80); 4 workers: TP 280, MP 40 (AP 70); 5 workers: TP 306, MP 15 (AP 51.2); 6 workers: TP 306, MP 0 (AP 51). Notice MP is already falling from worker 2 onward — diminishing returns set in almost immediately — while TP only stops rising once the 6th worker adds nothing.</p>
+      <p style="margin:0"><b>Worked numbers</b> — 1 worker: TP 10 (AP 10); 2 workers: TP 30, MP 20 (AP 15); 3 workers: TP 60, MP 30 (AP 20); 4 workers: TP 84, MP 24 (AP 21); 5 workers: TP 100, MP 16 (AP 20); 6 workers: TP 110, MP 10 (AP 18.3); 7 workers: TP 114, MP 4 (AP 16.3); 8 workers: TP 114, MP 0 (AP 14.3). MP rises up to the 3rd worker, then falls: diminishing returns set in from the 4th worker. TP keeps rising until the 8th worker adds nothing. MP cuts AP at AP's maximum, between the 4th and 5th worker. The <b>Watch</b> tab animates this table.</p>
     </div>
-  </div>
 </section>
 
 <!-- ============ SHORT RUN COST ============ -->
 <section class="topic cost" id="srcost">
-  <div class="wrap">
     <div class="topic-head"><span class="topic-num">2</span><h2>Short-run cost function</h2></div>
     <p>Costs are the mirror image of production. Because one factor is fixed in the short run, costs split into two kinds:</p>
     <div class="keyword-row">
@@ -335,12 +396,10 @@ a{color:var(--prod)}
       </svg>
       <figcaption>Left of Q, ATC and MC are still falling — the firm is getting increasing returns from adding workers to its fixed plant. Right of Q, diminishing returns have pushed both curves back up. Q is the optimum output: the single lowest-cost point, where MC = ATC = C.</figcaption>
     </figure>
-  </div>
 </section>
 
 <!-- ============ LONG RUN PRODUCTION ============ -->
 <section class="topic production" id="lrprod">
-  <div class="wrap">
     <div class="topic-head"><span class="topic-num">3</span><h2>Long-run production function</h2></div>
     <p>In the long run <b>every</b> factor is variable — there is no fixed factor left. "Short run" and "long run" aren't fixed lengths of calendar time; they're defined by whether the firm can still vary all its inputs (installing a new factory takes longer than hiring a worker, so capital is what stays fixed while it's still "short run").</p>
 
@@ -419,12 +478,10 @@ a{color:var(--prod)}
       </div>
     </div>
     <p style="color:var(--ink-dim); font-size:.88rem">Joining the tangency points across a whole isoquant map traces the firm's long-run expansion path — its lowest-cost route to any output level once it can vary every factor.</p>
-  </div>
 </section>
 
 <!-- ============ LONG RUN COST ============ -->
 <section class="topic cost" id="lrcost">
-  <div class="wrap">
     <div class="topic-head"><span class="topic-num">4</span><h2>Long-run cost function</h2></div>
     <p>The <b>long-run average cost (LRAC)</b> curve shows the lowest average cost achievable at each output level, once the firm is free to choose any scale of plant. It's built from a whole family of short-run average cost curves (SRACs) — one for each possible factory size.</p>
     <div class="keyword-row">
@@ -461,12 +518,10 @@ a{color:var(--prod)}
     </figure>
 
     <div class="callout"><b>Minimum efficient scale (MES)</b> is the lowest output at which LRAC reaches its minimum — the smallest scale a firm needs to be fully cost-efficient. A low MES relative to the market (e.g. a bakery) allows many small firms to coexist; a high MES relative to the market (e.g. car manufacturing, aircraft) means only a few large firms can compete on cost, pushing the industry toward concentration.</div>
-  </div>
 </section>
 
 <!-- ============ ECONOMIES OF SCALE ============ -->
 <section class="topic cost" id="scale">
-  <div class="wrap">
     <div class="topic-head"><span class="topic-num">5</span><h2>Internal &amp; external economies (and diseconomies) of scale</h2></div>
     <p><b>Internal</b> economies come from the firm's own growth — the falling-LRAC portion of the curve above. <b>External</b> economies come from the whole industry or area growing, lowering every firm's costs regardless of its own size — shifting the entire LRAC curve down, not just moving along it.</p>
 
@@ -491,12 +546,10 @@ a{color:var(--prod)}
         <p style="margin:0">An overcrowded industry/location pushes up costs for every firm in it — traffic congestion, bidding up local land prices, or a shortage of skilled labour as every firm competes for the same pool.</p>
       </div>
     </div>
-  </div>
 </section>
 
 <!-- ============ REVENUE ============ -->
 <section class="topic revenue" id="revenue">
-  <div class="wrap">
     <div class="topic-head"><span class="topic-num">6</span><h2>Total, average and marginal revenue</h2></div>
     <div class="keyword-row">
       <span class="kw" style="background:var(--rev-soft)">total revenue (TR)</span>
@@ -540,12 +593,10 @@ a{color:var(--prod)}
     </figure>
 
     <div class="callout"><b>Revenue-maximising relationship:</b> <span class="mono">MR = 0 ⇔ PED = 1 ⇔ TR at its maximum.</span> Above that point demand is elastic — cutting price raises TR (the extra units sold outweigh the lower price on each). Below it demand is inelastic — cutting price further actually lowers TR (the price cut on all units outweighs the small extra quantity sold). A firm aiming purely to maximise revenue (not profit) should produce exactly where MR = 0.</div>
-  </div>
 </section>
 
 <!-- ============ PROFIT ============ -->
 <section class="topic profit" id="profit">
-  <div class="wrap">
     <div class="topic-head"><span class="topic-num">7</span><h2>Normal, subnormal and supernormal profit</h2></div>
     <p>Profit = total revenue − total costs. But an economist's "costs" already include <b>normal profit</b> — the minimum return the entrepreneur needs to bother staying in this line of business at all, given what their capital and effort could earn elsewhere. It's the opportunity cost of enterprise, and it's built into TC, not paid out on top of it.</p>
 
@@ -574,101 +625,686 @@ a{color:var(--prod)}
     </div>
 
     <div class="callout"><b>Supernormal profit as a market signal:</b> new firms entering a market chasing supernormal profit is exactly the mechanism that (in a competitive market) erodes it back toward normal profit over time — supply expands, price falls, until TR = TC again.</div>
+</section>
+
+
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <h2>1 · Diminishing returns: TP, MP and AP</h2>
+  <p>Press Play, or use the numbered steps to jump around. Each step adds one worker to a fixed factory.</p>
+  <div id="stA"></div>
+
+  <h2>2 · Short-run cost curves and how MC cuts the averages</h2>
+  <div id="stB"></div>
+
+  <h2>3 · SRAC curves and the LRAC envelope</h2>
+  <div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Short-run costs at different outputs</h2>
+  <p>The firm has fixed costs and rising marginal cost. Move output and see every cost measure. Then change fixed costs and watch which curves move.</p>
+  <div class="grid2">
+    <div class="card"><div id="sl1"></div><div id="sl2"></div>
+      <div class="readout"><div><small>TC</small><strong id="k1"></strong></div><div><small>AFC</small><strong id="k2"></strong></div><div><small>AVC</small><strong id="k3"></strong></div><div><small>ATC</small><strong id="k4"></strong></div><div><small>MC</small><strong id="k5"></strong></div></div>
+      <div class="verdict" id="v1"></div></div>
+    <div class="card"><svg id="lab1" viewBox="0 0 480 360" role="img" aria-label="Short-run cost curves with a marker at the chosen output"></svg><p class="note">More fixed cost lifts AFC and ATC but leaves MC and AVC exactly where they were.</p></div>
+  </div>
+
+  <h2>Lab 2 · Least-cost combination of labour and capital</h2>
+  <p>To produce 100 units the firm can use many mixes of labour (L) and capital (K). Capital costs $10 a unit. Change the wage and watch the firm switch to the cheaper factor.</p>
+  <div class="grid2">
+    <div class="card"><div id="sl3"></div>
+      <div class="readout"><div><small>Labour</small><strong id="i1"></strong></div><div><small>Capital</small><strong id="i2"></strong></div><div><small>Total cost</small><strong id="i3"></strong></div></div>
+      <div class="verdict" id="v2"></div></div>
+    <div class="card"><svg id="lab2" viewBox="0 0 480 360" role="img" aria-label="Isoquant for 100 units with a tangent isocost line"></svg><p class="note">Curve: isoquant for 100 units. Straight line: the lowest isocost line that touches it. Its slope is the wage divided by the price of capital.</p></div>
+  </div>
+
+  <h2>Lab 3 · Demand, revenue and marginal revenue</h2>
+  <p>A price maker faces the demand curve P = 20 − Q. To sell more it has to cut the price on every unit.</p>
+  <div class="grid2">
+    <div class="card"><div id="sl4"></div>
+      <div class="readout"><div><small>Price (AR)</small><strong id="r1"></strong></div><div><small>TR</small><strong id="r2"></strong></div><div><small>MR</small><strong id="r3"></strong></div><div><small>PED</small><strong id="r4"></strong></div></div>
+      <div class="verdict" id="v3"></div></div>
+    <div class="card"><svg id="lab3" viewBox="0 0 480 360" role="img" aria-label="AR and MR curves with a marker at the chosen output"></svg></div>
+  </div>
+
+  <h2>Lab 4 · Normal, subnormal and supernormal profit</h2>
+  <p>A price taker uses the cost curves from Lab 1 (fixed cost 20). It produces where MC = price. Change the market price and read the profit type.</p>
+  <div class="grid2">
+    <div class="card"><div id="sl5"></div>
+      <div class="readout"><div><small>Output (MC = P)</small><strong id="p1"></strong></div><div><small>ATC</small><strong id="p2"></strong></div><div><small>Profit per unit</small><strong id="p3"></strong></div><div><small>Total profit</small><strong id="p4"></strong></div></div>
+      <div class="verdict" id="v4"></div></div>
+    <div class="card"><svg id="lab4" viewBox="0 0 480 360" role="img" aria-label="Cost curves with a profit rectangle at the chosen price"></svg><p class="note">Shaded box: (P − ATC) × Q. Green is supernormal profit, red is subnormal. Costs already include normal profit.</p></div>
   </div>
 </section>
 
-<footer class="wrap">Firm in Focus — built from CIE A Level Economics Chapter 34. For revision use alongside the coursebook, not a substitute for it.</footer>
-</div>
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Fixed or variable in the short run?</h2>
+  <p>Drag each cost into the box where it belongs for a firm producing in the short run. Tap an item, then tap a box if dragging is awkward.</p>
+  <div id="cl1" class="card"></div>
 
-<!-- ============ PRACTICE MODE ============ -->
-<div id="practice">
-<div class="hero wrap">
-  <div class="eyebrow">Classnotes practice</div>
-  <h1>Draw it. Explain it. Apply it.</h1>
-  <p>For each prompt: sketch the chart on paper (or in your notebook), then use the box below to explain what's happening in your own words and connect it to a real firm or industry. Your typed answers save in this browser only.</p>
-</div>
+  <h2>2 · Internal or external economy of scale?</h2>
+  <div id="cl2" class="card"></div>
 
-<div class="wrap" id="promptList"></div>
-<footer class="wrap">Answers are stored locally in this browser tab only — they won't sync anywhere, so keep a copy of anything you don't want to lose.</footer>
+  <h2>3 · Match the term to its meaning</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>4 · Put the diminishing-returns chain in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>5 · Calculations</h2>
+  <p>Enter numbers only. Give answers to one decimal place where needed.</p>
+  <div id="c1"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+
+  <h2>7 · Draw it. Explain it. Apply it.</h2>
+  <p>For each prompt, sketch the diagram on paper, then explain it and apply it to a real firm in the box. Your answers save in this browser only.</p>
+  <div id="promptList"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are explained in general terms so they stay true. Look up current figures before quoting numbers in an exam.</p>
+  <div class="rw"><h3>A restaurant kitchen</h3><p>With one kitchen and one set of ovens, the first few cooks let the team specialise and the output per cook may rise. Beyond a certain point cooks get in each other's way and queue for the same equipment, so each extra cook is likely to add less than the last.</p><div class="use"><b>Use it for:</b> diminishing returns, MP below AP, and why MC rises in the short run.</div></div>
+  <div class="rw"><h3>Car and aircraft makers</h3><p>Building a modern car or aircraft needs huge fixed investment in plant, design and testing, so the minimum efficient scale is large compared with the market. Only a handful of firms can reach it, which helps explain why these industries tend to be concentrated.</p><div class="use"><b>Use it for:</b> LRAC, MES, internal economies of scale and why some markets have few firms.</div></div>
+  <div class="rw"><h3>Large supermarket chains</h3><p>Big retailers can buy in bulk, negotiate lower prices from suppliers, borrow cheaply and spread advertising and head-office costs over a very large number of sales. Many of these cost advantages are bought through size, so smaller rivals often struggle to match their prices.</p><div class="use"><b>Use it for:</b> purchasing, financial, managerial and marketing economies of scale.</div></div>
+  <div class="rw"><h3>Technology and manufacturing clusters</h3><p>Areas such as Silicon Valley or the electronics cluster around Shenzhen have deep local supplier networks, skilled workers and shared knowledge. Every firm in the cluster may gain lower costs without growing itself.</p><div class="use"><b>Use it for:</b> external economies of scale, which shift the whole LRAC curve down.</div></div>
+  <div class="rw"><h3>Congested city centres</h3><p>As more firms crowd into one district, rents, wages and traffic delays can rise for all of them. Costs go up for every firm in the area, whatever its own size.</p><div class="use"><b>Use it for:</b> external diseconomies of scale and why clusters do not grow forever.</div></div>
+  <div class="rw"><h3>The independent café and the struggling high-street shop</h3><p>A café that earns about what the owner could have earned elsewhere is making normal profit and may reasonably carry on. A shop that earns less than the owner's best alternative is making subnormal profit, even if it still shows a small accounting surplus, and is likely to close in the long run.</p><div class="use"><b>Use it for:</b> normal, supernormal and subnormal profit, and why opportunity cost sits inside total cost.</div></div>
+  <div class="rw"><h3>A new product that sells well</h3><p>A firm with a popular new product may earn supernormal profit at first. If entry is easy, rivals could copy it, supply may rise, price may fall and profit could drift back towards normal. If there are barriers to entry, the supernormal profit may last much longer.</p><div class="use"><b>Use it for:</b> supernormal profit as a signal for entry, and evaluation based on barriers to entry.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for the reminders, the model answer and the common mistakes. Model answers are colour-coded to the mark scheme.</p>
+  <div class="key" aria-label="Colour key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Explain what is meant by the law of diminishing returns.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two marks means two ideas: what happens to the factor (it is varied while at least one other is fixed) and what happens to marginal product.</div>
+    <div class="ans"><span class="mk k" data-t="K">The law of diminishing returns states that, in the short run, as a firm adds more units of a variable factor to a fixed factor,</span> <span class="mk k" data-t="K">the extra output from each additional unit of the variable factor will eventually start to fall.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying that "total output falls". Total product may keep rising; it is <i>marginal</i> product that falls.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate</span> <span class="mark">4 marks</span> A firm sells 500 units at $12 each. Its total cost is $5,200, which includes normal profit. Calculate its total revenue and its profit, and state the type of profit.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two marks for the calculations and two for the interpretation. Show the formula and the working.</div>
+    <div class="ans"><span class="mk k" data-t="K">TR = P × Q = $12 × 500 = $6,000.</span> <span class="mk a" data-t="A">Profit = TR − TC = $6,000 − $5,200 = $800.</span> <span class="mk n" data-t="N">TR is greater than TC, so the firm is earning supernormal profit of $800.</span> <span class="mk n" data-t="N">Because TC already includes normal profit, this $800 is a return above the minimum needed to keep the firm in the industry.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Calling $800 "normal profit". Normal profit is already inside total cost.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">6 marks</span> Explain why a firm's short-run average total cost curve is likely to be U-shaped.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two developed reasons: one for the fall (spreading fixed costs, better use of the fixed factor) and one for the rise (diminishing returns). Link each to the shape of the curve.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">A firm's short-run average total cost curve is likely to be U-shaped because ATC is made up of average fixed cost and average variable cost.</span> <span class="mk n" data-t="N">At low output, AFC falls quickly as the fixed costs are spread over more units, and AVC may also fall because a small workforce is under-using the fixed capital, so ATC is likely to fall at first.</span></p>
+    <p><span class="mk n" data-t="N">At higher output the law of diminishing returns is likely to set in, so each extra worker adds less output for the same wage.</span> <span class="mk n" data-t="N">Marginal cost then rises, pulls AVC up, and eventually outweighs the falling AFC, so ATC rises again.</span> <span class="mk a" data-t="A">A restaurant with one kitchen could show this: the first few cooks use the ovens well, but a crowded kitchen raises the cost of each extra meal.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Using "economies of scale" to explain a short-run U-shape. Scale is a long-run idea; the short-run shape comes from the fixed factor and diminishing returns.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Explain</span> <span class="mark">8 marks</span> Explain how internal and external economies of scale could lower a firm's average costs.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Say who is growing in each case (the firm or the industry). Two developed points for each type, with an example, and a short comment on the difference in the curve (movement along versus shift).</div>
+    <div class="ans"><p><span class="mk k" data-t="K">Internal economies of scale are falling long-run average costs that come from the growth of the firm itself.</span> <span class="mk n" data-t="N">A larger firm may buy in bulk and negotiate lower prices, so its input cost per unit could fall, and it can spread advertising and management costs over many more units.</span> <span class="mk a" data-t="A">A large supermarket chain could use this to undercut smaller rivals.</span> <span class="mk n" data-t="N">These economies are shown by a movement down along the LRAC curve.</span></p>
+    <p><span class="mk k" data-t="K">External economies of scale come from the growth of the whole industry or location, not from the size of any one firm.</span> <span class="mk n" data-t="N">A cluster of suppliers, a skilled labour pool and shared infrastructure may lower every local firm's costs.</span> <span class="mk a" data-t="A">Technology firms in a large cluster may benefit in this way even if they are small.</span> <span class="mk n" data-t="N">These economies could shift the whole LRAC curve downwards.</span></p>
+    <p><span class="mk e" data-t="E">Both types are likely to have limits: a firm that grows too large may suffer internal diseconomies, and an overcrowded cluster may suffer external diseconomies, so the cost savings may not continue as growth goes on.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Listing the five types of economy with no explanation of how each lowers cost per unit.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Discuss</span> <span class="mark">12 marks</span> Discuss whether a firm earning supernormal profit in the short run is likely to continue earning it in the long run.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Open each paragraph with the question's wording. Finish each paragraph with a short evaluative point and a link back to the question. Finish with a judgement that depends on barriers to entry.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">Supernormal profit occurs when total revenue is greater than total cost, which already includes normal profit, the minimum return needed to keep the entrepreneur in the industry.</span></p>
+    <p><span class="mk n" data-t="N">A firm earning supernormal profit in the short run may not continue earning it in the long run if other firms can enter the market.</span> <span class="mk n" data-t="N">Supernormal profit signals that resources earn more here than elsewhere, so new firms are likely to enter, supply increases, price falls and the firm's revenue per unit falls until profit returns towards normal.</span> <span class="mk a" data-t="A">A popular new café format that rivals can easily copy could follow this path.</span> <span class="mk e" data-t="E">However, entry may take time, so the firm could enjoy supernormal profit for several years, which means the short run is not always short in practice.</span> <span class="mk n" data-t="N">Entry therefore explains why supernormal profit may disappear.</span></p>
+    <p><span class="mk n" data-t="N">A firm earning supernormal profit in the short run is likely to continue earning it in the long run if there are barriers to entry.</span> <span class="mk n" data-t="N">Patents, high minimum efficient scale, brand loyalty or control of key inputs could stop rivals entering, so supply stays restricted and price remains above average cost.</span> <span class="mk a" data-t="A">A pharmaceutical firm with a patented drug may keep high profits while the patent lasts.</span> <span class="mk e" data-t="E">Barriers rarely last for ever: patents expire and technology changes, so the profit may erode eventually.</span> <span class="mk n" data-t="N">Barriers to entry therefore explain why supernormal profit may continue.</span></p>
+    <p><span class="mk e" data-t="E">Overall, a firm is likely to keep supernormal profit in the long run only if barriers to entry are strong and lasting. In a market that is easy to enter, supernormal profit is likely to be competed away, so the answer mainly depends on how high the barriers are and how quickly rivals can respond.</span></p>
+    </div>
+    <div class="warn"><b class="h">Common mistake</b>Writing about perfect competition only. The question is about any firm, so barriers to entry are the key point of evaluation.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Say "short run" or "long run" every time.</b> The fixed factor changes everything: AFC, diminishing returns and the U-shape belong to the short run, economies of scale to the long run.</li>
+    <li><b>MC cuts AVC and ATC at their minimum points.</b> Draw it that way, never anywhere else.</li>
+    <li><b>Normal profit is inside total cost.</b> TR = TC means normal profit, not zero profit.</li>
+    <li><b>Do not confuse diminishing returns with diseconomies of scale.</b> Returns are short run (one factor fixed); economies and diseconomies are long run (all factors variable).</li>
+    <li><b>Internal versus external.</b> Internal: the firm grows, a movement along LRAC. External: the industry grows, a shift of the whole LRAC curve.</li>
+    <li><b>MR = 0 is where TR is at its maximum and PED = 1.</b> Link revenue to elasticity whenever you can.</li>
+    <li><b>Label every axis and every curve</b> and mark the key point (optimum output, MES, the profit rectangle).</li>
+    <li><b>Use real examples</b> and say what each one shows about the concept.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Define / State</td><td>A precise meaning in one or two ideas.</td></tr>
+    <tr><td>Calculate</td><td>Formula, substitution, answer with units.</td></tr>
+    <tr><td>Explain</td><td>A reason with a developed link, usually with an example.</td></tr>
+    <tr><td>Analyse</td><td>A chain of cause and effect applied to the context.</td></tr>
+    <tr><td>Discuss / Assess</td><td>Arguments on more than one side and a justified judgement.</td></tr>
+  </table></div>
+
+  <h2>Keyword flashcards</h2>
+  <p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</section>
 </div>
 
 <script>
-function setMode(m){
-  document.body.classList.toggle('mode-practice', m==='practice');
-  document.getElementById('btnLearn').classList.toggle('active', m==='learn');
-  document.getElementById('btnPractice').classList.toggle('active', m==='practice');
-  try{ localStorage.setItem('firm-focus-mode', m); }catch(e){}
-}
-(function(){
-  try{
-    var saved = localStorage.getItem('firm-focus-mode');
-    if(saved==='practice') setMode('practice');
-  }catch(e){}
-})();
+const $ = (s, e = document) => e.querySelector(s), $$ = (s, e = document) => [...e.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (n, d = 2) => (Math.round(n * 10 ** d) / 10 ** d).toString();
 
-var PROMPTS = [
-  {
-    id:'p1', title:'1 — Total, average and marginal product',
-    ctx:'Sketch TP against number of workers, then AP and MP on a second set of axes below it.',
-    ask:'Explain why MP rises then falls, and identify the point where MP = AP. Apply it: think of a small business (e.g. a restaurant kitchen) — at what point would adding another worker start doing more harm than good?'
-  },
-  {
-    id:'p2', title:'2 — Short-run cost curves',
-    ctx:'Sketch AFC, AVC, ATC and MC on one set of axes.',
-    ask:'Explain why MC cuts AVC and ATC at their minimum points, and why AFC never has a U-shape. Apply it: for a firm you know of, what counts as its fixed cost and what counts as its variable cost?'
-  },
-  {
-    id:'p3', title:'3 — Isoquants and isocosts',
-    ctx:'Sketch two isoquants (Q1 and Q2) with an isocost line tangent to Q1.',
-    ask:'Explain what the tangency point represents, and why a firm would move away from any other point on the isoquant. Apply it: for a real industry, would you expect its least-cost combination to use more labour or more capital, and why?'
-  },
-  {
-    id:'p4', title:'4 — SRAC envelope and the LRAC curve',
-    ctx:'Sketch several SRAC curves and the LRAC envelope curve that wraps around them, marking the minimum efficient scale.',
-    ask:'Explain why the LRAC only touches each SRAC at one point. Apply it: name an industry with a high minimum efficient scale and one with a low minimum efficient scale, and explain what that implies about how many firms compete in each.'
-  },
-  {
-    id:'p5', title:'5 — Economies and diseconomies of scale',
-    ctx:'No chart needed here — instead, list two examples each of internal and external economies of scale for a real company you know.',
-    ask:'Explain the difference between an internal and an external economy of scale using your examples. Apply it: what might cause that company to run into diseconomies of scale if it kept growing?'
-  },
-  {
-    id:'p6', title:'6 — Average and marginal revenue',
-    ctx:'Sketch a downward-sloping AR curve with its MR curve below it, marking the point where MR = 0.',
-    ask:'Explain the relationship between MR = 0, PED = 1, and total revenue at that point. Apply it: for a real product, would cutting the price to sell more raise or lower total revenue right now — what would you need to know to answer that?'
-  },
-  {
-    id:'p7', title:'7 — Normal, subnormal and supernormal profit',
-    ctx:'No chart needed — instead, write TR and TC for three imagined scenarios: one earning normal profit, one supernormal, one subnormal.',
-    ask:'Explain, using your own numbers, why normal profit is included in total costs rather than sitting on top of them. Apply it: describe a real or plausible business currently earning subnormal profit, and explain what you would expect to happen to it over the next few years if that continues.'
-  }
-];
-
-var list = document.getElementById('promptList');
-PROMPTS.forEach(function(p){
-  var card = document.createElement('div');
-  card.className = 'prompt-card';
-  card.innerHTML =
-    '<h3>'+p.title+'</h3>'+
-    '<p class="ctx">'+p.ctx+'</p>'+
-    '<div class="draw-box">sketch your chart here (on paper / in your notebook)</div>'+
-    '<div class="applywrap"><label for="'+p.id+'">Explain &amp; apply</label><br>'+
-    '<textarea id="'+p.id+'" placeholder="'+p.ask.replace(/"/g,'&quot;')+'"></textarea></div>';
-  list.appendChild(card);
-});
-
-// best-effort local persistence per textarea
-PROMPTS.forEach(function(p){
-  var ta = document.getElementById(p.id);
-  if(!ta) return;
-  try{
-    var saved = localStorage.getItem('firm-focus-'+p.id);
-    if(saved) ta.value = saved;
-  }catch(e){}
-  ta.addEventListener('input', function(){
-    try{ localStorage.setItem('firm-focus-'+p.id, ta.value); }catch(e){}
+/* ---------- tabs ---------- */
+function initTabs() {
+  const list = $(".tablist"), tabs = $$("[role=tab]", list), panels = tabs.map((t) => $("#" + t.dataset.p));
+  const show = (i, focus) => {
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", k === i); t.tabIndex = k === i ? 0 : -1; panels[k].hidden = k !== i; });
+    if (focus) tabs[i].focus();
+    try { history.replaceState(null, "", "#" + tabs[i].dataset.p); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => { show(i); window.scrollTo(0, 0); });
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((i + tabs.length - 1) % tabs.length, true); }
+    });
   });
-});
-</script>
+  const start = tabs.findIndex((t) => "#" + t.dataset.p === location.hash);
+  show(start < 0 ? 0 : start);
+}
 
+/* ---------- svg string helpers ---------- */
+const at = (o) => Object.entries(o || {}).map(([k, v]) => ` ${k}="${v}"`).join("");
+const SV = {
+  line: (x1, y1, x2, y2, c = "ax", o) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"${at(o)}/>`,
+  text: (x, y, t, c = "lbl", o) => `<text x="${x}" y="${y}" class="${c}"${at(o)}>${t}</text>`,
+  circle: (x, y, r, c = "dot1", o) => `<circle cx="${x}" cy="${y}" r="${r}" class="${c}"${at(o)}/>`,
+  rect: (x, y, w, h, c = "f1", o) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" class="${c}"${at(o)}/>`,
+  path: (d, c = "c1", o) => `<path d="${d}" class="${c}"${at(o)}/>`,
+  poly: (pts, c = "f1", o) => `<polygon points="${pts.map((p) => p.join(",")).join(" ")}" class="${c}"${at(o)}/>`,
+  arrowHead: (x, y, dir, c = "dot1") => { const s = 7; const p = { r: [[x, y], [x - s * 1.6, y - s], [x - s * 1.6, y + s]], l: [[x, y], [x + s * 1.6, y - s], [x + s * 1.6, y + s]], u: [[x, y], [x - s, y + s * 1.6], [x + s, y + s * 1.6]], d: [[x, y], [x - s, y - s * 1.6], [x + s, y - s * 1.6]] }[dir]; return `<polygon points="${p.map((q) => q.join(",")).join(" ")}" class="${c}"/>`; },
+};
+const ptsPath = (pts) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+
+/* ---------- animated stepper ---------- */
+function stepper(el, cfg) {
+  const W = cfg.w || 760, H = cfg.h || 400, steps = cfg.steps;
+  el.innerHTML = `<div class="stp"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.label || "Animated diagram")}"></svg>
+    <div class="stp-cap" aria-live="polite"></div>
+    <div class="stp-ctl"><button class="b" data-a="back">◀ Back</button><button class="b pri" data-a="play">▶ Play</button><button class="b" data-a="next">Next ▶</button><button class="b" data-a="restart" aria-label="Restart">↻</button><span class="stp-dots"></span></div></div>`;
+  const svg = $("svg", el), cap = $(".stp-cap", el), dots = $(".stp-dots", el), playBtn = $("[data-a=play]", el);
+  let cur = 0, drawn = { ...cfg.base, ...steps[0].s }, raf = 0, timer = 0, playing = false;
+  steps.forEach((_, i) => { const d = document.createElement("button"); d.textContent = i + 1; d.setAttribute("aria-label", "Step " + (i + 1)); d.onclick = () => { stop(); go(i); }; dots.appendChild(d); });
+  const interp = (a, b, t) => { const o = {}; for (const k in b) o[k] = typeof b[k] === "number" && typeof a[k] === "number" ? a[k] + (b[k] - a[k]) * t : t > 0.5 ? b[k] : a[k] !== undefined ? a[k] : b[k]; return o; };
+  const paint = (s) => { drawn = s; svg.innerHTML = cfg.draw(s); };
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    cap.innerHTML = steps[cur].cap;
+    cfg.onStep && cfg.onStep(cur);
+    $$("button", dots).forEach((d, k) => { d.classList.toggle("on", k === cur); d.classList.toggle("done", k < cur); });
+    const from = drawn, to = { ...cfg.base, ...steps[cur].s }, t0 = performance.now(), dur = reduced ? 0 : cfg.tween || 900;
+    cancelAnimationFrame(raf);
+    const tick = (now) => { const t = dur ? Math.max(0, Math.min(1, (now - t0) / dur)) : 1, e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; paint(interp(from, to, e)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() { playing = false; clearTimeout(timer); playBtn.textContent = "▶ Play"; }
+  function advance() { if (!playing) return; if (cur >= steps.length - 1) return stop(); go(cur + 1); timer = setTimeout(advance, cfg.dwell || 4800); }
+  playBtn.onclick = () => { if (playing) return stop(); if (cur >= steps.length - 1) go(0); playing = true; playBtn.textContent = "❚❚ Pause"; timer = setTimeout(advance, cfg.dwell ? Math.min(cfg.dwell, 3000) : 2500); };
+  $("[data-a=back]", el).onclick = () => { stop(); go(cur - 1); };
+  $("[data-a=next]", el).onclick = () => { stop(); go(cur + 1); };
+  $("[data-a=restart]", el).onclick = () => { stop(); go(0); };
+  paint(drawn); go(0);
+}
+
+/* ---------- slider ---------- */
+function slider(el, o) {
+  const id = o.id;
+  el.innerHTML = `<div class="sl"><label for="${id}">${o.label}<output id="${id}o"></output></label><input type="range" id="${id}" min="${o.min}" max="${o.max}" step="${o.step || 1}" value="${o.value}"></div>`;
+  const i = $("#" + id, el), out = $("#" + id + "o", el);
+  const upd = () => { out.textContent = (o.fmt || ((v) => v))(+i.value); o.onInput && o.onInput(+i.value); };
+  i.addEventListener("input", upd); upd();
+  return { get: () => +i.value, set: (v) => { i.value = v; upd(); } };
+}
+
+/* ---------- classify (also powers match) ---------- */
+function classify(el, o) {
+  const items = o.items.map((x, i) => ({ ...x, id: i })), cap = o.cap || 99;
+  el.classList.add("cls"); if (o.match) el.classList.add("match");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<div class="pool" data-b="pool" aria-label="Items to place"></div>
+    <div class="buckets">${o.buckets.map((b, i) => `<div class="bk" data-b="${i}"><h4>${b.label}</h4><div class="slot"></div></div>`).join("")}</div>
+    <div class="row"><button class="b pri" data-a="check">Check</button><button class="b" data-a="reset">Reset</button></div><div class="msg" aria-live="polite"></div>`;
+  const pool = $(".pool", el), msg = $(".msg", el);
+  let sel = null;
+  const chip = (it) => { const c = document.createElement("button"); c.className = "chip"; c.type = "button"; c.draggable = true; c.textContent = it.text; c.dataset.id = it.id;
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", it.id); sel = c; });
+    c.addEventListener("click", (e) => { e.stopPropagation(); if (sel === c) { c.classList.remove("sel"); sel = null; } else { sel && sel.classList.remove("sel"); sel = c; c.classList.add("sel"); } });
+    return c; };
+  const place = (c, zone) => {
+    const slot = zone === pool ? pool : $(".slot", zone);
+    if (zone !== pool && slot.children.length >= cap) { const old = slot.firstElementChild; pool.appendChild(old); }
+    slot.appendChild(c); c.classList.remove("sel", "ok", "no"); sel = null; msg.textContent = "";
+  };
+  const fill = () => { pool.innerHTML = ""; $$(".slot", el).forEach((s) => (s.innerHTML = "")); (o.noShuffle ? items : shuffle(items)).forEach((it) => pool.appendChild(chip(it))); msg.textContent = ""; };
+  [pool, ...$$(".bk", el)].forEach((z) => {
+    z.addEventListener("dragover", (e) => { e.preventDefault(); z.classList.add("over"); });
+    z.addEventListener("dragleave", () => z.classList.remove("over"));
+    z.addEventListener("drop", (e) => { e.preventDefault(); z.classList.remove("over"); const c = $(`[data-id="${e.dataTransfer.getData("text/plain")}"]`, el); c && place(c, z); });
+    z.addEventListener("click", () => { if (sel) place(sel, z); });
+  });
+  $("[data-a=check]", el).onclick = () => {
+    let ok = 0;
+    $$(".bk", el).forEach((b) => $$(".chip", b).forEach((c) => { const good = items[+c.dataset.id].b === +b.dataset.b; c.classList.toggle("ok", good); c.classList.toggle("no", !good); if (good) ok++; }));
+    const left = $$(".chip", pool).length;
+    msg.textContent = left ? `${left} still to place. ${ok} correct so far.` : ok === items.length ? "All correct. " + (o.done || "") : `${ok} of ${items.length} correct. Red ones are in the wrong place; move them and check again.`;
+  };
+  $("[data-a=reset]", el).onclick = fill;
+  fill();
+}
+function match(el, o) {
+  classify(el, { match: true, cap: 1, prompt: o.prompt, buckets: o.pairs.map((p) => ({ label: p[0] })), items: o.pairs.map((p, i) => ({ text: p[1], b: i })), done: o.done });
+}
+
+/* ---------- ordering ---------- */
+function order(el, o) {
+  el.classList.add("ord");
+  el.innerHTML = `${o.prompt ? `<p>${o.prompt}</p>` : ""}<ol></ol><div class="row"><button class="b pri" data-a="check">Check order</button><button class="b" data-a="reset">Shuffle again</button></div><div class="msg" aria-live="polite"></div>`;
+  const ol = $("ol", el), msg = $(".msg", el);
+  let dragEl = null;
+  const make = (t, id) => { const li = document.createElement("li"); li.draggable = true; li.dataset.id = id; li.innerHTML = `<span>${t}</span><button class="b" type="button" aria-label="Move up">↑</button><button class="b" type="button" aria-label="Move down">↓</button>`;
+    li.addEventListener("dragstart", () => { dragEl = li; li.classList.add("drag"); });
+    li.addEventListener("dragend", () => { li.classList.remove("drag"); dragEl = null; });
+    li.addEventListener("dragover", (e) => { e.preventDefault(); if (!dragEl || dragEl === li) return; const r = li.getBoundingClientRect(); ol.insertBefore(dragEl, e.clientY < r.top + r.height / 2 ? li : li.nextSibling); });
+    $$("button", li)[0].onclick = () => { li.previousElementSibling && ol.insertBefore(li, li.previousElementSibling); };
+    $$("button", li)[1].onclick = () => { li.nextElementSibling && ol.insertBefore(li.nextElementSibling, li); };
+    return li; };
+  const fill = () => { ol.innerHTML = ""; let s; do { s = shuffle(o.items.map((t, i) => [t, i])); } while (o.items.length > 1 && s.every((x, i) => x[1] === i)); s.forEach(([t, i]) => ol.appendChild(make(t, i))); msg.textContent = ""; };
+  $("[data-a=check]", el).onclick = () => { let ok = 0; $$("li", ol).forEach((li, i) => { const g = +li.dataset.id === i; li.classList.toggle("ok", g); li.classList.toggle("no", !g); if (g) ok++; }); msg.textContent = ok === o.items.length ? "Correct order. " + (o.done || "") : `${ok} of ${o.items.length} in the right place.`; };
+  $("[data-a=reset]", el).onclick = fill; fill();
+}
+
+/* ---------- multiple choice ---------- */
+function quiz(el, o) {
+  el.classList.add("qz");
+  let score = 0, answered = 0;
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p class="qt">${i + 1}. ${q.q}</p>${q.opts.map((t, k) => `<button class="opt" data-k="${k}">${String.fromCharCode(65 + k)}. ${t}</button>`).join("")}<div class="why"><b>${"Answer: " + String.fromCharCode(65 + q.a)}.</b> ${q.why}</div></div>`).join("") + `<div class="score" aria-live="polite"></div><button class="b" data-a="again">Try again</button>`;
+  const sc = $(".score", el);
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i];
+    $$(".opt", box).forEach((b) => b.addEventListener("click", () => { if (box.classList.contains("done")) return; box.classList.add("done"); answered++; const k = +b.dataset.k; if (k === q.a) score++; b.classList.add(k === q.a ? "ok" : "no"); $$(".opt", box)[q.a].classList.add("ok"); sc.textContent = `Score: ${score} / ${answered} answered (of ${o.qs.length})`; })); });
+  $("[data-a=again]", el).onclick = () => { score = answered = 0; sc.textContent = ""; $$(".q", el).forEach((b) => { b.classList.remove("done"); $$(".opt", b).forEach((x) => x.classList.remove("ok", "no")); }); };
+}
+
+/* ---------- calculations ---------- */
+function calc(el, o) {
+  el.classList.add("calc");
+  el.innerHTML = o.qs.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p>
+    <div class="row"><input type="text" inputmode="${q.t ? "text" : "decimal"}" autocapitalize="off" autocomplete="off" aria-label="Answer ${i + 1}" placeholder="${q.ph || "answer"}">${q.unit ? `<span>${q.unit}</span>` : ""}<button class="b pri" data-a="c">Check</button><button class="b" data-a="h">Hint</button><button class="b" data-a="s">Show working</button><span class="fb" aria-live="polite"></span></div>
+    <div class="sol" data-s="h">${q.hint || "Write the formula first, then substitute."}</div><div class="sol" data-s="s">${q.sol}</div></div>`).join("");
+  $$(".q", el).forEach((box) => { const q = o.qs[+box.dataset.i], inp = $("input", box), fb = $(".fb", box);
+    const check = () => { const v = parseFloat(inp.value.replace(/[,$%\s−]/g, (m) => (m === "−" ? "-" : ""))); const good = q.t ? q.t.includes(inp.value.replace(/\s/g, "").toUpperCase()) : !isNaN(v) && Math.abs(v - q.a) <= (q.tol ?? 0.01); fb.textContent = good ? "✓ Correct" : "✗ Not quite"; fb.className = "fb " + (good ? "ok" : "no"); };
+    $("[data-a=c]", box).onclick = check; inp.addEventListener("keydown", (e) => e.key === "Enter" && check());
+    $("[data-a=h]", box).onclick = () => $("[data-s=h]", box).classList.toggle("show");
+    $("[data-a=s]", box).onclick = () => $("[data-s=s]", box).classList.toggle("show"); });
+}
+
+/* ---------- flashcards ---------- */
+function cards(el, o) {
+  let deck = o.cards.map((c) => c), i = 0, back = false, known = new Set();
+  el.classList.add("fc");
+  el.innerHTML = `<div class="face" tabindex="0" role="button" aria-label="Flip card"></div><div class="row" style="margin-top:10px"><button class="b" data-a="p">◀</button><button class="b" data-a="f">Flip</button><button class="b" data-a="n">▶</button><button class="b" data-a="s">Shuffle</button><button class="b pri" data-a="k">I know this</button><span class="note" data-c></span></div>`;
+  const face = $(".face", el), cnt = $("[data-c]", el);
+  const paint = () => { const c = deck[i]; face.className = "face" + (back ? " back" : ""); face.innerHTML = `<div><small>${back ? "Definition" : "Term"}</small>${back ? c[1] : "<b>" + c[0] + "</b>"}</div>`; cnt.textContent = `${i + 1} / ${deck.length} · known ${known.size}`; };
+  const flip = () => { back = !back; paint(); };
+  face.onclick = flip; face.onkeydown = (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), flip());
+  $("[data-a=f]", el).onclick = flip;
+  $("[data-a=n]", el).onclick = () => { i = (i + 1) % deck.length; back = false; paint(); };
+  $("[data-a=p]", el).onclick = () => { i = (i + deck.length - 1) % deck.length; back = false; paint(); };
+  $("[data-a=s]", el).onclick = () => { deck = shuffle(deck); i = 0; back = false; paint(); };
+  $("[data-a=k]", el).onclick = () => { known.add(deck[i][0]); i = (i + 1) % deck.length; back = false; paint(); };
+  paint();
+}
+
+
+/* ---------- array cells (svg) ---------- */
+/* o: x0,y,w,h,gap, cls {i:'cur|ok|no|warn|sorted'}, dim (array of indexes), ptr {i:'L'|'L,M'}, idx (show indexes), lift {i:dy} */
+function cells(arr, o = {}) {
+  const w = o.w || 56, h = o.h || 48, gap = o.gap ?? 6, y = o.y || 90, n = arr.length, tot = n * w + (n - 1) * gap, x0 = o.x0 ?? 0;
+  const dim = new Set(o.dim || []), cls = o.cls || {}, ptr = o.ptr || {}, lift = o.lift || {};
+  let out = "";
+  arr.forEach((v, i) => {
+    const x = x0 + i * (w + gap), yy = y - (lift[i] || 0), c = cls[i] ? " cell-" + cls[i] : "";
+    out += `<g class="${dim.has(i) ? "cell-dimg" : ""}">` + SV.rect(x, yy, w, h, "cell" + c, { rx: 8 }) + SV.text(x + w / 2, yy + h / 2 + 7, v === null ? "" : v, "lbl bd", { "text-anchor": "middle", style: "font-size:20px;font-family:var(--mono)" });
+    if (o.idx !== false) out += SV.text(x + w / 2, y + h + 17, i, "sm", { "text-anchor": "middle" });
+    out += "</g>";
+    if (ptr[i]) {
+      out += SV.poly([[x + w / 2, y + h + 24], [x + w / 2 - 6, y + h + 34], [x + w / 2 + 6, y + h + 34]], "t1");
+      out += SV.text(x + w / 2, y + h + 51, ptr[i], "lbl bd t1", { "text-anchor": "middle" });
+    }
+  });
+  return out;
+}
+
+/* ---------- code panel: Pseudocode / Python tabs with a highlighted line ---------- */
+function codePanel(el, o) {
+  const langs = [["ps", "Pseudocode", o.pseudo], ["py", "Python", o.py]];
+  el.classList.add("code");
+  el.innerHTML = `<div class="ctabs" role="tablist" aria-label="Code language">${langs.map((l, i) => `<button role="tab" type="button" aria-selected="${i === 0}" data-l="${l[0]}">${l[1]}</button>`).join("")}</div>` +
+    langs.map((l, i) => `<pre class="cp" data-l="${l[0]}"${i ? " hidden" : ""}>${l[2].map((t, k) => `<span class="ln" data-k="${k}">${esc(t) || " "}</span>`).join("")}</pre>`).join("");
+  const tabs = $$("[role=tab]", el), pres = $$("pre", el);
+  tabs.forEach((t, i) => t.addEventListener("click", () => { tabs.forEach((x, k) => { x.setAttribute("aria-selected", k === i); pres[k].hidden = k !== i; }); }));
+  return { hl(ps, py) { [[ps, 0], [py, 1]].forEach(([ks, k]) => { $$(".ln", pres[k]).forEach((l) => l.classList.remove("on")); [].concat(ks ?? []).forEach((n) => { const l = $(`.ln[data-k="${n}"]`, pres[k]); l && l.classList.add("on"); }); }); } };
+}
+
+/* ---------- algorithm stepper: frames {cap, ps, py, svg} + code panel ---------- */
+function algo(el, o) {
+  el.classList.add("algo");
+  el.innerHTML = `<div class="aS"></div><div class="aC"></div>`;
+  const cp = codePanel($(".aC", el), o), fr = o.frames;
+  stepper($(".aS", el), { w: o.w || 640, h: o.h || 250, label: o.label, base: { i: 0 }, tween: 1, dwell: o.dwell || 2200, draw: (s) => fr[Math.max(0, Math.min(fr.length - 1, Math.round(s.i)))].svg, onStep: (c) => cp.hl(fr[c].ps, fr[c].py), steps: fr.map((f, i) => ({ cap: f.cap, s: { i } })) });
+}
+
+/* ---------- graphs: svg drawing, adjacency structures ---------- */
+function adjOf(g) {
+  const m = new Map(g.nodes.map((n) => [n.id, []]));
+  g.edges.forEach(([a, b, w]) => { m.get(a).push([b, w]); if (!g.directed) m.get(b).push([a, w]); });
+  m.forEach((l) => l.sort((x, y) => (x[0] < y[0] ? -1 : 1)));
+  return m;
+}
+/* o: cls {id:'cur|ok|seen|no'}, sub {id:'text under node'}, on Set of "a-b" keys (both orders for undirected), r radius */
+function graphSvg(g, o = {}) {
+  const r = o.r || 20, P = Object.fromEntries(g.nodes.map((n) => [n.id, n])), cls = o.cls || {}, on = o.on || new Set(), sub = o.sub || {};
+  let s = "";
+  g.edges.forEach(([a, b, w]) => {
+    const A = P[a], B = P[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, hot = on.has(a + "-" + b) || (!g.directed && on.has(b + "-" + a));
+    const rev = g.directed && g.edges.some(([x, y]) => x === b && y === a), ox = rev ? -uy * 7 : 0, oy = rev ? ux * 7 : 0;
+    const x1 = A.x + ux * (g.directed ? r : 0) + ox, y1 = A.y + uy * (g.directed ? r : 0) + oy, x2 = B.x - ux * (g.directed ? r + 2 : 0) + ox, y2 = B.y - uy * (g.directed ? r + 2 : 0) + oy;
+    s += SV.line(x1, y1, x2, y2, hot ? "edge-on" : "edge");
+    if (g.directed) { const hx = x2, hy = y2, px = -uy, py = ux, k = 11; s += `<polygon points="${hx},${hy} ${hx - ux * k + px * 6},${hy - uy * k + py * 6} ${hx - ux * k - px * 6},${hy - uy * k - py * 6}" class="${hot ? "t1" : "arr"}"/>`; }
+    if (g.weighted) { const mx = (A.x + B.x) / 2 - uy * (rev ? 18 : 11), my = (A.y + B.y) / 2 + ux * (rev ? 18 : 11); s += SV.text(mx, my + 5, w, "lbl bd" + (hot ? " t1" : ""), { "text-anchor": "middle", style: "font-size:14px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }); }
+  });
+  g.nodes.forEach((n) => {
+    s += SV.circle(n.x, n.y, r, "nd" + (cls[n.id] ? " nd-" + cls[n.id] : "")) + SV.text(n.x, n.y + 6, n.id, "lbl bd", { "text-anchor": "middle", style: "font-size:16px" });
+    if (sub[n.id] !== undefined) s += SV.text(n.x, n.y + r + 16, sub[n.id], "sm bd t4", { "text-anchor": "middle", style: "font-size:13px;font-family:var(--mono)" });
+  });
+  return s;
+}
+function matrixHtml(g, o = {}) {
+  const ids = g.nodes.map((n) => n.id), cell = (a, b) => { const e = g.edges.find(([x, y]) => (x === a && y === b) || (!g.directed && x === b && y === a)); return e ? (g.weighted ? e[2] : 1) : g.weighted ? "–" : 0; };
+  return `<div class="tw"><table class="t mx"><tr><th></th>${ids.map((i) => `<th>${i}</th>`).join("")}</tr>${ids.map((a) => `<tr><th>${a}</th>${ids.map((b) => { const v = cell(a, b), hl = o.hl && o.hl[0] === a && o.hl[1] === b; return `<td class="${v === 0 || v === "–" ? "z" : "on"}${hl ? " hl" : ""}">${v}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+function listHtml(g) {
+  const A = adjOf(g);
+  return `<div class="tw"><table class="t mx"><tr><th>Vertex</th><th>${g.directed ? "Points to" : "Adjacent to"}</th></tr>${g.nodes.map((n) => `<tr><th>${n.id}</th><td class="ls">${A.get(n.id).map(([b, w]) => (g.weighted ? `${b} (${w})` : b)).join(", ") || "–"}</td></tr>`).join("")}</table></div>`;
+}
+
+window.Lib = { adjOf, graphSvg, matrixHtml, listHtml, cells, codePanel, algo,  initTabs, SV, ptsPath, stepper, slider, classify, match, order, quiz, calc, cards, fmtN, esc };
+
+/* ---------- shared maths ---------- */
+// Cost model used throughout: VC = Q^3 - 6Q^2 + 15Q, FC set per lab (20 unless a slider changes it).
+const MC = (q) => 3 * q * q - 12 * q + 15, AVC = (q) => q * q - 6 * q + 15, ATC = (q, fc = 20) => AVC(q) + fc / q;
+const clamp01 = (x) => Math.max(0, Math.min(1, x));
+function frame(W, H, l, r, t, b, xmax, ymin, ymax) {
+  return { X: (q) => l + ((r - l) * q) / xmax, Y: (v) => b - ((b - t) * (v - ymin)) / (ymax - ymin), l, r, t, b, ymax, ymin };
+}
+function curve(f, q0, q1, F) {
+  const p = [];
+  for (let q = q0; q <= q1 + 1e-9; q += 0.05) { const v = f(q); if (v > F.ymax || v < F.ymin) continue; p.push([F.X(q), F.Y(v)]); }
+  return ptsPath(p);
+}
+function axes(F, xl, yl, y0 = 0) {
+  return SV.line(F.l, F.t, F.l, F.Y(y0)) + SV.line(F.l, F.Y(y0), F.r, F.Y(y0)) + SV.text(F.l + 6, F.t + 8, yl, "sm", { "text-anchor": "start" }) + SV.text(F.r, F.b + 24, xl, "sm", { "text-anchor": "end" });
+}
+const costSet = (F, fc, o = {}) => {
+  const op = (k) => (o[k] === undefined ? 1 : o[k]);
+  let s = "";
+  if (op("a")) s += SV.path(curve((q) => fc / q, 0.4, 5.5, F), "c4", { opacity: op("a") }) + SV.text(F.X(0.65), F.Y(Math.min(F.ymax - 2, fc / 0.65)) + 2, "AFC", "lbl bd t4", { opacity: op("a") });
+  if (op("v")) s += SV.path(curve(AVC, 0.05, 5.5, F), "c3", { opacity: op("v") }) + SV.text(F.X(1.1), F.Y(AVC(1.1)) - 8, "AVC", "lbl bd t3", { opacity: op("v") });
+  if (op("t")) s += SV.path(curve((q) => ATC(q, fc), 0.4, 5.5, F), "c1", { opacity: op("t") }) + SV.text(F.X(1.1), F.Y(ATC(1.1, fc)) - 8, "ATC", "lbl bd t1", { opacity: op("t") });
+  if (op("m")) s += SV.path(curve(MC, 0.05, 5.5, F), "c2", { opacity: op("m") }) + SV.text(F.X(5.2), F.Y(MC(5.2)) + 2, "MC", "lbl bd t2", { opacity: op("m"), "text-anchor": "end" });
+  return s;
+};
+
+/* ---------- 1. stepper: diminishing returns ---------- */
+const TP = [10, 30, 60, 84, 100, 110, 114, 114], MPd = [10, 20, 30, 24, 16, 10, 4, 0], APd = TP.map((v, i) => v / (i + 1));
+Lib.stepper($("#stA"), {
+  w: 760, h: 400, label: "Total, marginal and average product as workers are added to a fixed factory", base: { n: 0, pk: 0, cut: 0 },
+  draw: (s) => {
+    const Yt = (v) => 340 - (v * 300) / 120, Ym = (v) => 340 - (v * 300) / 32, Xb = (i) => 60 + (i - 1) * 38, Xl = (i) => 430 + (i - 1) * 40;
+    let o = SV.line(60, 40, 60, 340) + SV.line(60, 340, 366, 340) + SV.line(420, 40, 420, 340) + SV.line(420, 340, 724, 340);
+    o += SV.text(64, 34, "Total product (TP)", "lbl bd", { "text-anchor": "start" }) + SV.text(424, 34, "MP and AP per worker", "lbl bd", { "text-anchor": "start" });
+    o += SV.text(366, 384, "Workers", "sm", { "text-anchor": "end" }) + SV.text(724, 384, "Workers", "sm", { "text-anchor": "end" });
+    for (let i = 1; i <= 8; i++) {
+      const f = clamp01(s.n - (i - 1));
+      o += SV.text(Xb(i) + 14, 358, i, "sm", { "text-anchor": "middle" }) + SV.text(Xl(i), 358, i, "sm", { "text-anchor": "middle" });
+      if (f > 0) o += SV.rect(Xb(i), Yt(TP[i - 1] * f), 28, (TP[i - 1] * f * 300) / 120, "f1", { opacity: 0.6 });
+      if (f > 0.95) o += SV.text(Xb(i) + 14, Yt(TP[i - 1]) - 6, TP[i - 1], "sm", { "text-anchor": "middle" });
+      if (f > 0) o += SV.circle(Xl(i), Ym(MPd[i - 1]), 5, "dot2", { opacity: f }) + SV.circle(Xl(i), Ym(APd[i - 1]), 5, "dot1", { opacity: f });
+      if (i < 8) {
+        const g = clamp01(s.n - i);
+        if (g > 0) {
+          const e = (a) => Xl(i) + (Xl(i + 1) - Xl(i)) * g, mm = MPd[i - 1] + (MPd[i] - MPd[i - 1]) * g, aa = APd[i - 1] + (APd[i] - APd[i - 1]) * g;
+          o += SV.line(Xl(i), Ym(MPd[i - 1]), e(), Ym(mm), "c2") + SV.line(Xl(i), Ym(APd[i - 1]), e(), Ym(aa), "c1");
+        }
+      }
+    }
+    o += SV.text(716, Ym(0.8), "MP", "lbl bd t2", { "text-anchor": "end", opacity: clamp01(s.n - 6) }) + SV.text(716, Ym(14.8), "AP", "lbl bd t1", { "text-anchor": "end", opacity: clamp01(s.n - 6) });
+    if (s.pk) o += SV.line(Xl(3), 40, Xl(3), 340, "gr", { opacity: s.pk }) + SV.text(Xl(3) + 6, 56, "MP peaks here", "sm", { "text-anchor": "start", opacity: s.pk });
+    if (s.cut) o += SV.circle((Xl(4) + Xl(5)) / 2, Ym(20.5), 9, "dot4", { opacity: s.cut * 0.5 }) + SV.line((Xl(4) + Xl(5)) / 2, Ym(20.5) + 9, (Xl(4) + Xl(5)) / 2, Ym(7), "gr", { opacity: s.cut }) + SV.text((Xl(4) + Xl(5)) / 2, Ym(5), "MP cuts AP at AP's maximum", "lbl bd t4", { "text-anchor": "middle", opacity: s.cut });
+    return o;
+  },
+  steps: [
+    { cap: "A factory has fixed capital. Workers are the variable factor. We add one worker at a time and track <b>TP</b> (total output), <b>MP</b> (extra output from the last worker) and <b>AP</b> (TP ÷ workers).", s: { n: 0, pk: 0, cut: 0 } },
+    { cap: "<b>1 worker:</b> TP = 10. MP = 10 (the first worker's whole output) and AP = 10.", s: { n: 1, pk: 0, cut: 0 } },
+    { cap: "<b>Workers 2 and 3:</b> division of labour and better use of the machines. TP rises to 60. MP <b>rises</b> to 30, and AP rises behind it to 20.", s: { n: 3, pk: 1, cut: 0 } },
+    { cap: "<b>4th worker:</b> TP = 84, but MP falls to 24. This is the <b>law of diminishing returns</b>: each worker has less fixed capital to share. TP still rises, and AP still rises (to 21) because MP is above AP.", s: { n: 4, pk: 1, cut: 0 } },
+    { cap: "<b>5th worker:</b> MP = 16, now <b>below</b> AP, so AP falls to 20. MP always cuts AP at AP's maximum.", s: { n: 5, pk: 1, cut: 1 } },
+    { cap: "<b>Workers 6 to 8:</b> MP keeps falling. TP rises more and more slowly and stops at 114 when the 8th worker adds nothing (MP = 0). <b>TP is at its maximum where MP = 0.</b>", s: { n: 8, pk: 1, cut: 1 } },
+  ],
+});
+
+/* ---------- 2. stepper: short-run cost curves ---------- */
+Lib.stepper($("#stB"), {
+  w: 760, h: 400, label: "Average fixed, average variable, average total and marginal cost curves", base: { a: 0, v: 0, m: 0, t: 0, d1: 0, d2: 0 },
+  draw: (s) => {
+    const F = frame(760, 400, 70, 730, 20, 350, 5.5, 0, 40);
+    let o = axes(F, "Output (Q)", "Cost per unit ($)");
+    o += costSet(F, 20, { a: s.a, v: s.v, t: s.t, m: s.m });
+    if (s.d1) o += SV.circle(F.X(3), F.Y(6), 7, "dot4", { opacity: s.d1 }) + SV.line(F.X(3), F.Y(6), F.X(3), F.Y(0), "gr", { opacity: s.d1 }) + SV.text(F.X(3) - 10, F.Y(6) + 26, "MC = AVC at AVC's minimum", "lbl bd t4", { "text-anchor": "end", opacity: s.d1 });
+    if (s.d2) o += SV.circle(F.X(3.71), F.Y(11.8), 8, "dot4", { opacity: s.d2 }) + SV.line(F.X(3.71), F.Y(11.8), F.X(3.71), F.Y(0), "gr", { opacity: s.d2 }) + SV.text(F.X(3.71) + 12, F.Y(11.8) - 14, "Optimum output: MC = ATC", "lbl bd t4", { "text-anchor": "start", opacity: s.d2 });
+    return o;
+  },
+  steps: [
+    { cap: "A firm has <b>fixed costs of $20</b> and variable costs that depend on output. Costs per unit are shown on the vertical axis.", s: {} },
+    { cap: "<b>AFC = FC ÷ Q.</b> The same $20 is spread over more and more units, so AFC falls all the way. It never turns up.", s: { a: 1 } },
+    { cap: "<b>AVC = VC ÷ Q.</b> It falls at first, then rises as diminishing returns bite. U-shaped.", s: { a: 1, v: 1 } },
+    { cap: "<b>MC</b> is the cost of one more unit. It also falls then rises, but it <b>cuts AVC at AVC's lowest point</b>: while MC is below AVC the average is pulled down, once MC is above it the average is pulled up.", s: { a: 1, v: 1, m: 1, d1: 1 } },
+    { cap: "<b>ATC = AFC + AVC.</b> It is U-shaped too, and MC cuts it at its lowest point. That is the <b>optimum output</b>: the lowest cost per unit the firm can reach in the short run.", s: { a: 1, v: 1, m: 1, t: 1, d1: 1, d2: 1 } },
+  ],
+});
+
+/* ---------- 3. stepper: SRAC curves and the LRAC envelope ---------- */
+const L = (q) => 0.25 * (q - 5) * (q - 5) + 5, centres = [2, 3.5, 5, 6.5, 8];
+const sracF = (c) => (q) => L(c) + 0.5 * (c - 5) * (q - c) + 0.6 * (q - c) * (q - c);
+Lib.stepper($("#stC"), {
+  w: 760, h: 400, label: "Short-run average cost curves for different plant sizes and the long-run average cost envelope", base: { s0: 0, s1: 0, s2: 0, s3: 0, s4: 0, e: 0, z: 0 },
+  draw: (s) => {
+    const F = frame(760, 400, 70, 730, 20, 350, 10, 0, 14);
+    let o = axes(F, "Output (Q)", "Cost per unit ($)");
+    centres.forEach((c, k) => { const a = (s["s" + k] || 0) * (1 - 0.65 * s.e); if (a > 0) { const f = sracF(c); o += SV.path(curve(f, Math.max(0.2, c - 2.2), Math.min(9.8, c + 2.2), F), "c1", { opacity: a }) + SV.text(F.X(c), F.Y(f(c)) + 20, "SRAC" + (k + 1), "sm", { "text-anchor": "middle", opacity: a }); } });
+    if (s.e) o += SV.path(curve(L, 0.2, 9.8, F), "c2", { opacity: s.e }) + SV.text(F.X(9.6), F.Y(L(9.6)) - 10, "LRAC", "lbl bd t2", { "text-anchor": "end", opacity: s.e });
+    if (s.z) o += SV.circle(F.X(5), F.Y(5), 8, "dot4", { opacity: s.z }) + SV.line(F.X(5), F.Y(5), F.X(5), F.Y(0), "gr", { opacity: s.z }) + SV.text(F.X(5), F.Y(0) - 10, "MES", "lbl bd t4", { "text-anchor": "middle", opacity: s.z })
+      + SV.text(F.X(2.2), F.Y(13), "Economies of scale", "lbl bd t3", { "text-anchor": "middle", opacity: s.z }) + SV.text(F.X(7.8), F.Y(13), "Diseconomies of scale", "lbl bd t2", { "text-anchor": "middle", opacity: s.z });
+    return o;
+  },
+  steps: [
+    { cap: "In the long run the firm can choose its plant size. Each <b>SRAC</b> curve shows average cost for <b>one</b> plant size, with that plant fixed.", s: { s0: 1 } },
+    { cap: "A bigger plant gives a different SRAC curve, centred on a higher output. The firm picks whichever plant gives the <b>lowest cost per unit</b> for the output it wants.", s: { s0: 1, s1: 1, s2: 1 } },
+    { cap: "With a whole family of plant sizes available, the choices overlap like scallops.", s: { s0: 1, s1: 1, s2: 1, s3: 1, s4: 1 } },
+    { cap: "The <b>LRAC curve</b> is the envelope: the lowest cost per unit available at each output once any plant can be chosen. It touches each SRAC at one point only.", s: { s0: 1, s1: 1, s2: 1, s3: 1, s4: 1, e: 1 } },
+    { cap: "LRAC falls while the firm gets <b>economies of scale</b>, bottoms out at the <b>minimum efficient scale (MES)</b>, then rises with <b>diseconomies of scale</b>.", s: { s0: 1, s1: 1, s2: 1, s3: 1, s4: 1, e: 1, z: 1 } },
+  ],
+});
+
+/* ---------- Lab 1: short-run costs ---------- */
+function lab1() {
+  if (!$("#a1") || !$("#a2")) return;
+  const q = +$("#a1").value, fc = +$("#a2").value, vc = q * AVC(q), tc = fc + vc;
+  $("#k1").textContent = "$" + Lib.fmtN(tc, 1); $("#k2").textContent = "$" + Lib.fmtN(fc / q, 1); $("#k3").textContent = "$" + Lib.fmtN(AVC(q), 1); $("#k4").textContent = "$" + Lib.fmtN(ATC(q, fc), 1); $("#k5").textContent = "$" + Lib.fmtN(MC(q), 1);
+  let best = 0.4, bv = 1e9; for (let x = 0.4; x <= 5.5; x += 0.01) if (ATC(x, fc) < bv) { bv = ATC(x, fc); best = x; }
+  $("#v1").textContent = Math.abs(q - best) < 0.1 ? `This is the optimum output: MC meets ATC and ATC is at its lowest ($${Lib.fmtN(bv, 1)}).` : q < best ? "Left of the optimum: MC is below ATC, so ATC is still falling." : "Right of the optimum: MC is above ATC, so ATC is rising.";
+  const F = frame(480, 360, 50, 460, 20, 320, 5.5, 0, 40);
+  let s = axes(F, "Output (Q)", "Cost per unit ($)") + costSet(F, fc) + SV.line(F.X(q), F.Y(0), F.X(q), F.t, "gr") + SV.circle(F.X(q), F.Y(Math.min(40, ATC(q, fc))), 6, "dot1");
+  $("#lab1").innerHTML = s;
+}
+Lib.slider($("#sl1"), { id: "a1", label: "Output (Q)", min: 0.5, max: 5.5, step: 0.1, value: 2, fmt: (v) => v.toFixed(1), onInput: lab1 });
+Lib.slider($("#sl2"), { id: "a2", label: "Fixed cost (FC)", min: 0, max: 40, step: 2, value: 20, fmt: (v) => "$" + v, onInput: lab1 });
+lab1();
+
+/* ---------- Lab 2: isoquant and isocost ---------- */
+Lib.slider($("#sl3"), { id: "a3", label: "Wage per unit of labour", min: 4, max: 40, step: 1, value: 10, fmt: (v) => "$" + v, onInput: (w) => {
+  const r = 10, Lq = Math.sqrt((100 * r) / w), K = Math.sqrt((100 * w) / r), C = w * Lq + r * K;
+  $("#i1").textContent = Lib.fmtN(Lq, 1); $("#i2").textContent = Lib.fmtN(K, 1); $("#i3").textContent = "$" + Lib.fmtN(C, 0);
+  $("#v2").textContent = w === r ? "Labour and capital cost the same, so the firm uses equal amounts of each." : w > r ? "Labour is dearer than capital, so the firm uses less labour and more capital." : "Labour is cheaper than capital, so the firm uses more labour and less capital.";
+  const F = frame(480, 360, 50, 460, 20, 320, 30, 0, 30);
+  let s = axes(F, "Labour (L)", "Capital (K)");
+  const p = []; for (let x = 3.4; x <= 30; x += 0.2) p.push([F.X(x), F.Y(100 / x)]);
+  s += SV.path(ptsPath(p), "c1") + SV.text(F.X(25), F.Y(100 / 25) - 10, "100 units", "lbl bd t1");
+  const k0 = C / r, x0 = k0 > 30 ? ((k0 - 30) * r) / w : 0, y0 = k0 > 30 ? 30 : k0, x1 = Math.min(30, C / w), y1 = x1 < C / w ? k0 - (w / r) * x1 : 0;
+  s += SV.line(F.X(x0), F.Y(y0), F.X(x1), F.Y(y1), "c2") + SV.circle(F.X(Lq), F.Y(K), 7, "dot2");
+  s += SV.text(F.X(Lq) + 12, F.Y(K) - 10, `L = ${Lib.fmtN(Lq, 1)}, K = ${Lib.fmtN(K, 1)}`, "lbl bd t2", { "text-anchor": "start" });
+  $("#lab2").innerHTML = s;
+} });
+
+/* ---------- Lab 3: AR, MR and TR ---------- */
+Lib.slider($("#sl4"), { id: "a4", label: "Quantity sold (Q)", min: 1, max: 19, step: 0.5, value: 5, fmt: (v) => v.toFixed(1), onInput: (q) => {
+  const P = 20 - q, tr = P * q, mr = 20 - 2 * q, ped = P / q;
+  $("#r1").textContent = "$" + Lib.fmtN(P, 1); $("#r2").textContent = "$" + Lib.fmtN(tr, 1); $("#r3").textContent = (mr < 0 ? "−$" : "$") + Lib.fmtN(Math.abs(mr), 1); $("#r4").textContent = Lib.fmtN(ped, 2);
+  $("#v3").textContent = Math.abs(q - 10) < 0.01 ? "MR = 0, PED = 1 and TR is at its maximum ($100)." : q < 10 ? "MR is positive and demand is elastic (PED > 1): selling more raises TR." : "MR is negative and demand is inelastic (PED < 1): selling more lowers TR.";
+  const F = frame(480, 360, 50, 460, 20, 320, 20, -20, 20);
+  let s = axes(F, "Quantity (Q)", "Price, AR, MR ($)", 0);
+  s += SV.rect(F.X(0), F.Y(P), F.X(q) - F.X(0), F.Y(0) - F.Y(P), "f1");
+  s += SV.line(F.X(0), F.Y(20), F.X(20), F.Y(0), "c1") + SV.text(F.X(19.5), F.Y(1) + 18, "AR = D", "lbl bd t1", { "text-anchor": "end" });
+  s += SV.line(F.X(0), F.Y(20), F.X(20), F.Y(-20), "c2") + SV.text(F.X(19.5), F.Y(-18), "MR", "lbl bd t2", { "text-anchor": "end" });
+  s += SV.line(F.X(q), F.Y(Math.min(P, mr)), F.X(q), F.Y(0), "gr") + SV.circle(F.X(q), F.Y(P), 6, "dot1") + SV.circle(F.X(q), F.Y(mr), 6, "dot2");
+  s += SV.text(F.X(q / 2), (F.Y(P) + F.Y(0)) / 2 + 4, "TR = " + Lib.fmtN(tr, 0), "lbl bd t1", { "text-anchor": "middle" });
+  $("#lab3").innerHTML = s;
+} });
+
+/* ---------- Lab 4: profit types for a price taker ---------- */
+Lib.slider($("#sl5"), { id: "a5", label: "Market price (P = MR = AR)", min: 3, max: 24, step: 0.2, value: 16, fmt: (v) => "$" + v.toFixed(1), onInput: (P) => {
+  const F = frame(480, 360, 50, 460, 20, 320, 5.5, 0, 40), shut = P < 6, q = shut ? 0 : 2 + Math.sqrt((P - 3) / 3);
+  let s = axes(F, "Output (Q)", "Cost / revenue per unit ($)") + costSet(F, 20, { a: 0 }) + SV.line(F.l, F.Y(P), F.r, F.Y(P), "c4") + SV.text(F.r - 4, F.Y(P) - 8, "P = AR = MR", "lbl bd t4", { "text-anchor": "end" });
+  if (shut) {
+    $("#p1").textContent = "0"; $("#p2").textContent = "–"; $("#p3").textContent = "–"; $("#p4").textContent = "–$20";
+    $("#v4").textContent = "Price is below the lowest AVC ($6). The firm cannot even cover its variable costs, so it is likely to shut down in the short run and lose only its fixed costs.";
+  } else {
+    const atc = ATC(q), u = P - atc, tp = u * q;
+    $("#p1").textContent = Lib.fmtN(q, 2); $("#p2").textContent = "$" + Lib.fmtN(atc, 2); $("#p3").textContent = (u < 0 ? "−$" : "$") + Lib.fmtN(Math.abs(u), 2); $("#p4").textContent = (tp < 0 ? "−$" : "$") + Lib.fmtN(Math.abs(tp), 1);
+    s += SV.rect(F.X(0), Math.min(F.Y(P), F.Y(atc)), F.X(q) - F.X(0), Math.abs(F.Y(P) - F.Y(atc)), u >= 0 ? "f3" : "f2") + SV.circle(F.X(q), F.Y(P), 6, "dot4");
+    $("#v4").textContent = Math.abs(u) < 0.15 ? "P is about equal to ATC: the firm earns normal profit. TR covers all costs, including the entrepreneur's opportunity cost." : u > 0 ? "P is above ATC: supernormal profit. This is a signal that could attract new firms into the industry." : "P is below ATC but above AVC: subnormal profit. The firm covers its variable costs, so it may stay in the short run, but it is likely to leave in the long run.";
+  }
+  $("#lab4").innerHTML = s;
+} });
+
+/* ---------- Practise ---------- */
+Lib.classify($("#cl1"), {
+  prompt: "Which of these are fixed costs and which are variable costs in the short run?",
+  buckets: [{ label: "Fixed cost" }, { label: "Variable cost" }],
+  items: [
+    { text: "Rent on the factory", b: 0 }, { text: "Insurance on the building", b: 0 }, { text: "Salaries of permanent managers", b: 0 }, { text: "Repayments on a machinery loan", b: 0 },
+    { text: "Raw materials", b: 1 }, { text: "Hourly wages of temporary workers", b: 1 }, { text: "Electricity used by machines", b: 1 }, { text: "Packaging", b: 1 },
+  ],
+  done: "Fixed costs do not change with output in the short run. Variable costs rise as output rises.",
+});
+Lib.classify($("#cl2"), {
+  prompt: "Is each of these an internal or an external economy of scale?",
+  buckets: [{ label: "Internal (the firm grows)" }, { label: "External (the industry grows)" }],
+  items: [
+    { text: "Buying raw materials in bulk at a discount", b: 0 }, { text: "Large firm borrows at a lower interest rate", b: 0 }, { text: "Hiring specialist managers", b: 0 }, { text: "Advertising spread over far more units", b: 0 },
+    { text: "A local pool of skilled, industry-trained workers", b: 1 }, { text: "A cluster of nearby suppliers", b: 1 }, { text: "Shared port and road infrastructure built for the industry", b: 1 }, { text: "University research spillovers", b: 1 },
+  ],
+  done: "Internal economies are movements along the LRAC curve. External economies shift the whole curve down.",
+});
+Lib.match($("#m1"), { prompt: "Match each term to its meaning.", pairs: [
+  ["Marginal cost", "The extra cost of producing one more unit"],
+  ["Average fixed cost", "Fixed cost divided by output; falls all the way"],
+  ["Isoquant", "All labour and capital combinations that give the same output"],
+  ["Isocost line", "All combinations of factors that cost the same total amount"],
+  ["Minimum efficient scale", "The lowest output at which LRAC reaches its minimum"],
+  ["Normal profit", "The minimum return needed to keep the firm in the industry, included in total cost"],
+] });
+Lib.order($("#o1"), { prompt: "Put the chain from diminishing returns to rising average cost in order.", items: [
+  "A firm adds more workers to a fixed amount of capital.",
+  "Each extra worker has less capital to share.",
+  "Marginal product starts to fall.",
+  "The cost of producing one more unit (MC) starts to rise.",
+  "MC pulls AVC and then ATC upwards.",
+] });
+Lib.calc($("#c1"), { qs: [
+  { q: "TP is 60 with 3 workers and 84 with 4 workers. What is the marginal product of the 4th worker?", a: 24, hint: "MP = change in TP ÷ change in workers.", sol: "MP = 84 − 60 = 24 units." },
+  { q: "TP is 100 with 5 workers. What is the average product?", a: 20, hint: "AP = TP ÷ number of workers.", sol: "AP = 100 ÷ 5 = 20 units per worker." },
+  { q: "A firm has fixed costs of $200 and variable costs of $600 at an output of 50 units. What is the average total cost?", a: 16, unit: "$", hint: "ATC = TC ÷ Q, and TC = FC + VC.", sol: "TC = 200 + 600 = $800. ATC = 800 ÷ 50 = $16." },
+  { q: "Total cost rises from $300 to $312 when output rises from 20 to 21 units. What is the marginal cost?", a: 12, unit: "$", hint: "MC = change in TC ÷ change in Q.", sol: "MC = (312 − 300) ÷ (21 − 20) = $12." },
+  { q: "A firm sells 300 units at $12 each. What is its total revenue?", a: 3600, unit: "$", hint: "TR = P × Q.", sol: "TR = 12 × 300 = $3,600." },
+  { q: "TR is $5,000 and TC (including normal profit) is $4,200. How much supernormal profit does the firm earn?", a: 800, unit: "$", hint: "Supernormal profit = TR − TC.", sol: "$5,000 − $4,200 = $800." },
+] });
+Lib.quiz($("#qz1"), { qs: [
+  { q: "The law of diminishing returns applies when", opts: ["all factors are increased in the same proportion", "one factor is varied and at least one is fixed", "a firm moves to a bigger plant", "firms enter an industry"], a: 1, why: "Diminishing returns is a short-run idea: one factor is fixed, so extra units of the variable factor add less and less." },
+  { q: "Marginal cost cuts average total cost", opts: ["at ATC's maximum point", "at ATC's minimum point", "where AFC is zero", "at the origin"], a: 1, why: "MC pulls ATC down while below it and up when above it, so it cuts ATC at its lowest point." },
+  { q: "Which statement about a firm earning normal profit is correct?", opts: ["Total revenue is below total cost", "Total revenue equals total cost, which includes normal profit", "The firm is making an accounting loss", "The firm will leave the industry"], a: 1, why: "Normal profit is the opportunity cost of enterprise and is already included in total cost, so TR = TC." },
+  { q: "A cluster of suppliers growing near a car factory lowers every local firm's costs. This is", opts: ["an internal economy of scale", "an external economy of scale", "diminishing returns", "an internal diseconomy"], a: 1, why: "The saving comes from the industry or area growing, not from the firm's own size, so the whole LRAC curve shifts down." },
+  { q: "A price maker's marginal revenue is zero when", opts: ["price equals average cost", "PED = 1 and total revenue is at its maximum", "demand is perfectly elastic", "the firm earns normal profit"], a: 1, why: "MR = 0 where AR is at the midpoint of a straight-line demand curve: PED = 1, and TR is at its maximum." },
+] });
+
+Lib.cards($("#fc1"), { cards: [
+  ["Law of diminishing returns", "In the short run, as more of a variable factor is added to a fixed factor, the extra output from each additional unit eventually falls."],
+  ["Marginal product", "The extra output from one more unit of a variable factor."],
+  ["Average product", "Total product divided by the number of units of the variable factor."],
+  ["Fixed costs", "Costs that do not change with output in the short run."],
+  ["Marginal cost", "The extra cost of producing one more unit of output."],
+  ["Optimum output", "The output where MC = ATC and average total cost is at its lowest in the short run."],
+  ["Isoquant", "A line joining every combination of labour and capital that produces the same output."],
+  ["Isocost line", "A line joining every combination of factors that costs the same total amount."],
+  ["Long-run average cost (LRAC)", "The lowest average cost at each output when all factors, including plant size, can be varied."],
+  ["Minimum efficient scale", "The lowest output at which LRAC reaches its minimum."],
+  ["Internal economies of scale", "Falling LRAC caused by the growth of the firm itself."],
+  ["External economies of scale", "Lower costs for every firm caused by the growth of the whole industry or location."],
+  ["Marginal revenue", "The extra revenue from selling one more unit."],
+  ["Price taker", "A firm that faces a horizontal demand curve and must accept the market price."],
+  ["Normal profit", "The minimum return needed to keep the entrepreneur in the industry, included in total cost."],
+  ["Supernormal profit", "Profit above normal profit, when TR is greater than TC."],
+  ["Subnormal profit", "Profit below normal profit, when TR is less than TC."],
+] });
+
+/* ---------- Draw it. Explain it. Apply it. ---------- */
+const PROMPTS = [
+  { id: "p1", title: "1 · Total, average and marginal product", ctx: "Sketch TP against number of workers, then AP and MP on a second set of axes below it.", ask: "Explain why MP rises then falls, and identify the point where MP = AP. Apply it: think of a small business (a restaurant kitchen, say). At what point would adding another worker start doing more harm than good?" },
+  { id: "p2", title: "2 · Short-run cost curves", ctx: "Sketch AFC, AVC, ATC and MC on one set of axes.", ask: "Explain why MC cuts AVC and ATC at their minimum points, and why AFC never has a U-shape. Apply it: for a firm you know, what counts as its fixed cost and what counts as its variable cost?" },
+  { id: "p3", title: "3 · Isoquants and isocosts", ctx: "Sketch two isoquants (Q1 and Q2) with an isocost line tangent to Q1.", ask: "Explain what the tangency point represents, and why a firm would move away from any other point on the isoquant. Apply it: for a real industry, would you expect the least-cost combination to use more labour or more capital, and why?" },
+  { id: "p4", title: "4 · SRAC envelope and the LRAC curve", ctx: "Sketch several SRAC curves and the LRAC envelope that wraps around them, marking the minimum efficient scale.", ask: "Explain why the LRAC only touches each SRAC at one point. Apply it: name an industry with a high MES and one with a low MES, and say what that implies about how many firms compete in each." },
+  { id: "p5", title: "5 · Economies and diseconomies of scale", ctx: "No chart needed: list two examples each of internal and external economies of scale for a real company you know.", ask: "Explain the difference between an internal and an external economy of scale using your examples. Apply it: what might cause that company to run into diseconomies of scale if it kept growing?" },
+  { id: "p6", title: "6 · Average and marginal revenue", ctx: "Sketch a downward-sloping AR curve with its MR curve below it, marking the point where MR = 0.", ask: "Explain the relationship between MR = 0, PED = 1 and total revenue at that point. Apply it: for a real product, would cutting the price raise or lower total revenue right now, and what would you need to know to answer?" },
+  { id: "p7", title: "7 · Normal, subnormal and supernormal profit", ctx: "No chart needed: write TR and TC for three imagined scenarios, one earning normal profit, one supernormal and one subnormal.", ask: "Explain, using your own numbers, why normal profit is included in total costs rather than sitting on top of them. Apply it: describe a real or plausible business earning subnormal profit and say what you would expect to happen to it over the next few years." },
+];
+PROMPTS.forEach((p) => {
+  const card = document.createElement("div");
+  card.className = "prompt-card";
+  card.innerHTML = `<h3>${p.title}</h3><p class="ctx">${p.ctx}</p><div class="draw-box">sketch your diagram here (on paper or in your notebook)</div><label for="${p.id}">Explain and apply</label><textarea id="${p.id}" placeholder="${p.ask.replace(/"/g, "&quot;")}"></textarea>`;
+  $("#promptList").appendChild(card);
+  const ta = $("#" + p.id);
+  try { const saved = localStorage.getItem("firm-focus-" + p.id); if (saved) ta.value = saved; } catch (e) {}
+  ta.addEventListener("input", () => { try { localStorage.setItem("firm-focus-" + p.id, ta.value); } catch (e) {} });
+});
+
+Lib.initTabs();
+</script>
 </body></html>

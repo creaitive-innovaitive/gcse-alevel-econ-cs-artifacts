@@ -1,0 +1,558 @@
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">A Level Economics · 9708 · Chapter 34</div>
+  <h1>Firm in Focus</h1>
+  <p class="lead">How a firm turns inputs into output and output into profit: short-run and long-run production, the shape of every cost curve, economies of scale, revenue, and the three kinds of profit.</p>
+</header>
+
+<nav class="tablist" role="tablist" aria-label="Sections">
+  <button role="tab" data-p="learn">Learn</button>
+  <button role="tab" data-p="watch">Watch</button>
+  <button role="tab" data-p="explore">Explore</button>
+  <button role="tab" data-p="practise">Practise</button>
+  <button role="tab" data-p="real">Real world</button>
+  <button role="tab" data-p="exam">Exam questions</button>
+  <button role="tab" data-p="tips">Tips &amp; keywords</button>
+</nav>
+
+<!-- LEARN -->
+<section id="learn" role="tabpanel" class="legacy">
+<section class="topic production" id="srprod">
+    <div class="topic-head"><span class="topic-num">1</span><h2>Short-run production function</h2></div>
+    <p>In the short run at least one factor is fixed — almost always <b>capital</b> (the factory, the machines). <b>Labour</b> is the usual variable factor: the firm adjusts output by hiring more or fewer workers onto a fixed amount of kit.</p>
+
+    <div class="keyword-row">
+      <span class="kw">total product</span>
+      <span class="kw">marginal product</span>
+      <span class="kw">average product</span>
+      <span class="kw">law of diminishing returns</span>
+      <span class="kw">fixed factor</span>
+      <span class="kw">variable factor</span>
+      <span class="kw">short run</span>
+      <span class="kw">production function</span>
+    </div>
+
+    <div class="callout" style="border-color:var(--prod)"><b>SR vs LR production, in brief:</b> short run = <i>one</i> factor fixed (usually capital), labour is varied, and the law of diminishing returns governs TP/AP/MP. Long run = <i>no</i> factor is fixed — the firm can rescale everything, so the question shifts from "how much labour on this plant" to "what size of plant" (isoquants/isocosts, returns to scale).</div>
+
+    <div class="card">
+      <p style="margin-top:0"><b>Total product (TP)</b> — total output from a given number of workers on the fixed factor.<br>
+      <b>Marginal product (MP)</b> — the extra output from one more worker.<br>
+      <b>Average product (AP)</b> — output per worker, TP ÷ number of workers.</p>
+      <p style="margin-bottom:0">As workers are added to a fixed factory, MP rises at first (better use of kit, some division of labour) then falls — the <b>law of diminishing returns</b>: each extra worker has less fixed capital to share, so adds less than the one before. TP keeps rising while MP is positive, but its slope flattens; TP is at its maximum exactly where MP = 0.</p>
+    </div>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 620 300" width="100%">
+        <!-- TP panel -->
+        <line class="axis" x1="55" y1="20" x2="55" y2="130"/>
+        <line class="axis" x1="55" y1="130" x2="600" y2="130"/>
+        <text class="lbl-dim" x="10" y="24">Output</text>
+        <text class="lbl-dim" x="560" y="146">Workers</text>
+        <path d="M55,130 C120,60 180,35 260,26 C360,15 480,12 580,10" fill="none" stroke="var(--prod)" stroke-width="2.4"/>
+        <text class="lbl" x="470" y="24" fill="var(--prod)" font-weight="600">TP</text>
+        <line class="gridline" x1="300" y1="130" x2="300" y2="20"/>
+        <text class="lbl-dim" x="303" y="144">MP = 0 → TP max</text>
+
+        <!-- AP/MP panel -->
+        <line class="axis" x1="55" y1="170" x2="55" y2="280"/>
+        <line class="axis" x1="55" y1="280" x2="600" y2="280"/>
+        <text class="lbl-dim" x="10" y="174">Product / worker</text>
+        <path d="M55,280 C110,150 150,140 190,144 C260,150 380,190 500,260 C530,278 550,290 570,300" fill="none" stroke="var(--cost)" stroke-width="2.2"/>
+        <text class="lbl" x="200" y="152" fill="var(--cost)" font-weight="600">MP</text>
+        <path d="M55,280 C130,190 190,168 260,164 C360,160 460,178 560,220" fill="none" stroke="var(--prod)" stroke-width="2.2"/>
+        <text class="lbl" x="420" y="185" fill="var(--prod)" font-weight="600">AP</text>
+        <circle cx="260" cy="164" r="3.5" fill="var(--ink)"/>
+        <text class="lbl-dim" x="264" y="160">MP = AP → AP at its own max</text>
+        <line class="gridline" x1="300" y1="280" x2="300" y2="170"/>
+      </svg>
+      <figcaption>Diminishing returns: MP rises then falls; TP keeps rising until MP = 0, then flattens. AP is pulled up while MP is above it, and down once MP falls below it — so MP always cuts AP at AP's maximum.</figcaption>
+    </figure>
+
+    <div class="card" style="border-color:color-mix(in srgb, var(--prod) 35%, var(--line))">
+      <p style="margin:0"><b>Worked numbers</b> — 1 worker: TP 10 (AP 10); 2 workers: TP 30, MP 20 (AP 15); 3 workers: TP 60, MP 30 (AP 20); 4 workers: TP 84, MP 24 (AP 21); 5 workers: TP 100, MP 16 (AP 20); 6 workers: TP 110, MP 10 (AP 18.3); 7 workers: TP 114, MP 4 (AP 16.3); 8 workers: TP 114, MP 0 (AP 14.3). MP rises up to the 3rd worker, then falls: diminishing returns set in from the 4th worker. TP keeps rising until the 8th worker adds nothing. MP cuts AP at AP's maximum, between the 4th and 5th worker. The <b>Watch</b> tab animates this table.</p>
+    </div>
+</section>
+
+<!-- ============ SHORT RUN COST ============ -->
+<section class="topic cost" id="srcost">
+    <div class="topic-head"><span class="topic-num">2</span><h2>Short-run cost function</h2></div>
+    <p>Costs are the mirror image of production. Because one factor is fixed in the short run, costs split into two kinds:</p>
+    <div class="keyword-row">
+      <span class="kw" style="background:var(--cost-soft)">fixed costs (FC)</span>
+      <span class="kw" style="background:var(--cost-soft)">variable costs (VC)</span>
+      <span class="kw" style="background:var(--cost-soft)">total cost (TC)</span>
+      <span class="kw" style="background:var(--cost-soft)">AFC</span>
+      <span class="kw" style="background:var(--cost-soft)">AVC</span>
+      <span class="kw" style="background:var(--cost-soft)">ATC</span>
+      <span class="kw" style="background:var(--cost-soft)">MC</span>
+      <span class="kw" style="background:var(--cost-soft)">optimum output</span>
+    </div>
+
+    <div class="callout"><b>SR vs LR cost, in brief:</b> short-run cost splits into fixed and variable (FC/VC), because one factor can't be changed — that split is what gives AFC/AVC/ATC/MC their shapes. Long-run cost has no fixed/variable split at all — every cost is variable, so there's just one curve, LRAC, built by choosing the lowest-cost plant size (SRAC) for each output level.</div>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Measure</th><th>Formula</th><th>Behaviour as output rises</th></tr>
+        <tr><td class="mono">TC</td><td class="mono">FC + VC</td><td>Rises throughout</td></tr>
+        <tr><td class="mono">AFC</td><td class="mono">FC ÷ Q</td><td>Falls continuously — a fixed sum spread over more units ("spreading the overheads")</td></tr>
+        <tr><td class="mono">AVC</td><td class="mono">VC ÷ Q</td><td>U-shaped: falls, then rises as diminishing returns bite</td></tr>
+        <tr><td class="mono">ATC</td><td class="mono">TC ÷ Q  (= AFC + AVC)</td><td>U-shaped, sits above AVC by the (shrinking) gap of AFC</td></tr>
+        <tr><td class="mono">MC</td><td class="mono">ΔTC ÷ ΔQ</td><td>U-shaped, falls then rises faster than AVC/ATC</td></tr>
+      </table>
+    </div>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 620 290" width="100%">
+        <line class="axis" x1="55" y1="15" x2="55" y2="255"/>
+        <line class="axis" x1="55" y1="255" x2="600" y2="255"/>
+        <text class="lbl-dim" x="10" y="20">Costs ($)</text>
+        <text class="lbl-dim" x="560" y="272">Output</text>
+        <!-- AFC hyperbola, falls continuously -->
+        <path d="M75,60 C130,150 220,205 340,230 C420,244 500,250 580,253" fill="none" stroke="var(--ink-dim)" stroke-width="2"/>
+        <text class="lbl-dim" x="470" y="246">AFC</text>
+        <!-- AVC: high at low output, falls to a minimum, rises again -->
+        <path d="M75,55 C160,150 260,213 300,220 C355,214 450,175 530,100" fill="none" stroke="var(--prod)" stroke-width="2.2"/>
+        <text class="lbl" x="80" y="48" fill="var(--prod)" font-weight="600">AVC</text>
+        <!-- ATC: sits above AVC, minimum a little further right, gap with AVC narrows -->
+        <path d="M100,30 C195,145 300,193 330,200 C375,195 460,165 560,90" fill="none" stroke="var(--cost)" stroke-width="2.4"/>
+        <text class="lbl" x="105" y="24" fill="var(--cost)" font-weight="600">ATC</text>
+        <!-- MC: falls to its own (lower-output) minimum, then rises steeply through AVC-min then ATC-min -->
+        <path d="M75,150 C120,210 155,232 185,234 C230,236 270,225 300,220 C315,213 322,206 330,200 C360,180 420,125 480,70 C510,50 535,35 560,25" fill="none" stroke="var(--rev)" stroke-width="2.4"/>
+        <text class="lbl" x="505" y="45" fill="var(--rev)" font-weight="600">MC</text>
+        <circle cx="300" cy="220" r="3.2" fill="var(--ink)"/>
+        <circle cx="330" cy="200" r="3.2" fill="var(--ink)"/>
+        <text class="lbl-dim" x="230" y="246">MC crosses AVC</text>
+        <text class="lbl-dim" x="345" y="205">MC crosses ATC</text>
+        <text class="lbl-dim" x="345" y="218">— both at their minimum</text>
+      </svg>
+      <figcaption>MC cuts AVC and ATC exactly at their lowest points — pulling each average down while MC is below it, and up once MC rises above it. Where MC = ATC is the firm's <b>optimum output</b>, the lowest cost per unit it can produce in the short run.</figcaption>
+    </figure>
+
+    <div class="callout"><b>Why the U-shape:</b> AVC and MC fall at first because a small workforce is under-using the fixed capital — hiring more gets more out of it. Once diminishing returns set in, each extra worker adds less output for the same wage, so the cost of producing one more unit (MC) starts climbing, dragging AVC and then ATC up behind it. The optimum output (MC = ATC) is the firm's most cost-efficient point — not necessarily its most profitable one, which depends on revenue too.</div>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 560 300" width="100%">
+        <line class="axis" x1="70" y1="15" x2="70" y2="255"/>
+        <line class="axis" x1="70" y1="255" x2="530" y2="255"/>
+        <text class="lbl-dim" x="14" y="18">Costs ($)</text>
+        <text class="lbl-dim" x="490" y="272">Output</text>
+        <!-- MC: falls to its own minimum left of ATC's, then rises steeply through ATC's minimum -->
+        <path d="M110,110 C145,190 175,225 190,230 C215,232 238,220 255,205 C295,160 345,100 390,60 C405,48 415,40 425,32" fill="none" stroke="var(--rev)" stroke-width="2.6"/>
+        <text class="lbl" x="395" y="30" fill="var(--rev)" font-weight="600">MC</text>
+        <!-- ATC: shallower minimum, meets MC exactly at its own lowest point -->
+        <path d="M100,40 C160,140 220,195 255,205 C305,197 365,155 420,90" fill="none" stroke="var(--cost)" stroke-width="2.8"/>
+        <text class="lbl" x="430" y="86" fill="var(--cost)" font-weight="600">ATC</text>
+        <!-- intersection at ATC's minimum -->
+        <circle cx="255" cy="205" r="4.5" fill="var(--ink)"/>
+        <line class="gridline" x1="255" y1="205" x2="255" y2="255"/>
+        <line class="gridline" x1="70" y1="205" x2="255" y2="205"/>
+        <text class="lbl-dim" x="42" y="209">C</text>
+        <text class="lbl-dim" x="248" y="272">Q</text>
+        <text class="lbl" x="290" y="238">• Optimum output</text>
+        <text class="lbl" x="290" y="254">  MC = ATC</text>
+        <text class="lbl-dim" x="95" y="70">Increasing</text>
+        <text class="lbl-dim" x="95" y="84">returns</text>
+        <text class="lbl-dim" x="330" y="115">Diminishing</text>
+        <text class="lbl-dim" x="330" y="129">returns</text>
+      </svg>
+      <figcaption>Left of Q, ATC and MC are still falling — the firm is getting increasing returns from adding workers to its fixed plant. Right of Q, diminishing returns have pushed both curves back up. Q is the optimum output: the single lowest-cost point, where MC = ATC = C.</figcaption>
+    </figure>
+</section>
+
+<!-- ============ LONG RUN PRODUCTION ============ -->
+<section class="topic production" id="lrprod">
+    <div class="topic-head"><span class="topic-num">3</span><h2>Long-run production function</h2></div>
+    <p>In the long run <b>every</b> factor is variable — there is no fixed factor left. "Short run" and "long run" aren't fixed lengths of calendar time; they're defined by whether the firm can still vary all its inputs (installing a new factory takes longer than hiring a worker, so capital is what stays fixed while it's still "short run").</p>
+
+    <div class="keyword-row">
+      <span class="kw">isoquant</span>
+      <span class="kw">isocost</span>
+      <span class="kw">long run</span>
+      <span class="kw">increasing returns to scale</span>
+      <span class="kw">decreasing returns to scale</span>
+      <span class="kw">least-cost combination</span>
+    </div>
+
+    <div class="card">
+      <p style="margin-top:0">An <b>isoquant</b> joins every combination of labour and capital that produces the <i>same</i> level of output. An <b>isocost</b> joins every combination of labour and capital that costs the firm the <i>same</i> total spend, given current factor prices — its slope is the ratio of the two factor prices. The firm's least-cost way to produce a given output is where an isocost line is <b>tangent</b> to that isoquant.</p>
+      <p style="margin-bottom:0">This is why the best combination of factors holds when the marginal product per dollar spent is equalised across every factor:</p>
+      <div class="formula">MP<sub>A</sub> ÷ price<sub>A</sub> = MP<sub>B</sub> ÷ price<sub>B</sub> = MP<sub>C</sub> ÷ price<sub>C</sub> …</div>
+      <p style="margin:8px 0 0">If a dollar spent on labour bought more extra output than a dollar spent on capital, the firm would gain by shifting spending toward labour — it will keep doing so until a dollar buys the <i>same</i> extra output whichever factor it lands on. That's the tangency point.</p>
+    </div>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 560 300" width="100%">
+        <text class="lbl-dim" x="60" y="16" font-weight="600">a</text>
+        <line class="axis" x1="60" y1="25" x2="60" y2="265"/>
+        <line class="axis" x1="60" y1="265" x2="540" y2="265"/>
+        <text class="lbl-dim" x="14" y="28">Capital</text>
+        <text class="lbl-dim" x="480" y="282">Labour</text>
+        <!-- isoquant map: 5 curves, output 100-500, convex to the origin (bowed in toward it, not away), spacing widening outward (decreasing returns to scale) -->
+        <path d="M90,60 C90,192 205,215 225,215" fill="none" stroke="#4fb3d8" stroke-width="2.2"/>
+        <text class="lbl" x="228" y="219" fill="#4fb3d8" font-weight="600">100</text>
+        <path d="M115,50 C115,199 255,225 280,225" fill="none" stroke="var(--ink)" stroke-width="2.2"/>
+        <text class="lbl" x="283" y="229">200</text>
+        <path d="M148,42 C148,206 320,235 350,235" fill="none" stroke="var(--rev)" stroke-width="2.2"/>
+        <text class="lbl" x="353" y="239" fill="var(--rev)" font-weight="600">300</text>
+        <path d="M195,36 C195,211 386,242 420,242" fill="none" stroke="var(--good)" stroke-width="2.2"/>
+        <text class="lbl" x="423" y="246" fill="var(--good)" font-weight="600">400</text>
+        <path d="M258,30 C258,214 469,247 505,247" fill="none" stroke="var(--cost)" stroke-width="2.2"/>
+        <text class="lbl" x="508" y="251" fill="var(--cost)" font-weight="600">500</text>
+      </svg>
+      <figcaption>Isoquant map — each curve joins every labour/capital combination that produces that same output. Curves for equal 100-unit steps sit closer together near the origin (increasing returns to scale) and spread further apart further out (decreasing returns to scale).</figcaption>
+    </figure>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 560 300" width="100%">
+        <text class="lbl-dim" x="60" y="16" font-weight="600">b</text>
+        <line class="axis" x1="60" y1="25" x2="60" y2="265"/>
+        <line class="axis" x1="60" y1="265" x2="540" y2="265"/>
+        <text class="lbl-dim" x="14" y="28">Capital</text>
+        <text class="lbl-dim" x="480" y="282">Labour</text>
+        <!-- three isoquants, convex to the origin (bowed in toward it) -->
+        <path d="M90,150 C90,218 171,230 185,230" fill="none" stroke="#4fb3d8" stroke-width="2"/>
+        <path d="M120,110 C120,216 235,235 255,235" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M160,75 C160,215 309,240 335,240" fill="none" stroke="var(--rev)" stroke-width="2"/>
+        <!-- isocost lines: each just touches (is tangent to) one isoquant, matching its local slope, and doesn't cross it -->
+        <line x1="70" y1="182.5" x2="215.5" y2="260" stroke="var(--ink-dim)" stroke-width="1.4"/>
+        <line x1="95" y1="162.5" x2="261.6" y2="260" stroke="var(--ink-dim)" stroke-width="1.4"/>
+        <line x1="155" y1="160.7" x2="321.6" y2="260" stroke="var(--ink-dim)" stroke-width="1.4"/>
+        <!-- expansion path through the tangency points -->
+        <path d="M132,215.5 C150,214 165,213 180,212.25 C200,211 220,210.5 238,210" fill="none" stroke="var(--prod)" stroke-width="2.4"/>
+        <text class="lbl" x="220" y="195" fill="var(--prod)" font-weight="600">Long-run production function</text>
+        <circle cx="132" cy="215.5" r="4" fill="var(--prod)"/>
+        <circle cx="180" cy="212.25" r="4" fill="var(--prod)"/>
+        <circle cx="238" cy="210" r="4" fill="var(--prod)"/>
+      </svg>
+      <figcaption>Isoquants and isocosts together: each dot is where an isocost line just touches — is tangent to — an isoquant, without crossing over it. Because each isoquant is convex to the origin, that touching point is the single combination on it nearest to the origin the firm can reach for that spend: the least-cost way to produce that output. Joining the dots traces the firm's long-run expansion path.</figcaption>
+    </figure>
+
+    <p><b>Returns to scale</b> describe what happens to output when <i>every</i> factor is increased in the same proportion:</p>
+    <div class="two-col">
+      <div class="card" style="margin:8px 0">
+        <p class="pill-label internal">increasing returns to scale</p>
+        <p style="margin:0">Output rises by a <i>larger</i> percentage than inputs — e.g. inputs +50%, output +80%. On an isoquant map this shows as isoquants for equal output steps (100, 200, 300…) getting <b>closer together</b> as you move out from the origin — less extra input needed for the next chunk of output.</p>
+      </div>
+      <div class="card" style="margin:8px 0">
+        <p class="pill-label external">decreasing returns to scale</p>
+        <p style="margin:0">Output rises by a <i>smaller</i> percentage than inputs. Isoquants spread <b>further apart</b> — more and more extra labour and capital needed to add the same 100 units, exactly the pattern in the coursebook's isoquant map for output levels 100→500.</p>
+      </div>
+    </div>
+    <p style="color:var(--ink-dim); font-size:.88rem">Joining the tangency points across a whole isoquant map traces the firm's long-run expansion path — its lowest-cost route to any output level once it can vary every factor.</p>
+</section>
+
+<!-- ============ LONG RUN COST ============ -->
+<section class="topic cost" id="lrcost">
+    <div class="topic-head"><span class="topic-num">4</span><h2>Long-run cost function</h2></div>
+    <p>The <b>long-run average cost (LRAC)</b> curve shows the lowest average cost achievable at each output level, once the firm is free to choose any scale of plant. It's built from a whole family of short-run average cost curves (SRACs) — one for each possible factory size.</p>
+    <div class="keyword-row">
+      <span class="kw" style="background:var(--cost-soft)">SRAC</span>
+      <span class="kw" style="background:var(--cost-soft)">LRAC (envelope curve)</span>
+      <span class="kw" style="background:var(--cost-soft)">minimum efficient scale (MES)</span>
+    </div>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 620 300" width="100%">
+        <line class="axis" x1="55" y1="15" x2="55" y2="260"/>
+        <line class="axis" x1="55" y1="260" x2="600" y2="260"/>
+        <text class="lbl-dim" x="10" y="18">Cost ($)</text>
+        <text class="lbl-dim" x="560" y="277">Output</text>
+        <!-- five SRAC scallops, each a valley (low cost = large y, near the axis) -->
+        <path d="M75,40 C105,85 130,105 150,110 C175,108 200,85 220,50" fill="none" stroke="var(--ink-dim)" stroke-width="1.6" opacity=".8"/>
+        <path d="M150,60 C185,120 215,145 235,150 C260,148 295,120 325,70" fill="none" stroke="var(--ink-dim)" stroke-width="1.6" opacity=".8"/>
+        <path d="M235,75 C270,150 305,182 330,190 C360,186 400,150 430,80" fill="none" stroke="var(--ink-dim)" stroke-width="1.6" opacity=".8"/>
+        <path d="M340,80 C375,125 415,145 440,150 C465,145 495,115 530,75" fill="none" stroke="var(--ink-dim)" stroke-width="1.6" opacity=".8"/>
+        <path d="M440,70 C470,95 505,108 530,110 C550,105 575,80 590,45" fill="none" stroke="var(--ink-dim)" stroke-width="1.6" opacity=".8"/>
+        <text class="lbl-dim" x="90" y="35">SRAC1</text>
+        <text class="lbl-dim" x="270" y="70">SRAC3</text>
+        <text class="lbl-dim" x="545" y="40">SRAC5</text>
+        <!-- LRAC envelope: U-shaped, touching the very bottom of every SRAC scallop -->
+        <path d="M78,50 C90,60 123.8,93.3 150,110 C176.2,126.7 205,136.7 235,150 C265,163.3 295.8,190 330,190 C364.2,190 406.7,163.3 440,150 C473.3,136.7 505,126.7 530,110 C555,93.3 580,60 590,50" fill="none" stroke="var(--cost)" stroke-width="2.8"/>
+        <text class="lbl" x="470" y="100" fill="var(--cost)" font-weight="600">LRAC</text>
+        <circle cx="330" cy="190" r="4" fill="var(--ink)"/>
+        <line class="gridline" x1="330" y1="190" x2="330" y2="260"/>
+        <text class="lbl-dim" x="310" y="273">MES</text>
+        <text class="lbl-dim" x="120" y="230">economies of scale</text>
+        <text class="lbl-dim" x="440" y="230">diseconomies of scale</text>
+      </svg>
+      <figcaption>The LRAC is itself U-shaped, running through the lowest point of every SRAC scallop — "enveloping" the lowest cost achievable at each output level as the firm resizes its plant.</figcaption>
+    </figure>
+
+    <div class="callout"><b>Minimum efficient scale (MES)</b> is the lowest output at which LRAC reaches its minimum — the smallest scale a firm needs to be fully cost-efficient. A low MES relative to the market (e.g. a bakery) allows many small firms to coexist; a high MES relative to the market (e.g. car manufacturing, aircraft) means only a few large firms can compete on cost, pushing the industry toward concentration.</div>
+</section>
+
+<!-- ============ ECONOMIES OF SCALE ============ -->
+<section class="topic cost" id="scale">
+    <div class="topic-head"><span class="topic-num">5</span><h2>Internal &amp; external economies (and diseconomies) of scale</h2></div>
+    <p><b>Internal</b> economies come from the firm's own growth — the falling-LRAC portion of the curve above. <b>External</b> economies come from the whole industry or area growing, lowering every firm's costs regardless of its own size — shifting the entire LRAC curve down, not just moving along it.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Type</th><th>Internal (firm's own scale)</th><th>External (industry / location)</th></tr>
+        <tr><td><b>Purchasing / input costs</b></td><td>Bulk-buying raw materials and components at a discount</td><td>A cluster of suppliers nearby means every local firm gets components cheaply and fast</td></tr>
+        <tr><td><b>Technical</b></td><td>Large-scale machinery, specialisation and division of labour spread across more output</td><td>Shared local infrastructure — ports, power, roads — built for the whole industry</td></tr>
+        <tr><td><b>Managerial</b></td><td>Affording specialist managers (finance, HR, logistics) instead of generalists</td><td>A deep local pool of skilled, industry-trained labour to hire from (e.g. Silicon Valley engineers)</td></tr>
+        <tr><td><b>Financial</b></td><td>Large firms borrow more cheaply — lenders see them as lower risk</td><td>Knowledge / R&amp;D spillovers — university links, shared research, information networks</td></tr>
+        <tr><td><b>Marketing</b></td><td>Advertising and distribution costs spread over far more units sold</td><td>Reputation of a whole cluster or region (e.g. "Made in Germany" engineering)</td></tr>
+      </table>
+    </div>
+
+    <div class="two-col" style="margin-top:8px">
+      <div class="card" style="margin:0">
+        <p class="pill-label internal">internal diseconomies</p>
+        <p style="margin:0">A firm grows too large to manage well: communication breaks down, decision-making slows, workers feel alienated and less motivated. Rising LRAC beyond MES.</p>
+      </div>
+      <div class="card" style="margin:0">
+        <p class="pill-label external">external diseconomies</p>
+        <p style="margin:0">An overcrowded industry/location pushes up costs for every firm in it — traffic congestion, bidding up local land prices, or a shortage of skilled labour as every firm competes for the same pool.</p>
+      </div>
+    </div>
+</section>
+
+<!-- ============ REVENUE ============ -->
+<section class="topic revenue" id="revenue">
+    <div class="topic-head"><span class="topic-num">6</span><h2>Total, average and marginal revenue</h2></div>
+    <div class="keyword-row">
+      <span class="kw" style="background:var(--rev-soft)">total revenue (TR)</span>
+      <span class="kw" style="background:var(--rev-soft)">average revenue (AR)</span>
+      <span class="kw" style="background:var(--rev-soft)">marginal revenue (MR)</span>
+      <span class="kw" style="background:var(--rev-soft)">price taker</span>
+      <span class="kw" style="background:var(--rev-soft)">price maker</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Measure</th><th>Formula</th><th>Meaning</th></tr>
+        <tr><td class="mono">TR</td><td class="mono">P × Q</td><td>Total sales revenue</td></tr>
+        <tr><td class="mono">AR</td><td class="mono">TR ÷ Q  (= P)</td><td>Revenue per unit sold — always equals price</td></tr>
+        <tr><td class="mono">MR</td><td class="mono">ΔTR ÷ ΔQ</td><td>Extra revenue from selling one more unit</td></tr>
+      </table>
+    </div>
+    <p>A <b>price taker</b> (perfect competition) faces a horizontal demand curve at the market price — it can sell any quantity at that price, so <span class="mono">D = AR = MR</span>, all flat. A <b>price maker</b> faces the market's own downward-sloping demand curve: to sell more it must cut price on <i>every</i> unit, so MR falls faster than AR and sits below it throughout.</p>
+
+    <figure class="chart-card">
+      <svg viewBox="0 0 620 300" width="100%">
+        <line class="axis" x1="55" y1="15" x2="55" y2="255"/>
+        <line class="axis" x1="55" y1="255" x2="600" y2="255"/>
+        <text class="lbl-dim" x="10" y="18">Revenue ($)</text>
+        <text class="lbl-dim" x="555" y="272">Quantity</text>
+        <!-- AR (demand) straight line -->
+        <line x1="70" y1="35" x2="560" y2="245" stroke="var(--rev)" stroke-width="2.4"/>
+        <text class="lbl" x="510" y="215" fill="var(--rev)" font-weight="600">AR (= demand)</text>
+        <!-- MR straight line, twice the slope, same intercept -->
+        <line x1="70" y1="35" x2="315" y2="255" stroke="var(--cost)" stroke-width="2.4"/>
+        <text class="lbl" x="200" y="150" fill="var(--cost)" font-weight="600">MR</text>
+        <!-- elastic / inelastic markers -->
+        <line class="gridline" x1="315" y1="255" x2="315" y2="30"/>
+        <circle cx="315" cy="140" r="4" fill="var(--ink)"/>
+        <text class="lbl" x="322" y="120">PED = 1</text>
+        <text class="lbl-dim" x="322" y="135">MR = 0</text>
+        <text class="lbl-dim" x="322" y="150">TR at its maximum</text>
+        <text class="lbl-dim" x="120" y="60">elastic (PED &gt; 1)</text>
+        <text class="lbl-dim" x="380" y="80">inelastic (PED &lt; 1)</text>
+      </svg>
+      <figcaption>MR starts at the same price-intercept as AR but falls twice as fast (a straight-line demand curve halves in this way). Where MR crosses zero, AR is exactly at its mid-point — the price-elastic upper half of demand meets the price-inelastic lower half, and that's precisely where PED = 1.</figcaption>
+    </figure>
+
+    <div class="callout"><b>Revenue-maximising relationship:</b> <span class="mono">MR = 0 ⇔ PED = 1 ⇔ TR at its maximum.</span> Above that point demand is elastic — cutting price raises TR (the extra units sold outweigh the lower price on each). Below it demand is inelastic — cutting price further actually lowers TR (the price cut on all units outweighs the small extra quantity sold). A firm aiming purely to maximise revenue (not profit) should produce exactly where MR = 0.</div>
+</section>
+
+<!-- ============ PROFIT ============ -->
+<section class="topic profit" id="profit">
+    <div class="topic-head"><span class="topic-num">7</span><h2>Normal, subnormal and supernormal profit</h2></div>
+    <p>Profit = total revenue − total costs. But an economist's "costs" already include <b>normal profit</b> — the minimum return the entrepreneur needs to bother staying in this line of business at all, given what their capital and effort could earn elsewhere. It's the opportunity cost of enterprise, and it's built into TC, not paid out on top of it.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Profit type</th><th>Condition</th><th>What it means</th></tr>
+        <tr><td><b>Normal profit</b></td><td class="mono">TR = TC (TC includes normal profit)</td><td>The firm exactly covers all its costs, including the opportunity cost of the entrepreneur's own capital and effort. Enough to keep the firm in business — no more, no less.</td></tr>
+        <tr><td><b>Supernormal profit</b></td><td class="mono">TR &gt; TC</td><td>Profit above and beyond normal profit. Signals other firms to enter the market, chasing the same excess return.</td></tr>
+        <tr><td><b>Subnormal profit</b></td><td class="mono">TR &lt; TC</td><td>The firm is earning less than the opportunity cost of staying in business — a warning sign it may exit in the long run.</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="qa">
+        <p class="q">"If normal profit is basically covering costs, is subnormal profit actually a loss?"</p>
+        <p class="a">In accounting terms, not necessarily — the firm can still be covering its cash costs and even turning an accounting profit. In economic terms, yes, in the sense that matters for decisions: because normal profit is already folded into TC, "subnormal" means the firm is earning <i>less than</i> what its resources could earn doing something else. That's a real economic loss even if the bank balance is technically positive — the entrepreneur would be financially better off redeploying their capital and labour elsewhere.</p>
+      </div>
+      <div class="qa">
+        <p class="q">Real-world example: an independent café earning just enough to pay itself the owner's old salary</p>
+        <p class="a">If the return exactly matches what the owner gave up (their previous job's salary plus a normal return on the capital tied up), that's normal profit — rational to keep operating, not spectacular, not a warning sign.</p>
+      </div>
+      <div class="qa" style="margin-bottom:0">
+        <p class="q">Real-world example: a high-street shop competing with online retailers</p>
+        <p class="a">If it earns less than the owner could get investing that capital and time elsewhere, it's running subnormal profit — economically a loss, even if it isn't technically insolvent — and a classic reason independent shops close even while still "making money" on paper.</p>
+      </div>
+    </div>
+
+    <div class="callout"><b>Supernormal profit as a market signal:</b> new firms entering a market chasing supernormal profit is exactly the mechanism that (in a competitive market) erodes it back toward normal profit over time — supply expands, price falls, until TR = TC again.</div>
+</section>
+
+
+</section>
+
+<!-- WATCH -->
+<section id="watch" role="tabpanel" hidden>
+  <h2>1 · Diminishing returns: TP, MP and AP</h2>
+  <p>Press Play, or use the numbered steps to jump around. Each step adds one worker to a fixed factory.</p>
+  <div id="stA"></div>
+
+  <h2>2 · Short-run cost curves and how MC cuts the averages</h2>
+  <div id="stB"></div>
+
+  <h2>3 · SRAC curves and the LRAC envelope</h2>
+  <div id="stC"></div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" role="tabpanel" hidden>
+  <h2>Lab 1 · Short-run costs at different outputs</h2>
+  <p>The firm has fixed costs and rising marginal cost. Move output and see every cost measure. Then change fixed costs and watch which curves move.</p>
+  <div class="grid2">
+    <div class="card"><div id="sl1"></div><div id="sl2"></div>
+      <div class="readout"><div><small>TC</small><strong id="k1"></strong></div><div><small>AFC</small><strong id="k2"></strong></div><div><small>AVC</small><strong id="k3"></strong></div><div><small>ATC</small><strong id="k4"></strong></div><div><small>MC</small><strong id="k5"></strong></div></div>
+      <div class="verdict" id="v1"></div></div>
+    <div class="card"><svg id="lab1" viewBox="0 0 480 360" role="img" aria-label="Short-run cost curves with a marker at the chosen output"></svg><p class="note">More fixed cost lifts AFC and ATC but leaves MC and AVC exactly where they were.</p></div>
+  </div>
+
+  <h2>Lab 2 · Least-cost combination of labour and capital</h2>
+  <p>To produce 100 units the firm can use many mixes of labour (L) and capital (K). Capital costs $10 a unit. Change the wage and watch the firm switch to the cheaper factor.</p>
+  <div class="grid2">
+    <div class="card"><div id="sl3"></div>
+      <div class="readout"><div><small>Labour</small><strong id="i1"></strong></div><div><small>Capital</small><strong id="i2"></strong></div><div><small>Total cost</small><strong id="i3"></strong></div></div>
+      <div class="verdict" id="v2"></div></div>
+    <div class="card"><svg id="lab2" viewBox="0 0 480 360" role="img" aria-label="Isoquant for 100 units with a tangent isocost line"></svg><p class="note">Curve: isoquant for 100 units. Straight line: the lowest isocost line that touches it. Its slope is the wage divided by the price of capital.</p></div>
+  </div>
+
+  <h2>Lab 3 · Demand, revenue and marginal revenue</h2>
+  <p>A price maker faces the demand curve P = 20 − Q. To sell more it has to cut the price on every unit.</p>
+  <div class="grid2">
+    <div class="card"><div id="sl4"></div>
+      <div class="readout"><div><small>Price (AR)</small><strong id="r1"></strong></div><div><small>TR</small><strong id="r2"></strong></div><div><small>MR</small><strong id="r3"></strong></div><div><small>PED</small><strong id="r4"></strong></div></div>
+      <div class="verdict" id="v3"></div></div>
+    <div class="card"><svg id="lab3" viewBox="0 0 480 360" role="img" aria-label="AR and MR curves with a marker at the chosen output"></svg></div>
+  </div>
+
+  <h2>Lab 4 · Normal, subnormal and supernormal profit</h2>
+  <p>A price taker uses the cost curves from Lab 1 (fixed cost 20). It produces where MC = price. Change the market price and read the profit type.</p>
+  <div class="grid2">
+    <div class="card"><div id="sl5"></div>
+      <div class="readout"><div><small>Output (MC = P)</small><strong id="p1"></strong></div><div><small>ATC</small><strong id="p2"></strong></div><div><small>Profit per unit</small><strong id="p3"></strong></div><div><small>Total profit</small><strong id="p4"></strong></div></div>
+      <div class="verdict" id="v4"></div></div>
+    <div class="card"><svg id="lab4" viewBox="0 0 480 360" role="img" aria-label="Cost curves with a profit rectangle at the chosen price"></svg><p class="note">Shaded box: (P − ATC) × Q. Green is supernormal profit, red is subnormal. Costs already include normal profit.</p></div>
+  </div>
+</section>
+
+<!-- PRACTISE -->
+<section id="practise" role="tabpanel" hidden>
+  <h2>1 · Fixed or variable in the short run?</h2>
+  <p>Drag each cost into the box where it belongs for a firm producing in the short run. Tap an item, then tap a box if dragging is awkward.</p>
+  <div id="cl1" class="card"></div>
+
+  <h2>2 · Internal or external economy of scale?</h2>
+  <div id="cl2" class="card"></div>
+
+  <h2>3 · Match the term to its meaning</h2>
+  <div id="m1" class="card"></div>
+
+  <h2>4 · Put the diminishing-returns chain in order</h2>
+  <div id="o1" class="card"></div>
+
+  <h2>5 · Calculations</h2>
+  <p>Enter numbers only. Give answers to one decimal place where needed.</p>
+  <div id="c1"></div>
+
+  <h2>6 · Multiple choice</h2>
+  <div id="qz1"></div>
+
+  <h2>7 · Draw it. Explain it. Apply it.</h2>
+  <p>For each prompt, sketch the diagram on paper, then explain it and apply it to a real firm in the box. Your answers save in this browser only.</p>
+  <div id="promptList"></div>
+</section>
+
+<!-- REAL WORLD -->
+<section id="real" role="tabpanel" hidden>
+  <p class="note">Examples are explained in general terms so they stay true. Look up current figures before quoting numbers in an exam.</p>
+  <div class="rw"><h3>A restaurant kitchen</h3><p>With one kitchen and one set of ovens, the first few cooks let the team specialise and the output per cook may rise. Beyond a certain point cooks get in each other's way and queue for the same equipment, so each extra cook is likely to add less than the last.</p><div class="use"><b>Use it for:</b> diminishing returns, MP below AP, and why MC rises in the short run.</div></div>
+  <div class="rw"><h3>Car and aircraft makers</h3><p>Building a modern car or aircraft needs huge fixed investment in plant, design and testing, so the minimum efficient scale is large compared with the market. Only a handful of firms can reach it, which helps explain why these industries tend to be concentrated.</p><div class="use"><b>Use it for:</b> LRAC, MES, internal economies of scale and why some markets have few firms.</div></div>
+  <div class="rw"><h3>Large supermarket chains</h3><p>Big retailers can buy in bulk, negotiate lower prices from suppliers, borrow cheaply and spread advertising and head-office costs over a very large number of sales. Many of these cost advantages are bought through size, so smaller rivals often struggle to match their prices.</p><div class="use"><b>Use it for:</b> purchasing, financial, managerial and marketing economies of scale.</div></div>
+  <div class="rw"><h3>Technology and manufacturing clusters</h3><p>Areas such as Silicon Valley or the electronics cluster around Shenzhen have deep local supplier networks, skilled workers and shared knowledge. Every firm in the cluster may gain lower costs without growing itself.</p><div class="use"><b>Use it for:</b> external economies of scale, which shift the whole LRAC curve down.</div></div>
+  <div class="rw"><h3>Congested city centres</h3><p>As more firms crowd into one district, rents, wages and traffic delays can rise for all of them. Costs go up for every firm in the area, whatever its own size.</p><div class="use"><b>Use it for:</b> external diseconomies of scale and why clusters do not grow forever.</div></div>
+  <div class="rw"><h3>The independent café and the struggling high-street shop</h3><p>A café that earns about what the owner could have earned elsewhere is making normal profit and may reasonably carry on. A shop that earns less than the owner's best alternative is making subnormal profit, even if it still shows a small accounting surplus, and is likely to close in the long run.</p><div class="use"><b>Use it for:</b> normal, supernormal and subnormal profit, and why opportunity cost sits inside total cost.</div></div>
+  <div class="rw"><h3>A new product that sells well</h3><p>A firm with a popular new product may earn supernormal profit at first. If entry is easy, rivals could copy it, supply may rise, price may fall and profit could drift back towards normal. If there are barriers to entry, the supernormal profit may last much longer.</p><div class="use"><b>Use it for:</b> supernormal profit as a signal for entry, and evaluation based on barriers to entry.</div></div>
+</section>
+
+<!-- EXAM -->
+<section id="exam" role="tabpanel" hidden>
+  <h2>Exam-style questions</h2>
+  <p>Open each question for the reminders, the model answer and the common mistakes. Model answers are colour-coded to the mark scheme.</p>
+  <div class="key" aria-label="Colour key"><span class="k"><i></i>Knowledge (K)</span><span class="a"><i></i>Application (A)</span><span class="n"><i></i>Analysis (N)</span><span class="e"><i></i>Evaluation (E)</span></div>
+
+  <details class="eq"><summary>Q1 <span class="cmd">Explain</span> <span class="mark">2 marks</span> Explain what is meant by the law of diminishing returns.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two marks means two ideas: what happens to the factor (it is varied while at least one other is fixed) and what happens to marginal product.</div>
+    <div class="ans"><span class="mk k" data-t="K">The law of diminishing returns states that, in the short run, as a firm adds more units of a variable factor to a fixed factor,</span> <span class="mk k" data-t="K">the extra output from each additional unit of the variable factor will eventually start to fall.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Saying that "total output falls". Total product may keep rising; it is <i>marginal</i> product that falls.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q2 <span class="cmd">Calculate</span> <span class="mark">4 marks</span> A firm sells 500 units at $12 each. Its total cost is $5,200, which includes normal profit. Calculate its total revenue and its profit, and state the type of profit.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two marks for the calculations and two for the interpretation. Show the formula and the working.</div>
+    <div class="ans"><span class="mk k" data-t="K">TR = P × Q = $12 × 500 = $6,000.</span> <span class="mk a" data-t="A">Profit = TR − TC = $6,000 − $5,200 = $800.</span> <span class="mk n" data-t="N">TR is greater than TC, so the firm is earning supernormal profit of $800.</span> <span class="mk n" data-t="N">Because TC already includes normal profit, this $800 is a return above the minimum needed to keep the firm in the industry.</span></div>
+    <div class="warn"><b class="h">Common mistake</b>Calling $800 "normal profit". Normal profit is already inside total cost.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q3 <span class="cmd">Explain</span> <span class="mark">6 marks</span> Explain why a firm's short-run average total cost curve is likely to be U-shaped.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Two developed reasons: one for the fall (spreading fixed costs, better use of the fixed factor) and one for the rise (diminishing returns). Link each to the shape of the curve.</div>
+    <div class="ans"><p><span class="mk k" data-t="K">A firm's short-run average total cost curve is likely to be U-shaped because ATC is made up of average fixed cost and average variable cost.</span> <span class="mk n" data-t="N">At low output, AFC falls quickly as the fixed costs are spread over more units, and AVC may also fall because a small workforce is under-using the fixed capital, so ATC is likely to fall at first.</span></p>
+    <p><span class="mk n" data-t="N">At higher output the law of diminishing returns is likely to set in, so each extra worker adds less output for the same wage.</span> <span class="mk n" data-t="N">Marginal cost then rises, pulls AVC up, and eventually outweighs the falling AFC, so ATC rises again.</span> <span class="mk a" data-t="A">A restaurant with one kitchen could show this: the first few cooks use the ovens well, but a crowded kitchen raises the cost of each extra meal.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Using "economies of scale" to explain a short-run U-shape. Scale is a long-run idea; the short-run shape comes from the fixed factor and diminishing returns.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q4 <span class="cmd">Explain</span> <span class="mark">8 marks</span> Explain how internal and external economies of scale could lower a firm's average costs.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Say who is growing in each case (the firm or the industry). Two developed points for each type, with an example, and a short comment on the difference in the curve (movement along versus shift).</div>
+    <div class="ans"><p><span class="mk k" data-t="K">Internal economies of scale are falling long-run average costs that come from the growth of the firm itself.</span> <span class="mk n" data-t="N">A larger firm may buy in bulk and negotiate lower prices, so its input cost per unit could fall, and it can spread advertising and management costs over many more units.</span> <span class="mk a" data-t="A">A large supermarket chain could use this to undercut smaller rivals.</span> <span class="mk n" data-t="N">These economies are shown by a movement down along the LRAC curve.</span></p>
+    <p><span class="mk k" data-t="K">External economies of scale come from the growth of the whole industry or location, not from the size of any one firm.</span> <span class="mk n" data-t="N">A cluster of suppliers, a skilled labour pool and shared infrastructure may lower every local firm's costs.</span> <span class="mk a" data-t="A">Technology firms in a large cluster may benefit in this way even if they are small.</span> <span class="mk n" data-t="N">These economies could shift the whole LRAC curve downwards.</span></p>
+    <p><span class="mk e" data-t="E">Both types are likely to have limits: a firm that grows too large may suffer internal diseconomies, and an overcrowded cluster may suffer external diseconomies, so the cost savings may not continue as growth goes on.</span></p></div>
+    <div class="warn"><b class="h">Common mistake</b>Listing the five types of economy with no explanation of how each lowers cost per unit.</div>
+  </div></details>
+
+  <details class="eq"><summary>Q5 <span class="cmd">Discuss</span> <span class="mark">12 marks</span> Discuss whether a firm earning supernormal profit in the short run is likely to continue earning it in the long run.</summary><div class="body">
+    <div class="tip"><b class="h">Reminder</b>Open each paragraph with the question's wording. Finish each paragraph with a short evaluative point and a link back to the question. Finish with a judgement that depends on barriers to entry.</div>
+    <div class="key"><span class="k"><i></i>Knowledge</span><span class="a"><i></i>Application</span><span class="n"><i></i>Analysis</span><span class="e"><i></i>Evaluation</span></div>
+    <div class="ans">
+    <p><span class="mk k" data-t="K">Supernormal profit occurs when total revenue is greater than total cost, which already includes normal profit, the minimum return needed to keep the entrepreneur in the industry.</span></p>
+    <p><span class="mk n" data-t="N">A firm earning supernormal profit in the short run may not continue earning it in the long run if other firms can enter the market.</span> <span class="mk n" data-t="N">Supernormal profit signals that resources earn more here than elsewhere, so new firms are likely to enter, supply increases, price falls and the firm's revenue per unit falls until profit returns towards normal.</span> <span class="mk a" data-t="A">A popular new café format that rivals can easily copy could follow this path.</span> <span class="mk e" data-t="E">However, entry may take time, so the firm could enjoy supernormal profit for several years, which means the short run is not always short in practice.</span> <span class="mk n" data-t="N">Entry therefore explains why supernormal profit may disappear.</span></p>
+    <p><span class="mk n" data-t="N">A firm earning supernormal profit in the short run is likely to continue earning it in the long run if there are barriers to entry.</span> <span class="mk n" data-t="N">Patents, high minimum efficient scale, brand loyalty or control of key inputs could stop rivals entering, so supply stays restricted and price remains above average cost.</span> <span class="mk a" data-t="A">A pharmaceutical firm with a patented drug may keep high profits while the patent lasts.</span> <span class="mk e" data-t="E">Barriers rarely last for ever: patents expire and technology changes, so the profit may erode eventually.</span> <span class="mk n" data-t="N">Barriers to entry therefore explain why supernormal profit may continue.</span></p>
+    <p><span class="mk e" data-t="E">Overall, a firm is likely to keep supernormal profit in the long run only if barriers to entry are strong and lasting. In a market that is easy to enter, supernormal profit is likely to be competed away, so the answer mainly depends on how high the barriers are and how quickly rivals can respond.</span></p>
+    </div>
+    <div class="warn"><b class="h">Common mistake</b>Writing about perfect competition only. The question is about any firm, so barriers to entry are the key point of evaluation.</div>
+  </div></details>
+</section>
+
+<!-- TIPS -->
+<section id="tips" role="tabpanel" hidden>
+  <h2>Top tips</h2>
+  <ul class="tips">
+    <li><b>Say "short run" or "long run" every time.</b> The fixed factor changes everything: AFC, diminishing returns and the U-shape belong to the short run, economies of scale to the long run.</li>
+    <li><b>MC cuts AVC and ATC at their minimum points.</b> Draw it that way, never anywhere else.</li>
+    <li><b>Normal profit is inside total cost.</b> TR = TC means normal profit, not zero profit.</li>
+    <li><b>Do not confuse diminishing returns with diseconomies of scale.</b> Returns are short run (one factor fixed); economies and diseconomies are long run (all factors variable).</li>
+    <li><b>Internal versus external.</b> Internal: the firm grows, a movement along LRAC. External: the industry grows, a shift of the whole LRAC curve.</li>
+    <li><b>MR = 0 is where TR is at its maximum and PED = 1.</b> Link revenue to elasticity whenever you can.</li>
+    <li><b>Label every axis and every curve</b> and mark the key point (optimum output, MES, the profit rectangle).</li>
+    <li><b>Use real examples</b> and say what each one shows about the concept.</li>
+  </ul>
+  <h2>Command words</h2>
+  <div class="tw"><table class="t">
+    <tr><th>Command word</th><th>What it asks for</th></tr>
+    <tr><td>Define / State</td><td>A precise meaning in one or two ideas.</td></tr>
+    <tr><td>Calculate</td><td>Formula, substitution, answer with units.</td></tr>
+    <tr><td>Explain</td><td>A reason with a developed link, usually with an example.</td></tr>
+    <tr><td>Analyse</td><td>A chain of cause and effect applied to the context.</td></tr>
+    <tr><td>Discuss / Assess</td><td>Arguments on more than one side and a justified judgement.</td></tr>
+  </table></div>
+
+  <h2>Keyword flashcards</h2>
+  <p>Click the card to flip it. Mark the ones you know.</p>
+  <div id="fc1"></div>
+</section>
+</div>

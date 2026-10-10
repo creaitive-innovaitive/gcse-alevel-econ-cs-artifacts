@@ -1,0 +1,35 @@
+/* Firm in Focus: styles for the original Learn content (topic sections, chart cards, keyword chips) mapped onto the kit palette */
+.legacy{--prod:var(--accent);--cost:var(--bad);--rev:var(--n);--profit:var(--warn);--ink-dim:var(--muted);--surface-2:var(--soft)}
+.legacy section.topic{padding:6px 0 10px;margin-bottom:12px;border-top:1px solid var(--line)}
+.legacy .topic.production{--tc:var(--prod)} .legacy .topic.cost{--tc:var(--cost)} .legacy .topic.revenue{--tc:var(--rev)} .legacy .topic.profit{--tc:var(--profit)}
+.legacy .topic-head{display:flex;align-items:center;gap:10px;margin:18px 0 8px}
+.legacy .topic-head h2{margin:0}
+.legacy .topic-num{font:700 .78rem var(--mono);color:#fff;background:var(--tc,var(--accent));width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
+.legacy .keyword-row{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.legacy .keyword-row .kw{font-weight:600;font-size:.8rem;padding:4px 10px;border-radius:99px;background:var(--accent-soft);color:var(--ink);border:1px solid var(--line)}
+.legacy .card{margin:14px 0}
+.legacy .chart-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px 4px;margin:14px 0}
+.legacy .chart-card figcaption{font-size:.85rem;color:var(--muted);padding:0 4px 10px;text-align:center}
+.legacy .callout{border-left:4px solid var(--tc,var(--accent));background:var(--soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0;font-size:.95rem}
+.legacy .callout b{color:var(--tc,var(--accent))}
+.legacy .table-wrap{overflow-x:auto;margin:14px 0}
+.legacy table{width:100%;border-collapse:collapse;font-size:.9rem}
+.legacy th,.legacy td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.legacy th{font:700 .72rem var(--sans);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.legacy .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.legacy .two-col{grid-template-columns:1fr}}
+.legacy .pill-label{display:inline-block;font:700 .7rem var(--mono);padding:2px 8px;border-radius:6px;margin-bottom:6px}
+.legacy .pill-label.internal{background:var(--accent-soft);color:var(--accent)}
+.legacy .pill-label.external{background:var(--soft);color:var(--n)}
+.legacy .qa{margin:10px 0} .legacy .qa .q{font-weight:700;margin-bottom:3px} .legacy .qa .a{color:var(--muted)}
+.legacy .mono{font-family:var(--mono)}
+.legacy svg .axis{stroke:var(--muted);stroke-width:1;fill:none}
+.legacy svg .gridline{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+.legacy svg .lbl{font-size:11px;fill:var(--ink)}
+.legacy svg .lbl-dim{font-size:10px;fill:var(--muted)}
+.prompt-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+.prompt-card h3{font-size:1.02rem;margin:0 0 2px}
+.prompt-card .ctx{font-size:.88rem;color:var(--muted);margin-bottom:10px}
+.prompt-card .draw-box{border:1.5px dashed var(--line);border-radius:10px;height:120px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.8rem;margin-bottom:10px;background:var(--soft)}
+.prompt-card label{font:700 .72rem var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.prompt-card textarea{width:100%;min-height:80px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:.92rem;padding:9px 11px;resize:vertical;margin-top:4px}

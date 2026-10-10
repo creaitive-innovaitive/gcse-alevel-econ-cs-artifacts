@@ -5,6 +5,8 @@ name, title, slug = sys.argv[1:4]
 d = pathlib.Path(__file__).parent
 css, lib = (d/"lib.css").read_text(), (d/"lib.js").read_text()
 body, js = (d/f"{name}.body.html").read_text(), (d/f"{name}.js").read_text()
+extra = d/f"{name}.css"   # optional per-artifact styles (e.g. legacy chart classes)
+if extra.exists(): css += "\n" + extra.read_text()
 html = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
